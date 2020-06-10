@@ -1,0 +1,5 @@
+sandhill.cfg
+*.swp
+*.swo
+__pycache__
+env
