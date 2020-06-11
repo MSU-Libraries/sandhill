@@ -1,0 +1,15 @@
+{
+    "route": "/<string:namespace>",
+    "template": "collection.html.j2",
+    "data": [
+        {
+            "type": "solr",
+            "name": "item",
+            "base": "/select/",
+            "params": {
+                "q": "'PID:\"<ARG.NAMESPACE>:<ARG.ID>\"'",
+                "wt": "json"
+            }
+        }
+    ]
+}

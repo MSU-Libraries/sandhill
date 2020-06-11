@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ item.title | first }}</title>
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+    <h1>{{ item.title | first }}</h1>
+    <p>
+        {{ item.description }}
+    </p>
+    <p>{{ metadata_conf.title_field }}</p> 
+</body>
+</html>
