@@ -2,7 +2,7 @@ from ..utils.api import api_get
 from .. import app
 
 def query(data_dict):
-    url = app.config['SOLR_BASE'] + data_dict['base']
+    url = app.config['SOLR_BASE'] + "/select"
 
     # query solr with the parameters
     response = api_get(url, data_dict['params'])

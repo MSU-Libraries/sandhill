@@ -17,7 +17,7 @@ def main(*args, **kwargs):
     ## process and load data routes
     data = {}
     if 'data' in route_config:
-        route_data = [d for d in route_config['data'] if 'name' in d and 'type' in d]
+        route_data = [d for d in route_config['data'] if 'name' in d and 'processor' in d]
         data = load_route_data(route_data)
 
     ## render the tempate with the data

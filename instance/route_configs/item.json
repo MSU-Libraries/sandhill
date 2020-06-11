@@ -3,20 +3,19 @@
     "template": "item.html.j2",
     "data": [
         {
-            "type": "solr",
             "name": "item",
-            "base": "/select/",
+            "processor": "solr.query_record",
             "params": {
                 "q": "PID:\"{{ view_arg.namespace }}:{{ view_arg.id }}\"",
                 "wt": "json"
             }
         },
         {
-            "type": "json_file",
             "name": "metadata_conf",
+            "processor": "file.load_json",
             "params": {
-                    "path_1": "metadata_configs/{{ view_arg.namespace }}.json",
-                    "path_2": "metadata_configs/{{ item.fedora_datastream_version_OBJ_MIMETYPE_ms | first | replace('/','_') }}.json"
+                "path_1": "metadata_configs/{{ view_arg.namespace }}.json",
+                "path_2": "metadata_configs/{{ item.fedora_datastream_version_OBJ_MIMETYPE_ms | first | replace('/','_') }}.json"
             }
         }
     ]

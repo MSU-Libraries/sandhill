@@ -3,8 +3,8 @@ import collections
 from flask import json
 from .. import app
 
-def load_file(data_dict):
-    file_data = collections.OrderedDict() 
+def load_json(data_dict):
+    file_data = collections.OrderedDict()
 
     # loop over each provided path and stop when one is found
     if 'params' in data_dict:
