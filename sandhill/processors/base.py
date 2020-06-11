@@ -16,7 +16,6 @@ def load_route_data(route_data):
         data_template = Template(data_json)
         data_json = data_template.render(**loaded_data)
         route_data[i] = json.loads(data_json)
-        print(route_data[i])
 
         if route_data[i]['type'] == 'solr': 
             loaded_data[route_data[i]['name']] = solr.query_record(route_data[i])
