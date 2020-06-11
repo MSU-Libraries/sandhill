@@ -7,7 +7,7 @@
             "name": "item",
             "base": "/select/",
             "params": {
-                "q": "PID:\"<ARG.NAMESPACE>:<ARG.ID>\"",
+                "q": "PID:\"{{ view_arg.namespace }}:{{ view_arg.id }}\"",
                 "wt": "json"
             }
         },
@@ -15,8 +15,8 @@
             "type": "json_file",
             "name": "metadata_conf",
             "params": {
-                    "path_1": "metadata_configs/<ARG.NAMESPACE>.json",
-                    "path_2": "metadata_configs/<item.fedora_datastream_version_OBJ_MIMETYPE_ms.0>.json" 
+                    "path_1": "metadata_configs/{{ view_arg.namespace }}.json",
+                    "path_2": "metadata_configs/{{ item.fedora_datastream_version_OBJ_MIMETYPE_ms | first | replace('/','_') }}.json"
             }
         }
     ]

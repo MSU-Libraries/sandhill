@@ -4,7 +4,7 @@ from flask import Flask, request, render_template, url_for, send_from_directory
 from .. import app
 from ..utils.decorators import add_routes
 from ..utils.config_loader import load_route_config
-from ..processors.base import load_data
+from ..processors.base import load_route_data
 
 
 @add_routes()
@@ -14,11 +14,11 @@ def main(*args, **kwargs):
     ## field to determine which configs to use
     route_config = load_route_config(route_used)
 
-    ## loop over 'data' to gather data for the template
+    ## process and load data routes
     data = {}
-    if 'data' in route_config and 'name':
-        for d in [d for d in route_config['data'] if 'name' in d]:
-            data[d['name']] = load_data(d, data)
+    if 'data' in route_config:
+        route_data = [d for d in route_config['data'] if 'name' in d and 'type' in d]
+        data = load_route_data(route_data)
 
     ## render the tempate with the data
     return render_template(route_config['template'], **data)
