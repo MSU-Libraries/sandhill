@@ -16,7 +16,7 @@
             "name": "metadata_conf",
             "params": {
                     "path_1": "metadata_configs/<ARG.NAMESPACE>.json",
-                    "path_2": "metadata_configs/<ARG.fedora_datastream_version_OBJ_MIMETYPE_ms>.json" 
+                    "path_2": "metadata_configs/<item.fedora_datastream_version_OBJ_MIMETYPE_ms.0>.json" 
             }
         }
     ]

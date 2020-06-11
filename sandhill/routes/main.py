@@ -10,7 +10,6 @@ from ..processors.base import load_data
 @add_routes()
 def main(*args, **kwargs):
     route_used = request.url_rule.rule
-
     ## loop over all the configs in the instance dir looking at the "route"
     ## field to determine which configs to use
     route_config = load_route_config(route_used)
