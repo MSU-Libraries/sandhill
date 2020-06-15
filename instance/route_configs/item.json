@@ -1,5 +1,8 @@
 {
-    "route": "/<string:namespace>/<int:id>",
+    "route": [
+	    "/<string:namespace>/<int:id>",
+	    "/<string:namespace>:<int:id>"
+    ],
     "template": "item.html.j2",
     "data": [
         {

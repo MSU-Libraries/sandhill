@@ -20,7 +20,11 @@ def get_all_routes():
         with open(conf_file,"r") as conf_data:
             data = json.load(open(conf_file,'r'))
             if "route" in data:
-                routes.append(data["route"])
+                if isinstance(data["route"],list):
+                    for r in data["route"]:
+                        routes.append(r)
+                else:
+                    routes.append(data["route"])
 
     # determine the number of variables in each route and add to dictionary
     for rule in routes:
@@ -43,7 +47,11 @@ def load_route_config(route_rule):
         with open(conf_file,"r") as conf_data:
             data = json.load(conf_data, object_pairs_hook=collections.OrderedDict)
             if "route" in data:
-                if data["route"] == route_rule:
-                    break
+                if isinstance(data["route"],list):
+                    if route_rule in data["route"]:
+                        break
+                else:
+                    if data["route"] == route_rule:
+                        break
                 
     return data
