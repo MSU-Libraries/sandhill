@@ -7,6 +7,18 @@ Setup
 apt install python3-pip apache2 virtualenv libapache2-mod-wsgi-py3
 ```
 
+Install the required Pip packages  
+```
+env/bin/pip install -r requirements.txt
+```
+
+Make a copy of the default config and override any values you like. If not specified 
+in a separate config file, the defaults will be used. This step is not required if you 
+want to use the defaults for everything.
+
+```
+cp instance/sandhill.default_settings.cfg instance/sandhill.cfg
+```
 
 Developer Setup
 ===============
