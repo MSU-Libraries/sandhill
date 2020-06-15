@@ -11,3 +11,7 @@ if os.path.exists(os.path.join(app.instance_path,"sandhill.cfg")):
 
 # load the secret key 
 app.secret_key =  app.config["SECRET_KEY"]
+
+# Set log level
+# TODO make this a parameter
+app.logger.setLevel(logging.DEBUG) 
