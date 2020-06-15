@@ -16,10 +16,10 @@
         {
             "name": "metadata_conf",
             "processor": "file.load_json",
-            "params": {
-                "path_1": "metadata_configs/{{ view_arg.namespace }}.json",
-                "path_2": "metadata_configs/{{ item.fedora_datastream_version_OBJ_MIMETYPE_ms | first | replace('/','_') }}.json"
-            }
+            "paths": [
+                "metadata_configs/{{ view_arg.namespace }}.json",
+                "metadata_configs/{{ item.fedora_datastream_version_OBJ_MIMETYPE_ms | first | replace('/','_') }}.json"
+	    ]
         }
     ]
 }
