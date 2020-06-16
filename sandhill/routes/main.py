@@ -1,6 +1,6 @@
 import os
 import collections
-from flask import Flask, request, render_template, url_for, send_from_directory
+from flask import Flask, request, render_template, url_for, send_from_directory, Response
 from .. import app
 from ..utils.decorators import add_routes
 from ..utils.config_loader import load_route_config
@@ -15,13 +15,19 @@ def main(*args, **kwargs):
     route_config = load_route_config(route_used)
 
     ## process and load data routes
-    data = {}
+    data = ()
     if 'data' in route_config:
         route_data = [d for d in route_config['data'] if 'name' in d and 'processor' in d]
         data = load_route_data(route_data)
 
-    ## render the tempate with the data
-    return render_template(route_config['template'], **data)
+    ## if a template is provided, render the tempate with the data
+    if 'template' in route_config:
+        return render_template(route_config['template'], **data)
+    else: ## else, stream results
+        # Get the the non view_arg data -- TODO is there a cleaner way to do this part?
+        resp = data[[k for k,v in data.items() if k != 'view_arg'][0]]
+        return Response(resp.iter_content(chunk_size=10*1024), ## TODO -- make a config or param
+                        content_type=resp.headers['Content-Type'])
 
 @app.route('/favicon.ico')
 def favicon():
