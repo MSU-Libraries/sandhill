@@ -1,11 +1,12 @@
 import logging
 import requests
 import json
+from .. import app
 
-def api_get(url, query):
+def api_get(**kwargs):
     """Perform an API call GET request to return the response object"""
-    logging.info("API GET call: {0}".format(url, json.dumps(query)))
-    response = requests.get(url, params=query)
+    app.logger.info("API GET call: {0}".format(json.dumps(kwargs)))
+    response = requests.get(**kwargs)
     if not response.ok:
-        logging.info("API GET call returned {0}: {1}".format(response.status_code, response.text))
+        app.logger.info("API GET call returned {0}: {1}".format(response.status_code, response.text))
     return response

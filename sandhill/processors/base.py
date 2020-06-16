@@ -16,6 +16,7 @@ def load_route_data(route_data):
         data_template = Template(data_json)
         data_json = data_template.render(**loaded_data)
         route_data[i] = json.loads(data_json)
+        route_data[i]['view_arg'] = loaded_data['view_arg']
 
         # Dynamically load processor
         name = route_data[i]['name']

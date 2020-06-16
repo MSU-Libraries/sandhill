@@ -5,7 +5,7 @@ def query(data_dict):
     url = app.config['SOLR_BASE'] + "/select"
 
     # query solr with the parameters
-    response = api_get(url, data_dict['params'])
+    response = api_get(url=url, params=data_dict['params'])
 
     # convert to JSON
     return response.json()
