@@ -11,7 +11,7 @@
     </p>
 
     {% for display_conf in metadata_conf['display'] %}
-        {% if display_conf['display_type'] == "descriptive_list" and item[display_conf['field']] is defined %} 
+        {% if display_conf['display_type'] == "descriptive_list" and item[display_conf['field']] is defined %}
             {% include 'metadata_descriptive_list.html.j2' %}
         {% endif %}
     {% endfor %}
