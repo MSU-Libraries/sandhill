@@ -1,14 +1,14 @@
 <dl class="row sandhill_margintop10px sandhill_metadata_descriptive_list">
     <dt class="col-sm-3">{{ display_conf['name']  }}</dt>
     <dd class="col-sm-9">
-		{% if item[display_conf['field']] | is_list %}
-			{% for  meatadata_value in  item[display_conf['field']] %}
-				{{ meatadata_value }}
+        {% if item[display_conf['field']] | is_list %}
+            {% for  meatadata_value in  item[display_conf['field']] %}
+                {{ meatadata_value }}
                 <br>
-			{% endfor %}
-		{% else %}
-			{{ item[display_conf['field']] }}
-		{% endif %}
+            {% endfor %}
+        {% else %}
+            {{ item[display_conf['field']] }}
+        {% endif %}
     </dd>
 </dl>
 
