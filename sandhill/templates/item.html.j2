@@ -1,16 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>{{ item.title | first }}</title>
-<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
-<body>
-    <h1>{{ item.title | first }}</h1>
+{% extends 'base.html.j2' %}
+
+{% block title %}
+    {{ item[metadata_conf.title_field] }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ item[metadata_conf.title_field]}}</h1>
     <p>
         {{ item.description }}
     </p>
+
+    {% for display_conf in metadata_conf['display'] %}
+        {% if display_conf['display_type'] == "descriptive_list" and item[display_conf['field']] is defined %} 
+            {% include 'metadata_descriptive_list.html.j2' %}
+        {% endif %}
+    {% endfor %}
     <p>
         {{ metadata_conf.title_field }}
     </p>
-</body>
-</html>
+{% endblock %}
