@@ -1,4 +1,3 @@
-import logging
 import requests
 import json
 from .. import app

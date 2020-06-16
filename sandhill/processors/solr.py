@@ -12,4 +12,8 @@ def query(data_dict):
 
 def query_record(data_dict):
     json_data = query(data_dict)
-    return json_data['response']['docs'][0]
+    if 'error' in json_data:
+        app.logger.error(json_data['error'])
+    elif json_data['response']['docs']:
+        return json_data['response']['docs'][0]
+    return None

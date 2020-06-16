@@ -1,7 +1,7 @@
 import re
 import json
 from .. import app
-from flask import request
+from flask import request, abort
 from jinja2 import Template
 from importlib import import_module
 
@@ -32,5 +32,9 @@ def load_route_data(route_data):
 
         if action_function:
             loaded_data[name] = action_function(route_data[i])
+
+        if not loaded_data[name] and 'on_fail' in route_data[i]:
+            app.logger.error("Could not load data for {0} use for variable '{1}'".format(processor, name))
+            abort(int(route_data[i]['on_fail']))
 
     return loaded_data

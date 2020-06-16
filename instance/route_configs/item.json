@@ -8,6 +8,7 @@
         {
             "name": "item",
             "processor": "solr.query_record",
+	    "on_fail": 404,
             "params": {
                 "q": "PID:\"{{ view_arg.namespace }}:{{ view_arg.id }}\"",
                 "wt": "json"
@@ -16,6 +17,7 @@
         {
             "name": "metadata_conf",
             "processor": "file.load_json",
+	    "on_fail": 501,
             "paths": [
                 "metadata_configs/{{ view_arg.namespace }}.json",
                 "metadata_configs/{{ item.fedora_datastream_version_OBJ_MIMETYPE_ms | first | replace('/','_') }}.json"

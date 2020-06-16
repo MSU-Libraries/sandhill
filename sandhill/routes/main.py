@@ -18,29 +18,35 @@ def main(*args, **kwargs):
     route_config = load_route_config(route_used)
 
     ## process and load data routes
-    data = ()
+    data = {}
     if 'data' in route_config:
         route_data = [d for d in route_config['data'] if 'name' in d and 'processor' in d]
         data = load_route_data(route_data)
 
     ## if a template is provided, render the tempate with the data
     if 'template' in route_config:
-        try:
-            return_val = render_template(route_config['template'], **data)
-        except TemplateNotFound:
-            abort(501) # not implemented
+        return_val = handle_template(route_config['template'], **data)
     elif 'stream' in route_config:
-        resp = data[route_config['stream']]
-        if resp:
-            return_val =  Response(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']),
-                                   content_type=resp.headers['Content-Type'])
-
-    if not return_val:
-        # TODO --  add route decorator to make custom error page
-        abort(503) # service not available
+        return_val = handle_stream(route_config['stream'], **data)
     else:
-        return return_val
-            
+        # configs do not specify the minimum required data to load a page
+        abort(404)
+
+    return return_val
+
+def handle_template(template, **data):
+    try:
+        return render_template(template, **data)
+    except TemplateNotFound:
+        abort(501) # not implemented
+
+def handle_stream(stream_var, **data):
+    resp = data[stream_var]
+    if resp:
+        return Response(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']),
+                               content_type=resp.headers['Content-Type'])
+    else:
+        abort(503) # service not available
 
 @app.route('/favicon.ico')
 def favicon():
