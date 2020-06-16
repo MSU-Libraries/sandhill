@@ -1,0 +1,57 @@
+/* Colors used 
+border : #dddddd
+*/
+
+header {
+    margin-top:10px;
+}
+a, a:hover {
+    color:#18453b
+}
+h2 {
+    font-weight:200;
+    text-align: center;
+}
+/* bootstrap overrides */
+
+
+/* bootstrap overrides - End*/
+
+/* Helper classes for sandhill */
+.sandhill_margintop20px{
+    margin-top:20px;
+}
+.sandhill_margintop10px{
+    margin-top:10px;
+}
+.sandhill_margintop3px{
+    margin-top:3px;
+}
+.sandhill_margintop5px{
+    margin-top:5px;
+}
+.sandhill_marginbottom20px{
+    margin-bottom:20px;
+}
+.sandhill_marginbottom10px{
+    margin-bottom:10px;
+}
+.sandhill_paddingtop20px{
+    padding-top:20px;
+}
+.sandhill_paddingbottom20px{
+    padding-bottom:20px;
+}
+.sandhill_paddingbottom10px{
+    padding-bottom:10px;
+}
+.sandhill_noborder{
+    border:none;
+}
+/* Helper classes for sandhill - End */
+
+/* Item page css */
+.sandhil_metadata_descriptive_list {
+    border-bottom:1px solid #dddddd;
+}
+/* Item page css - End */
