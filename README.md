@@ -96,8 +96,20 @@ data section below.
 Docker
 ===============
 
-### Containers
+### Containers  
+* **sandhill**: will run the Sandhill Flask application, exposing port 8080
+* **nginx**: will run Nginx to host the sandhill's service socket (from 8080), exposing port 81
 
-* **Sandhill**: will run Apache/Nginx and the Sandhill Flask application
-* **IIIF**: will run Cantaloupe on the latest version
-* **Solr**: will run Solr on the latest version
+### Building the Image  
+```
+cd /var/www/sandhill
+docker-compose build
+```
+
+### Starting the image  
+```
+docker-compose up -d
+```
+### TODO  
+* have the docker compose reference an image instead of doing a build
+* have logs go to a volume so we can access them and preserve them between images
