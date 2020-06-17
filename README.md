@@ -29,25 +29,35 @@ virtualenv -p python3 env
 Routes
 ===============
 
-home.py
 `/` Home page
-
-item.py
 `/[namespace]/[numeric-identifier]` Item page (ex: `etd/100`)
 `/[full-identifier]` Item page (ex: `/etd:100`)
     Note: redirects to the `/[namespace]/[numeric-identifier]` route
-
-search.py
 `/search` Search results page
-
-collection.py
 `/[node-name]` Other content page or collection home page (ex: `/etd` or `/about`)
-    development note: 
-    First check if template exists for the provided node-name, if so, render it.
-    Else treat as a collection page and load the collection config file and use
-    the configs for the given namespace
-
-node.py
 `/[namespace]/[node-name]` Content page with in the namespace
+`iiif/[identifier]/[path]` Provide the pid and IIIF 2.0 path to render a file from the IIIF server
 
 Note: root pids will continue to be handled in apache
+
+All routes are dynamically added as needed by the `route_configs` 
+json files within the `instance` directory of the project. The `route` variable 
+in that file defines what route rule will be associated with the contents 
+of that file. Variable names can be included in the rules, which will be 
+available for use in the `data` section via the `view_arg` variable.  
+
+All that is needed to add a new content page or type is to create a new 
+`route_configs` file and it's corresponding template.
+
+For file streaming, instead of providing a `template` variable in the config 
+provide a `steam` variable, which will reference a `name` field within the 
+data section below.
+
+Docker
+===============
+
+### Containers
+
+* **Sandhill**: will run Apache/Nginx and the Sandhill Flask application
+* **IIIF**: will run Cantaloupe on the latest version
+* **Solr**: will run Solr on the latest version
