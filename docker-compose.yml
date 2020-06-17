@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+    sandhill:
+      build: .
+      container_name: sandhill
+      restart: always
+      expose:
+        - 8080
+
+    nginx:
+      build: ./nginx
+      container_name: nginx
+      restart: always
+      ports:
+        - "80:80"
