@@ -20,6 +20,46 @@ want to use the defaults for everything.
 cp instance/sandhill.default_settings.cfg instance/sandhill.cfg
 ```
 
+Apache Setup
+===============
+```
+apt install libapache2-mod-wsgi-py3
+```
+
+Copy the apache site config and make required local changes to it.  
+```
+cp sites-available/sandhill.conf /etc/apache2/sites-available/sandhill.conf
+a2ensite sandhill.conf
+systemctl restart apache2
+```
+
+Nginx Setup
+===============
+```
+apt install nginx
+```
+
+Copy the system unit for Sandhill  
+```
+cp sandhill.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable sandhill
+systemctl start sandhill
+```
+
+Make a copy of the `sites-available/sandhill` and make 
+required local changes to it before copying it over.  
+```
+cp sites-available/sandhill /etc/nginx/sites-available/sandhill
+ln -s /etc/nginx/sites-available/sandhill /etc/nginx/sites-enabled
+systemctl restart nginx
+```
+
+All application logs will be located in: `/var/log/nginx/sandhill.log`  
+All access logs will be located in: `/var/log/nginx/sandhill-access.log`  
+
+
+
 Developer Setup
 ===============
 ```

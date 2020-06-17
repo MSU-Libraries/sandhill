@@ -4,3 +4,4 @@ sandhill.cfg
 __pycache__
 env
 TODO.md
+sandhill.sock

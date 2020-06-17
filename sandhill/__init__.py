@@ -5,7 +5,6 @@ app = Flask(__name__, instance_relative_config=True)
 # Local imports requiring the Flask app
 from .utils import setup
 from .routes import main
-#from .commands import render_file
 
 if __name__ == "__main__":
     app.run(debug=True)

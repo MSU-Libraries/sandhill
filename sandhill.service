@@ -1,0 +1,15 @@
+[Unit]
+Description=uWSGI instance to serve Sandhill
+After=network.target
+
+[Service]
+User=schanzme
+Group=www-data
+WorkingDirectory=/var/www/sandhill
+Environment="Path=/var/www/sandhill/env/bin"
+ExecStart=/var/www/sandhill/env/bin/uwsgi --ini uwsgi.ini
+StandardOutput=file:/var/log/nginx/sandhill.log
+StandardError=file:/var/log/nginx/sandhill.log
+
+[Install]
+WantedBy=multi-user.target
