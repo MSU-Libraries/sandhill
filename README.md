@@ -29,14 +29,14 @@ virtualenv -p python3 env
 Routes
 ===============
 
-`/` Home page
-`/[namespace]/[numeric-identifier]` Item page (ex: `etd/100`)
-`/[full-identifier]` Item page (ex: `/etd:100`)
-    Note: redirects to the `/[namespace]/[numeric-identifier]` route
-`/search` Search results page
-`/[node-name]` Other content page or collection home page (ex: `/etd` or `/about`)
-`/[namespace]/[node-name]` Content page with in the namespace
-`iiif/[identifier]/[path]` Provide the pid and IIIF 2.0 path to render a file from the IIIF server
+`/` Home page  
+`/[namespace]/[numeric-identifier]` Item page (ex: `etd/100`)  
+`/[full-identifier]` Item page (ex: `/etd:100`)  
+    Note: redirects to the `/[namespace]/[numeric-identifier]` route  
+`/search` Search results page  
+`/[node-name]` Other content page or collection home page (ex: `/etd` or `/about`)  
+`/[namespace]/[node-name]` Content page with in the namespace  
+`iiif/[identifier]/[path]` Provide the pid and IIIF 2.0 path to render a file from the IIIF server  
 
 Note: root pids will continue to be handled in apache
 
