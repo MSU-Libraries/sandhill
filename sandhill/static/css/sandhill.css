@@ -1,57 +1,46 @@
-/* Colors used 
-border : #dddddd
+/* Colors used
+border     :    #dee2e6
+link color :    #18453b
 */
-
-header {
-    margin-top:10px;
+h1 {
+    font-size: 1.8rem;
+}
+h2 {
+    font-size:1.6rem;
 }
 a, a:hover {
     color:#18453b
-}
-h2 {
-    font-weight:200;
-    text-align: center;
 }
 /* bootstrap overrides */
 
 
 /* bootstrap overrides - End*/
 
-/* Helper classes for sandhill */
-.sandhill_margintop20px{
-    margin-top:20px;
+/* metadata expand block css */
+#sandhill_expand_block {
+  font-size: 1rem;
+  line-height: 1.5;
 }
-.sandhill_margintop10px{
-    margin-top:10px;
+
+#sandhill_expand_block #sandhill_block_collapse.collapse:not(.show) {
+  display: block;
+  height: 3rem;
+  overflow: hidden;
 }
-.sandhill_margintop3px{
-    margin-top:3px;
+
+#sandhill_expand_block #sandhill_block_collapse.collapsing {
+  height: 3rem;
 }
-.sandhill_margintop5px{
-    margin-top:5px;
+
+#sandhill_expand_block a.collapsed::after {
+  content: 'Show More';
 }
-.sandhill_marginbottom20px{
-    margin-bottom:20px;
+
+#sandhill_expand_block a:not(.collapsed)::after {
+  content: 'Show Less';
 }
-.sandhill_marginbottom10px{
-    margin-bottom:10px;
-}
-.sandhill_paddingtop20px{
-    padding-top:20px;
-}
-.sandhill_paddingbottom20px{
-    padding-bottom:20px;
-}
-.sandhill_paddingbottom10px{
-    padding-bottom:10px;
-}
-.sandhill_noborder{
-    border:none;
-}
-/* Helper classes for sandhill - End */
+/* metadata expand block css - End*/
 
 /* Item page css */
-.sandhil_metadata_descriptive_list {
-    border-bottom:1px solid #dddddd;
-}
+
 /* Item page css - End */

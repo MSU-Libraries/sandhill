@@ -1,0 +1,41 @@
+<div class="accordion my-sm-3" id="sandhill_downloads">
+    <div class="card">
+        <div class="card-header" id="sandhill_downloads_header">
+              <h2 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#sandhill_downloads_block" aria-expanded="true" aria-controls="sandhill_downloads_block">
+                      Downloads
+                </button>
+              </h2>
+        </div>
+
+        <div id="sandhill_downloads_block" class="collapse hide" aria-labelledby="sandhill_downloads_header" data-parent="#sandhill_downloads">
+              <div class="card-body p-sm-0">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Description</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Format</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for downloads_conf in metadata_conf['downloads'] %}
+                            {% if item[downloads_conf['mime_type_field']] %}
+                            <tr>
+                                <td scope="row">{{ downloads_conf['name'] }}</td>
+                                <td scope="row">{{ item[downloads_conf['file_size_field']] | solr_first_item | size_format}}</td>
+                                <td scope="row">{{ item[downloads_conf['mime_type_field']] | solr_first_item  }}</td>
+                                <td scope="row">
+                                    <a href="{{ item['PID'] | generate_fedcom_url(downloads_conf['datastream']) }}" aria-label="View {{ downloads_conf['name'] }}"><span data-toggle="tooltip" data-placement="top" title="" data-original-title="Download {{ downloads_conf['name'] }}"><i data-feather="eye"></span></i></a>
+                                    <a href="{{ item['PID'] | generate_fedcom_url(downloads_conf['datastream'], "DOWNLOAD") }}" aria-label="Download` {{ downloads_conf['name'] }}"><span data-toggle="tooltip" data-placement="top" title="" data-original-title="Download {{ downloads_conf['name'] }}"> <i data-feather="download"></i></span></a>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+              </div>
+        </div>
+    </div>
+</div>

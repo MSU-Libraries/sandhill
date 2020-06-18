@@ -5,17 +5,23 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ item[metadata_conf.title_field]}}</h1>
-    <p>
-        {{ item.description }}
-    </p>
+    {# title of the page #}
+    <h1>{{ item[metadata_conf['title_field']] }}</h1>
 
+    {# include the viewer section of the page  #}
+    {% if metadata_conf['media_template'] %}
+        {% include metadata_conf['media_template'] %}
+    {% endif %}
+
+    {# include the downloads section of the page  #}
+    {% if metadata_conf['downloads'] %}
+        {% include 'downloads_box.html.j2' %}
+    {% endif %}
+
+    {# include the metadata section of the page  #}
     {% for display_conf in metadata_conf['display'] %}
-        {% if display_conf['display_type'] == "descriptive_list" and item[display_conf['field']] is defined %}
-            {% include 'metadata_descriptive_list.html.j2' %}
-        {% endif %}
+            {% if item[display_conf['field']] %}
+                {% include display_conf['metadata_template'] %}
+            {% endif %}
     {% endfor %}
-    <p>
-        {{ metadata_conf.title_field }}
-    </p>
 {% endblock %}
