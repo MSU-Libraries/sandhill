@@ -1,198 +1,199 @@
 {
     "mime_types" : [ "application/pdf" ],
     "title_field": "fgs_label_s",
+    "media_template": "preview.html.j2",
     "display": [
         {
             "field": "description",
             "name": "Summary",
-            "show_as": "block",
+            "metadata_template": "metadata_expand_block.html.j2",
             "limit_length": 500
         },
         {
             "field": "collection_t",
             "name": "In Collections",
-            "show_as": "list"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "genre_aat",
             "name": "Material Type",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_author",
             "name": "Authors",
-            "show_as": "fieldset",
-            "link": "/islandora/search?type=dismax&amp;f%5B0%5D=name_author%3A<FIELD_VALUE>"
+            "metadata_template": "metadata_descriptive_list.html.j2",
+            "link": "https://d.lib.msu.edu/islandora/search?type=dismax&f[0]=<FIELD>:<VALUE>"
         },
         {
             "field": "name_editor",
             "name": "Editors",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_contributor",
             "name": "Contributors",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_publisher",
             "name": "Publishers",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_signer",
             "name": "Signers",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_thesis_advisor",
             "name": "Thesis Advisors",
-            "show_as": "fieldset",
-            "link": "/islandora/search?type=dismax&f%5B0%5D=name_thesis_advisor%3A<FIELD_VALUE>"
+            "metadata_template": "metadata_descriptive_list.html.j2",
+            "link": true
         },
         {
             "field": "name_committee_member",
             "name": "Committee Members",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_degree_committee_member",
             "name": "Committee Members",
-            "show_as": "fieldset",
-            "link": "/islandora/search?type=dismax&f%5B0%5D=name_degree_committee_member%3A<FIELD_VALUE>"
+            "metadata_template": "metadata_descriptive_list.html.j2",
+            "link": true
         },
         {
             "field": "date_key",
             "name": "Date",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "edition",
             "name": "Edition",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "series_info",
             "name": "Series",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "subject_display",
             "name": "Subjects",
-            "show_as": "fieldset",
-            "link": "/islandora/search?type=dismax&f%5B0%5D=subject_display%3A<FIELD_VALUE>"
+            "metadata_template": "metadata_descriptive_list.html.j2",
+            "link": true
         },
         {
             "field": "subject_local_topic",
             "name": "Category",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "subject_tic",
             "name": "Turfgrass Thesaurus Terms",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "ndltd.discipline",
             "name": "Program of Study",
-            "show_as": "fieldset",
-            "link": "/islandora/search?type=dismax&f%5B0%5D=ndltd.discipline%3A<FIELD_VALUE>"
+            "metadata_template": "metadata_descriptive_list.html.j2",
+            "link": true
         },
         {
             "field": "ndltd.level",
             "name": "Degree Level",
-            "show_as": "fieldset",
-            "link": "/islandora/search?type=dismax&f%5B0%5D=ndltd.level%3<FIELD_VALUE>"
+            "metadata_template": "metadata_descriptive_list.html.j2",
+            "link": true
         },
         {
             "field": "note_noType",
             "name": "Note",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "note_local",
             "name": "Local Note",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "note_venue",
             "name": "Venue Note",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "language",
             "name": "Language",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "extent",
             "name": "Pages",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "external_content_url",
             "name": "Additional Content",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "archived_version_url",
             "name": "Archived Version",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "physical_location",
             "name": "Location of Original",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_owner",
             "name": "Holding Institution",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "otherVersion",
             "name": "Other Versions",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "relatedMaterials_object_in_context",
             "name": "Related Items",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "rightsholder_name",
             "name": "Rights Holder",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "rightsholder_contact",
             "name": "Rights Holder Contact Information",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "rightsholder_note",
             "name": "Conditions of Use",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "toc_entry",
             "name": "Table of Contents",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "isbn",
             "name": "ISBN",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "issn",
             "name": "ISSN",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         },
         {
             "field": "catalog_record",
             "name": "Catalog Record",
-            "show_as": "fieldset"
+            "metadata_template": "metadata_descriptive_list.html.j2"
         }
     ],
     "downloads": [

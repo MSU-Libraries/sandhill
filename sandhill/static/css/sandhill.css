@@ -1,0 +1,46 @@
+/* Colors used
+border     :    #dee2e6
+link color :    #18453b
+*/
+h1 {
+    font-size: 1.8rem;
+}
+h2 {
+    font-size:1.6rem;
+}
+a, a:hover {
+    color:#18453b
+}
+/* bootstrap overrides */
+
+
+/* bootstrap overrides - End*/
+
+/* metadata expand block css */
+#sandhill_expand_block {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+#sandhill_expand_block #sandhill_block_collapse.collapse:not(.show) {
+  display: block;
+  height: 3rem;
+  overflow: hidden;
+}
+
+#sandhill_expand_block #sandhill_block_collapse.collapsing {
+  height: 3rem;
+}
+
+#sandhill_expand_block a.collapsed::after {
+  content: 'Show More';
+}
+
+#sandhill_expand_block a:not(.collapsed)::after {
+  content: 'Show Less';
+}
+/* metadata expand block css - End*/
+
+/* Item page css */
+
+/* Item page css - End */
