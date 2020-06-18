@@ -14,3 +14,8 @@ services:
       restart: always
       ports:
         - "81:80"
+      volumes:
+        - nginx_logs:/var/log/nginx
+
+volumes:
+  nginx_logs:

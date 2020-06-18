@@ -6,3 +6,6 @@ RUN rm /etc/nginx/conf.d/default.conf
 
 # Replace with our own nginx.conf
 COPY sandhill.conf /etc/nginx/conf.d/
+
+# Volume for logs
+VOLUME /var/log/nginx

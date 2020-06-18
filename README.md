@@ -100,6 +100,25 @@ Docker
 * **sandhill**: will run the Sandhill Flask application, exposing port 8080
 * **nginx**: will run Nginx to host the sandhill's service socket (from 8080), exposing port 81
 
+### Installing Docker
+```
+apt update
+apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+```
+
+When adding the key and source to apt:  
+```
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+```
+
+Finally, update apt sources and install Docker and supporting packages:  
+```
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+
 ### Building the Image  
 ```
 cd /var/www/sandhill
