@@ -33,14 +33,20 @@ a, a:hover {
 }
 
 #sandhill_expand_block a.collapsed::after {
-  content: 'Show More';
+  content: ' more';
 }
 
 #sandhill_expand_block a:not(.collapsed)::after {
-  content: 'Show Less';
+  content: ' less';
 }
 /* metadata expand block css - End*/
 
 /* Item page css */
-
+#sandhill_downloads_header h2 button {
+    font-size: 1.6rem;
+    color: #18453b;
+    text-decoration: none;
+    width: 100%;
+    text-align: left;
+}
 /* Item page css - End */
