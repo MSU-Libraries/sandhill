@@ -3,7 +3,7 @@ Description=uWSGI instance to serve Sandhill
 After=network.target
 
 [Service]
-User=schanzme
+User=www-data
 Group=www-data
 WorkingDirectory=/var/www/sandhill
 Environment="Path=/var/www/sandhill/env/bin"
