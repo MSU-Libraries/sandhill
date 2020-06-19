@@ -1,6 +1,12 @@
 Sandhill
 ---------------
 
+* [General Setup](#general-setup)
+* [Local Setup](#local-setup)
+* [Docker Setup](#docker-setup)
+* [Routes](#routes)
+* [Docker](#docker)
+
 General Setup
 ===============
 
@@ -17,7 +23,7 @@ Local Setup
 Use this setup if you want to set up a development environment that allows 
 code changes to be made and immediately updated on the page. 
 
-Install the required packages
+### Install the required packages  
 ```
 apt install python3-pip apache2 virtualenv libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3
 ```
@@ -32,6 +38,7 @@ Install the required Pip packages
 env/bin/pip install -r requirements.txt
 ```
 
+### Create the service
 Copy the systemd unit file to set it up as a service. 
 ```
 cp sandhill.service /etc/systemd/system/
@@ -40,6 +47,7 @@ systemctl enable sandhill
 systemctl start sandhill
 ```
 
+### Setup Apache
 Copy the apache site config and make required local changes to it.  
 ```
 cp apache2/sandhill_local.conf /etc/apache2/sites-available/sandhill.conf
