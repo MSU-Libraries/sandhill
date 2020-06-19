@@ -1,199 +1,199 @@
 {
     "mime_types" : [ "application/pdf" ],
     "title_field": "fgs_label_s",
-    "media_template": "preview.html.j2",
+    "media_template": "media_display/preview.html.j2",
     "display": [
         {
             "field": "description",
             "name": "Summary",
-            "metadata_template": "metadata_expand_block.html.j2",
+            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2",
             "limit_length": 500
         },
         {
             "field": "collection_t",
             "name": "In Collections",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "genre_aat",
             "name": "Material Type",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_author",
             "name": "Authors",
-            "metadata_template": "metadata_descriptive_list.html.j2",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "https://d.lib.msu.edu/islandora/search?type=dismax&f[0]=<FIELD>:<VALUE>"
         },
         {
             "field": "name_editor",
             "name": "Editors",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_contributor",
             "name": "Contributors",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_publisher",
             "name": "Publishers",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_signer",
             "name": "Signers",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_thesis_advisor",
             "name": "Thesis Advisors",
-            "metadata_template": "metadata_descriptive_list.html.j2",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": true
         },
         {
             "field": "name_committee_member",
             "name": "Committee Members",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_degree_committee_member",
             "name": "Committee Members",
-            "metadata_template": "metadata_descriptive_list.html.j2",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": true
         },
         {
             "field": "date_key",
             "name": "Date",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "edition",
             "name": "Edition",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "series_info",
             "name": "Series",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "subject_display",
             "name": "Subjects",
-            "metadata_template": "metadata_descriptive_list.html.j2",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": true
         },
         {
             "field": "subject_local_topic",
             "name": "Category",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "subject_tic",
             "name": "Turfgrass Thesaurus Terms",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "ndltd.discipline",
             "name": "Program of Study",
-            "metadata_template": "metadata_descriptive_list.html.j2",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": true
         },
         {
             "field": "ndltd.level",
             "name": "Degree Level",
-            "metadata_template": "metadata_descriptive_list.html.j2",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": true
         },
         {
             "field": "note_noType",
             "name": "Note",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "note_local",
             "name": "Local Note",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "note_venue",
             "name": "Venue Note",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "language",
             "name": "Language",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "extent",
             "name": "Pages",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "external_content_url",
             "name": "Additional Content",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "archived_version_url",
             "name": "Archived Version",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "physical_location",
             "name": "Location of Original",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "name_owner",
             "name": "Holding Institution",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "otherVersion",
             "name": "Other Versions",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "relatedMaterials_object_in_context",
             "name": "Related Items",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "rightsholder_name",
             "name": "Rights Holder",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "rightsholder_contact",
             "name": "Rights Holder Contact Information",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "rightsholder_note",
             "name": "Conditions of Use",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "toc_entry",
             "name": "Table of Contents",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "isbn",
             "name": "ISBN",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "issn",
             "name": "ISSN",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "field": "catalog_record",
             "name": "Catalog Record",
-            "metadata_template": "metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         }
     ],
     "downloads": [
