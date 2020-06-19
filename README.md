@@ -1,16 +1,8 @@
 Sandhill
 ---------------
 
-Setup
+General Setup
 ===============
-```
-apt install python3-pip apache2 virtualenv libapache2-mod-wsgi-py3
-```
-
-Install the required Pip packages  
-```
-env/bin/pip install -r requirements.txt
-```
 
 Make a copy of the default config and override any values you like. If not specified 
 in a separate config file, the defaults will be used. This step is not required if you 
@@ -20,26 +12,27 @@ want to use the defaults for everything.
 cp instance/sandhill.default_settings.cfg instance/sandhill.cfg
 ```
 
-Apache Setup
+Local Setup
 ===============
+Use this setup if you want to set up a development environment that allows 
+code changes to be made and immediately updated on the page. 
+
+Install the required packages
 ```
-apt install libapache2-mod-wsgi-py3
+apt install python3-pip apache2 virtualenv libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3
 ```
 
-Copy the apache site config and make required local changes to it.  
+In the cloned directory, create the virtual environment.
 ```
-cp sites-available/sandhill.conf /etc/apache2/sites-available/sandhill.conf
-a2ensite sandhill.conf
-systemctl restart apache2
+virtualenv -p python3 env
 ```
 
-Nginx Setup
-===============
+Install the required Pip packages  
 ```
-apt install nginx
+env/bin/pip install -r requirements.txt
 ```
 
-Copy the system unit for Sandhill  
+Copy the systemd unit file to set it up as a service. 
 ```
 cp sandhill.service /etc/systemd/system/
 systemctl daemon-reload
@@ -47,24 +40,59 @@ systemctl enable sandhill
 systemctl start sandhill
 ```
 
-Make a copy of the `sites-available/sandhill` and make 
-required local changes to it before copying it over.  
+Copy the apache site config and make required local changes to it.  
 ```
-cp sites-available/sandhill /etc/nginx/sites-available/sandhill
-ln -s /etc/nginx/sites-available/sandhill /etc/nginx/sites-enabled
-systemctl restart nginx
+cp apache2/sandhill_local.conf /etc/apache2/sites-available/sandhill.conf
+a2ensite sandhill.conf
+systemctl restart apache2
 ```
 
-All application logs will be located in: `/var/log/nginx/sandhill.log`  
-All access logs will be located in: `/var/log/nginx/sandhill-access.log`  
-
-
-
-Developer Setup
+Docker Setup
 ===============
+Use this setup if you just want to set up a server to host the site without needing to make 
+frequent changes to the code. 
+
+### Install Docker
 ```
-virtualenv -p python3 env
+apt update
+apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 ```
+
+When adding the key and source to apt:  
+```
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+```
+
+Finally, update apt sources and install Docker and supporting packages:  
+```
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+### Build the Image
+Build a new image based on the current code. TODO -- this will change once we have CI/CD, since we will 
+not be building the image on each server.
+```
+docker-compose build
+```
+
+### Run the Image
+Run the image in a detached mode. TODO -- we will have this be a service we set up on the server. 
+```
+docker-compose up -d
+```
+
+Note: If you need to manually take it down, run `docker-compose down`. TODO -- this will be moved to a service. 
+
+### Setup Apache
+Copy the apache site config and make required local changes to it.  
+```
+cp apache2/sandhill_docker.conf /etc/apache2/sites-available/sandhill.conf
+a2ensite sandhill.conf
+systemctl restart apache2
+```
+
 
 Routes
 ===============
@@ -99,36 +127,3 @@ Docker
 ### Containers  
 * **sandhill**: will run the Sandhill Flask application, exposing port 8080
 * **nginx**: will run Nginx to host the sandhill's service socket (from 8080), exposing port 81
-
-### Installing Docker
-```
-apt update
-apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-```
-
-When adding the key and source to apt:  
-```
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-```
-
-Finally, update apt sources and install Docker and supporting packages:  
-```
-apt-get update
-apt-get install docker-ce docker-ce-cli containerd.io
-```
-
-
-### Building the Image  
-```
-cd /var/www/sandhill
-docker-compose build
-```
-
-### Starting the image  
-```
-docker-compose up -d
-```
-### TODO  
-* have the docker compose reference an image instead of doing a build
-* have logs go to a volume so we can access them and preserve them between images
