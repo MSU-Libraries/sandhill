@@ -38,10 +38,28 @@ Install the required Pip packages
 env/bin/pip install -r requirements.txt
 ```
 
+## Create a log directory
+```
+mkdir -p /var/log/sandhill
+```
+
+## Setup logrotate on logs
+TODO
+
+## Create the rsyslog config
+This step is required to have filtered logging for only this application go to 
+a file other than syslog. This is only because `StandardOutput` and `StandardError` 
+do not support file redirection in Ubuntu 16.04.
+
+```
+cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
+chown -R syslog:adm /var/log/sandhill
+```
+
 ### Create the service
 Copy the systemd unit file to set it up as a service. 
 ```
-cp sandhill.service /etc/systemd/system/
+cp etc/systemd/system/sandhill.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable sandhill
 systemctl start sandhill
