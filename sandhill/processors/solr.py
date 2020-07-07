@@ -1,10 +1,12 @@
-from ..utils.api import api_get
-from .. import app
+from urllib.parse import urlencode
+from sandhill.utils.api import api_get
+from sandhill import app
 
 def query(data_dict):
     url = app.config['SOLR_BASE'] + "/select"
 
     # query solr with the parameters
+    app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
     response = api_get(url=url, params=data_dict['params'])
 
     # convert to JSON

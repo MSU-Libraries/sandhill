@@ -43,14 +43,14 @@ def handle_template(template, **data):
 def handle_stream(stream_var, **data):
     allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
     resp = data[stream_var]
-    if resp:
-        stream = Response(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
-        for header in allowed_headers:
-            if header in resp.headers.keys():
-                stream.headers.set(header, resp.headers.get(header))
-        return stream
-    else:
+    if not resp:
         abort(503) # service not available
+
+    stream = Response(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
+    for header in allowed_headers:
+        if header in resp.headers.keys():
+            stream.headers.set(header, resp.headers.get(header))
+    return stream
 
 @app.route('/favicon.ico')
 def favicon():

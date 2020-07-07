@@ -6,8 +6,8 @@
 	"stream": "datastream",
 	"data": [
 	    {
-		"processor": "fedora3.load_datastream",
-		"name": "datastream"
+            "processor": "fedora3.load_datastream",
+            "name": "datastream"
 	    }
 	]
 }
