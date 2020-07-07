@@ -1,4 +1,3 @@
-import re
 import json
 from .. import app
 from flask import request, abort
@@ -28,7 +27,7 @@ def load_route_data(route_data):
             app.logger.debug("Successfully loaded processor '{0}' and action '{1}'".format(processor, action))
         except (ImportError, AttributeError) as exc:
             app.logger.warning("Could not load action '{0}' from processor '{1}'; "
-                    "skipping route data '{2}.".format(action ,processor, name))
+                               "skipping route data '{2}.".format(action ,processor, name))
 
         if action_function:
             loaded_data[name] = action_function(route_data[i])

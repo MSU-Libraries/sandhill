@@ -41,10 +41,14 @@ def handle_template(template, **data):
         abort(501) # not implemented
 
 def handle_stream(stream_var, **data):
+    allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
     resp = data[stream_var]
     if resp:
-        return Response(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']),
-                               content_type=resp.headers['Content-Type'])
+        stream = Response(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
+        for header in allowed_headers:
+            if header in resp.headers.keys():
+                stream.headers.set(header, resp.headers.get(header))
+        return stream
     else:
         abort(503) # service not available
 
