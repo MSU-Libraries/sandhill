@@ -1,0 +1,14 @@
+{
+    "route": [
+	    "/search"
+    ],
+    "template": "search.html.j2",
+    "response": "search",
+	"data": [
+	    {
+            "processor": "solr.search",
+            "name": "search"
+	    }
+	]
+}
+

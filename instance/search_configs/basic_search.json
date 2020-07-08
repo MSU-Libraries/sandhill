@@ -1,0 +1,64 @@
+{
+    "query_boost_fields": "title_t^5 name_t^5 genre_t description_t^2 note_t^2 subject_t^2 collection_t physical_location_t note_thesis_t name_degree_committee_member name_thesis_advisor constituent_title constituent_name issn FULL_TEXT_t^1.5  OCR_t^1.5",
+    "base_filter": "-PID:*\\:root",
+    "allowed_namespaces": ["etd", "dmhsp", "wosl", "vvl", "fa", "grange", "ssb", "mbf", "gnn", "rcr"],
+    "allowed_facet_filters": ["genre_aat", "subject_display", "name_author"],
+    "facet_mincount": 1,
+    "facet_limit": 20,
+    "results_limit": 100,
+    "sort_fields": [
+        {
+            "field": "fgs_label_s",
+            "label": "title",
+            "sort_dir": "ASC"
+        },
+        {
+            "field": "date_key",
+            "label": "Date",
+            "sort_dir": "ASC"
+        },
+        {
+            "field": "score",
+            "label": "Relevance",
+            "sort_dir": "ASC"
+        }
+            
+    ],
+    "facet_fields": [
+        {
+            "field": "genre_aat",
+            "label": "Material Types",
+            "display_limit": "10"
+        },
+        {
+            "field": "subject_display",
+            "label": "Subjects",
+            "display_limit": "10"
+        }
+    ],
+    "search_display_fields": [
+        {
+            "field": "fgs_label_s",
+            "label": "Title",
+            "template": "template_with_links_to_item_placeholder"
+        },
+        {
+            "field": "name_primary",
+            "label": "Creator",
+            "template": "template_with_link_to_facet_placeholder"
+
+        },
+        {
+            "field": "date_key",
+            "label": "Date",
+            "template": "template_without_links_placeholder"
+        },
+        {
+            "field": "collection",
+            "label": "Collection",
+            "template": "template_without_links_placeholder"
+        }
+    ]
+
+}
+
