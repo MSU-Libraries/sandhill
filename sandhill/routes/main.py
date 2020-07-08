@@ -1,6 +1,6 @@
 import os
 import collections
-from flask import Flask, request, render_template, url_for, send_from_directory, Response, abort
+from flask import Flask, request, render_template, url_for, send_from_directory, Response, abort, wrappers
 from jinja2.exceptions import TemplateNotFound
 from .. import app
 from ..utils.decorators import add_routes
@@ -36,6 +36,8 @@ def main(*args, **kwargs):
 
 def handle_template(template, **data):
     try:
+        if 'response' in data.keys() and isinstance(data['response'], wrappers.Response):
+            return data['response']
         return render_template(template, **data)
     except TemplateNotFound:
         abort(501) # not implemented
