@@ -27,10 +27,10 @@ def search(data_dict):
         data_dict (dict) :  dictionary of url args
     """
     # example url: /search?q=frogs&start=1&limit=10
-    # example url: /search?q=frogs&result=json&start=1&rows=10
+    # example url: /search?q=frogs&format=json&start=1&rows=10
     # example url: /search?q=frogs AND Cows&start=1&rows=10
-    # example url: /search?q=frogs&genre_aat="Theses"&page=1&start=1&rows=10
-    # example url: /search?q=frogs&subject_display="Cooking"&subject_display="Menus"&page=1
+    # example url: /search?q=frogs&facet.field=genre_t:"Theses"&page=1&start=1&rows=10
+    # example url: /search?q=frogs&facet.field=subject_display: "Cooking" AND subject_display="Menus"&start=1&rows=10
 
     # use the request object to get the query and other params
 
