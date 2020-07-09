@@ -111,6 +111,12 @@ docker-compose up -d
 
 Note: If you need to manually take it down, run `docker-compose down`. TODO -- this will be moved to a service. 
 
+To view logs of a given container just run:
+```
+docker contrainer ls
+docker logs -f <CONTAINER NAME>
+```
+
 ### Setup Apache
 Copy the apache site config and make required local changes to it.  
 ```
