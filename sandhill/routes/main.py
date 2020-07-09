@@ -4,6 +4,7 @@ from flask import Flask, request, render_template, url_for, send_from_directory,
 from jinja2.exceptions import TemplateNotFound
 from .. import app
 from ..utils.decorators import add_routes
+from ..utils.utilities import ifnone
 from ..utils.config_loader import load_route_config
 from ..processors.base import load_route_data
 
@@ -16,7 +17,7 @@ def main(*args, **kwargs):
     ## loop over all the configs in the instance dir looking at the "route"
     ## field to determine which configs to use
     route_config = load_route_config(route_used)
-    response_var = route_config['response'] if 'response' in route_config else None 
+    response_var = ifnone(route_config['response'], None)
 
     ## process and load data routes
     data = {}
@@ -37,8 +38,6 @@ def main(*args, **kwargs):
 
 def handle_template(template, response_var, **data):
     try:
-        print(response_var)
-        print(data)
         if response_var in data:
             return data[response_var]
         return render_template(template, **data)
