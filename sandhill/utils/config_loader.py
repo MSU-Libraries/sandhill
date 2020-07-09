@@ -53,5 +53,19 @@ def load_route_config(route_rule):
                 else:
                     if data["route"] == route_rule:
                         break
-                
     return data
+
+def load_search_config():
+    """
+    loads the search config file from instance/search/basic_search.json
+    """
+    search_config = collections.OrderedDict()
+    search_config_path = os.path.join(app.instance_path, "search_configs/search.json")
+    try:
+        with open(search_config_path) as json_file:
+            app.logger.info("loading json file at {0}".format(search_config_path))
+            search_config = json.load(json_file, object_pairs_hook=collections.OrderedDict)
+    except IOError as io_exe:
+        app.logger.error("Unable open file at {0}".format(search_config_path))
+        app.logger.error("An IOError has occured: {0}".format(io_exe))
+    return search_config
