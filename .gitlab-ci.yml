@@ -33,6 +33,8 @@ build:
   only:
     - docker
   script:
+    - pwd
+    - git log -2
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
     - docker build --pull -t $CONTAINER_TEST_IMAGE_NGINX ./nginx
