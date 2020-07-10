@@ -11,6 +11,10 @@ ExecStart=/var/www/sandhill/env/bin/uwsgi --socket 127.0.0.1:8081 --protocol=htt
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=sandhill
+Type=notify
+Restart=always
+KillSignal=SIGQUIT
+NotifyAccess=all
 
 [Install]
 WantedBy=multi-user.target

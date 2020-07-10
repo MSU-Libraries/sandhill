@@ -17,7 +17,7 @@ def main(*args, **kwargs):
     ## loop over all the configs in the instance dir looking at the "route"
     ## field to determine which configs to use
     route_config = load_route_config(route_used)
-    response_var = ifnone(route_config['response'], None)
+    response_var = ifnone(route_config, 'response', None)
 
     ## process and load data routes
     data = {}

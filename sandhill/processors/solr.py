@@ -2,6 +2,9 @@ from flask import request, jsonify
 from urllib.parse import urlencode
 from sandhill.utils.api import api_get
 from sandhill import app
+from sandhill.utils.config_loader import load_search_config
+from sandhill.utils.generic import combine_to_list
+
 
 def query(data_dict):
     url = app.config['SOLR_BASE'] + "/select"
@@ -26,48 +29,37 @@ def search(data_dict):
         args:
         data_dict (dict) :  dictionary of url args
     """
-    # example url: /search?q=frogs&start=1&limit=10
-    # example url: /search?q=frogs&format=json&start=1&rows=10
-    # example url: /search?q=frogs AND Cows&start=1&rows=10
-    # example url: /search?q=frogs&facet.field=genre_t:"Theses"&page=1&start=1&rows=10
-    # example url: /search?q=frogs&facet.field=subject_display: "Cooking" AND subject_display="Menus"&start=1&rows=10
+    # to_dict() should convert immutable dict to a regular dict with a list of values
+    search_params = request.args.to_dict()
 
-    # use the request object to get the query and other params
+    search_config = load_search_config()
+    solr_config = search_config['solr_params']  # TODO handle if solr_params is missing
+    solr_params = {}
+    for field_name, field_conf in solr_config.items():
+        solr_params[field_name] = []
+        # Load base from config
+        if 'base' in field_conf:
+            solr_params[field_name] = field_conf['base']
+        # Load from search_params if field defined with a default
+        if field_name in search_params and 'default' in field_conf:
+            solr_params[field_name] = combine_to_list(solr_params[field_name], search_params[field_name])
+        # Load default from config if solr_param field not defined
+        elif 'default' in field_conf:
+            solr_params[field_name] = combine_to_list(solr_params[field_name], field_conf['default'])
+        # Remove field from solr query if empty
+        if not any(solr_params[field_name]):
+            del solr_params[field_name]
 
-    # Check if the query is empty 
+        # restrictions
+        #TODO something like: solr_params[field_name] = apply_restrictions(solr_params[field_name], field_conf['restrictions'])
+        if 'max' in field_conf:
+            solr_params[field_name] = [ val if val.isdigit() and int(val) < int(field_conf['max']) else field_conf['max'] for val in solr_params[field_name] ]
+        if 'min' in field_conf:
+            solr_params[field_name] = [ val if val.isdigit() and int(val) > int(field_conf['min']) else field_conf['min'] for val in solr_params[field_name] ]
 
-    # Check for solr injections or encode the query 
-
-    # get the list of return fields from the config
-
-    # assemble solr params 
-    '''
-    solr_params = {
-            "q": query,
-            "fq": filter_query,
-            "start": start_count,
-            "rows": limit,
-            "wt": "json",
-            "fl": filter_fields,
-            "sort": sort_query,
-            "facet": "on",
-            "facet.field": facet_fields,
-            "facet.mincount": facet_mincount,
-            "facet.limit": facet_limit,
-            "qf": query_boost_fields
-            }
-    '''
-    solr_params = {
-            "q": "frogs",
-            "start": 0,
-            "rows": 10,
-            "wt": "json",
-            "defType": "dismax"
-            }
     # make the solr call
     data_dict['params'] = solr_params
     search_results = query(data_dict)
-    # check if the return type is HTML or JSON
 
     # return results 
     return jsonify(search_results)
