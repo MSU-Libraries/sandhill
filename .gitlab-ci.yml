@@ -18,9 +18,9 @@ variables:
   CONNECT_STAGE: "deploy@fedcoms4.lib.msu.edu"
   CONNECT_PROD1: "deploy@fedcom4a.lib.msu.edu"
   CONNECT_PROD2: "deploy@fedcom4b.lib.msu.edu"
-  SITE_TEST: "https://sandhill.test.lib.msu.edu/"
-  SITE_STAGE: "https://sandhill.stage.lib.msu.edu/"
-  SITE_PROD: "https://sandhill.lib.msu.edu/"
+  SITE_TEST: "http://sandhill.test.lib.msu.edu/"
+  SITE_STAGE: "http://sandhill.stage.lib.msu.edu/"
+  SITE_PROD: "http://sandhill.lib.msu.edu/"
 
 
 before_script:
