@@ -1,0 +1,53 @@
+image: docker:stable
+services:
+  - docker:dind
+
+stages:
+  - build
+  - test
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
+  CONTAINER_TEST_IMAGE_NGINX: $CI_REGISTRY_IMAGE:test_nginx
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY_IMAGE:latest_nginx
+  PATH_TEST: "/var/www/sandhill/"
+  PATH_STAGE: "/var/www/sandhill/"
+  PATH_PROD: "/var/www/sandhill/"
+  CONNECT_TEST: "deploy@fedcomd4.lib.msu.edu"
+  CONNECT_STAGE: "deploy@fedcoms4.lib.msu.edu"
+  CONNECT_PROD1: "deploy@fedcom4a.lib.msu.edu"
+  CONNECT_PROD2: "deploy@fedcom4b.lib.msu.edu"
+  SITE_TEST: "https://sandhill.test.lib.msu.edu/"
+  SITE_STAGE: "https://sandhill.stage.lib.msu.edu/"
+  SITE_PROD: "https://sandhill.lib.msu.edu/"
+
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+build:
+  stage: build
+  tags:
+    - msul
+  only:
+    - docker
+  script:
+    - docker build --pull -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
+    - docker build --pull -t $CONTAINER_TEST_IMAGE_NGINX ./nginx
+    - docker push $CONTAINER_TEST_IMAGE_NGINX
+
+test:
+  stage: test
+  tags:
+    - msul
+  only:
+    - docker
+  script: 
+    - ssh $CONNECT_TEST cd $PATH_DEVEL && docker-compose down
+    - ssh $CONNECT_TEST cd $PATH_DEVEL && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - ssh $CONNECT_TEST cd $PATH_DEVEL && docker-compose up -d
+    - sleep 4
+    - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_TEST ) -eq 200 ]]"
+

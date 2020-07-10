@@ -2,14 +2,14 @@ version: '2'
 
 services:
     sandhill:
-      build: .
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:test
       container_name: sandhill
       restart: always
       expose:
         - 8080
 
     nginx:
-      build: ./nginx
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:test_nginx
       container_name: nginx
       restart: always
       ports:
