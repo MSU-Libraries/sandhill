@@ -7,7 +7,8 @@
 	"data": [
 	    {
             "processor": "solr.search",
-            "name": "search"
+            "name": "search",
+            "config": "main.json"
 	    }
 	]
 }
