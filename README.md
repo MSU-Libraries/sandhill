@@ -125,6 +125,13 @@ a2ensite sandhill.conf
 systemctl restart apache2
 ```
 
+### CI/CD Setup
+In order for the deploy user to be able to update the docker image, make sure to add the deploy user 
+to the docker group.
+```
+adduser deploy docker
+```
+
 
 Routes
 ===============

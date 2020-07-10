@@ -45,9 +45,9 @@ test:
   only:
     - docker
   script: 
-    - ssh $CONNECT_TEST cd $PATH_TEST && docker-compose down
-    - ssh $CONNECT_TEST cd $PATH_TEST && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - ssh $CONNECT_TEST cd $PATH_TEST && docker-compose up -d
+    - ssh $CONNECT_TEST "cd $PATH_TEST && docker-compose down"
+    - ssh $CONNECT_TEST "cd $PATH_TEST && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh $CONNECT_TEST "cd $PATH_TEST && docker-compose up -d"
     - sleep 4
     - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_TEST ) -eq 200 ]]"
 
