@@ -93,7 +93,7 @@ deploy_prod_primary_job:
   stage: deploy_prod_primary
   tags:
     - msul
-  only:1
+  only:
     - master
   script:
     - ssh $CONNECT_PROD1 git -C $PATH_PROD fetch stage master
