@@ -12,7 +12,7 @@ def load_datastream(data_dict):
     try:
         params = {}
         params['download'] = 'true' if data_dict['view_arg']['action'] == "download" else 'false'
-        fc_url = urljoin(app.config['FEDORA_BASE'],
+        fc_url = urljoin(os.environ.get('FEDORA_URL'),
                         "objects/{0}:{1}/datastreams/{2}/content".format(
                         data_dict['view_arg']['namespace'],
                         data_dict['view_arg']['id'],

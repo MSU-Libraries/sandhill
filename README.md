@@ -18,6 +18,11 @@ want to use the defaults for everything.
 cp instance/sandhill.default_settings.cfg instance/sandhill.cfg
 ```
 
+Install dependencies required for any setup.  
+```
+apt install python3-pip apache2
+```
+
 Local Setup
 ===============
 Use this setup if you want to set up a development environment that allows 
@@ -25,7 +30,7 @@ code changes to be made and immediately updated on the page.
 
 ### Install the required packages  
 ```
-apt install python3-pip apache2 virtualenv libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3
+apt install virtualenv libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3
 ```
 
 In the cloned directory, create the virtual environment.
@@ -93,7 +98,12 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 Finally, update apt sources and install Docker and supporting packages:  
 ```
 apt-get update
-apt-get install docker-ce docker-ce-cli containerd.io
+apt-get install docker-ce docker-ce-cli containerd.io docker-compose
+```
+
+## Install Docker Compose
+```
+sudo pip3 install docker-compose
 ```
 
 ### Build the Image

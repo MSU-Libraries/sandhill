@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+    sandhill:
+      environment:
+        - SOLR_URL=https://solr.stage.lib.msu.edu/solr/fedcom

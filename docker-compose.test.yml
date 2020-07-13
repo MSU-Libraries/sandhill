@@ -3,6 +3,8 @@ version: '2'
 services:
     sandhill:
       image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:test
+      environment:
+        - SOLR_URL=https://solr.devel.lib.msu.edu/solr/fedcom
 
     nginx:
       image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:test_nginx

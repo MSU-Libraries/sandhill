@@ -1,5 +1,6 @@
 from flask import request, jsonify, abort
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urljoin
+from urllib import urljoin
 from sandhill.utils.api import api_get
 from sandhill import app
 from sandhill.utils.config_loader import load_search_config
@@ -7,7 +8,7 @@ from sandhill.utils.generic import combine_to_list
 
 
 def query(data_dict):
-    url = app.config['SOLR_BASE'] + "/select"
+    url = os.environ.get('SOLR_URL') + "/select"
 
     # query solr with the parameters
     app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
