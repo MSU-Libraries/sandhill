@@ -16,7 +16,7 @@ variables:
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY_IMAGE:latest_nginx
   PATH_TEST: "/home/deploy/sandhill/"
-  PATH_TEST: "/home/deploy/sandhill/"
+  PATH_STAGE: "/home/deploy/sandhill/"
   PATH_PROD: "/home/deploy/sandhill/"
   CONNECT_TEST: "deploy@fedcomd4.lib.msu.edu"
   CONNECT_STAGE: "deploy@fedcoms4.lib.msu.edu"
