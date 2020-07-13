@@ -1,23 +1,6 @@
 {
     "facet_mincount": 1,
     "facet_limit": 20,
-    "sort_fields": [
-        {
-            "field": "fgs_label_s",
-            "label": "title",
-            "sort_dir": "ASC"
-        },
-        {
-            "field": "date_key",
-            "label": "Date",
-            "sort_dir": "ASC"
-        },
-        {
-            "field": "score",
-            "label": "Relevance",
-            "sort_dir": "ASC"
-        }
-    ],
     "facet_fields": [
         {
             "field": "genre_aat",
@@ -38,8 +21,8 @@
             "base": "*"
         },
         "fq": {
-            "base": ["-PID:*\\:root"],
-            "default": ["PID:etd\\:* OR PID:dmhsp\\:* OR PID:wosl\\:*"]
+            "base": ["-PID:*\\:root", "-PID:tone\\:*"],
+            "default": []
         },
         "start": {
             "default": 0
@@ -55,7 +38,7 @@
             "default": "fgs_label_s,name_primary,date_key,collection"
         },
         "sort": {
-            "default": ""
+            "default": "score DESC,fgs_label_s ASC,date_key ASC"
         },
         "defType": {
             "base": "dismax"

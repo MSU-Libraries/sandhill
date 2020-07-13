@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from urllib.parse import urlencode
 from sandhill.utils.api import api_get
 from sandhill import app
@@ -29,11 +29,16 @@ def search(data_dict):
         args:
         data_dict (dict) :  dictionary of url args
     """
-    # to_dict() should convert immutable dict to a regular dict with a list of values
-    search_params = request.args.to_dict()
+    if 'config' not in data_dict:
+        app.logger.error("Missing 'config' setting for processor '{0}' with name '{1}'".format(data_dict['processor'], data_dict['name']))
+        abort(500)
+    search_config = load_search_config(data_dict['config'])
+    if 'solr_params' not in search_config:
+        app.logger.error("Missing 'solr_params' inside search config file '{0}'".format(data_dict['config']))
+        abort(500)
 
-    search_config = load_search_config()
-    solr_config = search_config['solr_params']  # TODO handle if solr_params is missing
+    search_params = request.args.to_dict(flat=False)
+    solr_config = search_config['solr_params']
     solr_params = {}
     for field_name, field_conf in solr_config.items():
         solr_params[field_name] = []
@@ -53,13 +58,10 @@ def search(data_dict):
         # restrictions
         #TODO something like: solr_params[field_name] = apply_restrictions(solr_params[field_name], field_conf['restrictions'])
         if 'max' in field_conf:
-            solr_params[field_name] = [ val if val.isdigit() and int(val) < int(field_conf['max']) else field_conf['max'] for val in solr_params[field_name] ]
+            solr_params[field_name] = [ val if str(val).isdigit() and int(val) < int(field_conf['max']) else field_conf['max'] for val in solr_params[field_name] ]
         if 'min' in field_conf:
-            solr_params[field_name] = [ val if val.isdigit() and int(val) > int(field_conf['min']) else field_conf['min'] for val in solr_params[field_name] ]
+            solr_params[field_name] = [ val if str(val).isdigit() and int(val) > int(field_conf['min']) else field_conf['min'] for val in solr_params[field_name] ]
 
     # make the solr call
     data_dict['params'] = solr_params
-    search_results = query(data_dict)
-
-    # return results 
-    return jsonify(search_results)
+    return jsonify(query(data_dict))

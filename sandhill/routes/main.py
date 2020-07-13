@@ -21,8 +21,14 @@ def main(*args, **kwargs):
 
     ## process and load data routes
     data = {}
+    route_data = []
     if 'data' in route_config:
-        route_data = [d for d in route_config['data'] if 'name' in d and 'processor' in d]
+        for idx, entry in enumerate(route_config['data']):
+            if 'name' in entry and 'processor' in entry:
+                route_data.append(entry)
+            else:
+                app.logger.warning("Unable to parse route data entry number {0} for: {1}"
+                                   .format(idx,','.join(route_config['route'])))
         data = load_route_data(route_data)
 
     ## if a template is provided, render the tempate with the data
