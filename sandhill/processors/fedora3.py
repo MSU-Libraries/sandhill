@@ -1,3 +1,4 @@
+import os
 from urllib.parse import urlencode, urljoin
 from flask import abort
 from sandhill.utils.api import api_get

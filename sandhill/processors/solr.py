@@ -1,6 +1,6 @@
+import os
 from flask import request, jsonify, abort
 from urllib.parse import urlencode, urljoin
-from urllib import urljoin
 from sandhill.utils.api import api_get
 from sandhill import app
 from sandhill.utils.config_loader import load_search_config
