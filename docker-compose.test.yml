@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+    sandhill:
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:test
+
+    nginx:
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:test_nginx

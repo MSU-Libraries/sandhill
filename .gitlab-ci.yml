@@ -5,6 +5,10 @@ services:
 stages:
   - build
   - test
+  - release
+  - deploy_stage
+  - deploy_prod_primary
+  - deploy_prod_secondary
 
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
@@ -12,8 +16,8 @@ variables:
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY_IMAGE:latest_nginx
   PATH_TEST: "/home/deploy/sandhill/"
-  PATH_STAGE: "/var/www/sandhill/"
-  PATH_PROD: "/var/www/sandhill/"
+  PATH_TEST: "/home/deploy/sandhill/"
+  PATH_PROD: "/home/deploy/sandhill/"
   CONNECT_TEST: "deploy@fedcomd4.lib.msu.edu"
   CONNECT_STAGE: "deploy@fedcoms4.lib.msu.edu"
   CONNECT_PROD1: "deploy@fedcom4a.lib.msu.edu"
@@ -26,33 +30,93 @@ variables:
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-build:
+build_job:
   stage: build
   tags:
     - msul
   only:
-    - docker
+    - development
   script:
-    - pwd
-    - git log -2
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
     - docker build --pull -t $CONTAINER_TEST_IMAGE_NGINX ./nginx
     - docker push $CONTAINER_TEST_IMAGE_NGINX
 
-test:
+test_job:
   stage: test
   tags:
     - msul
   only:
-    - docker
+    - development
   script: 
-    - ssh $CONNECT_TEST git -C $PATH_TEST fetch origin docker
-    - ssh $CONNECT_TEST git -C $PATH_TEST checkout docker
-    - ssh $CONNECT_TEST git -C $PATH_TEST pull origin docker
-    - ssh $CONNECT_TEST "cd $PATH_TEST && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - ssh $CONNECT_TEST "cd $PATH_TEST && docker-compose pull"
-    - ssh $CONNECT_TEST "cd $PATH_TEST && docker-compose up -d"
+    - ssh $CONNECT_TEST git -C $PATH_TEST fetch origin development
+    - ssh $CONNECT_TEST git -C $PATH_TEST checkout development
+    - ssh $CONNECT_TEST git -C $PATH_TEST pull origin development
+    - ssh $CONNECT_TEST "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh $CONNECT_TEST "docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull"
+    - ssh $CONNECT_TEST "docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml up -d"
     - sleep 4
     - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_TEST ) -eq 200 ]]"
 
+
+release_job:
+  stage: release
+  tags:
+    - msul
+  only:
+    - stage
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker pull $CONTAINER_TEST_IMAGE_NGINX
+    - docker tag $CONTAINER_TEST_IMAGE_NGINX $CONTAINER_RELEASE_IMAGE_NGINX
+    - docker push $CONTAINER_RELEASE_IMAGE_NGINX
+
+deploy_stage_job:
+  stage: deploy_stage
+  tags:
+    - msul
+  only:
+    - stage
+  script:
+    - ssh $CONNECT_STAGE git -C $PATH_STAGE fetch origin stage
+    - ssh $CONNECT_STAGE git -C $PATH_STAGE checkout stage
+    - ssh $CONNECT_STAGE git -C $PATH_STAGE pull origin stage
+    - ssh $CONNECT_STAGE "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh $CONNECT_STAGE "docker-compose -f $PATH_STAGE/docker-compose.yml pull"
+    - ssh $CONNECT_STAGE "docker-compose -f $PATH_STAGE/docker-compose.yml up -d"
+    - sleep 4
+    - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_STAGE ) -eq 200 ]]"
+
+deploy_prod_primary_job:
+  stage: deploy_prod_primary
+  tags:
+    - msul
+  only:
+    - master
+  script:
+    - ssh $CONNECT_PROD1 git -C $PATH_PROD fetch stage master
+    - ssh $CONNECT_PROD1 git -C $PATH_PROD origin master
+    - ssh $CONNECT_PROD1 git -C $PATH_PROD pull origin master
+    - ssh $CONNECT_PROD1 "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh $CONNECT_PROD1 "docker-compose -f $PATH_PROD/docker-compose.yml pull"
+    - ssh $CONNECT_PROD1 "docker-compose -f $PATH_PROD/docker-compose.yml up -d"
+    - sleep 4
+    - ssh $CONNECT_PROD1 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD ) -eq 200 ]]"
+
+deploy_prod_secondary_job:
+  stage: deploy_prod_secondary
+  tags:
+    - msul
+  only:
+    - master
+  script:
+    - ssh $CONNECT_PROD2 git -C $PATH_PROD fetch origin master
+    - ssh $CONNECT_PROD2 git -C $PATH_PROD checkout master
+    - ssh $CONNECT_PROD2 git -C $PATH_PROD pull origin master
+    - ssh $CONNECT_PROD2 "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh $CONNECT_PROD2 "docker-compose -f $PATH_PROD/docker-compose.yml pull"
+    - ssh $CONNECT_PROD2 "docker-compose -f $PATH_PROD/docker-compose.yml up -d"
+    - sleep 4
+    - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD ) -eq 200 ]]"

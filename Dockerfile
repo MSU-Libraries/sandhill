@@ -4,7 +4,7 @@ FROM python:3.8.2
 WORKDIR /sandhill
 
 # Copy the current directory contents into the container
-ADD . /sandhill
+COPY . /sandhill
 
 # Install the dependencies
 RUN pip install -r requirements.txt
