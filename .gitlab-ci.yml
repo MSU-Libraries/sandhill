@@ -98,7 +98,7 @@ deploy_prod_primary_job:
     - master
   script:
     - ssh $CONNECT_PROD1 git -C $PATH_PROD fetch origin master
-    - ssh $CONNECT_PROD1 git -C $PATH_PROD origin master
+    - ssh $CONNECT_PROD1 git -C $PATH_PROD checkout master
     - ssh $CONNECT_PROD1 git -C $PATH_PROD pull origin master
     - ssh $CONNECT_PROD1 "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
     - ssh $CONNECT_PROD1 "docker-compose -f $PATH_PROD/docker-compose.yml pull"
