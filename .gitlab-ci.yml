@@ -4,17 +4,16 @@ services:
 
 stages:
   - build
-  - test
+  - deploy_test
   - release
   - deploy_stage
-  - deploy_prod_primary
-  - deploy_prod_secondary
+  - deploy_prod
 
 variables:
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
-  CONTAINER_TEST_IMAGE_NGINX: $CI_REGISTRY_IMAGE:test_nginx
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY_IMAGE:latest_nginx
+  CONTAINER_TEST_IMAGE: sandhill:test
+  CONTAINER_TEST_IMAGE_NGINX: nginx:test
+  CONTAINER_RELEASE_IMAGE: sandhill:latest
+  CONTAINER_RELEASE_IMAGE_NGINX: nginx:latest
   PATH_TEST: "/home/deploy/sandhill/"
   PATH_STAGE: "/home/deploy/sandhill/"
   PATH_PROD: "/home/deploy/sandhill/"
@@ -26,7 +25,6 @@ variables:
   SITE_STAGE: "http://sandhill.stage.lib.msu.edu/"
   SITE_PROD: "http://sandhill.lib.msu.edu/"
   SITE_PROD2: "http://sandhillm.lib.msu.edu/"
-
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -43,8 +41,8 @@ build_job:
     - docker build --pull -t $CONTAINER_TEST_IMAGE_NGINX ./nginx
     - docker push $CONTAINER_TEST_IMAGE_NGINX
 
-test_job:
-  stage: test
+build_test_job:
+  stage: deploy_test
   tags:
     - msul
   only:
@@ -91,7 +89,7 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_STAGE ) -eq 200 ]]"
 
 deploy_prod_primary_job:
-  stage: deploy_prod_primary
+  stage: deploy_prod
   tags:
     - msul
   only:
@@ -107,7 +105,7 @@ deploy_prod_primary_job:
     - ssh $CONNECT_PROD1 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD ) -eq 200 ]]"
 
 deploy_prod_secondary_job:
-  stage: deploy_prod_secondary
+  stage: deploy_prod
   tags:
     - msul
   only:
