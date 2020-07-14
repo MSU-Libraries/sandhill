@@ -10,10 +10,10 @@ stages:
   - deploy_prod
 
 variables:
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY/msu-libraries/repo-team/sandhill:test
-  CONTAINER_TEST_IMAGE_NGINX: $CI_REGISTRY/msu-libraries/repo-team/sandhill/nginx:test
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY/msu-libraries/repo-team/sandhill:latest
-  CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY/msu-libraries/repo-team/sandhill/nginx:latest
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
+  CONTAINER_TEST_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:test
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:latest
   PATH_TEST: "/home/deploy/sandhill/"
   PATH_STAGE: "/home/deploy/sandhill/"
   PATH_PROD: "/home/deploy/sandhill/"
