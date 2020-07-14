@@ -87,6 +87,7 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE "docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml pull"
     - ssh $CONNECT_STAGE "docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml up -d"
     - sleep 4
+    - echo "checking $SITE_STAGE"
     - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_STAGE ) -eq 200 ]]"
 
 deploy_prod_primary_job:
