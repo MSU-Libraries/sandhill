@@ -101,7 +101,7 @@ Note: If you need to manually take it down, run `docker-compose down`. TODO -- t
 
 To view logs of a given container just run:
 ```
-docker contrainer ls
+docker container ls
 docker logs -f <CONTAINER NAME>
 ```
 
@@ -173,8 +173,8 @@ available for use in the `data` section via the `view_arg` variable.
 All that is needed to add a new content page or type is to create a new 
 `route_configs` file and it's corresponding template.
 
-For file streaming, instead of providing a `template` variable in the config 
-provide a `steam` variable, which will reference a `name` field within the 
+For file streaming, instead of providing a `template` variable in the config, 
+provide a `stream` variable, which will reference a `name` field within the 
 data section below.
 
 Docker
