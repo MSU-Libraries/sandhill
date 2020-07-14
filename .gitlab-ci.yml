@@ -25,6 +25,7 @@ variables:
   SITE_TEST: "http://sandhill.test.lib.msu.edu/"
   SITE_STAGE: "http://sandhill.stage.lib.msu.edu/"
   SITE_PROD: "http://sandhill.lib.msu.edu/"
+  SITE_PROD2: "http://sandhillm.lib.msu.edu/"
 
 
 before_script:
@@ -87,7 +88,6 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE "docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml pull"
     - ssh $CONNECT_STAGE "docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml up -d"
     - sleep 4
-    - echo "checking $SITE_STAGE"
     - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_STAGE ) -eq 200 ]]"
 
 deploy_prod_primary_job:
@@ -120,4 +120,4 @@ deploy_prod_secondary_job:
     - ssh $CONNECT_PROD2 "docker-compose -f $PATH_PROD/docker-compose.yml pull"
     - ssh $CONNECT_PROD2 "docker-compose -f $PATH_PROD/docker-compose.yml up -d"
     - sleep 4
-    - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD ) -eq 200 ]]"
+    - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD2 ) -eq 200 ]]"

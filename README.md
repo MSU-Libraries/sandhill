@@ -1,15 +1,18 @@
 Sandhill
 ---------------
 
-* [General Setup](#general-setup)
 * [Local Setup](#local-setup)
 * [Docker Setup](#docker-setup)
 * [Routes](#routes)
 * [Docker](#docker)
 
-General Setup
-===============
 
+Local Setup
+===============
+Use this setup if you want to set up a development environment that allows 
+code changes to be made and immediately updated on the page. 
+
+### Config setup  
 Make a copy of the default config and override any values you like. If not specified 
 in a separate config file, the defaults will be used. This step is not required if you 
 want to use the defaults for everything.
@@ -18,19 +21,9 @@ want to use the defaults for everything.
 cp instance/sandhill.default_settings.cfg instance/sandhill.cfg
 ```
 
-Install dependencies required for any setup.  
-```
-apt install python3-pip apache2
-```
-
-Local Setup
-===============
-Use this setup if you want to set up a development environment that allows 
-code changes to be made and immediately updated on the page. 
-
 ### Install the required packages  
 ```
-apt install virtualenv libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3
+apt install virtualenv apache2 libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3 python3-pip
 ```
 
 In the cloned directory, create the virtual environment.
@@ -62,7 +55,8 @@ chown -R syslog:adm /var/log/sandhill
 ```
 
 ### Create the service
-Copy the systemd unit file to set it up as a service. 
+Copy the systemd unit file to set it up as a service. Be sure to make any local changes to 
+it for environment specific parameters
 ```
 cp etc/systemd/system/sandhill.service /etc/systemd/system/
 systemctl daemon-reload
@@ -86,10 +80,10 @@ frequent changes to the code.
 ### Install Docker
 ```
 apt update
-apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common python3-pip apache2
 ```
 
-When adding the key and source to apt:  
+Then add the key and source to apt:  
 ```
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -98,23 +92,44 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 Finally, update apt sources and install Docker and supporting packages:  
 ```
 apt-get update
-apt-get install docker-ce docker-ce-cli containerd.io docker-compose
+apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
-## Install Docker Compose
+### Install Docker Compose
 ```
 sudo pip3 install docker-compose
 ```
 
-### Build the Image
-Build a new image based on the current code. TODO -- this will change once we have CI/CD, since we will 
-not be building the image on each server.
+### Setup Apache
+Copy the apache site config and make required local changes to it.  
+```
+cp apache/sandhill_docker.conf /etc/apache2/sites-available/sandhill.conf
+apache2ctl configtest
+a2ensite sandhill.conf
+systemctl reload apache2
+```
+
+### Add deploy user to docker group
+In order for the deploy user to be able to update the docker image, make sure to add the deploy user 
+to the `docker` group.
+```
+adduser deploy docker
+```
+
+### Custom Docker build
+If you want to create an image to run and test outside of the CI/CD workflow, 
+you can run these steps.  
+
+#### Build the Image
+If setting this server up through the CI/CD, skip this step.  
+Build a new image based on the current code.  
 ```
 docker-compose build
 ```
 
-### Run the Image
-Run the image in a detached mode. TODO -- we will have this be a service we set up on the server. 
+#### Run the Image
+If setting this server up through the CI/CD, skip this step.  
+Run the image in a detached mode.
 ```
 docker-compose up -d
 ```
@@ -126,22 +141,6 @@ To view logs of a given container just run:
 docker contrainer ls
 docker logs -f <CONTAINER NAME>
 ```
-
-### Setup Apache
-Copy the apache site config and make required local changes to it.  
-```
-cp apache2/sandhill_docker.conf /etc/apache2/sites-available/sandhill.conf
-a2ensite sandhill.conf
-systemctl restart apache2
-```
-
-### CI/CD Setup
-In order for the deploy user to be able to update the docker image, make sure to add the deploy user 
-to the docker group.
-```
-adduser deploy docker
-```
-
 
 Routes
 ===============
