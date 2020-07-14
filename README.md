@@ -1,21 +1,21 @@
 Sandhill
 ---------------
 
-* [Local Setup](#local-setup)
-* [Docker Setup](#docker-setup)
+* [Developer Environment Setup](#developer-environment-setup)
+* [Deployable Docker Setup](#deployable-docker-setup)
 * [Routes](#routes)
 * [Docker](#docker)
 
 
-Local Setup
+Developer Environment Setup
 ===============
 Use this setup if you want to set up a development environment that allows 
 code changes to be made and immediately updated on the page. 
 
 ### Config setup  
-Make a copy of the default config and override any values you like. If not specified 
-in a separate config file, the defaults will be used. This step is not required if you 
-want to use the defaults for everything.
+Within the cloned directory, make a copy of the default config and override any values you like. 
+If not specified in a separate config file, the defaults will be used. This step is not required if you 
+want to use the defaults for everything. Run this command as the developer user's.  
 
 ```
 cp instance/sandhill.default_settings.cfg instance/sandhill.cfg
@@ -23,22 +23,22 @@ cp instance/sandhill.default_settings.cfg instance/sandhill.cfg
 
 ### Install the required packages  
 ```
-apt install virtualenv apache2 libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3 python3-pip
+sudo apt install virtualenv apache2 libapache2-mod-wsgi-py3 libapache2-mod-wsgi-py3 python3-pip
 ```
 
-In the cloned directory, create the virtual environment.
+In the cloned directory, create the virtual environment. Run this command as the developer's user. 
 ```
 virtualenv -p python3 env
 ```
 
-Install the required Pip packages  
+Install the required Pip packages as the developer's user.  
 ```
 env/bin/pip install -r requirements.txt
 ```
 
 ## Create a log directory
 ```
-mkdir -p /var/log/sandhill
+sudo mkdir -p /var/log/sandhill
 ```
 
 ## Setup logrotate on logs
@@ -50,75 +50,38 @@ a file other than syslog. This is only because `StandardOutput` and `StandardErr
 do not support file redirection in Ubuntu 16.04.
 
 ```
-cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
-chown -R syslog:adm /var/log/sandhill
+sudo cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
+sudo chown -R syslog:adm /var/log/sandhill
 ```
 
 ### Create the service
 Copy the systemd unit file to set it up as a service. Be sure to make any local changes to 
 it for environment specific parameters
 ```
-cp etc/systemd/system/sandhill.service /etc/systemd/system/
-systemctl daemon-reload
-systemctl enable sandhill
-systemctl start sandhill
+sudo cp etc/systemd/system/sandhill.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable sandhill
+sudo systemctl start sandhill
 ```
 
 ### Setup Apache
 Copy the apache site config and make required local changes to it.  
 ```
-cp apache2/sandhill_local.conf /etc/apache2/sites-available/sandhill.conf
-a2ensite sandhill.conf
-systemctl restart apache2
+sudo cp apache2/sandhill_local.conf /etc/apache2/sites-available/sandhill.conf
+sudo a2ensite sandhill.conf
+sudo systemctl restart apache2
 ```
 
-Docker Setup
-===============
-Use this setup if you just want to set up a server to host the site without needing to make 
-frequent changes to the code. 
-
-### Install Docker
-```
-apt update
-apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common python3-pip apache2
-```
-
-Then add the key and source to apt:  
-```
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-```
-
-Finally, update apt sources and install Docker and supporting packages:  
-```
-apt-get update
-apt-get install docker-ce docker-ce-cli containerd.io
-```
-
-### Install Docker Compose
-```
-sudo pip3 install docker-compose
-```
-
-### Setup Apache
-Copy the apache site config and make required local changes to it.  
-```
-cp apache/sandhill_docker.conf /etc/apache2/sites-available/sandhill.conf
-apache2ctl configtest
-a2ensite sandhill.conf
-systemctl reload apache2
-```
-
-### Add deploy user to docker group
-In order for the deploy user to be able to update the docker image, make sure to add the deploy user 
+### Add users to docker group
+In order for the users to be able to update the docker image, make sure to add their user 
 to the `docker` group.
 ```
-adduser deploy docker
+sudo adduser [developer_user] docker
 ```
 
 ### Custom Docker build
 If you want to create an image to run and test outside of the CI/CD workflow, 
-you can run these steps.  
+you can run these steps as the develop
 
 #### Build the Image
 If setting this server up through the CI/CD, skip this step.  
@@ -140,6 +103,51 @@ To view logs of a given container just run:
 ```
 docker contrainer ls
 docker logs -f <CONTAINER NAME>
+```
+
+
+Deployable Docker Setup
+===============
+Use this setup if you just want to set up a server to host the site without needing to make 
+frequent changes to the code. 
+
+### Install Docker
+```
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common python3-pip apache2
+```
+
+Then add the key and source to apt:  
+```
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+```
+
+Finally, update apt sources and install Docker and supporting packages:  
+```
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+### Install Docker Compose
+```
+sudo pip3 install docker-compose
+```
+
+### Setup Apache
+Copy the apache site config and make required local changes to it.  
+```
+sudo cp apache/sandhill_docker.conf /etc/apache2/sites-available/sandhill.conf
+sudo apache2ctl configtest
+sudo a2ensite sandhill.conf
+sudo systemctl reload apache2
+```
+
+### Add users to docker group
+In order for the deploy user to be able to update the docker image, make sure to add the deploy user 
+to the `docker` group.
+```
+sudo adduser deploy docker
 ```
 
 Routes
