@@ -58,6 +58,7 @@ build_test_job:
     - ssh $CONNECT_TEST docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull
     - ssh $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
     - sleep 4
+    - ssh $CONNECT_TEST sudo /bin/systemctl status sandhill-stack.test
     - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_TEST ) -eq 200 ]]"
 
 
@@ -92,6 +93,7 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml pull
     - ssh $CONNECT_STAGE sudo systemctl restart sandhill-stack.stage
     - sleep 4
+    - ssh $CONNECT_STAGE sudo systemctl status sandhill-stack.stage
     - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_STAGE ) -eq 200 ]]"
 
 deploy_prod_primary_job:
@@ -111,6 +113,7 @@ deploy_prod_primary_job:
     - ssh $CONNECT_PROD1 docker-compose -f $PATH_PROD/docker-compose.yml pull
     - ssh $CONNECT_PROD1 sudo systemctl restart sandhill-stack
     - sleep 4
+    - ssh $CONNECT_PROD1 sudo systemctl status sandhill-stack
     - ssh $CONNECT_PROD1 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD ) -eq 200 ]]"
 
 deploy_prod_secondary_job:
@@ -130,4 +133,5 @@ deploy_prod_secondary_job:
     - ssh $CONNECT_PROD2 docker-compose -f $PATH_PROD/docker-compose.yml pull
     - ssh $CONNECT_PROD2 sudo systemctl restart sandhill-stack
     - sleep 4
+    - ssh $CONNECT_PROD2 sudo systemctl status sandhill-stack
     - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD2 ) -eq 200 ]]"
