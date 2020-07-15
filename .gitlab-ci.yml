@@ -52,11 +52,11 @@ build_test_job:
     - ssh $CONNECT_TEST git -C $PATH_TEST checkout development
     - ssh $CONNECT_TEST git -C $PATH_TEST pull origin development
     - ssh $CONNECT_TEST "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - ssh -t $CONNECT_TEST "sudo cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/"
-    - ssh -t $CONNECT_TEST "sudo systemctl daemon-reload"
-    - ssh -t $CONNECT_TEST "sudo systemctl enable sandhill-stack.test"
+    -  ssh -T $CONNECT_TEST "sudo cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/"
+    -  ssh -T $CONNECT_TEST "sudo systemctl daemon-reload"
+    -  ssh -T $CONNECT_TEST "sudo systemctl enable sandhill-stack.test"
     - ssh $CONNECT_TEST "docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull"
-    - ssh -t $CONNECT_TEST "sudo systemctl restart sandhill-stack.test"
+    -  ssh -T $CONNECT_TEST "sudo systemctl restart sandhill-stack.test"
     - sleep 4
     - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_TEST ) -eq 200 ]]"
 
@@ -86,11 +86,11 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE git -C $PATH_STAGE checkout stage
     - ssh $CONNECT_STAGE git -C $PATH_STAGE pull origin stage
     - ssh $CONNECT_STAGE "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - ssh -t $CONNECT_STAGE "sudo cp $PATH_STAGE/etc/systemd/system/sandhill-stack.stage.service /etc/systemd/system/"
-    - ssh -t $CONNECT_STAGE "sudo systemctl daemon-reload"
-    - ssh -t $CONNECT_STAGE "sudo systemctl enable sandhill-stack.stage"
+    -  ssh -T $CONNECT_STAGE "sudo cp $PATH_STAGE/etc/systemd/system/sandhill-stack.stage.service /etc/systemd/system/"
+    -  ssh -T $CONNECT_STAGE "sudo systemctl daemon-reload"
+    -  ssh -T $CONNECT_STAGE "sudo systemctl enable sandhill-stack.stage"
     - ssh $CONNECT_STAGE "docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml pull"
-    - ssh -t $CONNECT_STAGE "sudo systemctl restart sandhill-stack.stage"
+    -  ssh -T $CONNECT_STAGE "sudo systemctl restart sandhill-stack.stage"
     - sleep 4
     - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_STAGE ) -eq 200 ]]"
 
@@ -105,11 +105,11 @@ deploy_prod_primary_job:
     - ssh $CONNECT_PROD1 git -C $PATH_PROD checkout master
     - ssh $CONNECT_PROD1 git -C $PATH_PROD pull origin master
     - ssh $CONNECT_PROD1 "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - ssh -t $CONNECT_PROD1 "sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/"
-    - ssh -t $CONNECT_PROD1 "sudo systemctl daemon-reload"
-    - ssh -t $CONNECT_PROD1 "sudo systemctl enable sandhill-stack"
+    -  ssh -T $CONNECT_PROD1 "sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/"
+    -  ssh -T $CONNECT_PROD1 "sudo systemctl daemon-reload"
+    -  ssh -T $CONNECT_PROD1 "sudo systemctl enable sandhill-stack"
     - ssh $CONNECT_PROD1 "docker-compose -f $PATH_PROD/docker-compose.yml pull"
-    - ssh -t $CONNECT_PROD1 "sudo systemctl restart sandhill-stack"
+    -  ssh -T $CONNECT_PROD1 "sudo systemctl restart sandhill-stack"
     - sleep 4
     - ssh $CONNECT_PROD1 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD ) -eq 200 ]]"
 
@@ -124,10 +124,10 @@ deploy_prod_secondary_job:
     - ssh $CONNECT_PROD2 git -C $PATH_PROD checkout master
     - ssh $CONNECT_PROD2 git -C $PATH_PROD pull origin master
     - ssh $CONNECT_PROD2 "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
-    - ssh -t $CONNECT_PROD2 "sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/"
-    - ssh -t $CONNECT_PROD2 "sudo systemctl daemon-reload"
-    - ssh -t $CONNECT_PROD2 "sudo systemctl enable sandhill-stack"
+    -  ssh -T $CONNECT_PROD2 "sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/"
+    -  ssh -T $CONNECT_PROD2 "sudo systemctl daemon-reload"
+    -  ssh -T $CONNECT_PROD2 "sudo systemctl enable sandhill-stack"
     - ssh $CONNECT_PROD2 "docker-compose -f $PATH_PROD/docker-compose.yml pull"
-    - ssh -t $CONNECT_PROD2 "sudo systemctl restart sandhill-stack"
+    -  ssh -T $CONNECT_PROD2 "sudo systemctl restart sandhill-stack"
     - sleep 4
     - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD2 ) -eq 200 ]]"
