@@ -161,6 +161,12 @@ sudo systemctl enable sandhill-stack
 sudo systemctl start sandhill-stack
 ```
 
+### Allow the CI/CD deploy user to execute the commands on the server. Run `sudo visudo` to add:  
+```
+deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack*, /bin/cp /home/deploy/sandhill/etc/systemd/system/sandhill-stack.*service /etc/systemd/system/, /bin/systemctl daemon-reload, /bin/systemctl enable sandhill-stack*
+```
+TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
+
 Routes
 ===============
 
