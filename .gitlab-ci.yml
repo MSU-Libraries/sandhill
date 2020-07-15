@@ -14,9 +14,9 @@ variables:
   CONTAINER_TEST_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:test
   CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
   CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:latest
-  PATH_TEST: "/home/deploy/sandhill/"
-  PATH_STAGE: "/home/deploy/sandhill/"
-  PATH_PROD: "/home/deploy/sandhill/"
+  PATH_TEST: "/home/deploy/sandhill"
+  PATH_STAGE: "/home/deploy/sandhill"
+  PATH_PROD: "/home/deploy/sandhill"
   CONNECT_TEST: "deploy@fedcomd4.lib.msu.edu"
   CONNECT_STAGE: "deploy@fedcoms4.lib.msu.edu"
   CONNECT_PROD1: "deploy@fedcom4a.lib.msu.edu"
@@ -52,11 +52,11 @@ build_test_job:
     - ssh $CONNECT_TEST git -C $PATH_TEST checkout development
     - ssh $CONNECT_TEST git -C $PATH_TEST pull origin development
     - ssh $CONNECT_TEST docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - ssh -tt $CONNECT_TEST sudo /bin/cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
-    - ssh -tt $CONNECT_TEST sudo /bin/systemctl daemon-reload
-    - ssh -tt $CONNECT_TEST sudo /bin/systemctl enable sandhill-stack.test
+    - ssh $CONNECT_TEST sudo /bin/cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
+    - ssh $CONNECT_TEST sudo /bin/systemctl daemon-reload
+    - ssh $CONNECT_TEST sudo /bin/systemctl enable sandhill-stack.test
     - ssh $CONNECT_TEST docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull
-    - ssh -tt $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
+    - ssh $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
     - sleep 4
     - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_TEST ) -eq 200 ]]"
 
