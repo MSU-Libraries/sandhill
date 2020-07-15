@@ -101,7 +101,7 @@ Note: If you need to manually take it down, run `docker-compose down`. TODO -- t
 
 To view logs of a given container just run:
 ```
-docker contrainer ls
+docker container ls
 docker logs -f <CONTAINER NAME>
 ```
 
@@ -150,6 +150,12 @@ to the `docker` group.
 sudo adduser deploy docker
 ```
 
+### Allow the CI/CD deploy user to execute the commands on the server. Run `sudo visudo` to add:  
+```
+deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack.test, /bin/cp /home/deploy/sandhill/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/, /bin/systemctl daemon-reload, /bin/systemctl enable sandhill-stack.test, /bin/systemctl status sandhill-stack.test
+```
+TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
+
 Routes
 ===============
 
@@ -173,8 +179,8 @@ available for use in the `data` section via the `view_arg` variable.
 All that is needed to add a new content page or type is to create a new 
 `route_configs` file and it's corresponding template.
 
-For file streaming, instead of providing a `template` variable in the config 
-provide a `steam` variable, which will reference a `name` field within the 
+For file streaming, instead of providing a `template` variable in the config, 
+provide a `stream` variable, which will reference a `name` field within the 
 data section below.
 
 Docker

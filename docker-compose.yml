@@ -12,7 +12,7 @@ services:
         - FEDORA_URL=http://localhost:8080/fedora
 
     nginx:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest_nginx
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:latest
       container_name: nginx
       restart: always
       ports:

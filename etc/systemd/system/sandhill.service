@@ -6,7 +6,7 @@ After=network.target
 User=www-data
 Group=www-data
 WorkingDirectory=/var/www/sandhill
-Environment="Path=/var/www/sandhill/env/bin"
+Environment="PATH=/var/www/sandhill/env/bin"
 Environment="SOLR_URL=https://solr.devel.lib.msu.edu/solr/fedcom"
 Environment="FEDORA_URL=http://localhost:8080/fedora"
 ExecStart=/var/www/sandhill/env/bin/uwsgi --socket 127.0.0.1:8081 --protocol=http --py-autoreload 1 -w wsgi:application
