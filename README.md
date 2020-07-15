@@ -150,6 +150,17 @@ to the `docker` group.
 sudo adduser deploy docker
 ```
 
+### Create the service
+Copy the systemd unit file to set it up as a service. Be sure to make any local changes to 
+it for environment specific parameters. Note that there are different files for each 
+environment currently.
+```
+sudo cp etc/systemd/system/sandhill-stack.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable sandhill-stack
+sudo systemctl start sandhill-stack
+```
+
 Routes
 ===============
 
