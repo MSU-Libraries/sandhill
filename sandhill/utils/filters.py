@@ -25,18 +25,16 @@ def is_list(value):
     return isinstance(value, list)
 
 @app.template_filter()
-def generate_fedcom_url(value, obj_type='OBJ', action="VIEW"):
+def generate_fedcom_url(value, obj_type='OBJ', action="view"):
     """ Generates view and download url's
         args:
-            pid (str): pid of the object
+            value (str): pid of the object
             obj_type (str): type of datastream object
             action (str): view or download the datastream
     """
-    base_url = "https://d.lib.msu.edu"
     pid = value.replace(":","/")
-    obj_url = base_url
 
-    return '{0}/{1}/datastream/{2}/{3}'.format(base_url, pid, obj_type, action)
+    return '/{0}/{1}/{2}'.format(pid, obj_type, action)
 
 @app.template_filter()
 def solr_first_item(value):

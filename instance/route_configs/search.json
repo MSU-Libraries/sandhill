@@ -1,8 +1,9 @@
 {
     "route": [
-	    "/search"
+	    "/search",
+        "/search.<string:format>"
     ],
-    "template": "search.html.j2",
+    "template": "search_results.html.j2",
     "response": "search",
 	"data": [
 	    {
@@ -11,5 +12,6 @@
             "config": "main.json"
 	    }
 	]
+
 }
 

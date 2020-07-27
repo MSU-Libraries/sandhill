@@ -1,6 +1,6 @@
 import os
 from flask import request, jsonify, abort
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode
 from sandhill.utils.api import api_get
 from sandhill import app
 from sandhill.utils.config_loader import load_search_config
@@ -37,6 +37,21 @@ def search(data_dict):
     if 'solr_params' not in search_config:
         app.logger.error("Missing 'solr_params' inside search config file '{0}'".format(data_dict['config']))
         abort(500)
+    allowed_formats = ['html', 'json']
+    result_format = 'html'
+
+    # check if the accept mimetype is json
+
+    if 'text/json' in list(request.accept_mimetypes):
+        result_format = 'json'
+
+    if 'format' in  data_dict['view_args']:
+        if data_dict['view_args']['format'] not in allowed_formats:
+            abort(501)
+        else:
+           result_format =  data_dict['view_args']['format']
+
+
 
     search_params = request.args.to_dict(flat=False)
     solr_config = search_config['solr_params']
@@ -65,4 +80,6 @@ def search(data_dict):
 
     # make the solr call
     data_dict['params'] = solr_params
-    return jsonify(query(data_dict))
+    if result_format == 'json':
+        return jsonify(query(data_dict))
+    return query(data_dict)

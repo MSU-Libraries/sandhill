@@ -1,0 +1,20 @@
+{% extends 'base.html.j2' %}
+
+{% block title %}
+    Search Results
+{% endblock %}
+
+{% block content %}
+
+{#% include 'basic_search.html.j2' %#}
+
+{% for item in search['response']['docs'] %}
+    <div class = "search_resuts row">
+        {% include 'search_preview.html.j2' %}
+        {% include 'search_metadata.html.j2' %}
+    </div>
+{% endfor %} 
+ 
+
+
+{% endblock %}

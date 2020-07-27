@@ -5,7 +5,7 @@
 	    {
 		"processor": "iiif.load_image",
 		"name": "iiif",
-		"identifier": "https%3A%2F%2Fd.lib.msu.edu%2Fislandora%2Fobject%2F{{ view_arg.pid }}%2Fdatastream%2FJPG%2Fview"
+		"identifier": "https%3A%2F%2Fd.lib.msu.edu%2Fislandora%2Fobject%2F{{ view_args.pid }}%2Fdatastream%2FJPG%2Fview"
 	    }
 	]
 }

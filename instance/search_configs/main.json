@@ -35,7 +35,7 @@
             "base": "json"
         },
         "fl": {
-            "default": "fgs_label_s,name_primary,date_key,collection"
+            "default": "PID, fgs_label_s,name_primary,date_key,collection"
         },
         "sort": {
             "default": "score DESC,fgs_label_s ASC,date_key ASC"
