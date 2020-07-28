@@ -2,11 +2,11 @@ import os
 import collections
 from flask import Flask, request, render_template, url_for, send_from_directory, Response, abort, wrappers
 from jinja2.exceptions import TemplateNotFound
-from .. import app
-from ..utils.decorators import add_routes
-from ..utils.utilities import ifnone
-from ..utils.config_loader import load_route_config
-from ..processors.base import load_route_data
+from sandhill import app
+from sandhill.utils.decorators import add_routes
+from sandhill.utils.utilities import ifnone
+from sandhill.utils.config_loader import load_route_config
+from sandhill.processors.base import load_route_data
 
 
 @add_routes()

@@ -37,11 +37,10 @@ def search(data_dict):
     if 'solr_params' not in search_config:
         app.logger.error("Missing 'solr_params' inside search config file '{0}'".format(data_dict['config']))
         abort(500)
+
     allowed_formats = ['html', 'json']
     result_format = 'html'
-
     # check if the accept mimetype is json
-
     if 'text/json' in list(request.accept_mimetypes):
         result_format = 'json'
 
@@ -50,8 +49,6 @@ def search(data_dict):
             abort(501)
         else:
            result_format =  data_dict['view_args']['format']
-
-
 
     search_params = request.args.to_dict(flat=False)
     solr_config = search_config['solr_params']
@@ -80,6 +77,7 @@ def search(data_dict):
 
     # make the solr call
     data_dict['params'] = solr_params
+    solr_results = query(data_dict)
     if result_format == 'json':
-        return jsonify(query(data_dict))
-    return query(data_dict)
+        solr_results = jsonify(solr_results)
+    return solr_results

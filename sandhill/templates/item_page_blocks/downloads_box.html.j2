@@ -24,8 +24,8 @@
                             {% if item[downloads_conf['mime_type_field']] %}
                             <tr>
                                 <td scope="row">{{ downloads_conf['name'] }}</td>
-                                <td scope="row">{{ item[downloads_conf['file_size_field']] | solr_first_item | size_format}}</td>
-                                <td scope="row">{{ item[downloads_conf['mime_type_field']] | solr_first_item  }}</td>
+                                <td scope="row">{{ item[downloads_conf['file_size_field']] | head | size_format }}</td>
+                                <td scope="row">{{ item[downloads_conf['mime_type_field']] | head }}</td>
                                 <td scope="row">
                                     <a href="{{ item['PID'] | generate_fedcom_url(downloads_conf['datastream']) }}" aria-label="View {{ downloads_conf['name'] }}"><i data-feather="eye"></i></a>
                                     <a href="{{ item['PID'] | generate_fedcom_url(downloads_conf['datastream'], "DOWNLOAD") }}" aria-label="Download` {{ downloads_conf['name'] }}"><i data-feather="download"></i></a>

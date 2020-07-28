@@ -32,13 +32,14 @@ def generate_fedcom_url(value, obj_type='OBJ', action="view"):
             obj_type (str): type of datastream object
             action (str): view or download the datastream
     """
+    #TODO fix filter name? no longer fedcom url
     pid = value.replace(":","/")
 
     return '/{0}/{1}/{2}'.format(pid, obj_type, action)
 
 @app.template_filter()
-def solr_first_item(value):
-    """ Check if a value is a list and returns the first item"""
+def head(value):
+    """If value is a list, returns the head of the list, otherwise return the value as is"""
     if isinstance(value, list):
         value = value[0]
     return value
