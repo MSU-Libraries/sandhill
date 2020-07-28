@@ -1,0 +1,38 @@
+{# Logic within paginator; All counts are 0 based (0 = first page) #}
+{% set max_page = (num_found / rows) | round(0, 'floor') | int %}
+{% set cur_page = (start / rows) | round(0) | int %}
+
+{% set min_range = cur_page - link_range %}
+{% if min_range < 0 %}
+    {% set min_range = 0 %}
+{% endif %}
+{% set max_range = cur_page + link_range %}
+{% if max_range > max_page %}
+    {% set max_range = max_page %}
+{% endif %}
+
+{% set page_list = ([0] + (range(min_range,max_range)|list) + [max_page]) | unique %}
+
+<div class="pagination row">
+	<div class="col-12">
+	<nav aria-label="TODO">
+	  <ul class="pagination justify-content-center">
+		<li class="page-item {% if cur_page <= 0 %}disabled{% endif %}">
+		  <a class="page-link" href="#">Previous</a>
+		</li>
+        {% for p in page_list %}
+		<li class="page-item {% if p == cur_page %}active{% endif %}">
+            {% if p == cur_page %}
+                <span class="page-link">{{ p + 1 }}<span class="sr-only">(current)</span></span>
+            {% else %}
+                <a class="page-link" href="#">{{ p + 1 }}</a>
+            {% endif %}
+		</li>
+        {% endfor %}
+		<li class="page-item {% if cur_page >= max_page %}disabled{% endif %}">
+		  <a class="page-link" href="#">Next</a>
+		</li>
+	  </ul>
+	</nav>
+	</div>
+</div>
