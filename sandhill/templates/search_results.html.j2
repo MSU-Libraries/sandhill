@@ -8,9 +8,15 @@ Search Results
 {#% include 'basic_search.html.j2' %#}
 
 {% for item in search['response']['docs'] %}
-    <div class="search_resuts row">
-        {% include 'search_preview.html.j2' %}
-        {% include 'search_metadata.html.j2' %}
+    <div class="search_results row">
+        {% include 'search_results_blocks/preview.html.j2' %}
+        <div class="col-md-9">
+            {% for field in search_conf.display_fields %}
+                {% if item[field.solr_field] %}
+                    {% include field.template %}
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 {% endfor %} 
 

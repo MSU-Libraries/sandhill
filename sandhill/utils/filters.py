@@ -25,7 +25,7 @@ def is_list(value):
     return isinstance(value, list)
 
 @app.template_filter()
-def generate_fedcom_url(value, obj_type='OBJ', action="view"):
+def generate_datastream_url(value, obj_type='OBJ', action="view"):
     """ Generates view and download url's
         args:
             value (str): pid of the object
@@ -44,3 +44,14 @@ def head(value):
         value = value[0]
     return value
 
+@app.template_filter('solr_escape')
+def solr_escape(value):
+    """Filter to escape a value being passed to Solr"""
+    escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
+                '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
+                '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
+                ';': r'\;' }
+    value = value.replace('\\', r'\\')  # must be first replacement
+    for k,v in escapes.items():
+        value = value.replace(k,v)
+    return value

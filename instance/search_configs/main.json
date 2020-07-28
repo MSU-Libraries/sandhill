@@ -56,27 +56,26 @@
             "default": ""
         }
     },
-    "field_lists": [
+    "display_fields": [
         {
-            "field": "fgs_label_s",
+            "solr_field": "fgs_label_s",
             "label": "Title",
-            "template": "template_with_links_to_item_placeholder"
+            "template": "search_results_blocks/metadata_item_link.html.j2"
         },
         {
-            "field": "name_primary",
+            "solr_field": "name_primary",
             "label": "Creator",
-            "template": "template_with_link_to_facet_placeholder"
-
+            "template": "search_results_blocks/metadata_facet_link.html.j2"
         },
         {
-            "field": "date_key",
+            "solr_field": "date_key",
             "label": "Date",
-            "template": "template_without_links_placeholder"
+            "template": "search_results_blocks/metadata.html.j2"
         },
         {
-            "field": "collection",
+            "solr_field": "collection",
             "label": "Collection",
-            "template": "template_without_links_placeholder"
+            "template": "search_results_blocks/metadata.html.j2"
         }
     ]
 }

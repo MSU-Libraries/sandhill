@@ -10,6 +10,14 @@
             "processor": "solr.search",
             "name": "search",
             "config": "main.json"
+        },
+        {
+            "processor": "file.load_json",
+            "name": "search_conf",
+            "on_fail": 501,
+            "paths": [
+                "search_configs/main.json"
+            ]
         }
     ]
 }
