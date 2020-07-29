@@ -1,0 +1,32 @@
+{% extends 'base.html.j2' %}
+
+{% block title %}
+Search Results
+{% endblock %}
+
+{% block content %}
+
+
+{#% include 'basic_search.html.j2' %#}
+
+{% for item in search['response']['docs'] %}
+    <div class="search_results row border-dark border-bottom py-3">
+        {% include 'search_results_blocks/preview.html.j2' %}
+        <div class="col-md-9">
+            {% for field in search_conf.display_fields %}
+                {% if item[field.solr_field] %}
+                    {% include field.template %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %} 
+
+{# Set pagination variable before including pagination template #}
+{% set start = search.response.start %}
+{% set total = search.response.numFound %}
+{% set rows = search.responseHeader.params.rows|int %}
+{% set link_range = 3 %}
+{% include 'pagination.html.j2' %}
+
+{% endblock %}
