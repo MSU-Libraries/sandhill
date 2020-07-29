@@ -1,5 +1,7 @@
-{# Logic within paginator; All counts are 0 based (0 = first page) #}
-{% set max_page = (num_found / rows) | round(0, 'floor') | int %}
+{# Logic within paginator; All counts are 0 based (0 = first page) 
+   Required variables to be defined prior to this template: total, start, rows, url_components, link_range #}
+
+{% set max_page = (total / rows) | round(0, 'floor') | int %}
 {% set cur_page = (start / rows) | round(0) | int %}
 
 {% set min_range = cur_page - link_range %}
@@ -14,8 +16,8 @@
 {% set page_list = ([0] + (range(min_range,max_range)|list) + [max_page]) | unique %}
 
 <div class="pagination row">
-	<div class="col-12">
-	<nav aria-label="TODO">
+  <div class="col-12">
+	<nav aria-label="Page list">
 	  <ul class="pagination justify-content-center">
 		<li class="page-item {% if cur_page <= 0 %}disabled{% endif %}">
 		  <a class="page-link" href="{{ url_components | set_param("start", start - rows) | assemble_url }}">Previous</a>
@@ -34,5 +36,5 @@
 		</li>
 	  </ul>
 	</nav>
-	</div>
+  </div>
 </div>

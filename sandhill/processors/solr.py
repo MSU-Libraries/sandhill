@@ -4,8 +4,8 @@ from urllib.parse import urlencode
 from sandhill.utils.api import api_get
 from sandhill import app
 from sandhill.utils.config_loader import load_search_config
-from sandhill.utils.generic import combine_to_list, match_request_format
-
+from sandhill.utils.generic import combine_to_list
+from sandhill.utils.request import match_request_format
 
 def query(data_dict):
     url = os.environ.get('SOLR_URL') + "/select"

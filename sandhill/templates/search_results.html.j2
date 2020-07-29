@@ -24,7 +24,7 @@ Search Results
 
 {# Set pagination variable before including pagination template #}
 {% set start = search.response.start %}
-{% set num_found = search.response.numFound %}
+{% set total = search.response.numFound %}
 {% set rows = search.responseHeader.params.rows|int %}
 {% set link_range = 3 %}
 {% include 'pagination.html.j2' %}

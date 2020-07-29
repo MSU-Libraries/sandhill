@@ -1,6 +1,6 @@
 """Filters for jinja templating engine"""
 import urllib
-from .. import app
+from sandhill import app
 
 @app.template_filter()
 def number_format(value):
@@ -32,7 +32,6 @@ def generate_datastream_url(value, obj_type='OBJ', action="view"):
             obj_type (str): type of datastream object
             action (str): view or download the datastream
     """
-    #TODO fix filter name? no longer fedcom url
     pid = value.replace(":","/")
 
     return '/{0}/{1}/{2}'.format(pid, obj_type, action)
@@ -55,13 +54,6 @@ def solr_escape(value):
     for k,v in escapes.items():
         value = value.replace(k,v)
     return value
-
-@app.template_filter('urlencode_dictlist')
-def urlencode_dictlist(value):
-    """
-    Handle dict with lists
-    """
-    return urllib.parse.urlencode(value, doseq=True)
 
 @app.template_filter('set_param')
 def set_param(url_components, key, value):
