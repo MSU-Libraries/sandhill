@@ -5,6 +5,8 @@ Search Results
 {% endblock %}
 
 {% block content %}
+
+
 {#% include 'basic_search.html.j2' %#}
 
 {% for item in search['response']['docs'] %}
@@ -24,7 +26,6 @@ Search Results
 {% set start = search.response.start %}
 {% set num_found = search.response.numFound %}
 {% set rows = search.responseHeader.params.rows|int %}
-{% set link_base = "/search?TODO_FROM_URL" %}
 {% set link_range = 3 %}
 {% include 'pagination.html.j2' %}
 

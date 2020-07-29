@@ -1,4 +1,5 @@
 """Filters for jinja templating engine"""
+import urllib
 from .. import app
 
 @app.template_filter()
@@ -17,7 +18,6 @@ def size_format(value):
         i += 1
     f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
     return '%s %s' % (f, suffixes[i])
-
 
 @app.template_filter()
 def is_list(value):
@@ -55,3 +55,24 @@ def solr_escape(value):
     for k,v in escapes.items():
         value = value.replace(k,v)
     return value
+
+@app.template_filter('urlencode_dictlist')
+def urlencode_dictlist(value):
+    """
+    Handle dict with lists
+    """
+    return urllib.parse.urlencode(value, doseq=True)
+
+@app.template_filter('set_param')
+def set_param(url_components, key, value):
+    """Take dictionary of url components, and update 'key' with 'value'."""
+    if key in url_components['query_args']:
+        url_components['query_args'][key] = value
+
+    return url_components
+
+@app.template_filter('assemble_url')
+def assemble_url(url_components):
+    """Take url_components (derived from Flask Request object) and return url."""
+    return url_components["path"] + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
+

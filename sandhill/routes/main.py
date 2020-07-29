@@ -13,7 +13,7 @@ from sandhill.processors.base import load_route_data
 def main(*args, **kwargs):
     return_val = None
     route_used = request.url_rule.rule
-    
+
     ## loop over all the configs in the instance dir looking at the "route"
     ## field to determine which configs to use
     route_config = load_route_config(route_used)
@@ -30,7 +30,6 @@ def main(*args, **kwargs):
                 app.logger.warning("Unable to parse route data entry number {0} for: {1}"
                                    .format(idx,','.join(route_config['route'])))
         data = load_route_data(route_data)
-
     ## if a template is provided, render the tempate with the data
     if 'template' in route_config:
         return_val = handle_template(route_config['template'], response_var, **data)
@@ -65,4 +64,4 @@ def handle_stream(stream_var, **data):
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon') 
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
