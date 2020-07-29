@@ -55,11 +55,10 @@ def solr_escape(value):
         value = value.replace(k,v)
     return value
 
-@app.template_filter('set_param')
-def set_param(url_components, key, value):
+@app.template_filter('set_query_arg')
+def set_query_arg(url_components, key, value):
     """Take dictionary of url components, and update 'key' with 'value'."""
-    if key in url_components['query_args']:
-        url_components['query_args'][key] = value
+    url_components['query_args'][key] = value
 
     return url_components
 
