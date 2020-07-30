@@ -35,7 +35,7 @@
             "base": "json"
         },
         "fl": {
-            "default": "PID, fgs_label_s,name_primary,date_key,collection"
+            "default": "PID, fgs_label_s,name_primary,date_key,collection,description"
         },
         "sort": {
             "default": "score DESC,fgs_label_s ASC,date_key ASC"
@@ -76,6 +76,12 @@
             "solr_field": "collection",
             "label": "Collection",
             "template": "search_results_blocks/metadata.html.j2"
+        },
+        {
+            "solr_field": "description",
+            "label": "Description",
+            "template": "search_results_blocks/metadata.html.j2",
+            "max_length": 200
         }
     ]
 }
