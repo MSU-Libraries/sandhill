@@ -45,6 +45,9 @@ build_test_job:
   stage: deploy_test
   tags:
     - msul
+  environment:
+    name: test
+    url: https://sandhill.test.lib.msu.edu
   only:
     - development
   script: 
@@ -80,6 +83,9 @@ deploy_stage_job:
   stage: deploy_stage
   tags:
     - msul
+  environment:
+    name: stage
+    url: https://sandhill.stage.lib.msu.edu
   only:
     - stage
   script:
@@ -100,6 +106,9 @@ deploy_prod_primary_job:
   stage: deploy_prod
   tags:
     - msul
+  environment:
+    name: production
+    url: https://sandhill.lib.msu.edu
   only:
     - master
   script:
