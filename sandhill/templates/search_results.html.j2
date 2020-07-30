@@ -9,6 +9,8 @@ Search Results
 
 {#% include 'basic_search.html.j2' %#}
 
+<h1>Search Results</h1>
+
 {% for item in search['response']['docs'] %}
     <div class="search_results row border-dark border-bottom py-3">
         {% include 'search_results_blocks/preview.html.j2' %}
