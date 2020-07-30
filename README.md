@@ -156,6 +156,12 @@ deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack.test, /bin/cp 
 ```
 TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
 
+### Add a UFW rule for docker access
+Give the non-routable range that the docker containers use the access they need to request Fedora data.  
+```
+ufw allow from 192.168.0.0/16 to any port 80,443,8080 proto tcp
+```
+
 Routes
 ===============
 
@@ -174,7 +180,7 @@ All routes are dynamically added as needed by the `route_configs`
 json files within the `instance` directory of the project. The `route` variable 
 in that file defines what route rule will be associated with the contents 
 of that file. Variable names can be included in the rules, which will be 
-available for use in the `data` section via the `view_arg` variable.  
+available for use in the `data` section via the `view_args` variable.  
 
 All that is needed to add a new content page or type is to create a new 
 `route_configs` file and it's corresponding template.

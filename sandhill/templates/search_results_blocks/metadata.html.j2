@@ -1,0 +1,8 @@
+<div class="row border-bottom py-2">
+    <div class="col-3">{{ field.label }}</div>
+    {% if field.max_length %}
+        <div class="col-9">{{ item[field.solr_field] | truncate(field.max_length) }}</div>
+    {% else %}
+        <div class="col-9">{{ item[field.solr_field] }}</div>
+    {% endif %}
+</div>
