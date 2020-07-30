@@ -1,7 +1,7 @@
 <div class="row border-bottom py-2">
     <div class="col-3">{{ field.label }}</div>
     <div class="col-9">
-        <a href="/search?fq={{ field.solr_field }}:{{ item[field.solr_field] | solr_escape }}">{{ item[field.solr_field] }}</a>
+        <a href="/search?fq={{ field.solr_field }}:{{ item[field.solr_field] | solr_escape | urlencode }}">{{ item[field.solr_field] }}</a>
     </div>
 </div>
 

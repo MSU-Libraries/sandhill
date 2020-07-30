@@ -26,6 +26,6 @@ def load_datastream(data_dict):
             app.logger.warning("Call to Fedora Commons returned {0}".format(fedora.status_code))
             abort(fedora.status_code)
     except RequestException as exc:
-        app.logger.warning("Call to Fedora Commons failed: {1}".format(exc))
+        app.logger.warning("Call to Fedora Commons failed: {0}".format(exc))
         abort(503)
     return fedora
