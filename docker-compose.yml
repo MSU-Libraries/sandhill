@@ -26,9 +26,9 @@ services:
 
 networks:
     nonroutable_net:
-    ipam:
       driver: default
-      config:
-        - subnet: 192.168.0.0/16
+      ipam:
+        config:
+          - subnet: 192.168.0.0/16
 volumes:
   nginx_logs:
