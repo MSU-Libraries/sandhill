@@ -6,7 +6,7 @@ services:
       container_name: sandhill
       restart: always
       expose:
-        - 8080
+        - 8082
       environment:
         - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom
         - FEDORA_URL=http://localhost:8080/fedora
