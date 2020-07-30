@@ -36,7 +36,7 @@ build_job:
   environment:
     name: test
     url: http://sandhill.test.lib.msu.edu
-    action: prepare
+    action: start
   only:
     - development
   script:
