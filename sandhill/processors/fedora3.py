@@ -20,7 +20,7 @@ def load_datastream(data_dict):
                         data_dict['view_args']['label'])
                     )
         app.logger.debug("Connecting to {0}?{1}".format(fc_url, urlencode(params)))
-        fedora = api_get(url=fc_url, params=params)
+        fedora = api_get(url=fc_url, params=params, stream=True)
 
         if not fedora.ok:
             app.logger.warning("Call to Fedora Commons returned {0}".format(fedora.status_code))
