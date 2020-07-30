@@ -10,7 +10,7 @@ services:
       networks:
         nonroutable_net:
       environment:
-        - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom
+        - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom-prod
         - FEDORA_URL=http://d.lib.msu.edu:8080/fedora
 
     nginx:
