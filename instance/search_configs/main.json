@@ -21,7 +21,7 @@
             "base": "*"
         },
         "fq": {
-            "base": ["-PID:*\\:root", "-PID:tone\\:*"],
+            "base": ["-PID:*\\:root", "-PID:tone\\:*", "-PID:msul\\:*"],
             "default": []
         },
         "start": {
