@@ -156,6 +156,12 @@ deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack.test, /bin/cp 
 ```
 TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
 
+### Add a UFW rule for docker access
+Give the non-routable range that the docker containers use the access they need to request Fedora data.  
+```
+ufw allow from 192.168.0.0/16 to any port 80,443,8080 proto tcp
+```
+
 Routes
 ===============
 
