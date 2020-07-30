@@ -7,7 +7,7 @@ from importlib import import_module
 def load_route_data(route_data):
     loaded_data = {}
     # add view_args into loaded_data
-    loaded_data['view_arg'] = request.view_args
+    loaded_data['view_args'] = request.view_args
 
     for i in range(len(route_data)):
         # Apply Jinja2 templating to data config
@@ -15,7 +15,7 @@ def load_route_data(route_data):
         data_template = Template(data_json)
         data_json = data_template.render(**loaded_data)
         route_data[i] = json.loads(data_json)
-        route_data[i]['view_arg'] = loaded_data['view_arg']
+        route_data[i]['view_args'] = loaded_data['view_args']
 
         # Dynamically load processor
         name = route_data[i]['name']

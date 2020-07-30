@@ -1,11 +1,11 @@
 import os
 from flask import request, jsonify, abort
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode
 from sandhill.utils.api import api_get
 from sandhill import app
 from sandhill.utils.config_loader import load_search_config
 from sandhill.utils.generic import combine_to_list
-
+from sandhill.utils.request import match_request_format
 
 def query(data_dict):
     url = os.environ.get('SOLR_URL') + "/select"
@@ -38,6 +38,8 @@ def search(data_dict):
         app.logger.error("Missing 'solr_params' inside search config file '{0}'".format(data_dict['config']))
         abort(500)
 
+    result_format = match_request_format('format', ['text/html','text/json'])
+
     search_params = request.args.to_dict(flat=False)
     solr_config = search_config['solr_params']
     solr_params = {}
@@ -65,4 +67,7 @@ def search(data_dict):
 
     # make the solr call
     data_dict['params'] = solr_params
-    return jsonify(query(data_dict))
+    solr_results = query(data_dict)
+    if result_format == 'text/json':
+        solr_results = jsonify(solr_results)
+    return solr_results
