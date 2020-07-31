@@ -44,7 +44,7 @@ build_job:
     - docker build --pull -t $CONTAINER_TEST_IMAGE_NGINX ./nginx
     - docker push $CONTAINER_TEST_IMAGE_NGINX
 
-build_test_job:
+deploy_test_job:
   stage: deploy_test
   tags:
     - msul
