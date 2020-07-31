@@ -1,6 +1,8 @@
 """
 Generic function that can be used in any context
 """
+from jinja2 import Template
+
 
 def ifnone(var, default_val):
     '''
@@ -26,3 +28,14 @@ def combine_to_list(*args):
             combined.append(x)
     return combined
 
+def render_template(template, context):
+    """
+    Renders jinja templates
+    args:
+        template (string): jinja template
+        context (dict): Context for the jinja template
+    """
+    # TODO default jinja2 environment does not currently include custom sandhill filters; refactor so that it is available
+    data_template = Template(template)
+    data_json = data_template.render(**context)
+    return data_json

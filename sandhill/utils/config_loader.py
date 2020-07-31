@@ -23,7 +23,7 @@ def get_all_routes():
     Finds all the json files with within /instance/route_configs
     that contain a "route" key
     '''
-    routes = [] 
+    routes = []
     var_counts = {}
 
     for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
@@ -68,3 +68,20 @@ def load_search_config(file_name):
     """
     config_path = os.path.join(app.instance_path, "search_configs", file_name)
     return load_json_config(config_path)
+
+def load_json_configs(path, recurse=False):
+    """
+    Loads all the config files in the path
+    args:
+        path (string): path to the dir for the configs
+        recurse (bool): if set does the recursive walk into the dir
+    """
+    config_files = {}
+    for root, dirs, files in  os.walk(path):
+        for config_file in files:
+            if config_file.endswith('.json'):
+                config_file_path = os.path.join(root, config_file)
+                config_files[config_file_path] = load_json_config(config_file_path)
+        if not recurse:
+            break
+    return config_files

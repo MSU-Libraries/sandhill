@@ -1,8 +1,19 @@
 {
-    "mime_types" : [ "application/pdf" ],
+    "match_conditions": [
+        {
+            "value": "{{ view_args.namespace }}",
+            "allowed": ["etd", "austm"]
+        },
+        {
+            "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
+            "allowed": ["info:fedora/islandora:sp_pdf"]
+        }
+    ],
     "title_field": "fgs_label_s",
     "media_template": "media_display/preview.html.j2",
-    "embargo_field": "embargo_end_date_ss",
+    "restriction_conditions": [
+        "{{ item.embargo_end_date_ss | head | date_passed }}"
+    ],
     "display": [
         {
             "field": "description",
@@ -204,7 +215,7 @@
             "mime_type_field": "fedora_datastream_latest_OBJ_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_OBJ_SIZE_ms",
             "datastream": "OBJ",
-            "apply_embargo_restriction": true
+            "restricted": true
         },
         {
             "name": "Low-resolution image",
