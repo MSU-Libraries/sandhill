@@ -105,7 +105,7 @@
             "field": "ndltd.level",
             "name": "Degree Level",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=subject_display:{{ metadata_value | solr_escape | urlencode }}"
+            "link": "/search?fq=ndltd.level:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "field": "note_noType",
