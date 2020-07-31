@@ -2,6 +2,7 @@
     "mime_types" : [ "application/pdf" ],
     "title_field": "fgs_label_s",
     "media_template": "media_display/preview.html.j2",
+    "embargo_filed": "embargo_end_date_ss",
     "display": [
         {
             "field": "description",
@@ -202,7 +203,8 @@
             "name": "Original file",
             "mime_type_field": "fedora_datastream_latest_OBJ_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_OBJ_SIZE_ms",
-            "datastream": "OBJ"
+            "datastream": "OBJ",
+            "apply_embargo_restriction": true
         },
         {
             "name": "Low-resolution image",

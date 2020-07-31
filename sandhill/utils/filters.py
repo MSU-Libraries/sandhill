@@ -1,6 +1,7 @@
 """Filters for jinja templating engine"""
 import urllib
 from sandhill import app
+from datetime import datetime
 from jinja2 import contextfilter
 
 
@@ -69,6 +70,14 @@ def assemble_url(url_components):
     """Take url_components (derived from Flask Request object) and return url."""
     return url_components["path"] + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
 
+@app.template_filter('check_embargo')
+def check_embargo(value):
+    """ Checks if the embargoded date is greater than the current date"""
+    embargo_release_date =  datetime.strptime(value, "%Y-%m-%d")
+    current_date  = datetime.now()
+    if embargo_release_date.date() > current_date.date():
+        return True
+    return False
 
 @app.template_filter('render_string')
 @contextfilter

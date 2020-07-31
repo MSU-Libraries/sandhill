@@ -21,7 +21,7 @@
                     </thead>
                     <tbody>
                         {% for downloads_conf in metadata_conf['downloads'] %}
-                            {% if item[downloads_conf['mime_type_field']] %}
+                            {% if item[downloads_conf['mime_type_field']] and ( not ( downloads_conf['apply_embargo_restriction']  and  ( item['embargo_end_date_ss']  and  item['embargo_end_date_ss'] | head | check_embargo ))) %}
                             <tr>
                                 <td scope="row">{{ downloads_conf['name'] }}</td>
                                 <td scope="row">{{ item[downloads_conf['file_size_field']] | head | size_format }}</td>
