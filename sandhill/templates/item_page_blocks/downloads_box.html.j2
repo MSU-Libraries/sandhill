@@ -20,6 +20,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <!-- TODO -- pull the embargo field from the config -->
                         {% for downloads_conf in metadata_conf['downloads'] %}
                             {% if item[downloads_conf['mime_type_field']] and ( not ( downloads_conf['apply_embargo_restriction']  and  ( item['embargo_end_date_ss']  and  item['embargo_end_date_ss'] | head | check_embargo ))) %}
                             <tr>

@@ -5,6 +5,8 @@ Sandhill
 * [Deployable Docker Setup](#deployable-docker-setup)
 * [Routes](#routes)
 * [Docker](#docker)
+* [Metadata Configuration](instance/metadata_configs/README.md)
+* [Page Creation](instance/route_configs/README.md)
 
 
 Developer Environment Setup
