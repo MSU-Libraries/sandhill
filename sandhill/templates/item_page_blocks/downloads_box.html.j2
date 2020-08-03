@@ -20,18 +20,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <!-- TODO -- pull the embargo field from the config -->
+                    <!-- TODO pull the embargo field from the config -->
                         {% for downloads_conf in metadata_conf['downloads'] %}
-                            {% if item[downloads_conf['mime_type_field']] and ( not ( downloads_conf['apply_embargo_restriction']  and  ( item['embargo_end_date_ss']  and  item['embargo_end_date_ss'] | head | check_embargo ))) %}
-                            <tr>
-                                <td scope="row">{{ downloads_conf['name'] }}</td>
-                                <td scope="row">{{ item[downloads_conf['file_size_field']] | head | size_format }}</td>
-                                <td scope="row">{{ item[downloads_conf['mime_type_field']] | head }}</td>
-                                <td scope="row">
-                                    <a href="{{ item['PID'] | generate_datastream_url(downloads_conf['datastream']) }}" aria-label="View {{ downloads_conf['name'] }}"><i data-feather="eye"></i></a>
-                                    <a href="{{ item['PID'] | generate_datastream_url(downloads_conf['datastream'], "download") }}" aria-label="Download` {{ downloads_conf['name'] }}"><i data-feather="download"></i></a>
-                                </td>
-                            </tr>
+                            {% if downloads_conf.restricted is not defined or not ( restriction and downloads_conf.restricted ) %}
+                                {% if item[downloads_conf['mime_type_field']] %}
+                                <tr>
+                                    <td scope="row">{{ downloads_conf['name'] }}</td>
+                                    <td scope="row">{{ item[downloads_conf['file_size_field']] | head | size_format }}</td>
+                                    <td scope="row">{{ item[downloads_conf['mime_type_field']] | head }}</td>
+                                    <td scope="row">
+                                        <a href="{{ item['PID'] | generate_datastream_url(downloads_conf['datastream']) }}" aria-label="View {{ downloads_conf['name'] }}"><i data-feather="eye"></i></a>
+                                        <a href="{{ item['PID'] | generate_datastream_url(downloads_conf['datastream'], "download") }}" aria-label="Download` {{ downloads_conf['name'] }}"><i data-feather="download"></i></a>
+                                    </td>
+                                </tr>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     </tbody>

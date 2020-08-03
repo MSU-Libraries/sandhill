@@ -79,3 +79,5 @@ Additionally, you can dynamically alter the values of the variables used by usin
 to the existing Jinja2 filters, there are custom ones available within our [filters](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/master/sandhill/utils/filters.py) file. Some examples are: 
 * `solr_escape`: Which will take a value and escape the special Solr characters
 * `urlencode`: Encode the value to be used in a URL
+
+
