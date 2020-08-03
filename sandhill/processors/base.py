@@ -1,6 +1,6 @@
 import json
 from sandhill import app
-from sandhill.utils.generic import render_template
+from sandhill.utils.template import render_template
 from flask import request, abort
 from importlib import import_module
 
@@ -33,7 +33,7 @@ def load_route_data(route_data):
         if action_function:
             loaded_data[name] = action_function(route_data[i], )
 
-        if not loaded_data[name] and 'on_fail' in route_data[i]:
+        if (name not in loaded_data or loaded_data[name] is None) and 'on_fail' in route_data[i]:
             app.logger.error("Could not load data for processor '{0}' used for variable '{1}'".format(processor, name))
             abort(int(route_data[i]['on_fail']))
 

@@ -4,7 +4,7 @@ from operator import itemgetter
 from flask import json, abort
 from sandhill import app
 from sandhill.utils.config_loader import load_json_configs
-from sandhill.utils.generic import render_template
+from sandhill.utils.template import render_template, evaluate_conditions
 
 
 def load_json(data_dict):
@@ -19,6 +19,7 @@ def load_json(data_dict):
                break
 
     return file_data
+
 
 def load_matched_json(data_dict):
     """
@@ -36,18 +37,15 @@ def load_matched_json(data_dict):
         for path, config in config_files.items():
             if "match_conditions" in config:
                 match_configs = config['match_conditions']
-                matched = 0
-                # TODO refactor to ensure ALL matches must be true before setting matched_dict value to non-0 value
-                for match in match_configs:
-                    check_value = render_template(match['value'], data_dict)
-                    if check_value in match['allowed']:
-                        # Idea: use boosts if the matched value for 2 config files is the same, e.g. matched += boost
-                        matched += 1
-                matched_dict[path] = matched
+                matched_dict[path] = evaluate_conditions(config['match_conditions'], data_dict)
         matched_path = max(matched_dict.items(), key=itemgetter(1))[0]
+
+        for path, score in matched_dict.items():
+            app.logger.debug("load_matched_json - score: {0}, path: {1}".format(score, path))
 
         # Ensure number of matches is greater than 0
         if matched_dict[matched_path]:
+            app.logger.info("load_matched_json - matched: {0}".format(matched_path))
             file_data = config_files[matched_path]
 
     return file_data

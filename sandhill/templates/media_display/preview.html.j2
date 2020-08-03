@@ -1,6 +1,6 @@
 <div class="text-center">
     <!-- TODO pull the embargo field from the config -->
-    {% if item['embargo_end_date_ss'] and ( item['embargo_end_date_ss'] | head | date_passed ) %}
+    {% if restriction %}
         <img class="border rounded"
             src="{{ item['PID'] | generate_datastream_url("PREVIEW") }}"
             class="img-fluid"
