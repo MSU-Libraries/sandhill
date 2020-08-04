@@ -2,10 +2,10 @@ version: '2'
 
 services:
     sandhill:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:test
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:${TAG}
       environment:
         - SOLR_URL=https://solr.devel.lib.msu.edu/solr/fedcom
         - FEDORA_URL=http://d.devel.lib.msu.edu:8080/fedora
 
     nginx:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:test
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:${TAG}
