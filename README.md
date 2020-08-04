@@ -221,4 +221,4 @@ TAG=4f991a07 docker-compose -f /home/deploy/sandhill/docker-compose.yml -f /home
 NOTE: If you want to keep this image tag deploy past a server reboot, you will need to update the service file to use it as well. 
 To do this, replace the variables in the [sandhill-stack.server](/etc/systemd/system/sandhill-stack.service) for 
 `ExecStart`, `ExecStop`, and `ExecReload` to match the command you used above (adding in the environment variable for `TAG` and 
-swapping the second docker-compose file with `docker-compose.rollback.yml`).  
+adding an additional docker-compose to the command, `docker-compose.rollback.yml`).  
