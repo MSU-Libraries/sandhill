@@ -35,19 +35,24 @@ build_job:
   stage: build
   tags:
     - msul
-  environment:
-    name: test
-    url: http://sandhill.test.lib.msu.edu
   only:
     - development
   script:
     - docker build --pull -t $CONTAINER_BUILD_IMAGE .
     - docker push $CONTAINER_BUILD_IMAGE
+    - docker build --pull -t $CONTAINER_BUILD_IMAGE_NGINX ./nginx
+    - docker push $CONTAINER_BUILD_IMAGE_NGINX
+
+tag_build_job:
+  stage: build
+  tags:
+    - msul
+  only:
+    - development
+  script:
     - docker pull $CONTAINER_BUILD_IMAGE
     - docker tag $CONTAINER_BUILD_IMAGE $CONTAINER_TEST_IMAGE
     - docker push $CONTAINER_TEST_IMAGE
-    - docker build --pull -t $CONTAINER_BUILD_IMAGE_NGINX ./nginx
-    - docker push $CONTAINER_BUILD_IMAGE_NGINX
     - docker pull $CONTAINER_BUILD_IMAGE_NGINX
     - docker tag $CONTAINER_BUILD_IMAGE_NGINX $CONTAINER_TEST_IMAGE_NGINX
     - docker push $CONTAINER_TEST_IMAGE_NGINX
@@ -56,9 +61,6 @@ deploy_test_job:
   stage: deploy_test
   tags:
     - msul
-  environment:
-    name: test
-    url: http://sandhill.test.lib.msu.edu
   only:
     - development
   script: 
@@ -80,9 +82,6 @@ release_job:
   stage: release
   tags:
     - msul
-  environment:
-    name: stage
-    url: http://sandhill.stage.lib.msu.edu
   only:
     - stage
   script:
@@ -97,9 +96,6 @@ deploy_stage_job:
   stage: deploy_stage
   tags:
     - msul
-  environment:
-    name: stage
-    url: http://sandhill.stage.lib.msu.edu
   only:
     - stage
   script:
@@ -120,9 +116,6 @@ deploy_prod_primary_job:
   stage: deploy_prod
   tags:
     - msul
-  environment:
-    name: production
-    url: http://sandhill.lib.msu.edu
   only:
     - master
   script:

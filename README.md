@@ -197,3 +197,28 @@ Docker
 ### Containers  
 * **sandhill**: will run the Sandhill Flask application, exposing port 8080
 * **nginx**: will run Nginx to host the sandhill's service socket (from 8080), exposing port 81
+
+Rollback
+===============
+To rollback to a previous image, instead of using the service (which points to the `latest` release image), 
+we will override that by providing the git commit sha of the version we want to rollback to.  
+
+Navigate to the [container registry](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/container_registry) 
+to identify the tag you want to rollback to, which is based on the git commit. For example the image tagged 
+`4f991a07` references https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/tree/4f991a07 that code base. 
+
+To perform the rollback, stop the running service:  
+```
+systemctl stop sandhill-stack
+```
+
+Now bring up the instance providing the tag and using this override docker-compose file:  
+```
+# Replace the TAG value with the image tag you wish to rollback to
+TAG=4f991a07 docker-compose -f /home/deploy/sandhill/docker-compose.yml -f /home/deploy/sandhill/docker-compose.rollback.yml up
+```
+
+NOTE: If you want to keep this image tag deploy past a server reboot, you will need to update the service file to use it as well. 
+To do this, replace the variables in the [sandhill-stack.server](/etc/systemd/system/sandhill-stack.service) for 
+`ExecStart`, `ExecStop`, and `ExecReload` to match the command you used above (adding in the environment variable for `TAG` and 
+swapping the second docker-compose file with `docker-compose.rollback.yml`).  
