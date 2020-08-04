@@ -1,6 +1,7 @@
 sandhill.cfg
 *.swp
 *.swo
+*.pyc
 __pycache__
 env
 TODO.md
