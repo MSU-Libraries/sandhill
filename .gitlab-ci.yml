@@ -61,7 +61,7 @@ deploy_test_job:
     - ssh $CONNECT_TEST sudo /bin/cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
     - ssh $CONNECT_TEST sudo /bin/systemctl daemon-reload
     - ssh $CONNECT_TEST sudo /bin/systemctl enable sandhill-stack.test
-    - ssh $CONNECT_TEST docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml -e TAG=$CI_COMMIT_SHORT_SHA pull
+    - ssh $CONNECT_TEST TAG=$CI_COMMIT_SHORT_SHA docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull
     - ssh $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
     - sleep 4
     - ssh $CONNECT_TEST sudo /bin/systemctl status sandhill-stack.test
