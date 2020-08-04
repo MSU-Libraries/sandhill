@@ -7,9 +7,11 @@ services:
       restart: always
       expose:
         - 8080
+      networks:
+        nonroutable_net:
       environment:
-        - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom
-        - FEDORA_URL=http://localhost:8080/fedora
+        - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom-prod
+        - FEDORA_URL=http://d.lib.msu.edu:8080/fedora
 
     nginx:
       image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:latest
@@ -17,8 +19,16 @@ services:
       restart: always
       ports:
         - "81:80"
+      networks:
+        nonroutable_net:
       volumes:
         - nginx_logs:/var/log/nginx
 
+networks:
+    nonroutable_net:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 192.168.0.0/16
 volumes:
   nginx_logs:

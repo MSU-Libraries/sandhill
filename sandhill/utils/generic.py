@@ -25,4 +25,3 @@ def combine_to_list(*args):
         else:
             combined.append(x)
     return combined
-

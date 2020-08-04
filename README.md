@@ -5,6 +5,8 @@ Sandhill
 * [Deployable Docker Setup](#deployable-docker-setup)
 * [Routes](#routes)
 * [Docker](#docker)
+* [Metadata Configuration](instance/metadata_configs/README.md)
+* [Page Creation](instance/route_configs/README.md)
 
 
 Developer Environment Setup
@@ -155,6 +157,12 @@ sudo adduser deploy docker
 deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack.test, /bin/cp /home/deploy/sandhill/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/, /bin/systemctl daemon-reload, /bin/systemctl enable sandhill-stack.test, /bin/systemctl status sandhill-stack.test
 ```
 TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
+
+### Add a UFW rule for docker access
+Give the non-routable range that the docker containers use the access they need to request Fedora data.  
+```
+ufw allow from 192.168.0.0/16 to any port 80,443,8080 proto tcp
+```
 
 Routes
 ===============

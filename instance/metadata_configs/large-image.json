@@ -1,6 +1,6 @@
 {
-    "mime_types" : [ "image/tiff" ],
     "title_field": "fgs_label_s",
+    "media_template": "media_display/preview.html.j2",
     "display": [
         {
             "field": "description",
