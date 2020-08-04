@@ -38,7 +38,7 @@ def get_all_routes():
     # determine the number of variables in each route and add to dictionary
     for rule in routes:
         # re match to determine # of vars
-        matches = re.findall(r'<\w+:\w+>', rule)
+        matches = re.findall('<\w+:\w+>', rule)
         var_counts[rule] = len(matches)
 
     # order the dictionary by lowest number of variables to greatest
