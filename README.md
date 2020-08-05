@@ -5,6 +5,8 @@ Sandhill
 * [Deployable Docker Setup](#deployable-docker-setup)
 * [Routes](#routes)
 * [Docker](#docker)
+* [Developer Notes](#developer-notes)
+* [Rollback](#rollback)
 * [Metadata Configuration](instance/metadata_configs/README.md)
 * [Page Creation](instance/route_configs/README.md)
 
@@ -197,6 +199,19 @@ Docker
 ### Containers  
 * **sandhill**: will run the Sandhill Flask application, exposing port 8080
 * **nginx**: will run Nginx to host the sandhill's service socket (from 8080), exposing port 81
+
+Developer Notes
+===============
+### Unit Testing
+All code is expected to have a corelating unit test. In order to run the existing test 
+simply do:  
+```
+# Running outside of the virtual environment
+./env/bin/pytest
+
+# Running within the virtual environment
+pytest
+```
 
 Rollback
 ===============
