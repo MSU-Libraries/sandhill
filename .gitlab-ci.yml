@@ -64,12 +64,12 @@ deploy_test_job:
     - ssh $CONNECT_TEST git -C $PATH_TEST fetch origin
     - ssh $CONNECT_TEST git -C $PATH_TEST checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_TEST docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - ssh $CONNECT_TEST sed -i 's/COMMIT_SHORT_SHA/$CI_COMMIT_SHORT_SHA/g' $PATH_TEST/etc/systemd/system/sandhill-stack.test.service
     - ssh $CONNECT_TEST sudo /bin/cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
     - ssh $CONNECT_TEST sudo /bin/systemctl daemon-reload
     - ssh $CONNECT_TEST sudo /bin/systemctl enable sandhill-stack.test
     - ssh $CONNECT_TEST "(echo 'TAG=$CI_COMMIT_SHORT_SHA' > $PATH_TEST/.env)"
-    - ssh $CONNECT_TEST docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull
+    - ssh $CONNECT_TEST (cd $PATH_TEST && docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml config)
+    - ssh $CONNECT_TEST (CD $PATH_TEST && docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull)
     - ssh $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
     - sleep 4
     - ssh $CONNECT_TEST sudo /bin/systemctl status sandhill-stack.test
