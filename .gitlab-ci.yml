@@ -61,7 +61,7 @@ deploy_test_job:
     name: test
     url: http://sandhill.test.lib.msu.edu
   script: 
-    - ssh $CONNECT_TEST git -C $PATH_TEST fetch origin $CI_COMMIT_SHORT_SHA
+    - ssh $CONNECT_TEST git -C $PATH_TEST fetch origin
     - ssh $CONNECT_TEST git -C $PATH_TEST checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_TEST docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - ssh $CONNECT_TEST sudo /bin/cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
@@ -84,7 +84,7 @@ deploy_stage_job:
     name: stage
     url: http://sandhill.stage.lib.msu.edu
   script:
-    - ssh $CONNECT_STAGE git -C $PATH_STAGE fetch origin $CI_COMMIT_SHORT_SHA
+    - ssh $CONNECT_STAGE git -C $PATH_STAGE fetch origin
     - ssh $CONNECT_STAGE git -C $PATH_STAGE checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_STAGE docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - ssh $CONNECT_STAGE sudo cp $PATH_STAGE/etc/systemd/system/sandhill-stack.stage.service /etc/systemd/system/
@@ -107,7 +107,7 @@ deploy_prod_primary_job:
     name: prod_primary
     url: http://sandhill.lib.msu.edu
   script:
-    - ssh $CONNECT_PROD1 git -C $PATH_PROD fetch origin $CI_COMMIT_SHORT_SHA
+    - ssh $CONNECT_PROD1 git -C $PATH_PROD fetch origin
     - ssh $CONNECT_PROD1 git -C $PATH_PROD checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_PROD1 docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - ssh $CONNECT_PROD1 sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
@@ -130,7 +130,7 @@ deploy_prod_secondary_job:
     name: prod_secondary
     url: http://sandhillm.lib.msu.edu
   script:
-    - ssh $CONNECT_PROD2 git -C $PATH_PROD fetch origin $CI_COMMIT_SHORT_SHA
+    - ssh $CONNECT_PROD2 git -C $PATH_PROD fetch origin
     - ssh $CONNECT_PROD2 git -C $PATH_PROD checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_PROD2 docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - ssh $CONNECT_PROD2 sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
