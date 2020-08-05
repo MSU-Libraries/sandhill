@@ -2,25 +2,28 @@ from jinja2 import Environment
 from inspect import getmembers, isfunction
 from sandhill.utils import filters
 
-def render_template(template, context):
+def render_template(template_str, context):
     """
     Renders jinja templates
     args:
-        template (string): jinja template
+        template_str (string): jinja template
         context (dict): Context for the jinja template
     """
     env = Environment()
     sandhill_filters = dict([f for f in getmembers(filters) if isfunction(f[1])])
     env.filters = {**env.filters, **sandhill_filters}
-    data_template = env.from_string(template)
+    data_template = env.from_string(template_str)
     return data_template.render(**context)
 
 def evaluate_conditions(conditions, context, match_all=True):
     """
-    Render each of the condition['value'] using the given context; the result must match a value in condition['allowed']
+    Render each of the condition['value'] using the given context; the result must 
+    match a value in condition['allowed']
     args:
         conditions (list): List of dict containing keys 'value' and 'allowed'
         context (dict): Context dictionary for template variables
+        match_all (bool): If all conditions need to be matched for it to be considered 
+            a match. Default = True
     return:
         (int): returns the number of matches matched ONLY if all are matched, else returns 0
     """

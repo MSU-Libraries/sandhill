@@ -25,7 +25,7 @@ def load_matched_json(data_dict):
     """
     Loads all the config files and returns the file that has the maximum matched conditions
     """
-    file_data = {}
+    file_data = None
     matched_dict = {}
     config_dir_path = os.path.join(app.instance_path, 'metadata_configs')
     if not os.path.exists(config_dir_path):
@@ -38,13 +38,13 @@ def load_matched_json(data_dict):
             if "match_conditions" in config:
                 match_configs = config['match_conditions']
                 matched_dict[path] = evaluate_conditions(config['match_conditions'], data_dict)
-        matched_path = max(matched_dict.items(), key=itemgetter(1))[0]
+        matched_path = max(matched_dict.items(), key=itemgetter(1))[0] if matched_dict else None
 
         for path, score in matched_dict.items():
             app.logger.debug("load_matched_json - score: {0}, path: {1}".format(score, path))
 
         # Ensure number of matches is greater than 0
-        if matched_dict[matched_path]:
+        if matched_path in matched_dict and matched_dict[matched_path]:
             app.logger.info("load_matched_json - matched: {0}".format(matched_path))
             file_data = config_files[matched_path]
 

@@ -20,8 +20,8 @@
 
     {# include the metadata section of the page  #}
     {% for display_conf in metadata_conf['display'] %}
-            {% if item[display_conf['field']] %}
-                {% include display_conf['metadata_template'] %}
-            {% endif %}
+        {% if item[display_conf['field']] %}
+            {% include display_conf['metadata_template'] %}
+        {% endif %}
     {% endfor %}
 {% endblock %}
