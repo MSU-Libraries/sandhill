@@ -28,8 +28,7 @@ Sample configuration:
         {
             "field": "description",
             "name": "Summary",
-            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2",
-            "limit_length": 500
+            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
         },
         {
             "field": "collection_t",
@@ -64,8 +63,6 @@ These are the fields that appear in the metadata section of the item page
 * `metadata_template`: The template file within the `sandhill\templates` directory to display this field
 * (Optional) `link`: If provided, will turn the metadata value into a link. See the [variables](#variables) section below 
 for more information
-* (Optional) `limit_length`: The max length of the field allowed, depending on the `metada_template` provided, it will either
-truncate the value or create an expanding box
 
 Variables
 ============
