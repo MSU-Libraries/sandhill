@@ -213,6 +213,16 @@ simply do:
 pytest
 ```
 
+It will search for all `test_*.py` files recursivly starting in the current working directory. 
+So if you want to limit the tests run, then go into the directory you want and run the `pytest` 
+command.
+
+If you are in a sub-directory and want to view the complete coverage report showing which lines 
+of code are uncovered, you could run `pytest --cov-report term-missing`
+
+In the future, we will update the `.coveragerc` file to fail if any of the files have less than 
+100% coverage, but for now it will just print them.
+
 Rollback
 ===============
 To rollback to a previous image, instead of using the service (which points to the `latest` release image), 
