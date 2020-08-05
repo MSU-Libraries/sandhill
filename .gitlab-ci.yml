@@ -67,7 +67,7 @@ deploy_test_job:
     - ssh $CONNECT_TEST sudo /bin/cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
     - ssh $CONNECT_TEST sudo /bin/systemctl daemon-reload
     - ssh $CONNECT_TEST sudo /bin/systemctl enable sandhill-stack.test
-    - ssh $CONNECT_TEST echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_TEST/.env
+    - ssh $CONNECT_TEST (echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_TEST/.env)
     - ssh $CONNECT_TEST docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull
     - ssh $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
     - sleep 4
@@ -90,7 +90,7 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE sudo cp $PATH_STAGE/etc/systemd/system/sandhill-stack.stage.service /etc/systemd/system/
     - ssh $CONNECT_STAGE sudo systemctl daemon-reload
     - ssh $CONNECT_STAGE sudo systemctl enable sandhill-stack.stage
-    - ssh $CONNECT_STAGE echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_STAGE/.env
+    - ssh $CONNECT_STAGE (echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_STAGE/.env)
     - ssh $CONNECT_STAGE docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml pull
     - ssh $CONNECT_STAGE sudo systemctl restart sandhill-stack.stage
     - sleep 4
@@ -113,7 +113,7 @@ deploy_prod_primary_job:
     - ssh $CONNECT_PROD1 sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
     - ssh $CONNECT_PROD1 sudo systemctl daemon-reload
     - ssh $CONNECT_PROD1 sudo systemctl enable sandhill-stack
-    - ssh $CONNECT_PROD1 echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_PROD1/.env
+    - ssh $CONNECT_PROD1 (echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_PROD1/.env)
     - ssh $CONNECT_PROD1 docker-compose -f $PATH_PROD/docker-compose.yml pull
     - ssh $CONNECT_PROD1 sudo systemctl restart sandhill-stack
     - sleep 4
@@ -136,7 +136,7 @@ deploy_prod_secondary_job:
     - ssh $CONNECT_PROD2 sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
     - ssh $CONNECT_PROD2 sudo systemctl daemon-reload
     - ssh $CONNECT_PROD2 sudo systemctl enable sandhill-stack
-    - ssh $CONNECT_PROD2 echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_PROD2/.env
+    - ssh $CONNECT_PROD2 (echo "TAG=$CI_COMMIT_SHORT_SHA" > $PATH_PROD2/.env)
     - ssh $CONNECT_PROD2 docker-compose -f $PATH_PROD/docker-compose.yml pull
     - ssh $CONNECT_PROD2 sudo systemctl restart sandhill-stack
     - sleep 4
