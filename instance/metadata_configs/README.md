@@ -154,6 +154,7 @@ See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sand
 ### Jinja2 Variables
 All variables defined in template files are available to be used in configuration files.
 * `metadata_value` is a variable that is available in the templates 
+
 Example display field:
 ```
 {
@@ -183,6 +184,7 @@ Example template:
 ```
 * `view_args.namespace` and `view_args.id`  are set in the route configs in the `routes` section and 
 represent the pid components
+
 Example route config:
 ```
 {
