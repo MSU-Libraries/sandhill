@@ -6,9 +6,12 @@ item pages within Sandhill.
 Define the Configuration File
 ============================================
 From Sandhill's perspective, config files can be named arbitrarily. 
-One particular naming system that might be logical to use would follow the convention 
-of using namespace (ex: `etd.json`) or type (ex: `pdf.json`). 
+One particular naming system that might be logical to employ would use namespace (ex: `etd.json`) or type (ex: `pdf.json`). 
 
+In addition to more familiar data types, such as strings and integers, all [jinja template functionality](https://jinja.palletsprojects.com/en/2.11.x/templates/) is
+available to be included in the values specified in each metadata configuration file. For instance,
+`{{ view_args.namespace }}` is a jinja expression that will be evaluated internally to arrive at the actual value to be
+included on the page.
 
 Field Definitions
 ================
@@ -18,7 +21,7 @@ Sample configuration:
     "match_conditions": [
         {
             "value": "{{ view_args.namespace }}",
-            "allowed": ["etd"]
+            "allowed": ["etd", "austm"]
         },
         {
             "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
@@ -69,10 +72,10 @@ Sample configuration:
 
 
 `match_conditions` will determinte the route for the path.
-A route must match all the conditions in the config file, 
-if not, an error page with a "not implemented"(501) is returned to the user.
+A route must match all the conditions in the config file. 
+If not, an error page with a "501 Not Implemented" error is returned to the user.
 
-`match_conditions` is a list of dicts.
+`match_conditions` is a list of python dictionaries.
 
 Example:
 ```
@@ -87,8 +90,8 @@ Example:
         }
     ]
 ```
-* `value`: Value to compare. The item data from solr is availabe in a varibale `item`, which can be used to compute the value.
-* `allowed`: List of acceptable values, these values are compared with the provided value to determine a match
+* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through jinja before comparison.
+* `allowed`: List of acceptable values, these values are compared with the provided `value` to determine a match. Matches must be exact.
 
 
 
@@ -109,7 +112,7 @@ Example:
     ]
 ```
 * `value`: Value to compare. Can use Jinja2 variables and filters to determine the value. 
-The item data from solr is availabe in a varibale `item`, which can be used to compute the value.
+The item data from solr is available in a variable `item`, which can be used to compute the value.
 * `allowed`: List of acceptable values, these values are compared with the provided value to determine a match.
 
 
