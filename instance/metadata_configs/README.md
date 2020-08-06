@@ -107,7 +107,7 @@ Example:
         }
     ],
 ```
-* `value`: Value to compare. Can use jinja2 variables and filters to determine the value. 
+* `value`: Value to compare. Can use Jinja2 variables and filters to determine the value. 
 The item data from solr is availabe in a varibale `item`, which can be used to compute the value.
 * `allowed`: List of acceptable values, these values are compared with the provided value to determine a match.
 
@@ -121,8 +121,7 @@ These configurations are used to render the downloads section on the page
 * `field`: Solr field to display the value of
 * `label`: The label to use for the field
 * `metadata_template`: The template file within the `sandhill\templates` directory to display this field
-* (Optional) `link`: If provided, will turn the metadata value into a link. Jinja varibales and filters can be used in the field.
-for more information
+* (Optional) `link`: If provided, will turn the metadata value into a link. Jinja2 varibales and filters can be used in the field.
 
 ### Downloads Fields
 These configurations are used to render the downloads section on the page
@@ -132,7 +131,7 @@ These configurations are used to render the downloads section on the page
 * `file_size_field`: Filesize of the object.
 * `datastream`: Fedora datastream of the object. This is used to generate the "view" and "download" links.
 * (Optional) `restricted`: If provided and set to true, the object will not be displayed in the downloads box given that the restriction conditions are met. 
-See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/tree/development/instance%2Fmetadata_configs#Restriction%20Conditions)
+See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions)
 for more information
 
 
@@ -145,8 +144,9 @@ Variables
 used through out the page. Some examples of variables available are: 
 * `metadata_value` which is the value of the current metadata field
 * `view_args.namespace` and `view_args.id` come from the route configs in the `routes` section and 
-* `item` is the solr response for the record. It is a dictinoary with solr fields as keys and their corresponding values. 
 represent the pid components
+* `item` is the solr response for the record. It is a dictinoary with solr fields as keys and their corresponding values. 
+
 
 Additionally, you can dynamically alter the values of the variables used by using Jinja2 filters. To add 
 to the existing Jinja2 filters, there are custom ones available within our [filters](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/master/sandhill/utils/filters.py) file. Some examples are: 
