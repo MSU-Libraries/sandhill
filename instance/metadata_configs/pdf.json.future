@@ -1,234 +1,250 @@
 {
-    "mime_types" : [ "application/pdf" ],
+    "match_conditions": [
+        {
+            "value": "{{ view_args.namespace }}",
+            "allowed": ["etd", "austm"]
+        },
+        {
+            "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
+            "allowed": ["info:fedora/islandora:sp_pdf"]
+        }
+    ],
     "title_field": "fgs_label_s",
     "media_template": "media_display/preview.html.j2",
+    "restriction_conditions": [
+        {
+            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else False }}",
+            "allowed": ["True"]
+        }
+    ],
     "display": [
         {
-            "field": "description",
-            "name": "Summary",
-            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2",
-            "limit_length": 500
+            "field": "{{ item.description }}",
+            "label": "Summary",
+            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
         },
         {
-            "field": "collection_t",
-            "name": "In Collections",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "field": "genre_aat",
-            "name": "Material Type",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "field": "name_author",
-            "name": "Authors",
+            "field": "{{ item.collection_t }}",
+            "label": "In Collections",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": "https://d.lib.msu.edu/islandora/search?type=dismax&f[0]=<FIELD>:<VALUE>"
+            "link": "/{{ view_args.namespace }}"
         },
         {
-            "field": "name_editor",
-            "name": "Editors",
+            "field": "{{ item.genre_aat }}",
+            "label": "Material Type",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "name_contributor",
-            "name": "Contributors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "field": "name_publisher",
-            "name": "Publishers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "field": "name_signer",
-            "name": "Signers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "field": "name_thesis_advisor",
-            "name": "Thesis Advisors",
+            "field": "{{ item.name_author }}",
+            "label": "Authors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": true
+            "link": "/search?fq=name_author:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "field": "name_committee_member",
-            "name": "Committee Members",
+            "field": "{{ item.name_editor }}",
+            "label": "Editors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "name_degree_committee_member",
-            "name": "Committee Members",
+            "field": "{{ item.name_contributor }}",
+            "label": "Contributors",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "field": "{{ item.name_publisher }}",
+            "label": "Publishers",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "field": "{{ item.name_signer }}",
+            "label": "Signers",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "field": "{{ item.name_thesis_advisor }}",
+            "label": "Thesis Advisors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": true
+            "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
         },
         {
-            "field": "date_key",
-            "name": "Date",
+            "field": "{{ item.name_committee_member }}",
+            "label": "Committee Members",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "edition",
-            "name": "Edition",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "field": "series_info",
-            "name": "Series",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "field": "subject_display",
-            "name": "Subjects",
+            "field": "{{ item.name_degree_committee_member }}",
+            "label": "Committee Members",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": true
+            "link": "/search?fq=name_degree_committee_member:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "field": "subject_local_topic",
-            "name": "Category",
+            "field": "{{ item.date_key }}",
+            "label": "Date",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "subject_tic",
-            "name": "Turfgrass Thesaurus Terms",
+            "field": "{{ item.edition }}",
+            "label": "Edition",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "ndltd.discipline",
-            "name": "Program of Study",
+            "field": "{{ item.series_info }}",
+            "label": "Series",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "field": "{{ item.subject_display }}",
+            "label": "Subjects",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": true
+            "link": "/search?fq=subject_display:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "field": "ndltd.level",
-            "name": "Degree Level",
+            "field": "{{ item.subject_local_topic }}",
+            "label": "Category",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "field": "{{ item.subject_tic }}",
+            "label": "Turfgrass Thesaurus Terms",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "field": "{{ item['ndltd.discipline']}}",
+            "label": "Program of Study",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": true
+            "link": "/search?fq=ndltd.discipline:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "field": "note_noType",
-            "name": "Note",
+            "field": "{{ item['ndltd.level'] }}",
+            "label": "Degree Level",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=ndltd.level:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
+            "field": "{{ item.note_noType }}",
+            "label": "Note",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "note_local",
-            "name": "Local Note",
+            "field": "{{ item.note_local }}",
+            "label": "Local Note",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "note_venue",
-            "name": "Venue Note",
+            "field": "{{ item.note_venue }}",
+            "label": "Venue Note",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "language",
-            "name": "Language",
+            "field": "{{ item.language }}",
+            "label": "Language",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "extent",
-            "name": "Pages",
+            "field": "{{ item.extent }}",
+            "label": "Pages",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "external_content_url",
-            "name": "Additional Content",
+            "field": "{{ item.external_content_url }}",
+            "label": "Additional Content",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "archived_version_url",
-            "name": "Archived Version",
+            "field": "{{ item.archived_version_url }}",
+            "label": "Archived Version",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "physical_location",
-            "name": "Location of Original",
+            "field": "{{ item.physical_location }}",
+            "label": "Location of Original",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "name_owner",
-            "name": "Holding Institution",
+            "field": "{{ item.name_owner }}",
+            "label": "Holding Institution",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "otherVersion",
-            "name": "Other Versions",
+            "field": "{{ item.otherVersion }}",
+            "label": "Other Versions",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "relatedMaterials_object_in_context",
-            "name": "Related Items",
+            "field": "{{ item.relatedMaterials_object_in_context }}",
+            "label": "Related Items",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "rightsholder_name",
-            "name": "Rights Holder",
+            "field": "{{ item.rightsholder_name }}",
+            "label": "Rights Holder",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "rightsholder_contact",
-            "name": "Rights Holder Contact Information",
+            "field": "{{ item.rightsholder_contact }}",
+            "label": "Rights Holder Contact Information",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "rightsholder_note",
-            "name": "Conditions of Use",
+            "field": "{{ item.rightsholder_note }}",
+            "label": "Conditions of Use",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "toc_entry",
-            "name": "Table of Contents",
+            "field": "{{ item.toc_entry }}",
+            "label": "Table of Contents",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "isbn",
-            "name": "ISBN",
+            "field": "{{ item.isbn }}",
+            "label": "ISBN",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "issn",
-            "name": "ISSN",
+            "field": "{{ item.issn }}",
+            "label": "ISSN",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "field": "catalog_record",
-            "name": "Catalog Record",
+            "field": "{{ item.catalog_record }}",
+            "label": "Catalog Record",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         }
     ],
     "downloads": [
         {
-            "name": "Original file",
+            "label": "Original file",
             "mime_type_field": "fedora_datastream_latest_OBJ_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_OBJ_SIZE_ms",
-            "datastream": "OBJ"
+            "datastream": "OBJ",
+            "restricted": true
         },
         {
-            "name": "Low-resolution image",
+            "label": "Low-resolution image",
             "mime_type_field": "fedora_datastream_latest_PREVIEW_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_PREVIEW_SIZE_ms",
             "datastream": "PREVIEW"
         },
         {
-            "name": "Full text",
+            "label": "Full text",
             "mime_type_field": "fedora_datastream_latest_FULL_TEXT_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_FULL_TEXT_SIZE_ms",
             "datastream": "FULL_TEXT"
         },
         {
-            "name": "Descriptive metadata (MODS)",
+            "label": "Descriptive metadata (MODS)",
             "mime_type_field": "fedora_datastream_latest_MODS_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_MODS_SIZE_ms",
             "datastream": "MODS"
         },
         {
-            "name": "Descriptive metadata (Dublin Core)",
+            "label": "Descriptive metadata (Dublin Core)",
             "mime_type_field": "fedora_datastream_latest_DC_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_DC_SIZE_ms",
             "datastream": "DC"
         },
         {
-            "name": "Descriptive metadata (NDLTD)",
+            "label": "Descriptive metadata (NDLTD)",
             "mime_type_field": "fedora_datastream_latest_NDLTD_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_NDLTD_SIZE_ms",
             "datastream": "NDLTD"

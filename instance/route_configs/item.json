@@ -16,13 +16,15 @@
         },
         {
             "name": "metadata_conf",
-            "processor": "file.load_json",
-            "on_fail": 501,
-            "_comment": "TODO -- this fails for embargoed items since there is not etd.json and of course no fedora_data_stream_version",
-            "paths": [
-                "metadata_configs/{{ view_args.namespace }}.json",
-                "metadata_configs/{{ item.fedora_datastream_version_OBJ_MIMETYPE_ms | first | replace('/','_') }}.json"
-            ]
+            "processor": "file.load_matched_json",
+            "on_fail": 501
+        },
+        {
+            "name": "restriction",
+            "processor": "evaluate.conditions",
+            "on_fail": 401,
+            "conditions": "metadata_conf.restriction_conditions"
         }
     ]
 }
+

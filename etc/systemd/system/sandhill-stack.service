@@ -5,6 +5,7 @@ After=docker.service
 [Service]
 Type=simple
 WorkingDirectory=/home/deploy/sandhill
+EnvironmentFile=/home/deploy/sandhill/.env
 ExecStart=/usr/local/bin/docker-compose -f /home/deploy/sandhill/docker-compose.yml up
 ExecStop=/usr/local/bin/docker-compose -f /home/deploy/sandhill/docker-compose.yml down
 ExecReload=/usr/local/bin/docker-compose -f /home/deploy/sandhill/docker-compose.yml up
