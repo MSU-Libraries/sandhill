@@ -84,7 +84,7 @@ Example:
             "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
             "allowed": ["info:fedora/islandora:sp_pdf"]
         }
-    ],
+    ]
 ```
 * `value`: Value to compare. The item data from solr is availabe in a varibale `item`, which can be used to compute the value.
 * `allowed`: List of acceptable values, these values are compared with the provided value to determine a match
@@ -105,7 +105,7 @@ Example:
             "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else False }}",
             "allowed": ["True"]
         }
-    ],
+    ]
 ```
 * `value`: Value to compare. Can use Jinja2 variables and filters to determine the value. 
 The item data from solr is availabe in a varibale `item`, which can be used to compute the value.
@@ -138,9 +138,11 @@ for more information
 
 Variables
 ============
+* `link` field within the `display` section has the ability to create dynamic URLs with variables.
+* `restricted` field with in the `downloads` section can be used to control the display of the downloads object based on the restriction conditions. 
+See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions) for more information. 
 
 ### Special Variables
-* `link` field within the `display` section has the ability to create dynamic URLs with variables 
 used through out the page. Some examples of variables available are: 
 * `metadata_value` which is the value of the current metadata field
 * `view_args.namespace` and `view_args.id` come from the route configs in the `routes` section and 
