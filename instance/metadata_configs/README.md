@@ -5,8 +5,9 @@ item pages within Sandhill.
 
 Define the Configuration File
 ============================================
-Files must be named after the namespace (ex: `etd.json`) or 
-based on the type (ex: `pdf.json`). 
+From Sandhill's perspective, config files can be named arbitrarily. 
+One particular naming system that might be logical to use would follow the convention 
+of using namespace (ex: `etd.json`) or type (ex: `pdf.json`). 
 
 
 Field Definitions
@@ -143,10 +144,12 @@ Variables
 See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions) for more information. 
 
 ### Jinja2 Variables
+All variables defined in template files are available to be used in configuration files.
+[Example config block here]
 * `metadata_value` which is the value of the current metadata field
 * `view_args.namespace` and `view_args.id` come from the route configs in the `routes` section and 
 represent the pid components
-* `item` is the solr response for the record. It is a dictinoary with solr fields as keys and their corresponding values. 
+* `item` is the solr response for the record. It is a dictionary with solr fields as keys and their corresponding values. 
 
 
 Additionally, you can dynamically alter the values of the variables used by using Jinja2 filters. To add 
