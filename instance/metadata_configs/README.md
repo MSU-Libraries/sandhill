@@ -47,6 +47,12 @@ Sample configuration:
             "label": "In Collections",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/{{ view_args.namespace }}"
+        },
+        {
+            "field": "name_thesis_advisor",
+            "label": "Thesis Advisors",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
         }
     ],
     "downloads": [
@@ -71,7 +77,7 @@ Sample configuration:
 ### Match Conditions
 
 
-`match_conditions` will determinte the route for the path.
+`match_conditions` will determine the route for the path.
 A route must match all the conditions in the config file. 
 If not, an error page with a "501 Not Implemented" error is returned to the user.
 
@@ -111,21 +117,20 @@ Example:
         }
     ]
 ```
-* `value`: Value to compare. Can use Jinja2 variables and filters to determine the value. 
-The item data from solr is available in a variable `item`, which can be used to compute the value.
-* `allowed`: List of acceptable values, these values are compared with the provided value to determine a match.
+* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through jinja before comparison.
+* `allowed`: List of acceptable values, these values are compared with the provided value to determine a match. Matches must be exact.
 
 
 ### General Fields
 * `title_field`: The Solr field to use for the title on the item page
-* `media_template`: The template file within the `sandhill\templates` directory to use for the object viewer
+* `media_template`: The template file within the `sandhill\templates\media_display` directory to use for the object viewer
 
 ### Display Fields  
 These configurations are used to render the downloads section on the page
-* `field`: Solr field to display the value of
-* `label`: The label to use for the field
-* `metadata_template`: The template file within the `sandhill\templates` directory to display this field
-* (Optional) `link`: If provided, will turn the metadata value into a link. Jinja2 varibales and filters can be used in the field.
+* `field`: Solr field to display the value. 
+* `label`: The label to use for the field.
+* `metadata_template`: The template file within the `sandhill\templates\item_page_blocks` directory to display this field
+* (Optional) `link`: If provided, will turn the metadata value into a link. The string is rendered through jinja.
 
 ### Downloads Fields
 These configurations are used to render the downloads section on the page
@@ -143,16 +148,76 @@ for more information
 Variables
 ============
 * `link` field within the `display` section has the ability to create dynamic URLs with variables.
-* `restricted` field with in the `downloads` section can be used to control the display of the downloads object based on the restriction conditions. 
+* `restricted` field within the `downloads` section can be used to control the display of the downloads object based on the restriction conditions. 
 See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions) for more information. 
 
 ### Jinja2 Variables
 All variables defined in template files are available to be used in configuration files.
-[Example config block here]
-* `metadata_value` which is the value of the current metadata field
-* `view_args.namespace` and `view_args.id` come from the route configs in the `routes` section and 
+* `metadata_value` is a variable that is available in the templates 
+Example display field:
+```
+{
+    "field": "name_thesis_advisor",
+    "label": "Thesis Advisors",
+    "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+    "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
+}
+
+```
+Example template:
+```
+<dl class="row my-sm-3 sandhill_metadata_descriptive_list">
+    <dt class="col-sm-3" id="sandhill_metadata_field">{{ display_conf['label']  }}</dt>
+    <dd class="col-sm-9" aria-labelledby="sandhill_metadata_field">
+        {% if item[display_conf['field']] | is_list %}
+            {% for  metadata_value in  item[display_conf['field']] %}
+                {% include 'item_page_blocks/display_field.html.j2' %}
+                <br/>
+            {% endfor %}
+        {% else %}
+            {% set metadata_value = item[display_conf['field']] %}
+            {% include 'item_page_blocks/display_field.html.j2' %}
+        {% endif %}
+    </dd>
+</dl>
+```
+* `view_args.namespace` and `view_args.id`  are set in the route configs in the `routes` section and 
 represent the pid components
-* `item` is the solr response for the record. It is a dictionary with solr fields as keys and their corresponding values. 
+Example route config:
+```
+{
+    "route": [
+        "/<string:namespace>/<int:id>",
+        "/<string:namespace>:<int:id>"
+    ],
+    "template": "item.html.j2",
+    "data": [
+        {
+            "name": "item",
+            "processor": "solr.query_record",
+            "on_fail": 404,
+            "params": {
+                "q": "PID:\"{{ view_args.namespace }}:{{ view_args.id }}\"",
+                "wt": "json"
+            }
+        },
+        {
+            "name": "metadata_conf",
+            "processor": "file.load_matched_json",
+            "on_fail": 501
+        },
+        {
+            "name": "restriction",
+            "processor": "evaluate.conditions",
+            "on_fail": 401,
+            "conditions": "metadata_conf.restriction_conditions"
+        }
+    ]
+}
+
+```
+* `item` is the solr response for the record. It is a dictionary with solr fields as keys and their corresponding values.
+The variable is set in the route configs in the `data` section.
 
 
 Additionally, you can dynamically alter the values of the variables used by using Jinja2 filters. To add 
