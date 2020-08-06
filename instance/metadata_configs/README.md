@@ -142,8 +142,7 @@ Variables
 * `restricted` field with in the `downloads` section can be used to control the display of the downloads object based on the restriction conditions. 
 See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions) for more information. 
 
-### Special Variables
-used through out the page. Some examples of variables available are: 
+### Jinja2 Variables
 * `metadata_value` which is the value of the current metadata field
 * `view_args.namespace` and `view_args.id` come from the route configs in the `routes` section and 
 represent the pid components
