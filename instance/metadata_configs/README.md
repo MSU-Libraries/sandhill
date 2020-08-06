@@ -8,14 +8,14 @@ Define the Configuration File
 From Sandhill's perspective, config files can be named arbitrarily. 
 One particular naming system that might be logical to employ would use namespace (ex: `etd.json`) or type (ex: `pdf.json`). 
 
-In addition to more familiar data types, such as strings and integers, all [jinja template functionality](https://jinja.palletsprojects.com/en/2.11.x/templates/) is
+In addition to more familiar data types, such as strings and integers, all [Jinja template functionality](https://jinja.palletsprojects.com/en/2.11.x/templates/) is
 available to be included in the values specified in each metadata configuration file. For instance,
-`{{ view_args.namespace }}` is a jinja expression that will be evaluated internally to arrive at the actual value to be
+`{{ view_args.namespace }}` is a Jinja expression that will be evaluated internally to arrive at the actual value to be
 included on the page.
 
 Field Definitions
 ================
-Sample configuration:  
+### Sample configuration  
 ```
 {
     "match_conditions": [
@@ -76,7 +76,6 @@ Sample configuration:
 
 ### Match Conditions
 
-
 `match_conditions` will determine the route for the path.
 A route must match all the conditions in the config file. 
 If not, an error page with a "501 Not Implemented" error is returned to the user.
@@ -96,10 +95,8 @@ Example:
         }
     ]
 ```
-* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through jinja before comparison.
+* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through Jinja before comparison.
 * `allowed`: List of acceptable values, these values are compared with the provided `value` to determine a match. Matches must be exact.
-
-
 
 ### Restriction Conditions
 
@@ -117,7 +114,7 @@ Example:
         }
     ]
 ```
-* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through jinja before comparison.
+* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through Jinja before comparison.
 * `allowed`: List of acceptable values, these values are compared with the provided value to determine a match. Matches must be exact.
 
 
@@ -126,34 +123,12 @@ Example:
 * `media_template`: The template file within the `sandhill\templates\media_display` directory to use for the object viewer
 
 ### Display Fields  
-These configurations are used to render the downloads section on the page
-* `field`: Solr field to display the value. 
+These configurations are used to render the downloads section on the page. 
+
+* `field`: Name of the Solr field. 
 * `label`: The label to use for the field.
 * `metadata_template`: The template file within the `sandhill\templates\item_page_blocks` directory to display this field
-* (Optional) `link`: If provided, will turn the metadata value into a link. The string is rendered through jinja.
-
-### Downloads Fields
-These configurations are used to render the downloads section on the page
-
-* `label`: The label to use for the object in the downloads section.
-* `mime_type_field`: Mimetype of the object in the downloads section.
-* `file_size_field`: Filesize of the object.
-* `datastream`: Fedora datastream of the object. This is used to generate the "view" and "download" links.
-* (Optional) `restricted`: If provided and set to true, the object will not be displayed in the downloads box given that the restriction conditions are met. 
-See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions)
-for more information
-
-
-
-Variables
-============
-* `link` field within the `display` section has the ability to create dynamic URLs with variables.
-* `restricted` field within the `downloads` section can be used to control the display of the downloads object based on the restriction conditions. 
-See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions) for more information. 
-
-### Jinja2 Variables
-All variables defined in template files are available to be used in configuration files.
-* `metadata_value` is a variable that is available in the templates 
+* (Optional) `link`: If provided, will turn the metadata value into a link. The string is rendered through Jinja.
 
 Example display field:
 ```
@@ -163,9 +138,12 @@ Example display field:
     "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
     "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
 }
-
 ```
-Example template:
+
+All variables defined in the route config and in template files are available to be used in configuration files.
+For example, in the above `link` value, `metadata_value` is referring to the `metadata_value` defined in the template file - see example below. 
+
+Example contents of `metadata_template` file:
 ```
 <dl class="row my-sm-3 sandhill_metadata_descriptive_list">
     <dt class="col-sm-3" id="sandhill_metadata_field">{{ display_conf['label']  }}</dt>
@@ -182,8 +160,38 @@ Example template:
     </dd>
 </dl>
 ```
+
+### Downloads Fields
+These configurations are used to render the downloads section on the page.
+
+* `label`: The label to use for the object in the downloads section.
+* `mime_type_field`: Mimetype of the object in the downloads section.
+* `file_size_field`: Filesize of the object.
+* `datastream`: Fedora datastream of the object. This is used to generate the "view" and "download" links.
+* (Optional) `restricted`: If provided and set to true, the object will not be displayed in the downloads box given that the restriction conditions are met. 
+See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions)
+for more information
+
+Example `downloads` field:
+```
+{
+    "label": "Original file",
+    "mime_type_field": "fedora_datastream_latest_OBJ_MIMETYPE_ms",
+    "file_size_field": "fedora_datastream_latest_OBJ_SIZE_ms",
+    "datastream": "OBJ",
+    "restricted": true
+}
+```
+
+Route Config Variables
+=======================
+
+### Jinja2 Variables
 * `view_args.namespace` and `view_args.id`  are set in the route configs in the `routes` section and 
 represent the pid components
+
+### Route config explanation
+The route has a list of `data` sources; each `data` entry has a `name`. The value of the `name` is the name of the variable. 
 
 Example route config:
 ```
@@ -218,13 +226,19 @@ Example route config:
 }
 
 ```
-* `item` is the solr response for the record. It is a dictionary with solr fields as keys and their corresponding values.
+
+For example, this is the route config for the `item.html.j2` template. 
+In the `data` section, `name` has a value of `item`. `item` will be available inside that template, and will contain the results of the `solr.query_record` data processor. 
+See the example at the top of the page, in the Field Definitions section, under ["Sample Configuration"](#sample-configuration) > `match_conditions`. 
+Look for the second set of curly braces, at the line that starts with `value`. 
+
+* `item` is the Solr response for the record. It is a dictionary with solr fields as keys and their corresponding values.
 The variable is set in the route configs in the `data` section.
 
 
 Additionally, you can dynamically alter the values of the variables used by using Jinja2 filters. To add 
 to the existing Jinja2 filters, there are custom ones available within our [filters](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/master/sandhill/utils/filters.py) file. Some examples are: 
-* `solr_escape`: A custom filter, which will take a alue and escape the special Solr characters
+* `solr_escape`: A custom filter, which will take a value and escape the special Solr characters
 * `urlencode`: Encode the value to be used in a URL
 
 
