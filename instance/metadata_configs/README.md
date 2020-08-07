@@ -123,11 +123,15 @@ Example:
 * `media_template`: The template file within the `sandhill\templates\media_display` directory to use for the object viewer
 
 ### Display Fields  
-These configurations are used to render the downloads section on the page. 
+These configurations are used to render the metadata section on the page. 
 
 * `field`: Name of the Solr field. 
 * `label`: The label to use for the field.
-* `metadata_template`: The template file within the `sandhill\templates\item_page_blocks` directory to display this field
+* `metadata_template`: The template file within the `sandhill\templates\item_page_blocks` directory to display this field.
+    
+    Available metadata templates
+    * `item_page_blocks/metadata_expand_block.html.j2`: A template that creates a toggle for the visibility of content.
+    * `item_page_blocks/metadata_descriptive_list.html.j2`: A template that creates a descriptive list of fields and values.
 * (Optional) `link`: If provided, will turn the metadata value into a link. The string is rendered through Jinja.
 
 Example display field:
