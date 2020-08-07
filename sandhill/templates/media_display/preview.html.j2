@@ -1,9 +1,19 @@
 <div class="text-center">
-    <a href="{{ item['PID'] | generate_datastream_url }}">
-        <img class="border rounded" 
+    <!-- TODO pull the embargo field from the config -->
+    {% if restriction %}
+        <img class="border rounded"
             src="{{ item['PID'] | generate_datastream_url("PREVIEW") }}"
-            class="img-fluid" 
+            class="img-fluid"
             alt="{{ item[metadata_conf['title_field']] }}"/>
-    </a>
+
+    {% else %}
+        <a href="{{ item['PID'] | generate_datastream_url }}">
+            <img class="border rounded"
+                src="{{ item['PID'] | generate_datastream_url("PREVIEW") }}"
+                class="img-fluid"
+                alt="{{ item[metadata_conf['title_field']] }}"/>
+        </a>
+
+    {% endif %}
 </div>
 

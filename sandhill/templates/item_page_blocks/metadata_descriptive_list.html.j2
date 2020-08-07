@@ -1,13 +1,14 @@
 <dl class="row my-sm-3 sandhill_metadata_descriptive_list">
-    <dt class="col-sm-3" id="sandhill_metadata_field">{{ display_conf['name']  }}</dt>
+    <dt class="col-sm-3" id="sandhill_metadata_field">{{ display_conf['label']  }}</dt>
     <dd class="col-sm-9" aria-labelledby="sandhill_metadata_field">
         {% if item[display_conf['field']] | is_list %}
-            {% for  meatadata_value in  item[display_conf['field']] %}
-                {{ meatadata_value }}
-                <br>
+            {% for  metadata_value in  item[display_conf['field']] %}
+                {% include 'item_page_blocks/display_field.html.j2' %}
+                <br/>
             {% endfor %}
         {% else %}
-            {{ item[display_conf['field']] }}
+            {% set metadata_value = item[display_conf['field']] %}
+            {% include 'item_page_blocks/display_field.html.j2' %}
         {% endif %}
     </dd>
 </dl>

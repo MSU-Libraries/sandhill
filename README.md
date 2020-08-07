@@ -5,6 +5,10 @@ Sandhill
 * [Deployable Docker Setup](#deployable-docker-setup)
 * [Routes](#routes)
 * [Docker](#docker)
+* [Developer Notes](#developer-notes)
+* [Rollback](#rollback)
+* [Metadata Configuration](instance/metadata_configs/README.md)
+* [Page Creation](instance/route_configs/README.md)
 
 
 Developer Environment Setup
@@ -195,3 +199,44 @@ Docker
 ### Containers  
 * **sandhill**: will run the Sandhill Flask application, exposing port 8080
 * **nginx**: will run Nginx to host the sandhill's service socket (from 8080), exposing port 81
+
+Developer Notes
+===============
+### Unit Testing
+All code is expected to have a corelating unit test. In order to run the existing test 
+simply do:  
+```
+# Running outside of the virtual environment
+./env/bin/pytest
+
+# Running within the virtual environment
+pytest
+```
+
+It will search for all `test_*.py` files recursivly starting in the current working directory. 
+So if you want to limit the tests run, then go into the directory you want and run the `pytest` 
+command.
+
+If you are in a sub-directory and want to view the complete coverage report showing which lines 
+of code are uncovered, you could run `pytest --cov-report term-missing`
+
+In the future, we will update the `.coveragerc` file to fail if any of the files have less than 
+100% coverage, but for now it will just print them.
+
+Rollback
+===============
+To rollback an environment to a previous commit, you first need to identify the commit (i.e. tag in the 
+container registry) you want to rollback to.
+
+Navigate to the [container registry](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/container_registry) 
+to identify the tag you want to rollback to, which is based on the git commit. For example the image tagged 
+`4f991a07` references https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/tree/4f991a07 that code base. 
+
+Now navigate to the [environment](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/environments) and 
+select the affected environment. Find the commit that matches the tag you want to rollback to and click the 
+icon that looks like a refresh arrow that says "rollback environment" when you hover on it.
+
+This will kick of the job the re-deploys that git commit to the server. The environment will stay in that state until another 
+rollback to the latest (or any other) version is triggered. Another merge to the branch linked to that environment will also 
+override whatever rolled back state you are in.  
+

@@ -3,6 +3,7 @@ services:
   - docker:dind
 
 stages:
+  - unittest
   - build
   - deploy_test
   - release
@@ -28,6 +29,19 @@ variables:
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+unittest_job:
+  stage: unittest
+  tags:
+    - msul
+  except:
+    - stage
+    - master
+  script:
+    - virtualenv -p python3 $CI_PROJECT_DIR/env
+    - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
+    - $CI_PROJECT_DIR/env/bin/pytest
+
 
 build_job:
   stage: build
@@ -150,3 +164,4 @@ deploy_prod_secondary_job:
     - sleep 4
     - ssh $CONNECT_PROD2 sudo systemctl status sandhill-stack
     - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD2 ) -eq 200 ]]"
+
