@@ -123,7 +123,7 @@ Example:
 * `media_template`: The template file within the `sandhill\templates\media_display` directory to use for the object viewer
 
 ### Display Fields  
-These configurations are used to render the downloads section on the page. 
+These configurations are used to render the metadata section on the page. 
 
 * `field`: Name of the Solr field. 
 * `label`: The label to use for the field.
