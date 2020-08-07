@@ -2,7 +2,7 @@ version: '2'
 
 services:
     sandhill:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:${TAG}
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
       container_name: sandhill
       restart: always
       expose:
@@ -14,7 +14,7 @@ services:
         - FEDORA_URL=http://d.lib.msu.edu:8080/fedora
 
     nginx:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:${TAG}
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:latest
       container_name: nginx
       restart: always
       ports:
