@@ -136,7 +136,7 @@ deploy_prod_secondary_job:
   only:
     - master
   dependencies:
-    - deploy_prod_primary_job
+    - deploy_stage_job
   script:
     - ssh $CONNECT_PROD2 git -C $REPO_PATH reset HEAD --hard
     - ssh $CONNECT_PROD2 git -C $REPO_PATH fetch origin
