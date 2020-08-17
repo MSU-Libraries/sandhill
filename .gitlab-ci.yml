@@ -36,9 +36,6 @@ build_job:
   stage: build
   tags:
     - msul
-  environment:
-    name: test
-    url: http://sandhill.test.lib.msu.edu
   only:
     - master
   script:
@@ -47,7 +44,7 @@ build_job:
     - docker build --pull -t $CONTAINER_IMAGE_NGINX ./nginx
     - docker push $CONTAINER_IMAGE_NGINX
 
-build_test_job:
+deploy_test_job:
   stage: deploy_test
   tags:
     - msul
@@ -72,7 +69,7 @@ build_test_job:
     - ssh $CONNECT_TEST sudo /bin/systemctl status sandhill-stack.test
     - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $CI_ENVIRONMENT_URL ) -eq 200 ]]"
 
-deploy_stage_job:
+1_deploy_stage_job:
   stage: deploy_stage
   tags:
     - msul
@@ -98,7 +95,7 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE sudo systemctl status sandhill-stack.stage
     - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $CI_ENVIRONMENT_URL ) -eq 200 ]]"
 
-deploy_prod_primary_job:
+2_deploy_prod_primary_job:
   stage: deploy_prod
   tags:
     - msul
@@ -124,7 +121,7 @@ deploy_prod_primary_job:
     - ssh $CONNECT_PROD1 sudo systemctl status sandhill-stack
     - ssh $CONNECT_PROD1 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $CI_ENVIRONMENT_URL ) -eq 200 ]]"
 
-deploy_prod_secondary_job:
+3_deploy_prod_secondary_job:
   stage: deploy_prod
   tags:
     - msul
