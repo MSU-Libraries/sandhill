@@ -77,6 +77,8 @@ deploy_stage_job:
     name: stage
     url: http://sandhill.stage.lib.msu.edu
   when: manual
+  dependencies:
+    - deploy_test_job
   only:
     - master
   script:
@@ -105,7 +107,8 @@ deploy_prod_primary_job:
   when: manual
   only:
     - master
-  needs: ["deploy_stage_job"]
+  dependencies:
+    - deploy_stage_job
   script:
     - ssh $CONNECT_PROD1 git -C $REPO_PATH reset HEAD --hard
     - ssh $CONNECT_PROD1 git -C $REPO_PATH fetch origin
@@ -132,7 +135,8 @@ deploy_prod_secondary_job:
   when: manual
   only:
     - master
-  needs: ["deploy_prod_primary_job"]
+  dependencies:
+    - deploy_prod_primary_job
   script:
     - ssh $CONNECT_PROD2 git -C $REPO_PATH reset HEAD --hard
     - ssh $CONNECT_PROD2 git -C $REPO_PATH fetch origin
