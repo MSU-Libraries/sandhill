@@ -80,6 +80,8 @@ deploy_stage_job:
     name: stage
     url: http://sandhill.stage.lib.msu.edu
   when: manual
+  only:
+    - master
   script:
     - ssh $CONNECT_STAGE git -C $REPO_PATH reset HEAD --hard
     - ssh $CONNECT_STAGE git -C $REPO_PATH fetch origin
@@ -104,6 +106,8 @@ deploy_prod_primary_job:
     name: production
     url: http://sandhill.lib.msu.edu
   when: manual
+  only:
+    - master
   script:
     - ssh $CONNECT_PROD1 git -C $REPO_PATH reset HEAD --hard
     - ssh $CONNECT_PROD1 git -C $REPO_PATH fetch origin
@@ -128,6 +132,8 @@ deploy_prod_secondary_job:
     name: production secondary
     url: http://sandhillm.lib.msu.edu
   when: manual
+  only:
+    - master
   script:
     - ssh $CONNECT_PROD2 git -C $REPO_PATH reset HEAD --hard
     - ssh $CONNECT_PROD2 git -C $REPO_PATH fetch origin
