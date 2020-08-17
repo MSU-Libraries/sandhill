@@ -56,6 +56,7 @@ do not support file redirection in Ubuntu 16.04.
 ```
 sudo cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
 sudo chown -R syslog:adm /var/log/sandhill
+sudo systemctl restart rsyslog
 ```
 
 ### Create the service
