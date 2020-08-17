@@ -1,0 +1,28 @@
+{
+    "route": [
+        "/search",
+        "/search.<string:format>"
+    ],
+    "template": "search_results.html.j2",
+    "response": "search",
+    "data": [
+        {
+            "processor": "solr.search",
+            "name": "search",
+            "config": "main.json"
+        },
+        {
+            "processor": "file.load_json",
+            "name": "search_conf",
+            "on_fail": 501,
+            "paths": [
+                "search_configs/main.json"
+            ]
+        },
+        {
+            "processor": "request.get_url_components",
+            "name": "url_components",
+            "on_fail": 500
+        }
+    ]
+}
