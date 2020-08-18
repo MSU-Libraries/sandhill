@@ -18,6 +18,10 @@ variables:
   CONNECT_STAGE: "deploy@fedcoms4.lib.msu.edu"
   CONNECT_PROD1: "deploy@fedcom4a.lib.msu.edu"
   CONNECT_PROD2: "deploy@fedcom4b.lib.msu.edu"
+  SOLR_TEST: "https://solr.devel.lib.msu.edu/solr/fedcom"
+  SOLR_STAGE: "https://solr.stage.lib.msu.edu/solr/fedcom"
+  SOLR_PROD: "https://solr.lib.msu.edu/solr/fedcom"
+  FEDORA_URL: "http://localhost:8080/fedora"
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -30,7 +34,6 @@ unittest_job:
     - virtualenv -p python3 $CI_PROJECT_DIR/env
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
     - $CI_PROJECT_DIR/env/bin/pytest
-
 
 build_job:
   stage: build
@@ -67,7 +70,7 @@ deploy_test_job:
     - ssh $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
     - sleep 4
     - ssh $CONNECT_TEST sudo /bin/systemctl status sandhill-stack.test
-    - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $CI_ENVIRONMENT_URL ) -eq 200 ]]"
+    - ssh $CONNECT_TEST "SOLR_URL=$SOLR_TEST FEDORA_URL=$FEDORA_URL $REPO_PATH/env/bin/pytest $REPO_PATH -m functional"
 
 deploy_stage_job:
   stage: deploy_stage
@@ -95,7 +98,7 @@ deploy_stage_job:
     - ssh $CONNECT_STAGE sudo systemctl restart sandhill-stack.stage
     - sleep 4
     - ssh $CONNECT_STAGE sudo systemctl status sandhill-stack.stage
-    - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $CI_ENVIRONMENT_URL ) -eq 200 ]]"
+    - ssh $CONNECT_STAGE "SOLR_URL=$SOLR_STAGE FEDORA_URL=$FEDORA_URL $REPO_PATH/env/bin/pytest $REPO_PATH -m functional"
 
 deploy_prod_primary_job:
   stage: deploy_prod
@@ -123,7 +126,7 @@ deploy_prod_primary_job:
     - ssh $CONNECT_PROD1 sudo systemctl restart sandhill-stack
     - sleep 4
     - ssh $CONNECT_PROD1 sudo systemctl status sandhill-stack
-    - ssh $CONNECT_PROD1 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $CI_ENVIRONMENT_URL ) -eq 200 ]]"
+    - ssh $CONNECT_PROD1 "SOLR_URL=$SOLR_PROD FEDORA_URL=$FEDORA_URL $REPO_PATH/env/bin/pytest $REPO_PATH -m functional"
 
 deploy_prod_secondary_job:
   stage: deploy_prod
@@ -151,5 +154,5 @@ deploy_prod_secondary_job:
     - ssh $CONNECT_PROD2 sudo systemctl restart sandhill-stack
     - sleep 4
     - ssh $CONNECT_PROD2 sudo systemctl status sandhill-stack
-    - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $CI_ENVIRONMENT_URL ) -eq 200 ]]"
+    - ssh $CONNECT_PROD2 "SOLR_URL=$SOLR_PROD FEDORA_URL=$FEDORA_URL $REPO_PATH/env/bin/pytest $REPO_PATH -m functional"
 

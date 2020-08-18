@@ -1,0 +1,33 @@
+[
+    {
+        "page": "/",
+        "code": 200,
+        "contains": [
+            "Welcome to the MSU Libraries Digital Repository"
+        ]
+    },
+    {
+        "page": "/etd/1000",
+        "code": 200
+    },
+    {
+        "page": "/path/does/not/exist",
+        "code": 404
+    },
+    {
+        "page": "/search.xml",
+        "code": 501
+    },
+    {
+        "page": "/dmhsp/10",
+        "code": 501
+    },
+    {
+        "page": "/wosl/10",
+        "code": 404
+    },
+    {
+        "page": "/zzzzzz/1234",
+        "code": 404
+    }
+]

@@ -10,7 +10,7 @@ def conditions(data_dict):
         data_dict (dict): Dictinoary with the configs
 
     return:
-        (int): returns the number of matches matched ONLY if all are matched, else returns 0
+        (bool|None): Returns True if given conditions match appropriate to the parameters, False if they do not, or None on failure
     """
     evaluation = None
     condition_keys = ifnone(data_dict,'conditions', '')
@@ -20,7 +20,8 @@ def conditions(data_dict):
         app.logger.warning("Processor 'evaluate' is missing or has invalid 'match_all': "
                            + ifnone(data_dict, 'match_all', "not defined"))
     elif not conditions:
-        app.logger.warning("Invalid condition keys: {0}".format(data_dict['conditions']))
+        app.logger.warning("Invalid condition keys: {0}".format(
+            data_dict['conditions'] if 'conditions' in data_dict else "'conditions' undefined"))
     else:
         evaluation = evaluate_conditions(conditions, data_dict, match_all=data_dict['match_all']) > 0
 

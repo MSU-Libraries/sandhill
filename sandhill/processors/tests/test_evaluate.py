@@ -62,14 +62,18 @@ def test_conditions():
     assert evaluation is None
 
     # Test for missing 'conditions' definitions
+    data_dict['match_all'] = False
     del data_dict['conditions']
+    evaluation = evaluate.conditions(data_dict)
+    assert evaluation is None
+
+    # Test referencing an invalid condition key
+    data_dict['conditions'] = "other_conf.invalid_key"
     evaluation = evaluate.conditions(data_dict)
     assert evaluation is None
 
     # Test for missing conditions 'value'/'allowed' dict
     data_dict['conditions'] = "other_conf.other_cons"
     del data_dict['other_conf']
-    data_dict['match_all'] = True
     evaluation = evaluate.conditions(data_dict)
     assert evaluation is None
-
