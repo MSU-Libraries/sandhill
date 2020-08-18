@@ -224,7 +224,8 @@ Example route config:
             "name": "restriction",
             "processor": "evaluate.conditions",
             "on_fail": 401,
-            "conditions": "metadata_conf.restriction_conditions"
+            "conditions": "metadata_conf.restriction_conditions",
+            "match_all": true
         }
     ]
 }

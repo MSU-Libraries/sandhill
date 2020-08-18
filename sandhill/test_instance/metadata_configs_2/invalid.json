@@ -1,0 +1,8 @@
+{
+    "match_conditions": [
+        {
+            "values": "{{ wrong key }}",
+            "allow": "wrong key and not a list"
+        }
+    ]
+}
