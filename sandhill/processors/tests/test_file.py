@@ -81,5 +81,21 @@ def test_load_matched_json():
         file_data = file.load_matched_json(data_dict)
     assert 404 == http_error.type.code
 
+    # Test of the on fail error code is valid 
+    data_dict['on_fail'] = "404"
+    with  raises(HTTPException) as http_error:
+        file_data = file.load_matched_json(data_dict)
+    assert "??? Unknown Error" in str(http_error.value)
 
+    # Test of the on fail error code is valid 
+    data_dict['on_fail'] = "abc"
+    with  raises(HTTPException) as http_error:
+        file_data = file.load_matched_json(data_dict)
+    assert "??? Unknown Error" in str(http_error.value)
+
+    # Test of the on fail error code is valid 
+    data_dict['on_fail'] = 7000
+    with  raises(LookupError) as lookup_error:
+        file_data = file.load_matched_json(data_dict)
+    assert "no exception for" in str(lookup_error.value)
 
