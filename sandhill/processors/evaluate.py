@@ -4,12 +4,24 @@ from sandhill.utils.generic import ifnone, get_descendant_from_dict
 from flask import abort
 
 def conditions(data_dict):
+    """
+    Evaluates the condtions speicified in the processor section of the configs
+    args:
+        data_dict (dict): Dictinoary with the configs
+
+    return:
+        (int): returns the number of matches matched ONLY if all are matched, else returns 0
+    """
+    evaluation = None
     condition_keys = ifnone(data_dict,'conditions', '')
     conditions = get_descendant_from_dict(data_dict, condition_keys.split('.') if condition_keys else [])
 
-    if not conditions:
+    if 'match_all' not in data_dict or not isinstance(data_dict['match_all'], bool):
+        app.logger.warning("Processor 'evaluate' is missing or has invalid 'match_all': "
+                           + ifnone(data_dict, 'match_all', "not defined"))
+    elif not conditions:
         app.logger.warning("Invalid condition keys: {0}".format(data_dict['conditions']))
-        if "on_fail" in data_dict:
-            abort(data_dict["on_fail"])
+    else:
+        evaluation = evaluate_conditions(conditions, data_dict, match_all=data_dict['match_all']) > 0
 
-    return evaluate_conditions(conditions, data_dict, match_all=False) > 0
+    return evaluation

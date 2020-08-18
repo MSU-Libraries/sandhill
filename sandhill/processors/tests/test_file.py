@@ -30,8 +30,8 @@ def test_load_json():
     file_data = file.load_json(data_dict, test_instance)
     assert isinstance(file_data, OrderedDict)
     assert not file_data
-    
-    # Testing load_json function without a path 
+
+    # Testing load_json function without a path
     file_data = file.load_json(data_dict)
     assert isinstance(file_data, OrderedDict)
     assert not file_data # Expected output is an empty datadict
@@ -68,12 +68,12 @@ def test_load_matched_json():
     file_data = file.load_matched_json(data_dict, test_instance)
     assert not isinstance(file_data, dict)
     assert not file_data
-    
+
     # Testing function load_matched_json without a basepath
     file_data = file.load_matched_json(data_dict)
     assert not isinstance(file_data, dict)
     assert not file_data # Expected output is none
-    
+
     # Testing the on_fail functionality in load_matched_json when the config path is invalid
     data_dict['location'] = "metadata_config_invalid_path"
     data_dict['on_fail'] = 404
@@ -81,21 +81,20 @@ def test_load_matched_json():
         file_data = file.load_matched_json(data_dict)
     assert 404 == http_error.type.code
 
-    # Test of the on fail error code is valid 
+    # Test of the on fail error code is valid
     data_dict['on_fail'] = "404"
     with  raises(HTTPException) as http_error:
         file_data = file.load_matched_json(data_dict)
     assert "??? Unknown Error" in str(http_error.value)
 
-    # Test of the on fail error code is valid 
+    # Test of the on fail error code is valid
     data_dict['on_fail'] = "abc"
     with  raises(HTTPException) as http_error:
         file_data = file.load_matched_json(data_dict)
     assert "??? Unknown Error" in str(http_error.value)
 
-    # Test of the on fail error code is valid 
+    # Test of the on fail error code is valid
     data_dict['on_fail'] = 7000
     with  raises(LookupError) as lookup_error:
         file_data = file.load_matched_json(data_dict)
     assert "no exception for" in str(lookup_error.value)
-
