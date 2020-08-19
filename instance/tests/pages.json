@@ -29,5 +29,13 @@
     {
         "page": "/zzzzzz/1234",
         "code": 404
+    },
+    {
+        "page": "/etd/100/TN/view",
+        "code": 200
+    },
+    {
+        "page": "/etd/100/INVALID/view",
+        "code": 404
     }
 ]
