@@ -4,6 +4,7 @@ from sandhill.processors import fedora3
 from requests.models import Response
 from requests.exceptions import RequestException
 
+
 def test_conditions():
     data_dict = {
         "view_args": {
