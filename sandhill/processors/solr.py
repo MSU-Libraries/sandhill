@@ -2,72 +2,84 @@ import os
 from flask import request, jsonify, abort
 from urllib.parse import urlencode
 from sandhill.utils.api import api_get
+import validators
 from sandhill import app
-from sandhill.utils.config_loader import load_search_config
-from sandhill.utils.generic import combine_to_list
-from sandhill.utils.request import match_request_format
+from requests.exceptions import RequestException
+from json.decoder import JSONDecodeError
+from sandhill.utils.generic import get_descendant_from_dict, ifnone
+from sandhill.utils.request import match_request_format, overlay_with_query_args
+from sandhill.processors.file import load_json
 
-def query(data_dict):
-    url = os.environ.get('SOLR_URL') + "/select"
+def select(data_dict, solr_url=None, api_get_function=api_get):
+    response = None
+    if not solr_url:
+        solr_url = os.environ.get('SOLR_URL', None)
+    if not data_dict or not solr_url or not validators.url(solr_url):
+        abort(400)
+    url = solr_url + "/select"
 
-    # query solr with the parameters
-    app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
-    response = api_get(url=url, params=data_dict['params'])
+    try:
+        # query solr with the parameters
+        app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
+        response = api_get_function(url=url, params=data_dict['params'])
 
-    # convert to JSON
-    return response.json()
+        if not response.ok:
+            app.logger.warning("Call to Solr returned {0}".format(response.status_code))
+            abort(response.status_code)
 
-def query_record(data_dict):
-    json_data = query(data_dict)
+        response = response.json()
+    except RequestException as exc:
+        app.logger.warning("Call to Solr failed: {0}".format(exc))
+        abort(503)
+    except JSONDecodeError as jexc:
+        app.logger.error("Call returned from Solr that was not JSON.")
+        abort(503)
+    except KeyError as exc:
+        app.logger.error("Missing url component: {0}".format(exc))
+        abort(400)
+
+    return response
+
+def select_record(data_dict, solr_url=None, api_get_function=api_get):
+    json_data = select(data_dict, solr_url, api_get_function)
+
+    # Get the records that exist at the provided record_keys
+    record_keys = ifnone(data_dict,'record_keys', 'response.docs')
+    records = get_descendant_from_dict(json_data, record_keys.split('.') if record_keys else [])
+
     if 'error' in json_data:
-        app.logger.error(json_data['error'])
-    elif json_data['response']['docs']:
-        return json_data['response']['docs'][0]
+        app.logger.warning("Error returned from Solr: {0}".format(str(json_data['error'])))
+    elif records:
+        return records[0]
     return None
 
-def search(data_dict):
+def search(data_dict, solr_url=None, api_get_function=api_get):
     """Searches solr and gets the results
-        args:
-        data_dict (dict) :  dictionary of url args
+    args:
+        data_dict (dict) :  route config settings for searching
+    returns:
+        Response (from flask): If result_format is 'test/json'
+        dict: All other cases
     """
-    if 'config' not in data_dict:
+    if 'paths' not in data_dict or not data_dict['paths']:
         app.logger.error("Missing 'config' setting for processor '{0}' with name '{1}'".format(data_dict['processor'], data_dict['name']))
         abort(500)
-    search_config = load_search_config(data_dict['config'])
+
+    # Load the search settings
+    search_config = load_json(data_dict)
     if 'solr_params' not in search_config:
-        app.logger.error("Missing 'solr_params' inside search config file '{0}'".format(data_dict['config']))
+        app.logger.error("Missing 'solr_params' inside search config file(s) '{0}'".format(str(data_dict['paths'])))
         abort(500)
-
-    result_format = match_request_format('format', ['text/html','text/json'])
-
-    search_params = request.args.to_dict(flat=False)
     solr_config = search_config['solr_params']
-    solr_params = {}
-    for field_name, field_conf in solr_config.items():
-        solr_params[field_name] = []
-        # Load base from config
-        if 'base' in field_conf:
-            solr_params[field_name] = field_conf['base']
-        # Load from search_params if field defined with a default
-        if field_name in search_params and 'default' in field_conf:
-            solr_params[field_name] = combine_to_list(solr_params[field_name], search_params[field_name])
-        # Load default from config if solr_param field not defined
-        elif 'default' in field_conf:
-            solr_params[field_name] = combine_to_list(solr_params[field_name], field_conf['default'])
-        # Remove field from solr query if empty
-        if not any(solr_params[field_name]):
-            del solr_params[field_name]
 
-        # restrictions
-        #TODO something like: solr_params[field_name] = apply_restrictions(solr_params[field_name], field_conf['restrictions'])
-        if 'max' in field_conf:
-            solr_params[field_name] = [ val if str(val).isdigit() and int(val) < int(field_conf['max']) else field_conf['max'] for val in solr_params[field_name] ]
-        if 'min' in field_conf:
-            solr_params[field_name] = [ val if str(val).isdigit() and int(val) > int(field_conf['min']) else field_conf['min'] for val in solr_params[field_name] ]
+    # override default parameters with request query parameters (if allowed by config)
+    data_dict['params'] = overlay_with_query_args(solr_config)
 
-    # make the solr call
-    data_dict['params'] = solr_params
-    solr_results = query(data_dict)
+    solr_results = select(data_dict, solr_url, api_get_function)
+
+    # check if the json results were requested
+    result_format = match_request_format('format', ['text/html','text/json'])
     if result_format == 'text/json':
         solr_results = jsonify(solr_results)
+
     return solr_results

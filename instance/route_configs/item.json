@@ -7,7 +7,8 @@
     "data": [
         {
             "name": "item",
-            "processor": "solr.query_record",
+            "processor": "solr.select_record",
+            "record_key":"response.docs",
             "on_fail": 404,
             "params": {
                 "q": "PID:\"{{ view_args.namespace }}:{{ view_args.id }}\"",

@@ -3,8 +3,9 @@ from sandhill.utils.api import api_get
 from sandhill import app
 import validators
 from flask import abort
-from sandhill.utils.generic import ifnone 
+from sandhill.utils.generic import ifnone
 from requests.exceptions import RequestException
+from sandhill.utils.test import _test_api_get, _test_api_get_fail, _test_api_get_unavailable
 
 
 def load_image(data_dict, iiif_url=None, api_get_function=api_get):
@@ -13,9 +14,9 @@ def load_image(data_dict, iiif_url=None, api_get_function=api_get):
         iiif_url = ifnone (app.config, 'IIIF_BASE', None)
     if not iiif_url or not validators.url(iiif_url):
         abort(400)
-    try: 
+    try:
         if 'iiif_path' in data_dict['view_args'] and 'identifier' in data_dict:
-            image = api_get_function(url=os.path.join(iiif_url, data_dict['identifier'], data_dict['view_args']['iiif_path']), 
+            image = api_get_function(url=os.path.join(iiif_url, data_dict['identifier'], data_dict['view_args']['iiif_path']),
                         stream=True)
         else:
             app.logger.warning("Could not call IIIF Server; missing identifier or iiif_path")

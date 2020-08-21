@@ -10,15 +10,17 @@ from sandhill.utils.template import render_template, evaluate_conditions
 def load_json(data_dict, base_path=None):
     if not base_path:
         base_path = app.instance_path
+    print(base_path)
     file_data = collections.OrderedDict()
 
     # loop over each provided path and stop when one is found
     if 'paths' in data_dict:
         for path in data_dict['paths']:
             full_path = os.path.join(base_path, path)
+            print(full_path)
             if os.path.exists(full_path):
-               file_data = json.load(open(full_path), object_pairs_hook=collections.OrderedDict)
-               break
+                file_data = json.load(open(full_path), object_pairs_hook=collections.OrderedDict)
+                break
 
     return file_data
 

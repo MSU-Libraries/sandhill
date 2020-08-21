@@ -1,6 +1,8 @@
 import os
 import collections
-from flask import Flask, request, render_template, url_for, send_from_directory, Response, abort, wrappers
+from flask import Flask, request, render_template, url_for, send_from_directory, abort, wrappers
+from flask import Response as FlaskResponse
+from requests.models import Response as RequestsResponse
 from jinja2.exceptions import TemplateNotFound
 from sandhill import app
 from sandhill.utils.decorators import add_routes
@@ -43,19 +45,22 @@ def main(*args, **kwargs):
 
 def handle_template(template, response_var, **data):
     try:
-        if response_var in data and isinstance(data[response_var], Response) :
+        if response_var in data and isinstance(data[response_var], FlaskResponse) :
             return data[response_var]
         return render_template(template, **data)
     except TemplateNotFound:
-        abort(501) # not implemented
+        app.logger.warning("Could not find template to render: {0}".format(template))
+        abort(501)
 
 def handle_stream(stream_var, **data):
     allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
     resp = data[stream_var]
-    if not resp:
-        abort(503) # service not available
+    if isinstance(resp, RequestsResponse) and not resp:
+        abort(resp.status_code)
+    elif not resp:
+        abort(503)
 
-    stream = Response(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
+    stream = FlaskResponse(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
     for header in allowed_headers:
         if header in resp.headers.keys():
             stream.headers.set(header, resp.headers.get(header))

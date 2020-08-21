@@ -62,10 +62,12 @@ def load_route_config(route_rule):
                     break
     return data
 
-def load_search_config(file_name):
+def load_search_config(file_name, base_path=None):
     """
     loads the search config file from instance/search/basic_search.json
     """
+    if not base_path:
+        base_path = app.instance_path
     config_path = os.path.join(app.instance_path, "search_configs", file_name)
     return load_json_config(config_path)
 

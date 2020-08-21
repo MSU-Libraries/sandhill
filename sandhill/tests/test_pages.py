@@ -15,6 +15,7 @@ def test_pages():
 
     with app.test_client() as client:
         for page in pages:
+            app.logger.info("Testing page: {0}".format(page['page']))
             resp = client.get(page['page'])
             assert resp.status_code == page['code']
 

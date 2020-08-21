@@ -31,7 +31,7 @@ def load_route_data(route_data):
                                "skipping route data '{2}'.".format(action ,processor, name))
 
         if action_function:
-            loaded_data[name] = action_function(route_data[i], )
+            loaded_data[name] = action_function(route_data[i])
 
         if (name not in loaded_data or loaded_data[name] is None) and 'on_fail' in route_data[i]:
             app.logger.error("Could not load data for processor '{0}' used for variable '{1}'".format(processor, name))

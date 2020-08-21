@@ -19,6 +19,18 @@
         "code": 501
     },
     {
+        "page": "/search",
+        "code": 200
+    },
+    {
+        "page": "/search.json",
+        "code": 200,
+        "contains": [
+            "\"responseHeader\"",
+            "\"status\": 0"
+        ]
+    },
+    {
         "page": "/dmhsp/10",
         "code": 501
     },
@@ -36,6 +48,17 @@
     },
     {
         "page": "/etd/100/INVALID/view",
+        "code": 404
+    },
+    {
+        "page": "/iiif/dmhsp%3A558/info.json",
+        "code": 200,
+        "contains": [
+            "\"protocol\":\"http://iiif.io/api/image\""
+        ]
+    },
+    {
+        "page": "/iiif/invalidpid/info.json",
         "code": 404
     }
 ]

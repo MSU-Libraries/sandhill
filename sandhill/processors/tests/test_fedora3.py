@@ -1,8 +1,9 @@
 from pytest import raises
 from werkzeug.exceptions import HTTPException
 from sandhill.processors import fedora3
-from requests.models import Response
+from requests.models import Response as RequestsResponse
 from requests.exceptions import RequestException
+from sandhill.utils.test import _test_api_get, _test_api_get_fail, _test_api_get_unavailable
 
 
 def test_conditions():
@@ -16,13 +17,13 @@ def test_conditions():
     }
     # Test for successful response
     response = fedora3.load_datastream(data_dict, fedora_url="https://test.example.edu", api_get_function=_test_api_get)
-    assert isinstance(response, Response)
+    assert isinstance(response, RequestsResponse)
     assert response.ok
 
     # Test for successful response with 'download' action
     data_dict["view_args"]["action"] = "download"
     response = fedora3.load_datastream(data_dict, fedora_url="https://test.example.edu", api_get_function=_test_api_get)
-    assert isinstance(response, Response)
+    assert isinstance(response, RequestsResponse)
     assert response.ok
 
     # Test for invalid 'action' setting.
@@ -57,21 +58,3 @@ def test_conditions():
     with raises(HTTPException) as http_error:
         response = fedora3.load_datastream(data_dict, fedora_url="https://test.example.edu", api_get_function=_test_api_get)
     assert http_error.type.code == 400
-
-
-
-def _test_api_get(url=None, params=None, stream=True):
-    """Test function to simulate fedora api call."""
-    response = Response()
-    response.status_code = 200
-    return response
-
-def _test_api_get_fail(url=None, params=None, stream=True):
-    """Test function to always fail."""
-    response = Response()
-    response.status_code = 500
-    return response
-
-def _test_api_get_unavailable(url=None, params=None, stream=True):
-    """Test function to always fail."""
-    raise RequestException()
