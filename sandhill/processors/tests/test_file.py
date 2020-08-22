@@ -6,12 +6,13 @@ from sandhill import app
 from werkzeug.exceptions import HTTPException
 
 def test_load_json():
-    test_instance = os.path.join(app.root_path, "test_instance/")
+    app.instance_path = os.path.join(app.root_path, "test_instance/")
+
     # Test loading config successfully
     data_dict = {
         'paths': [ 'route_configs/search.json' ]
     }
-    file_data = file.load_json(data_dict, test_instance)
+    file_data = file.load_json(data_dict)
     assert isinstance(file_data, OrderedDict)
     assert file_data
 
@@ -19,7 +20,7 @@ def test_load_json():
     data_dict = {
         'paths': [ 'invalid/test.json', 'route_configs/search.json' ]
     }
-    file_data = file.load_json(data_dict, test_instance)
+    file_data = file.load_json(data_dict)
     assert isinstance(file_data, OrderedDict)
     assert file_data
 
@@ -27,18 +28,14 @@ def test_load_json():
     data_dict = {
         'paths': [ 'invalid/test.json' ]
     }
-    file_data = file.load_json(data_dict, test_instance)
+    file_data = file.load_json(data_dict)
     assert isinstance(file_data, OrderedDict)
     assert not file_data
 
-    # Testing load_json function without a path
-    file_data = file.load_json(data_dict)
-    assert isinstance(file_data, OrderedDict)
-    assert not file_data # Expected output is an empty datadict
-
 
 def test_load_matched_json():
-    test_instance = os.path.join(app.root_path, "test_instance/")
+    app.instance_path = os.path.join(app.root_path, "test_instance/")
+
     # Test matching etd config file successfully
     data_dict = {
         'location': 'metadata_configs_1',
@@ -49,7 +46,7 @@ def test_load_matched_json():
             'model_type': 'info:fedora/islandora:sp_pdf'
         }
     }
-    file_data = file.load_matched_json(data_dict, test_instance)
+    file_data = file.load_matched_json(data_dict)
     assert isinstance(file_data, dict)
     assert file_data
     assert 'test_filename' in file_data
@@ -65,14 +62,9 @@ def test_load_matched_json():
             'model_type': 'info:fedora/islandora:sp_pdf'
         }
     }
-    file_data = file.load_matched_json(data_dict, test_instance)
-    assert not isinstance(file_data, dict)
-    assert not file_data
-
-    # Testing function load_matched_json without a basepath
     file_data = file.load_matched_json(data_dict)
     assert not isinstance(file_data, dict)
-    assert not file_data # Expected output is none
+    assert not file_data
 
     # Testing the on_fail functionality in load_matched_json when the config path is invalid
     data_dict['location'] = "metadata_config_invalid_path"
