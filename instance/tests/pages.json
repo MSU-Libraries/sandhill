@@ -19,6 +19,23 @@
         "code": 501
     },
     {
+        "page": "/search",
+        "code": 200
+    },
+    {
+        "_comment": "Testing ampersand use in the search query",
+        "page": "/search?fq=name_primary:O.M.%5C%20Scott%5C%20%5C%26%5C%20Sons",
+        "code": 200
+    },
+    {
+        "page": "/search.json",
+        "code": 200,
+        "contains": [
+            "\"responseHeader\"",
+            "\"status\": 0"
+        ]
+    },
+    {
         "page": "/dmhsp/10",
         "code": 501
     },
@@ -35,7 +52,26 @@
         "code": 200
     },
     {
+        "page": "/etd/100/TN",
+        "code": 404
+    },
+    {
+        "page": "/etd/100/TN/invalidaction",
+        "code": 400
+    },
+    {
         "page": "/etd/100/INVALID/view",
+        "code": 404
+    },
+    {
+        "page": "/iiif/dmhsp%3A558/info.json",
+        "code": 200,
+        "contains": [
+            "\"protocol\":\"http://iiif.io/api/image\""
+        ]
+    },
+    {
+        "page": "/iiif/invalidpid/info.json",
         "code": 404
     }
 ]

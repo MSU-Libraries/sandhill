@@ -81,7 +81,7 @@ arguments inside each entry are: `name` and `processor`.
 
 _Arguments for each `data` Object_  
 * `name` (string): The name of the variable in which to store the results of this data _processor_. This name will appear as a variable inside temapltes.  
-* `processor` (string): The filename and function to call as the data processor, e.g. `solr.select_query` would load the `solr.py` processor and call the `select_query` function.  
+* `processor` (string): The filename and function to call as the data processor, e.g. `solr.select_record` would load the `solr.py` processor and call the `select_record` function.  
 * `on_fail` (int, optional): The HTTP status code number to abort the page render with, should the data _processor_ fail in any way.  
 * `?` (all other arguments): Dependent on the _processor_; refer to that specific _processor_ documentation for details.  
 

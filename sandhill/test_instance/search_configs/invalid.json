@@ -1,0 +1,45 @@
+{
+    "facet_mincount": 1,
+    "facet_limit": 20,
+    "facet_fields": [
+        {
+            "field": "genre_aat",
+            "label": "Material Types",
+            "display_limit": "10"
+        },
+        {
+            "field": "subject_display",
+            "label": "Subjects",
+            "display_limit": "10"
+        }
+    ],
+    "display_fields": [
+        {
+            "solr_field": "fgs_label_s",
+            "label": "Title",
+            "template": "search_results_blocks/metadata_item_link.html.j2"
+        },
+        {
+            "solr_field": "name_primary",
+            "label": "Creator",
+            "template": "search_results_blocks/metadata_facet_link.html.j2"
+        },
+        {
+            "solr_field": "date_key",
+            "label": "Date",
+            "template": "search_results_blocks/metadata.html.j2"
+        },
+        {
+            "solr_field": "collection",
+            "label": "Collection",
+            "template": "search_results_blocks/metadata.html.j2"
+        },
+        {
+            "solr_field": "description",
+            "label": "Description",
+            "template": "search_results_blocks/metadata.html.j2",
+            "max_length": 200
+        }
+    ]
+}
+

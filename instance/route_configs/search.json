@@ -9,7 +9,7 @@
         {
             "processor": "solr.search",
             "name": "search",
-            "config": "main.json"
+            "paths": [ "search_configs/main.json" ]
         },
         {
             "processor": "file.load_json",
