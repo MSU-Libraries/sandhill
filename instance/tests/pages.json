@@ -23,6 +23,11 @@
         "code": 200
     },
     {
+        "_comment": "Testing ampersand use in the search query",
+        "page": "/search?fq=name_primary:O.M.%5C%20Scott%5C%20%5C%26%5C%20Sons",
+        "code": 200
+    },
+    {
         "page": "/search.json",
         "code": 200,
         "contains": [

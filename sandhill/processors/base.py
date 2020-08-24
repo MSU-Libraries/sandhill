@@ -1,14 +1,21 @@
 import json
 from sandhill import app
 from sandhill.utils.template import render_template
+from sandhill.utils.generic import ifnone
 from flask import request, abort
 from importlib import import_module
 
 def load_route_data(route_data):
+    """Loop through route data, applying Jinja replacements
+    and calling route data processors specified
+    args:
+        route_data (list of OrderedDict): data loaded from the route config file
+    return:
+        dict containing loaded data
+    """
     loaded_data = {}
     # add view_args into loaded_data
     loaded_data['view_args'] = request.view_args
-
     for i in range(len(route_data)):
         # Apply Jinja2 templating to data config
         data_json = json.dumps(route_data[i])
@@ -19,7 +26,13 @@ def load_route_data(route_data):
 
         # Dynamically load processor
         name = route_data[i]['name']
-        processor, action = route_data[i]['processor'].rsplit('.', 1)
+        try:
+            processor, action = route_data[i]['processor'].rsplit('.', 1)
+        except ValueError as exc:
+            app.logger.error("No 'action' set for processor: {0}".format(route_data[i]['processor']))
+            processor = route_data[i]['processor']
+            action = "no action defined"
+
         action_function = None
         try:
             mod = import_module("sandhill.processors." + processor)
@@ -35,6 +48,10 @@ def load_route_data(route_data):
 
         if (name not in loaded_data or loaded_data[name] is None) and 'on_fail' in route_data[i]:
             app.logger.error("Could not load data for processor '{0}' used for variable '{1}'".format(processor, name))
-            abort(int(route_data[i]['on_fail']))
+            try:
+                abort(int(route_data[i]['on_fail']))
+            except ValueError as exc:
+                app.logger.error("Invalid on_fail set, must be integer: {0}".format(route_data[i]['on_fail']))
+                abort(500)
 
     return loaded_data
