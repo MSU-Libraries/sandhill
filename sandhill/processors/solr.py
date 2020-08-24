@@ -1,8 +1,7 @@
 import os
 from flask import request, jsonify, abort
 from urllib.parse import urlencode
-from sandhill.utils.api import api_get
-import validators
+from sandhill.utils.api import api_get, establish_url
 from sandhill import app
 from requests.exceptions import RequestException
 from json.decoder import JSONDecodeError
@@ -10,13 +9,10 @@ from sandhill.utils.generic import get_descendant_from_dict, ifnone
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 
-def select(data_dict, solr_url=None, api_get_function=api_get):
+def select(data_dict, url=None, api_get_function=api_get):
     response = None
-    if not solr_url:
-        solr_url = os.environ.get('SOLR_URL', None)
-    if not data_dict or not solr_url or not validators.url(solr_url):
-        abort(400)
-    url = solr_url + "/select"
+    url = establish_url(url, os.environ.get('SOLR_URL', None))
+    url = url + "/select"
 
     try:
         # query solr with the parameters
@@ -34,14 +30,15 @@ def select(data_dict, solr_url=None, api_get_function=api_get):
     except JSONDecodeError as jexc:
         app.logger.error("Call returned from Solr that was not JSON.")
         abort(503)
+    # Catch for missing 'params' key
     except KeyError as exc:
         app.logger.error("Missing url component: {0}".format(exc))
         abort(400)
 
     return response
 
-def select_record(data_dict, solr_url=None, api_get_function=api_get):
-    json_data = select(data_dict, solr_url, api_get_function)
+def select_record(data_dict, url=None, api_get_function=api_get):
+    json_data = select(data_dict, url, api_get_function)
 
     # Get the records that exist at the provided record_keys
     record_keys = ifnone(data_dict,'record_keys', 'response.docs')
@@ -53,7 +50,7 @@ def select_record(data_dict, solr_url=None, api_get_function=api_get):
         return records[0]
     return None
 
-def search(data_dict, solr_url=None, api_get_function=api_get):
+def search(data_dict, url=None, api_get_function=api_get):
     """Searches solr and gets the results
     args:
         data_dict (dict) :  route config settings for searching
@@ -75,7 +72,7 @@ def search(data_dict, solr_url=None, api_get_function=api_get):
     # override default parameters with request query parameters (if allowed by config)
     data_dict['params'] = overlay_with_query_args(solr_config)
 
-    solr_results = select(data_dict, solr_url, api_get_function)
+    solr_results = select(data_dict, url, api_get_function)
 
     # check if the json results were requested
     result_format = match_request_format('format', ['text/html','text/json'])

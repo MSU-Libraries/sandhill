@@ -30,6 +30,19 @@ def test_load_route_data():
         assert isinstance(loaded, dict)
         assert loaded
 
+    # Test of the on fail error code is valid
+    route_data = [
+        OrderedDict({
+            "processor": "request.invalid_action",
+            "name": "url_components",
+            "on_fail": 7000
+        })
+    ]
+    with app.test_request_context('/etd/1000'):
+        with raises(LookupError) as lookup_error:
+            loaded = base.load_route_data(route_data)
+        assert "no exception for" in str(lookup_error.value)
+
     # Test invalid on_fail
     route_data = [
          OrderedDict({
@@ -81,3 +94,4 @@ def test_load_route_data():
         assert isinstance(loaded, dict)
         del loaded['view_args']
         assert not loaded
+

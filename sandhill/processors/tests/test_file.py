@@ -69,24 +69,5 @@ def test_load_matched_json():
     # Testing the on_fail functionality in load_matched_json when the config path is invalid
     data_dict['location'] = "metadata_config_invalid_path"
     data_dict['on_fail'] = 404
-    with  raises(HTTPException) as http_error:
-        file_data = file.load_matched_json(data_dict)
-    assert 404 == http_error.type.code
-
-    # Test of the on fail error code is valid
-    data_dict['on_fail'] = "404"
-    with  raises(HTTPException) as http_error:
-        file_data = file.load_matched_json(data_dict)
-    assert "??? Unknown Error" in str(http_error.value)
-
-    # Test of the on fail error code is valid
-    data_dict['on_fail'] = "abc"
-    with  raises(HTTPException) as http_error:
-        file_data = file.load_matched_json(data_dict)
-    assert "??? Unknown Error" in str(http_error.value)
-
-    # Test of the on fail error code is valid
-    data_dict['on_fail'] = 7000
-    with  raises(LookupError) as lookup_error:
-        file_data = file.load_matched_json(data_dict)
-    assert "no exception for" in str(lookup_error.value)
+    file_data = file.load_matched_json(data_dict)
+    assert file_data is None    # expect None return, as base processor will throw the abort

@@ -52,6 +52,14 @@
         "code": 200
     },
     {
+        "page": "/etd/100/TN",
+        "code": 404
+    },
+    {
+        "page": "/etd/100/TN/invalidaction",
+        "code": 400
+    },
+    {
         "page": "/etd/100/INVALID/view",
         "code": 404
     },
