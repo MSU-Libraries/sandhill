@@ -28,12 +28,15 @@ def load_route_data(route_data):
         name, processor, action = _identify_processor_components(route_data[i])
 
         # Identify action from within processor, if valid
+        print("*******************")
+        print(name)
+        print(processor)
+        print(action)
         action_function = _identify_processor_function(name, processor, action)
 
         # Call action from processor
         if action_function:
             loaded_data[name] = action_function(route_data[i])
-
         # Trigger abort with 'on_fail', if set; otherwise allow failure and continue
         if (name not in loaded_data or loaded_data[name] is None) and 'on_fail' in route_data[i]:
             app.logger.error("Could not load data for processor '{0}' used for variable '{1}'".format(processor, name))
@@ -67,5 +70,6 @@ def _identify_processor_function(name, processor, action):
         #TODO log the exc
         app.logger.warning("Could not load action '{0}' from processor '{1}'; "
                            "skipping route data '{2}'.".format(action ,processor, name))
+        print(exc)
     return action_function
 

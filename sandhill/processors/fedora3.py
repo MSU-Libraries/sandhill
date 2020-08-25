@@ -1,3 +1,7 @@
+'''
+
+
+'''
 import os
 from urllib.parse import urlencode
 from flask import abort
@@ -6,13 +10,13 @@ from sandhill import app
 from requests import RequestException
 
 def load_datastream(data_dict, url=None, api_get_function=api_get):
+
     fedora = None
     allowed_actions = ['view', 'download']
     if data_dict['view_args']['action'] not in allowed_actions:
         abort(400)
 
     url = establish_url(url, os.environ.get('FEDORA_URL', None))
-
     try:
         params = {}
         params['download'] = 'true' if data_dict['view_args']['action'] == "download" else 'false'

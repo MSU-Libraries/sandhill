@@ -15,7 +15,6 @@ def conditions(data_dict):
     evaluation = None
     condition_keys = ifnone(data_dict,'conditions', '')
     conditions = get_descendant_from_dict(data_dict, condition_keys.split('.') if condition_keys else [])
-
     if 'match_all' not in data_dict or not isinstance(data_dict['match_all'], bool):
         app.logger.warning("Processor 'evaluate' is missing or has invalid 'match_all': "
                            + ifnone(data_dict, 'match_all', "not defined"))
@@ -24,5 +23,7 @@ def conditions(data_dict):
             data_dict['conditions'] if 'conditions' in data_dict else "'conditions' undefined"))
     else:
         evaluation = evaluate_conditions(conditions, data_dict, match_all=data_dict['match_all']) > 0
-
+        if 'abort_on_match' in data_dict and data_dict['abort_on_match'] and evaluation:
+            evaluation =  None
+            
     return evaluation
