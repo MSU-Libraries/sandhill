@@ -13,7 +13,7 @@ app.jinja_loader = loader
 
 # So we can load 'static' files from the instance/static/ directory
 for rule in app.url_map.iter_rules('static'):
-    # Remove the default rule as our static files are handled in routes/main.py
+    # Remove the default rule as our static files are handled in routes/static.py
     app.url_map._rules.remove(rule)
 
 # Set default config file
