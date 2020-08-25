@@ -7,6 +7,10 @@
         ]
     },
     {
+        "page": "/favicon.ico",
+        "code": 200
+    },
+    {
         "page": "/etd/1000",
         "code": 200
     },

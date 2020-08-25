@@ -14,3 +14,7 @@ def handle_static(static_file):
         raise RuntimeError("No static folder for this object")
     cache_timeout = app.get_send_file_max_age(static_file)
     return send_from_directory(static_path, static_file, cache_timeout=cache_timeout)
+
+@app.route('/favicon.ico')
+def favicon():
+    return handle_static('favicon.ico')
