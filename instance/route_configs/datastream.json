@@ -6,6 +6,29 @@
     "stream": "datastream",
     "data": [
         {
+            "processor": "solr.select_record",
+            "name": "item",
+            "on_fail": 404,
+            "params": {
+                "q": "PID:\"{{ view_args.namespace }}:{{ view_args.id }}\"",
+                "wt": "json"
+            }
+        },
+        {
+            "name": "metadata_conf",
+            "processor": "file.load_matched_json",
+            "on_fail": 501,
+            "location": "metadata_configs"
+        },
+        {
+            "name": "restriction",
+            "processor": "evaluate.conditions",
+            "on_fail": 403,
+            "conditions": "metadata_conf.restriction_conditions",
+            "match_all": true,
+            "abort_on_match": true
+        },
+        {
             "processor": "fedora3.load_datastream",
             "name": "datastream"
         }

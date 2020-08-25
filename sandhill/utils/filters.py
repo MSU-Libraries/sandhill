@@ -75,7 +75,7 @@ def date_passed(value):
     """ Checks if the embargoded date is greater than the current date"""
     value_date =  datetime.strptime(value, "%Y-%m-%d")
     current_date  = datetime.now()
-    if value_date.date() > current_date.date():
+    if value_date.date() < current_date.date():
         return True
     return False
 

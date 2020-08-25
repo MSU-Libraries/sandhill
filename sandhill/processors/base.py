@@ -28,10 +28,6 @@ def load_route_data(route_data):
         name, processor, action = _identify_processor_components(route_data[i])
 
         # Identify action from within processor, if valid
-        print("*******************")
-        print(name)
-        print(processor)
-        print(action)
         action_function = _identify_processor_function(name, processor, action)
 
         # Call action from processor
