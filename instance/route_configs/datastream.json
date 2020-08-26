@@ -15,16 +15,19 @@
             }
         },
         {
-            "name": "metadata_conf",
-            "processor": "file.load_matched_json",
+            "name": "embargo",
+            "processor": "file.load_json",
             "on_fail": 501,
-            "location": "metadata_configs"
+            "paths":
+            [
+                "restriction_configs/embargo.json"
+            ]
         },
         {
             "name": "restriction",
             "processor": "evaluate.conditions",
             "on_fail": 403,
-            "conditions": "metadata_conf.restriction_conditions",
+            "conditions": "embargo.restriction_conditions",
             "match_all": true,
             "abort_on_match": true
         },
