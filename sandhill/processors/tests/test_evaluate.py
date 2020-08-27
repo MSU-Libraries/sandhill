@@ -56,6 +56,11 @@ def test_conditions():
     evaluation = evaluate.conditions(data_dict)
     assert evaluation is True
 
+    # Test for abort on match
+    data_dict['abort_on_match'] = True
+    evaluation = evaluate.conditions(data_dict)
+    assert evaluation is None
+
     # Test for missing definition of 'match_all'
     del data_dict['match_all']
     evaluation = evaluate.conditions(data_dict)
@@ -76,4 +81,35 @@ def test_conditions():
     data_dict['conditions'] = "other_conf.other_cons"
     del data_dict['other_conf']
     evaluation = evaluate.conditions(data_dict)
+    assert evaluation is None
+
+
+def test_template():
+    data_dict = {
+        'processor': 'evaluate.template',
+        'name': 'datastream_label',
+        'test_var': 'test_val',
+        'value': '{{ test_var }}',
+        'on_fail': 500
+    }
+
+    # Test for positive scenario
+    evaluation = evaluate.template(data_dict)
+    assert isinstance(evaluation, str)
+    assert evaluation == 'test_val'
+
+    # Test for invalid template passed
+    data_dict['value'] = "{{ forgot to close"
+    evaluation = evaluate.template(data_dict)
+    assert evaluation is None
+
+    # Test for invalid variable in valid jinja
+    data_dict['value'] = "{{ invalid_var_name }}"
+    evaluation = evaluate.template(data_dict)
+    assert isinstance(evaluation, str)
+    assert evaluation == ''
+
+    # Test not providing a 'value'
+    del data_dict['value']
+    evaluation = evaluate.template(data_dict)
     assert evaluation is None

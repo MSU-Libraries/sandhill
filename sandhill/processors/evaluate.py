@@ -45,4 +45,5 @@ def template(data_dict):
             evaluation = render_template(data_dict['value'], data_dict)
         except TemplateError as tmpl_err:
             app.logger.warning("Invalid template provided for: {0}. Error: {1}".format(data_dict['value'], tmpl_err))
+
     return evaluation
