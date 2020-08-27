@@ -1,6 +1,8 @@
 from sandhill import app
 from sandhill.utils.template import evaluate_conditions
 from sandhill.utils.generic import ifnone, get_descendant_from_dict
+from sandhill.utils.template import render_template
+from jinja2 import TemplateError
 from flask import abort
 
 def conditions(data_dict):
@@ -26,4 +28,21 @@ def conditions(data_dict):
         if 'abort_on_match' in data_dict and data_dict['abort_on_match'] and evaluation:
             evaluation =  None
             
+    return evaluation
+
+def template(data_dict):
+    """
+    Given a Jinja2 template, it will render that template to a string and set it in the `name` 
+    variable.
+    args:
+        data_dict (dict): Dictinoary with the configs
+    return:
+        (string|None): rendered template to a string value
+    """
+    evaluation = None
+    if 'value' in data_dict:
+        try:
+            evaluation = render_template(data_dict['value'], data_dict)
+        except TemplateError as tmpl_err:
+            app.logger.warning("Invalid template provided for: {0}. Error: {1}".format(data_dict['value'], tmpl_err))
     return evaluation

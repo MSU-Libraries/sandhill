@@ -15,6 +15,12 @@
             }
         },
         {
+            "processor": "evaluate.template",
+            "name": "datastream_label",
+            "value": "{{ view_args.label }}",
+            "on_fail": 500
+        },
+        {
             "name": "embargo",
             "processor": "file.load_json",
             "on_fail": 501,

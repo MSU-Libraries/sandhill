@@ -35,7 +35,8 @@ def load_route_data(route_data):
             loaded_data[name] = action_function(route_data[i])
         # Trigger abort with 'on_fail', if set; otherwise allow failure and continue
         if (name not in loaded_data or loaded_data[name] is None) and 'on_fail' in route_data[i]:
-            app.logger.error("Could not load data for processor '{0}' used for variable '{1}'".format(processor, name))
+            app.logger.warning("Processor '{0}' used for variable '{1}' returned None and had on_fail value of '{2}'".format(
+                processor, name, route_data[i]['on_fail']))
             try:
                 abort(int(route_data[i]['on_fail']))
             except ValueError as exc:

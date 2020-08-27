@@ -5,8 +5,8 @@
             "allowed": ["False"]
         },
         {
-            "value": "{{ True if view_args.label in item.embargo_datastream_ss else False }}",
-            "allowed": ["True"]
+            "value": "{{ 'embargoed' if item.embargo_datastream_ss is not defined or view_args.label in item.embargo_datastream_ss else 'accessible' }}",
+            "allowed": ["embargoed"]
         }
 
     ]
