@@ -80,38 +80,38 @@
     },
     {
         "_comment": "test an embargoed datastream",
-        "page": "/etd/58981/OBJ/view",
+        "page": "/etd/988/OBJ/view",
         "code": 403
     },
     {
         "_comment": "test an embargoed etd with allowed datastream",
-        "page": "/etd/58981/MODS/view",
+        "page": "/etd/988/MODS/view",
         "code": 200
     },
     {
         "_comment": "test that the OBJ datastream is not on the item page",
-        "page": "/etd/58981",
+        "page": "/etd/988",
         "code": 200,
         "excludes": [
-            "/etd/58981/OBJ/view"
+            "/etd/988/OBJ/view"
         ]
     },
     {
         "_comment": "test embargoed etd with no embargo_datastream_ss set",
-        "page": "/etd/58450/OBJ/view",
+        "page": "/etd/1655/OBJ/view",
         "code": 403
     },
     {
         "_comment": "test embargoed etd with no embargo_datastream_ss set",
-        "page": "/etd/58450/MODS/view",
+        "page": "/etd/1655/MODS/view",
         "code": 403
     },
     {
         "_comment": "test that the item page loads on an embargoed etd with no embargo_datastream_ss set",
-        "page": "/etd/58450",
+        "page": "/etd/1655",
         "code": 200,
         "excludes": [
-            "/etd/58450/OBJ/view"
+            "/etd/1655/OBJ/view"
         ]
     },
     {
