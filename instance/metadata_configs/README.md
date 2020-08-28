@@ -32,8 +32,8 @@ Field Definitions
     "media_template": "media_display/preview.html.j2",
     "restriction_conditions": [
         {
-            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else False }}",
-            "allowed": ["True"]
+            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
+            "allowed": ["False"]
         }
     ],
     "display": [

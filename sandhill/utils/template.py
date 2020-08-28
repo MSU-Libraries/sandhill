@@ -8,6 +8,8 @@ def render_template(template_str, context):
     args:
         template_str (string): jinja template
         context (dict): Context for the jinja template
+    raises:
+        jinja2.TemplateError
     """
     env = Environment()
     sandhill_filters = dict([f for f in getmembers(filters) if isfunction(f[1])])

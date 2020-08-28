@@ -23,3 +23,8 @@ def test_pages():
             if 'contains' in page:
                 for needle in page['contains']:
                     assert needle in resp.data.decode("utf-8")
+
+            # Validate expected strings do not appear in response
+            if 'excludes' in pages:
+                for needle in page['excludes']:
+                    assert needle not in resp.data.decode("utf-8")

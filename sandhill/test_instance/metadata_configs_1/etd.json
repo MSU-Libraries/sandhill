@@ -14,8 +14,8 @@
     "media_template": "media_display/preview.html.j2",
     "restriction_conditions": [
         {
-            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else False }}",
-            "allowed": ["True"]
+            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
+            "allowed": ["False"]
         }
     ],
     "display": [
@@ -230,7 +230,9 @@
             "label": "Full text",
             "mime_type_field": "fedora_datastream_latest_FULL_TEXT_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_FULL_TEXT_SIZE_ms",
-            "datastream": "FULL_TEXT"
+            "datastream": "FULL_TEXT",
+            "restricted": true
+
         },
         {
             "label": "Descriptive metadata (MODS)",

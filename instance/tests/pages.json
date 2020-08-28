@@ -77,5 +77,53 @@
     {
         "page": "/iiif/invalidpid/info.json",
         "code": 404
+    },
+    {
+        "_comment": "test an embargoed datastream",
+        "page": "/etd/988/OBJ/view",
+        "code": 403
+    },
+    {
+        "_comment": "test an embargoed etd with allowed datastream",
+        "page": "/etd/988/MODS/view",
+        "code": 200
+    },
+    {
+        "_comment": "test that the OBJ datastream is not on the item page",
+        "page": "/etd/988",
+        "code": 200,
+        "excludes": [
+            "/etd/988/OBJ/view"
+        ]
+    },
+    {
+        "_comment": "test embargoed etd with no embargo_datastream_ss set",
+        "page": "/etd/1655/OBJ/view",
+        "code": 403
+    },
+    {
+        "_comment": "test embargoed etd with no embargo_datastream_ss set",
+        "page": "/etd/1655/MODS/view",
+        "code": 403
+    },
+    {
+        "_comment": "test that the item page loads on an embargoed etd with no embargo_datastream_ss set",
+        "page": "/etd/1655",
+        "code": 200,
+        "excludes": [
+            "/etd/1655/OBJ/view"
+        ]
+    },
+    {
+        "page": "/etd/100",
+        "code": 200,
+        "contains": [
+            "/etd/100/OBJ/view"
+        ]
+    },
+    {
+        "page": "/etd/100/OBJ/view",
+        "code": 200
     }
+
 ]

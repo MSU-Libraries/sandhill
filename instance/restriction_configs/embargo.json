@@ -1,0 +1,14 @@
+{
+    "restriction_conditions": [
+        {
+            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
+            "allowed": ["False"]
+        },
+        {
+            "value": "{{ 'embargoed' if item.embargo_datastream_ss is not defined or datastream_label in item.embargo_datastream_ss else 'accessible' }}",
+            "allowed": ["embargoed"]
+        }
+
+    ]
+
+}
