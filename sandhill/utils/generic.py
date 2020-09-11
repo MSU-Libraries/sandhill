@@ -25,7 +25,7 @@ def ifnone(*args):
         return var[key] if isinstance(var, dict) and key in var else default_val
     elif len(args) == 2:
         default_value = args[1]
-        return var if var else default_value
+        return var if var is not None else default_value
     else:
         raise TypeError(f"ifnone() missing required positional argument (2 or 3) {len(args)} received.")
 
