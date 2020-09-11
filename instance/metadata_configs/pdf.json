@@ -5,7 +5,7 @@
             "allowed": ["info:fedora/islandora:sp_pdf"]
         }
     ],
-    "title_field": "fgs_label_s",
+    "title": "{{ item.fgs_label_s }}",
     "media_template": "media_display/preview.html.j2",
     "restriction_conditions": [
         {
@@ -15,7 +15,7 @@
     ],
     "display": [
         {
-            "field": "description",
+            "value": "{{ item.description }}",
             "label": "Summary",
             "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
         },
