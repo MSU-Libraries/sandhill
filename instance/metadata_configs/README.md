@@ -28,7 +28,7 @@ Field Definitions
             "allowed": ["info:fedora/islandora:sp_pdf"]
         }
     ],
-    "title_field": "fgs_label_s",
+    "title": "{{ item. fgs_label_s }}",
     "media_template": "media_display/preview.html.j2",
     "restriction_conditions": [
         {
@@ -38,18 +38,18 @@ Field Definitions
     ],
     "display": [
         {
-            "field": "description",
+            "value": "{{ item.description }}",
             "label": "Abstract",
             "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
         },
         {
-            "field": "collection_t",
+            "value": "{{ item.collection_t }}",
             "label": "In Collections",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/{{ view_args.namespace }}"
         },
         {
-            "field": "name_thesis_advisor",
+            "value": "{{ item.name_thesis_advisor }}",
             "label": "Thesis Advisors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
@@ -119,13 +119,13 @@ Example:
 
 
 ### General Fields
-* `title_field`: The Solr field to use for the title on the item page
+* `title`: The Solr field to use for the title on the item page
 * `media_template`: The template file within the `sandhill\templates\media_display` directory to use for the object viewer
 
 ### Display Fields  
 These configurations are used to render the metadata section on the page. 
 
-* `field`: Name of the Solr field. 
+* `value`: Value of the field, which can use the Solr field. 
 * `label`: The label to use for the field.
 * `metadata_template`: The template file within the `sandhill\templates\item_page_blocks` directory to display this field.
     
@@ -137,7 +137,7 @@ These configurations are used to render the metadata section on the page.
 Example display field:
 ```
 {
-    "field": "name_thesis_advisor",
+    "value": "{{ item.name_thesis_advisor }}",
     "label": "Thesis Advisors",
     "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
     "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
@@ -152,13 +152,13 @@ Example contents of `metadata_template` file:
 <dl class="row my-sm-3 sandhill_metadata_descriptive_list">
     <dt class="col-sm-3" id="sandhill_metadata_field">{{ display_conf['label']  }}</dt>
     <dd class="col-sm-9" aria-labelledby="sandhill_metadata_field">
-        {% if item[display_conf['field']] | is_list %}
-            {% for  metadata_value in  item[display_conf['field']] %}
+        {% if display_conf['value'] | is_list %}
+            {% for  metadata_value in  display_conf['value'] %}
                 {% include 'item_page_blocks/display_field.html.j2' %}
                 <br/>
             {% endfor %}
         {% else %}
-            {% set metadata_value = item[display_conf['field']] %}
+            {% set metadata_value = display_conf['value'] %}
             {% include 'item_page_blocks/display_field.html.j2' %}
         {% endif %}
     </dd>
