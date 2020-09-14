@@ -124,6 +124,14 @@
     {
         "page": "/etd/100/OBJ/view",
         "code": 200
+    },
+    {
+        "page":"/etd/1234",
+        "code": 200,
+        "contains": [
+            "<h1>Broadening the concept of civic agriculture : the history of civic food systems in Progressive Era Grand Rapids, Michigan</h1>",
+            "<a href=\"/search?fq=subject_display:Agriculture%5C-%5C-Social%5C%20aspects\">Agriculture--Social aspects</a>"
+        ]
     }
 
 ]

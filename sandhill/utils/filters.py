@@ -1,8 +1,10 @@
 """Filters for jinja templating engine"""
 import urllib
+from ast import literal_eval
 from sandhill import app
+from sandhill.utils.generic import ifnone
 from datetime import datetime
-from jinja2 import contextfilter
+from jinja2 import contextfilter, TemplateError
 
 
 @app.template_filter()
@@ -79,10 +81,32 @@ def date_passed(value):
         return True
     return False
 
-@app.template_filter('render_string')
+@app.template_filter('render')
 @contextfilter
-def render_string(context, value):
-    data_template = context.environment.from_string(value)
-    # TODO -- add in try/except
-    data_str = data_template.render(**context)
-    return data_str
+def render(context, value, to_str=True):
+    """Renders a given string or literal
+    args:
+        context (Jinja2 context): context information and variables to use when 
+            evaluating the provided template string.
+        value (str): Jinja2 template string to evaluate given the provided context
+        to_str (bool): If it should return a string of the rendered template to it
+            or attempt a literal_eval to convert it to it's datatype (default = True)
+    returns:
+        (str|any): the rendered value or string
+    """
+    data_val = None
+    context.environment.autoescape = to_str if isinstance(to_str, bool) else False
+
+    try:
+        data_template = context.environment.from_string(value)
+        data_val = data_template.render(**context)
+        if not to_str and data_val:
+            data_val = literal_eval(data_val)
+    except (ValueError, SyntaxError) as err:
+        app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
+    except TemplateError as terr:
+        app.logger.error(f"Invalid template provided: {value}. Error: {terr}")
+
+    context.environment.autoescape = True
+    return ifnone(data_val, None)
+
