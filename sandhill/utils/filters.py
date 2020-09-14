@@ -94,20 +94,19 @@ def render(context, value, to_str=True):
     returns:
         (str|any): the rendered value or string
     """
-    data_val = ''
+    data_val = None
     context.environment.autoescape = to_str if isinstance(to_str, bool) else False
 
     try:
         data_template = context.environment.from_string(value)
         data_val = data_template.render(**context)
-
-        if not to_str:
-            data_val = literal_eval(data_val) # TODO -- this throws an exception for metadata fields not in solr record
-    except (ValueError,SyntaxError) as err:
-        app.logger.warning(f"Could not literal eval {data_val}. Error: {err}")
+        if not to_str and data_val:
+            data_val = literal_eval(data_val)
+    except (ValueError, SyntaxError) as err:
+        app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
     except TemplateError as terr:
-        app.logger.warning(f"Invalid template provided: {value}. Error: {terr}")
+        app.logger.error(f"Invalid template provided: {value}. Error: {terr}")
 
     context.environment.autoescape = True
-    return ifnone(data_val,'')
+    return ifnone(data_val, None)
 
