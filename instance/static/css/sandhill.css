@@ -50,3 +50,11 @@ a, a:hover {
     text-align: left;
 }
 /* Item page css - End */
+/* PDF Viewer css */
+#sandhill_pdf_viewer{
+    height:40rem;
+    border: 5px solid #e3e3e3;
+    border-radius: 5px;
+
+}
+/* PDF Viewer css - END */

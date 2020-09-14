@@ -75,10 +75,13 @@ def assemble_url(url_components):
 @app.template_filter('date_passed')
 def date_passed(value):
     """ Checks if the embargoded date is greater than the current date"""
-    value_date =  datetime.strptime(value, "%Y-%m-%d")
-    current_date  = datetime.now()
-    if value_date.date() < current_date.date():
-        return True
+    try:
+        value_date =  datetime.strptime(value, "%Y-%m-%d")
+        current_date  = datetime.now()
+        if value_date.date() < current_date.date():
+            return True
+    except TypeError as err:
+        app.logger.error(f"Unable to get a valid date in {value}. Error {err} ")
     return False
 
 @app.template_filter('render')

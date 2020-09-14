@@ -9,8 +9,8 @@
     <h1>{{ metadata_conf['title'] | render }}</h1>
 
     {# include the viewer section of the page  #}
-    {% if metadata_conf['media_template'] %}
-        {% include metadata_conf['media_template'] %}
+    {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
+        {% include (metadata_conf['media_template'] | render)  %}
     {% endif %}
 
     {# include the downloads section of the page  #}
