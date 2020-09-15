@@ -39,60 +39,60 @@
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "name_author",
+            "value": "{{ item.name_author }}",
             "label": "Authors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_author:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "value": "name_editor",
+            "value": "{{ item.name_editor }}",
             "label": "Editors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "name_contributor",
+            "value": "{{ item.name_contributor }}",
             "label": "Contributors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "name_publisher",
+            "value": "{{ item.name_publisher }}",
             "label": "Publishers",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "name_signer",
+            "value": "{{ item.name_signer }}",
             "label": "Signers",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "name_thesis_advisor",
+            "value": "{{ item.name_thesis_advisor }}",
             "label": "Thesis Advisors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
         },
         {
-            "value": "name_committee_member",
+            "value": "{{ item.name_committee_member }}",
             "label": "Committee Members",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "name_degree_committee_member",
+            "value": "{{ item.name_degree_committee_member }}",
             "label": "Committee Members",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_degree_committee_member:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "value": "date_key",
+            "value": "{{ item.date_key }}",
             "label": "Date",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "edition",
+            "value": "{{ item.edition }}",
             "label": "Edition",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "series_info",
+            "value": "{{ item.series_info }}",
             "label": "Series",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
@@ -103,114 +103,114 @@
             "link": "/search?fq=subject_display:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "value": "subject_local_topic",
+            "value": "{{ item.subject_local_topic }}",
             "label": "Category",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "subject_tic",
+            "value": "{{ item.subject_tic }}",
             "label": "Turfgrass Thesaurus Terms",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "ndltd.discipline",
+            "value": "{{ item['ndltd.discipline'] }}",
             "label": "Program of Study",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=ndltd.discipline:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "value": "ndltd.level",
+            "value": "{{ item['ndltd.level'] }}",
             "label": "Degree Level",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=ndltd.level:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
-            "value": "note_noType",
+            "value": "{{ item.note_noType }}",
             "label": "Note",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "note_local",
+            "value": "{{ item.note_local }}",
             "label": "Local Note",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "note_venue",
+            "value": "{{ item.note_venue }}",
             "label": "Venue Note",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "language",
+            "value": "{{ item.language }}",
             "label": "Language",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "extent",
+            "value": "{{ item.extent }}",
             "label": "Pages",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "external_content_url",
+            "value": "{{ item.external_content_url }}",
             "label": "Additional Content",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "archived_version_url",
+            "value": "{{ item.archived_version_url }}",
             "label": "Archived Version",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "physical_location",
+            "value": "{{ item.physical_location }}",
             "label": "Location of Original",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "name_owner",
+            "value": "{{ item.name_owner }}",
             "label": "Holding Institution",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "otherVersion",
+            "value": "{{ item.otherVersion }}",
             "label": "Other Versions",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "relatedMaterials_object_in_context",
+            "value": "{{ item.relatedMaterials_object_in_context }}",
             "label": "Related Items",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "rightsholder_name",
+            "value": "{{ item.rightsholder_name }}",
             "label": "Rights Holder",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "rightsholder_contact",
+            "value": "{{ item.rightsholder_contact }}",
             "label": "Rights Holder Contact Information",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "rightsholder_note",
+            "value": "{{ item.rightsholder_note }}",
             "label": "Conditions of Use",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "toc_entry",
+            "value": "{{ item.toc_entry }}",
             "label": "Table of Contents",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "isbn",
+            "value": "{{ item.isbn }}",
             "label": "ISBN",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "issn",
+            "value": "{{ item.issn }}",
             "label": "ISSN",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "catalog_record",
+            "value": "{{ item.catalog_record }}",
             "label": "Catalog Record",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         }
