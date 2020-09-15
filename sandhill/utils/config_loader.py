@@ -5,9 +5,6 @@ import json
 from collections import OrderedDict
 from sandhill import app
 
-# TODO refactor this variable away
-route_path = os.path.join(app.instance_path, "route_configs")
-
 def load_json_config(file_path):
     """Load a json config file"""
     loaded_config = collections.OrderedDict()
@@ -19,11 +16,12 @@ def load_json_config(file_path):
         app.logger.error("IOError loading file occured: {0}".format(io_exe))
     return loaded_config
 
-def get_all_routes():
+def get_all_routes(routes_dir="route_configs"):
     '''
     Finds all the json files with within /instance/route_configs
     that contain a "route" key
     '''
+    route_path = os.path.join(app.instance_path, routes_dir)
     routes = []
     var_counts = {}
 
@@ -48,10 +46,11 @@ def get_all_routes():
     # return the list of the sorted routes
     return [r[0] for r in var_counts]
 
-def load_route_config(route_rule):
+def load_route_config(route_rule, routes_dir="route_configs"):
     '''
     Return the json data for the provided route_config
     '''
+    route_path = os.path.join(app.instance_path, routes_dir)
     for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
         data = load_json_config(conf_file)
         if "route" in data:

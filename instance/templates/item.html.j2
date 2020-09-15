@@ -20,7 +20,7 @@
 
     {# include the metadata section of the page  #}
     {% for display_conf in metadata_conf['display'] %}
-        {% if display_conf['value'] and (display_conf['value'] | render(False)) %}
+        {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
             {% include display_conf['metadata_template'] %}
         {% endif %}
     {% endfor %}

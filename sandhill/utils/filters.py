@@ -8,16 +8,11 @@ from jinja2 import contextfilter, TemplateError
 
 
 @app.template_filter()
-def number_format(value):
-    """ Jinja filter to format the number """
-    return format(int(value), ',d')
-
-@app.template_filter()
 def size_format(value):
     """ Jinja filter to format the size """
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     i = 0
-    nbytes =  int(value) if value else 0
+    nbytes = int(value) if f"{value}".isdigit() else 0
     while nbytes >= 1024 and i < len(suffixes)-1:
         nbytes /= 1024
         i += 1
@@ -43,8 +38,8 @@ def generate_datastream_url(value, obj_type='OBJ', action="view"):
 
 @app.template_filter()
 def head(value):
-    """If value is a list, returns the head of the list, otherwise return the value as is"""
-    if isinstance(value, list):
+    """If value is a non-empty list, returns the head of the list, otherwise return the value as is"""
+    if isinstance(value, list) and value:
         value = value[0]
     return value
 
@@ -83,30 +78,50 @@ def date_passed(value):
 
 @app.template_filter('render')
 @contextfilter
-def render(context, value, to_str=True):
+def render(context, value):
     """Renders a given string or literal
     args:
         context (Jinja2 context): context information and variables to use when 
             evaluating the provided template string.
         value (str): Jinja2 template string to evaluate given the provided context
-        to_str (bool): If it should return a string of the rendered template to it
-            or attempt a literal_eval to convert it to it's datatype (default = True)
     returns:
-        (str|any): the rendered value or string
+        (str|None): the rendered value or string
     """
     data_val = None
-    context.environment.autoescape = to_str if isinstance(to_str, bool) else False
 
     try:
         data_template = context.environment.from_string(value)
         data_val = data_template.render(**context)
-        if not to_str and data_val:
-            data_val = literal_eval(data_val)
-    except (ValueError, SyntaxError) as err:
-        app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
     except TemplateError as terr:
         app.logger.error(f"Invalid template provided: {value}. Error: {terr}")
 
-    context.environment.autoescape = True
-    return ifnone(data_val, None)
+    return data_val
 
+@app.template_filter('render_literal')
+@contextfilter
+def render_literal(context, value, fallback_to_str=True):
+    """Renders a Jinja template and attempts to perform a literal_eval on the result
+    args:
+        context (Jinja2 context): context information and variables to use when 
+            evaluating the provided template string.
+        value (str): Jinja2 template string to evaluate given the provided context
+        fallback_to_str (bool): If function should return string value on a failed
+            attempt to literal_eval (default = True)
+    returns:
+        (any|None) The literal_eval'ed result, or string if fallback_to_str, or None on render failure
+    raises:
+        ValueError: If content is valid Python, but not a valid datatype
+        SyntaxError: If content is not valid Python
+    """
+    context.environment.autoescape = False
+    data_val = render(context, value)
+
+    try:
+        if data_val:
+            data_val = literal_eval(data_val)
+    except (ValueError, SyntaxError) as err:
+        app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
+        if not fallback_to_str:
+            raise err
+    context.environment.autoescape = True
+    return data_val

@@ -2,8 +2,8 @@ import os
 import logging
 from flask import g, abort, json
 from functools import wraps
-from .. import app
-from .config_loader import get_all_routes
+from sandhill import app
+from sandhill.utils.config_loader import get_all_routes
 
 def add_routes():
     """
