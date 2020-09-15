@@ -1,5 +1,6 @@
 from sandhill.utils import filters
 from sandhill import app
+from jinja2.runtime import new_context
 
 def test_islist():
     assert filters.is_list([]) == True
@@ -11,16 +12,10 @@ def test_islist():
 def test_render():
 
     data_dict = {
-        "environment": {
-            "var": "val"
-        }
+        "var": "val"
     }
 
-    # Test rendering a value from the context
-    with app.test_request_context('/etd/1000'):
-        #ctx = app.app_context()
-        print(app.__dict__)
-        print(app.template_context_processors.__dict__)
-        print(type(app.jinja_env.render(data_dict)))
-        print(app.jinja_env.render(data_dict))
-        assert filters.render("just no", "{{ var }}") == "val"
+    template = app.jinja_env.from_string("{{ var }}")
+    context = template.new_context(vars=data_dict)
+    assert filters.render(context, "{{ var }}") == "val"
+
