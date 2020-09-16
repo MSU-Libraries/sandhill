@@ -49,7 +49,15 @@ def test_assemble_url():
     pass #TODO
 
 def test_date_passed():
-    pass #TODO
+    # TODO -- needs group review
+
+    # Test positive scenarios
+    assert filters.date_passed('2000-01-01') == True
+    assert filters.date_passed('2040-01-01') == False
+
+    # Test bad input
+    assert filters.date_passed('not-a-date') == False
+    assert filters.date_passed(2000) == False
 
 def test_render():
     data_dict = {

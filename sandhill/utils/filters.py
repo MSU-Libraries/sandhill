@@ -65,15 +65,28 @@ def set_query_arg(url_components, key, value):
 @app.template_filter('assemble_url')
 def assemble_url(url_components):
     """Take url_components (derived from Flask Request object) and return url."""
-    return url_components["path"] + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
+    url = ""
+    if isinstance(url_components, dict) and "path" in url_components:
+        url = url_components["path"]
+        if "query_args" in url_components:
+            url = url + urllib.parse.urlencode(url_components["query_args"], doseq=True)
+    return url
 
 @app.template_filter('date_passed')
 def date_passed(value):
-    """ Checks if the embargoded date is greater than the current date"""
-    value_date =  datetime.strptime(value, "%Y-%m-%d")
-    current_date  = datetime.now()
-    if value_date.date() < current_date.date():
-        return True
+    """ Checks if the embargoded date is greater than the current date
+    args:
+        value (str): Date in the format yyy-mm-dd that needs to be checked
+    returns:
+        (bool): If the given date is less than the current date or not
+    """
+    try:
+        value_date =  datetime.strptime(value, "%Y-%m-%d")
+        current_date  = datetime.now()
+        if value_date.date() < current_date.date():
+            return True
+    except (ValueError, TypeError):
+        pass
     return False
 
 @app.template_filter('render')
