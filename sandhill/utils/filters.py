@@ -45,31 +45,52 @@ def head(value):
 
 @app.template_filter('solr_escape')
 def solr_escape(value):
-    """Filter to escape a value being passed to Solr"""
-    escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                ';': r'\;' }
-    value = value.replace('\\', r'\\')  # must be first replacement
-    for k,v in escapes.items():
-        value = value.replace(k,v)
+    """Filter to escape a value being passed to Solr
+    args:
+        value (str): string to escape Solr characters
+    returns:
+        (str): same string but with Solr characters escaped
+    """
+    if isinstance(value, str):
+        escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
+                    '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
+                    '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
+                    ';': r'\;' }
+        value = value.replace('\\', r'\\')  # must be first replacement
+        for k,v in escapes.items():
+            value = value.replace(k,v)
     return value
 
 @app.template_filter('set_query_arg')
 def set_query_arg(url_components, key, value):
-    """Take dictionary of url components, and update 'key' with 'value'."""
-    url_components['query_args'][key] = value
+    """Take dictionary of url components, and update 'key' with 'value'.
+    args:
+        url_components (dict): dictionary of your URL components
+        key (str|int): key of the query_arg to add/update
+        value (any): value to give that key
+    returns:
+        (dict): The updated url_components dictionary
+    """
+    if isinstance(url_components, dict) and (isinstance(key, str) or isinstance(key, int)):
+        if 'query_args' not in url_components:
+            url_components['query_args'] = {}
+        url_components['query_args'][key] = value
 
     return url_components
 
 @app.template_filter('assemble_url')
 def assemble_url(url_components):
-    """Take url_components (derived from Flask Request object) and return url."""
+    """Take url_components (derived from Flask Request object) and return url.
+    args:
+        url_components (dict): compoents of the URL to build
+    returns:
+        (str): fully combined URL with query arguments
+    """
     url = ""
     if isinstance(url_components, dict) and "path" in url_components:
         url = url_components["path"]
-        if "query_args" in url_components:
-            url = url + urllib.parse.urlencode(url_components["query_args"], doseq=True)
+        if "query_args" in url_components and isinstance(url_components['query_args'],dict) and url_components['query_args']:
+            url = url + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
     return url
 
 @app.template_filter('date_passed')

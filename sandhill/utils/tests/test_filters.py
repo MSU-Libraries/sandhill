@@ -40,13 +40,70 @@ def test_head():
     assert not emptylist
 
 def test_solr_escape():
-    pass #TODO
+    # TODO -- needs group review
+
+    # test escape
+    assert filters.solr_escape("a test string") == r"a\ test\ string"
+    assert filters.solr_escape("a with+") == r"a\ with\+"
+    assert filters.solr_escape("a \\with+") == r"a\ \\with\+"
+    assert filters.solr_escape("") == ""
+
+    # test non-string
+    assert filters.solr_escape(['test']) == ['test']
+    assert filters.solr_escape(None) == None
 
 def test_set_query_arg():
-    pass #TODO
+    # TODO -- needs group review
+
+    args = {}
+
+    # test adding when key isn't already there
+    assert filters.set_query_arg(args, 'a','b') == {"query_args":{"a":"b"}}
+
+    # test adding to an existing arg list
+    assert filters.set_query_arg(args,'c','d') == {"query_args":{"a":"b", "c":"d"}}
+
+    # test overwriting a key
+    assert filters.set_query_arg(args,'a','b2') == {"query_args":{"a":"b2", "c":"d"}}
+
+    # test providing a non-string key
+    assert filters.set_query_arg(args,1,2) == {"query_args":{"a":"b2", "c":"d", 1:2}}
+
+    # test providing a list as a key
+    assert filters.set_query_arg(args, [1], 2) == {"query_args":{"a":"b2", "c":"d", 1:2}}
+
+    # test providing a non-dict
+    args2 = ['test']
+    assert filters.set_query_arg(args2, 1, 2) == ['test']
 
 def test_assemble_url():
-    pass #TODO
+    # TODO -- needs group review
+
+    url_components = {
+        "path": "https://mytest.com",
+    }
+
+    # Test positive scenarios
+    assert filters.assemble_url(url_components) == "https://mytest.com"
+
+    url_components["query_args"] = {}
+    assert filters.assemble_url(url_components) == "https://mytest.com"
+    
+    url_components["query_args"] = {"q":"'hi'"}
+    assert filters.assemble_url(url_components) == "https://mytest.com?q=%27hi%27"
+
+    url_components["query_args"]["another"] = "value with space"
+    assert filters.assemble_url(url_components) == "https://mytest.com?q=%27hi%27&another=value+with+space"
+
+    # test missing path
+    del url_components["path"]
+    assert filters.assemble_url(url_components) == ""
+
+    # test non-dict query_args
+    url_components["path"] = "mysite"
+    url_components["query_args"] = 1
+    assert filters.assemble_url(url_components) == "mysite"
+
 
 def test_date_passed():
     # TODO -- needs group review
