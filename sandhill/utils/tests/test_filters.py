@@ -40,55 +40,49 @@ def test_head():
     assert not emptylist
 
 def test_solr_escape():
-    # TODO -- needs group review
-
     # test escape
     assert filters.solr_escape("a test string") == r"a\ test\ string"
     assert filters.solr_escape("a with+") == r"a\ with\+"
     assert filters.solr_escape("a \\with+") == r"a\ \\with\+"
     assert filters.solr_escape("") == ""
+    assert filters.solr_escape("hello") == "hello"
 
     # test non-string
     assert filters.solr_escape(['test']) == ['test']
     assert filters.solr_escape(None) == None
 
-def test_set_query_arg():
-    # TODO -- needs group review
-
+def test_set_child_key():
     args = {}
 
     # test adding when key isn't already there
-    assert filters.set_query_arg(args, 'a','b') == {"query_args":{"a":"b"}}
+    assert filters.set_child_key(args, 'query_args', 'a', 'b') == {"query_args": {"a": "b"}}
 
     # test adding to an existing arg list
-    assert filters.set_query_arg(args,'c','d') == {"query_args":{"a":"b", "c":"d"}}
+    assert filters.set_child_key(args, 'query_args', 'c', 'd') == {"query_args": {"a": "b", "c": "d"}}
 
     # test overwriting a key
-    assert filters.set_query_arg(args,'a','b2') == {"query_args":{"a":"b2", "c":"d"}}
+    assert filters.set_child_key(args, 'query_args', 'a', 'b2') == {"query_args": {"a": "b2", "c": "d"}}
 
     # test providing a non-string key
-    assert filters.set_query_arg(args,1,2) == {"query_args":{"a":"b2", "c":"d", 1:2}}
+    assert filters.set_child_key(args, 'query_args', 1, 2) == {"query_args": {"a": "b2", "c": "d", 1: 2}}
 
     # test providing a list as a key
-    assert filters.set_query_arg(args, [1], 2) == {"query_args":{"a":"b2", "c":"d", 1:2}}
+    assert filters.set_child_key(args, 'query_args', [1], 2) == {"query_args":{"a": "b2", "c": "d", 1: 2}}
 
     # test providing a non-dict
     args2 = ['test']
-    assert filters.set_query_arg(args2, 1, 2) == ['test']
+    assert filters.set_child_key(args2, 'query_args', 1, 2) == ['test']
 
 def test_assemble_url():
-    # TODO -- needs group review
-
     url_components = {
         "path": "https://mytest.com",
     }
-
     # Test positive scenarios
     assert filters.assemble_url(url_components) == "https://mytest.com"
 
     url_components["query_args"] = {}
     assert filters.assemble_url(url_components) == "https://mytest.com"
-    
+
     url_components["query_args"] = {"q":"'hi'"}
     assert filters.assemble_url(url_components) == "https://mytest.com?q=%27hi%27"
 
@@ -104,10 +98,10 @@ def test_assemble_url():
     url_components["query_args"] = 1
     assert filters.assemble_url(url_components) == "mysite"
 
+    # test non-dict url_components
+    assert filters.assemble_url("hello") == ""
 
 def test_date_passed():
-    # TODO -- needs group review
-
     # Test positive scenarios
     assert filters.date_passed('2000-01-01') == True
     assert filters.date_passed('2040-01-01') == False

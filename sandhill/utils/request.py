@@ -1,13 +1,21 @@
 from flask import request, abort
-from sandhill.utils.generic import combine_to_list
+from sandhill.utils.generic import combine_to_unique_list
 
 def match_request_format(view_args_key, allowed_formats, default_format='text/html'):
     """
     Match a request mimetype to the given view_args_key or the allowed mimetypes provided by client.
+
+    args:
+        view_args_key (str): the key in the url request to check within for matching format.
+        allowed_formats (list): list of acceptable mimetypes.
+    kwargs:
+        default_format (str): the mimetype to use by default if view_args_key value is not allowed.
+    returns:
+        result_format (str): the mimetype for the format to return.
     """
     result_format = default_format
     # check for accept header
-    for mtype in list(request.accept_mimetypes):
+    for mtype, _ in list(request.accept_mimetypes):
         if mtype in allowed_formats:
            result_format = mtype
            break
@@ -52,19 +60,21 @@ def overlay_with_query_args(query_config):
             query_params[field_name] = field_conf['base']
         # Load from request_args if field defined with a default
         if field_name in request_args and 'default' in field_conf:
-            query_params[field_name] = combine_to_list(query_params[field_name], request_args[field_name])
+            query_params[field_name] = combine_to_unique_list(query_params[field_name], request_args[field_name])
         # Load default from config if solr_param field not defined
         elif 'default' in field_conf:
-            query_params[field_name] = combine_to_list(query_params[field_name], field_conf['default'])
+            query_params[field_name] = combine_to_unique_list(query_params[field_name], field_conf['default'])
         # Remove field from solr query if empty
         if not any(query_params[field_name]):
             del query_params[field_name]
 
         # restrictions
         #TODO something like: query_params[field_name] = apply_restrictions(query_params[field_name], field_conf['restrictions'])
+        # Anyone who puts a negative number in rows or (any other non integer) will get what they deserve. "-1" for instance will return the max
+        # number of search results.
         if 'max' in field_conf:
-            query_params[field_name] = [ val if str(val).isdigit() and int(val) < int(field_conf['max']) else field_conf['max'] for val in query_params[field_name] ]
+            query_params[field_name] = [ val if str(val).isdigit() and int(val) < int(field_conf['max']) else str(field_conf['max']) for val in query_params[field_name] ]
         if 'min' in field_conf:
-            query_params[field_name] = [ val if str(val).isdigit() and int(val) > int(field_conf['min']) else field_conf['min'] for val in query_params[field_name] ]
+            query_params[field_name] = [ val if str(val).isdigit() and int(val) > int(field_conf['min']) else str(field_conf['min']) for val in query_params[field_name] ]
 
     return query_params
