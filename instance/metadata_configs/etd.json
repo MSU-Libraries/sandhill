@@ -11,17 +11,7 @@
     ],
     "title": "{{ item.fgs_label_s }}",
     "_comment": "TODO: Refactor the media_template section",
-    "media_template": "{{ 'media_display/pdfjs.html.j2' if not item.embargo_end_date_ss or (item.embargo_end_date_ss and item.embargo_end_date_ss | head | date_passed) else 'media_display/preview.html.j2'  }}",
-    "restriction_conditions": [
-        {
-            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
-            "allowed": ["False"]
-        },
-        {
-            "value": "{{ True if view_args.label in item.embargo_datastream_ss else False }}",
-            "allowed": ["False"]
-        }
-    ],
+    "media_template": "{{ 'media_display/pdf.html.j2' if not restriction  else 'media_display/preview_embargo.html.j2'  }}",
     "display": [
         {
             "value": "{{ item.description }}",

@@ -107,18 +107,21 @@
         "code": 403
     },
     {
-        "_comment": "test that the item page loads on an embargoed etd with no embargo_datastream_ss set",
+        "_comment": "test that the item page loads on an embargoed etd with no embargo_datastream_ss set and it does not load the iframe that dislays the pdf in PDF.js viewer",
         "page": "/etd/1655",
         "code": 200,
         "excludes": [
-            "/etd/1655/OBJ/view"
+            "/etd/1655/OBJ/view",
+            "<iframe id=\"pdf-js-viewer\""
         ]
     },
     {
         "page": "/etd/100",
         "code": 200,
+        "_comment": "Confirm that the item page loads with the PDF.js viewer",
         "contains": [
-            "/etd/100/OBJ/view"
+            "/etd/100/OBJ/view",
+            "<iframe id=\"pdf-js-viewer\""
         ]
     },
     {
@@ -131,6 +134,14 @@
         "contains": [
             "<h1>Broadening the concept of civic agriculture : the history of civic food systems in Progressive Era Grand Rapids, Michigan</h1>",
             "<a href=\"/search?fq=subject_display:Agriculture%5C-%5C-Social%5C%20aspects\">Agriculture--Social aspects</a>"
+        ]
+    },
+    {
+        "page":"/static/repo_pdfjs/web/viewer.html",
+        "code": 200,
+        "_comment": "Test that the static viewer files are loaded on to the page",
+        "contains": [
+            "<div id=\"mainContainer\">"
         ]
     }
 
