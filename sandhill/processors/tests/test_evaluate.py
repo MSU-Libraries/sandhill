@@ -10,8 +10,8 @@ def test_conditions():
         "metadata_conf": {
             "restriction_conditions": [
                 {
-                    "value": "test",
-                    "allowed": ["test"]
+                    "evaluate": "test",
+                    "match_when": ["test"]
                 }
             ]
         }
@@ -27,8 +27,8 @@ def test_conditions():
     data_dict['other_conf'] = {
         "other_cons": [
             {
-                "value": "notmatched",
-                "allowed": ["will", "fail"]
+                "evaluate": "notmatched",
+                "match_when": ["will", "fail"]
             }
         ]
     }
@@ -39,12 +39,12 @@ def test_conditions():
     data_dict['other_conf'] = {
         "other_cons": [
             {
-                "value": "test",
-                "allowed": ["test"]
+                "evaluate": "test",
+                "match_when": ["test"]
             },
             {
-                "value": "notmatched",
-                "allowed": ["will", "fail"]
+                "evaluate": "notmatched",
+                "match_when": ["will", "fail"]
             }
         ]
     }
@@ -77,7 +77,7 @@ def test_conditions():
     evaluation = evaluate.conditions(data_dict)
     assert evaluation is None
 
-    # Test for missing conditions 'value'/'allowed' dict
+    # Test for missing conditions 'evaluate'/'match_when' dict
     data_dict['conditions'] = "other_conf.other_cons"
     del data_dict['other_conf']
     evaluation = evaluate.conditions(data_dict)

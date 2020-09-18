@@ -20,22 +20,16 @@ Field Definitions
 {
     "match_conditions": [
         {
-            "value": "{{ view_args.namespace }}",
-            "allowed": ["etd", "austm"]
+            "evaluate": "{{ view_args.namespace }}",
+            "match_when": ["etd", "austm"]
         },
         {
-            "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
-            "allowed": ["info:fedora/islandora:sp_pdf"]
+            "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
+            "match_when": ["info:fedora/islandora:sp_pdf"]
         }
     ],
     "title": "{{ item. fgs_label_s }}",
     "media_template": "media_display/preview.html.j2",
-    "restriction_conditions": [
-        {
-            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
-            "allowed": ["False"]
-        }
-    ],
     "display": [
         {
             "value": "{{ item.description }}",
@@ -86,36 +80,18 @@ Example:
 ```
     "match_conditions": [
         {
-            "value": "{{ view_args.namespace }}",
-            "allowed": ["etd"]
+            "evaluate": "{{ view_args.namespace }}",
+            "match_when": ["etd"]
         },
         {
-            "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
-            "allowed": ["info:fedora/islandora:sp_pdf"]
+            "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
+            "match_when": ["info:fedora/islandora:sp_pdf"]
         }
     ]
 ```
-* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through Jinja before comparison.
-* `allowed`: List of acceptable values, these values are compared with the provided `value` to determine a match. Matches must be exact.
+* `evaluate`: This is the value in the current context to be compared to match_when values. This string is rendered through Jinja before comparison.
+* `match_when`: List of acceptable values, these values are compared with the provided `value` to determine a match. Matches must be exact.
 
-### Restriction Conditions
-
-`restriction_conditions` can be added to the config files, 
-which determines if any restrictions can be applied to the item.
-
-`restriction_conditions` is a list of dicts.
-
-Example:
-```
-    "restriction_conditions": [
-        {
-            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else False }}",
-            "allowed": ["True"]
-        }
-    ]
-```
-* `value`: This is the value in the current context to be compared to allowed values. This string is rendered through Jinja before comparison.
-* `allowed`: List of acceptable values, these values are compared with the provided value to determine a match. Matches must be exact.
 
 
 ### General Fields

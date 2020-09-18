@@ -28,11 +28,13 @@ def evaluate_conditions(conditions, context, match_all=True):
             a match. Default = True
     return:
         (int): returns the number of matches matched ONLY if all are matched, else returns 0
+    raises
+        KeyError: when "match_when" or "evaluate" is not in conditions
     """
     matched = 0
     for match in conditions:
-        check_value = render_template(match['value'], context)
-        if check_value in match['allowed']:
+        check_value = render_template(match['evaluate'], context)
+        if check_value in match['match_when']:
             # Idea: use boosts if the matched value for 2 config files is the same, e.g. matched += boost
             matched += 1
     # Only assigned matched value if ALL matches are successful

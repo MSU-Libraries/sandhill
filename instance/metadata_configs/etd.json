@@ -1,12 +1,12 @@
 {
     "match_conditions": [
         {
-            "value": "{{ view_args.namespace }}",
-            "allowed": ["etd"]
+            "evaluate": "{{ view_args.namespace }}",
+            "match_when": ["etd"]
         },
         {
-            "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
-            "allowed": ["info:fedora/islandora:sp_pdf"]
+            "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
+            "match_when": ["info:fedora/islandora:sp_pdf"]
         }
     ],
     "title": "{{ item.fgs_label_s }}",

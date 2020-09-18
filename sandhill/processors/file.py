@@ -36,7 +36,7 @@ def load_matched_json(data_dict):
             try:
                 matched_dict[path] = evaluate_conditions(config['match_conditions'], data_dict)
             except KeyError as exc:
-                app.logger.warning("Missing 'value' and/or 'allowed' for 'match_condition' in: {0}".format(path))
+                app.logger.warning("Missing 'evaluate' and/or 'match_when' for 'match_condition' in: {0}".format(path))
                 continue
     matched_path = max(matched_dict.items(), key=itemgetter(1))[0] if matched_dict else None
 

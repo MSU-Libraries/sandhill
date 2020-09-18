@@ -107,7 +107,7 @@ def date_passed(value):
         current_date  = datetime.now()
         if value_date.date() < current_date.date():
             return True
-    except (ValueError, TypeError) as error:
+    except (ValueError, TypeError) as err:
         app.logger.error(f"Unable to get a valid date in {value}. Error {err} ")
     return False
 
