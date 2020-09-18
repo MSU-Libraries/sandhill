@@ -5,19 +5,15 @@ from sandhill import app
 from sandhill.utils.generic import ifnone
 from datetime import datetime
 from jinja2 import contextfilter, TemplateError
+from collections.abc import Hashable
 
-
-@app.template_filter()
-def number_format(value):
-    """ Jinja filter to format the number """
-    return format(int(value), ',d')
 
 @app.template_filter()
 def size_format(value):
     """ Jinja filter to format the size """
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     i = 0
-    nbytes =  int(value) if value else 0
+    nbytes = int(value) if f"{value}".isdigit() else 0
     while nbytes >= 1024 and i < len(suffixes)-1:
         nbytes /= 1024
         i += 1
@@ -43,70 +39,124 @@ def generate_datastream_url(value, obj_type='OBJ', action="view"):
 
 @app.template_filter()
 def head(value):
-    """If value is a list, returns the head of the list, otherwise return the value as is"""
-    if isinstance(value, list):
+    """If value is a non-empty list, returns the head of the list, otherwise return the value as is"""
+    if isinstance(value, list) and value:
         value = value[0]
     return value
 
 @app.template_filter('solr_escape')
 def solr_escape(value):
-    """Filter to escape a value being passed to Solr"""
-    escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                ';': r'\;' }
-    value = value.replace('\\', r'\\')  # must be first replacement
-    for k,v in escapes.items():
-        value = value.replace(k,v)
+    """Filter to escape a value being passed to Solr
+    args:
+        value (str): string to escape Solr characters
+    returns:
+        (str): same string but with Solr characters escaped
+    """
+    if isinstance(value, str):
+        escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
+                    '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
+                    '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
+                    ';': r'\;' }
+        value = value.replace('\\', r'\\')  # must be first replacement
+        for k, v in escapes.items():
+            value = value.replace(k, v)
     return value
 
-@app.template_filter('set_query_arg')
-def set_query_arg(url_components, key, value):
-    """Take dictionary of url components, and update 'key' with 'value'."""
-    url_components['query_args'][key] = value
-
-    return url_components
+@app.template_filter('set_child_key')
+def set_child_key(parent_dict, parent_key, key, value):
+    """Take dictionary of url components, and update 'key' with 'value'.
+    args:
+        parent_dict (dict): dictionary to add parent_key to
+        parent_key (str|int|other hashable type): parent key to add to the parent_dict
+        key (str|int|other hashable type): key to put under parent_key
+        value (any): value to give that key
+    returns:
+        parent_dict (dict): The updated parent dictionary
+    """
+    if isinstance(parent_dict, dict) and isinstance(parent_key, Hashable) and isinstance(key, Hashable):
+        if parent_key not in parent_dict:
+            parent_dict[parent_key] = {}
+        parent_dict[parent_key][key] = value
+    return parent_dict
 
 @app.template_filter('assemble_url')
 def assemble_url(url_components):
-    """Take url_components (derived from Flask Request object) and return url."""
-    return url_components["path"] + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
+    """Take url_components (derived from Flask Request object) and return url.
+    args:
+        url_components (dict): compoents of the URL to build
+    returns:
+        (str): fully combined URL with query arguments
+    """
+    url = ""
+    if isinstance(url_components, dict) and "path" in url_components:
+        url = url_components["path"]
+        if "query_args" in url_components and isinstance(url_components['query_args'], dict) and url_components['query_args']:
+            url = url + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
+    return url
 
 @app.template_filter('date_passed')
 def date_passed(value):
-    """ Checks if the embargoded date is greater than the current date"""
-    value_date =  datetime.strptime(value, "%Y-%m-%d")
-    current_date  = datetime.now()
-    if value_date.date() < current_date.date():
-        return True
+    """ Checks if the embargoded date is greater than the current date
+    args:
+        value (str): Date in the format yyy-mm-dd that needs to be checked
+    returns:
+        (bool): If the given date is less than the current date or not
+    """
+    try:
+        value_date =  datetime.strptime(value, "%Y-%m-%d")
+        current_date  = datetime.now()
+        if value_date.date() < current_date.date():
+            return True
+    except (ValueError, TypeError) as err:
+        app.logger.error(f"Unable to get a valid date in {value}. Error {err} ")
     return False
 
 @app.template_filter('render')
 @contextfilter
-def render(context, value, to_str=True):
+def render(context, value):
     """Renders a given string or literal
     args:
-        context (Jinja2 context): context information and variables to use when 
+        context (Jinja2 context): context information and variables to use when
             evaluating the provided template string.
         value (str): Jinja2 template string to evaluate given the provided context
-        to_str (bool): If it should return a string of the rendered template to it
-            or attempt a literal_eval to convert it to it's datatype (default = True)
     returns:
-        (str|any): the rendered value or string
+        (str|None): the rendered value or string
     """
     data_val = None
-    context.environment.autoescape = to_str if isinstance(to_str, bool) else False
 
     try:
         data_template = context.environment.from_string(value)
         data_val = data_template.render(**context)
-        if not to_str and data_val:
-            data_val = literal_eval(data_val)
-    except (ValueError, SyntaxError) as err:
-        app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
     except TemplateError as terr:
         app.logger.error(f"Invalid template provided: {value}. Error: {terr}")
 
-    context.environment.autoescape = True
-    return ifnone(data_val, None)
+    return data_val
 
+@app.template_filter('render_literal')
+@contextfilter
+def render_literal(context, value, fallback_to_str=True):
+    """Renders a Jinja template and attempts to perform a literal_eval on the result
+    args:
+        context (Jinja2 context): context information and variables to use when
+            evaluating the provided template string.
+        value (str): Jinja2 template string to evaluate given the provided context
+        fallback_to_str (bool): If function should return string value on a failed
+            attempt to literal_eval (default = True)
+    returns:
+        (any|None) The literal_eval'ed result, or string if fallback_to_str, or None on render failure
+    raises:
+        ValueError: If content is valid Python, but not a valid datatype
+        SyntaxError: If content is not valid Python
+    """
+    context.environment.autoescape = False
+    data_val = render(context, value)
+
+    try:
+        if data_val:
+            data_val = literal_eval(data_val)
+    except (ValueError, SyntaxError) as err:
+        app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
+        if not fallback_to_str:
+            raise err
+    context.environment.autoescape = True
+    return data_val

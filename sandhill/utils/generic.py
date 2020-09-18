@@ -4,7 +4,7 @@ Generic function that can be used in any context
 
 def ifnone(*args):
     '''
-    Returns the default value if the key is not in the dictionary or if 
+    Returns the default value if the key is not in the dictionary or if
     a non-dictionary is provided it will return the default if it is not set.
     args:
         var (dict): The dictionary to check
@@ -15,7 +15,7 @@ def ifnone(*args):
         default_value: What to return if the variable is None
     Returns:
         The default_value if the value is None or the key is not in the dict
-    Trows: 
+    Trows:
         TypeError
     '''
     var = args[0] if args else None
@@ -25,7 +25,7 @@ def ifnone(*args):
         return var[key] if isinstance(var, dict) and key in var else default_val
     elif len(args) == 2:
         default_value = args[1]
-        return var if var else default_value
+        return var if var is not None else default_value
     else:
         raise TypeError(f"ifnone() missing required positional argument (2 or 3) {len(args)} received.")
 
@@ -41,6 +41,12 @@ def combine_to_list(*args):
             combined.append(x)
     return combined
 
+def combine_to_unique_list(*args):
+    """Remove duplicates from combined list."""
+    unique_list = []
+    [unique_list.append(x) for x in combine_to_list(*args) if x not in unique_list]
+    return unique_list
+
 def get_descendant_from_dict(dict_obj, list_keys):
     '''
     Gets key values from the dictionary if they exist
@@ -55,3 +61,4 @@ def get_descendant_from_dict(dict_obj, list_keys):
         else:
             dict_obj = None
     return dict_obj if list_keys else None
+

@@ -1,0 +1,6 @@
+{
+    "route": "/about",
+    "template": "about.html.j2",
+    "data": [
+    ]
+}

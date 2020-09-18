@@ -7,10 +7,13 @@
 {% block content %}
     {# title of the page #}
     <h1>{{ metadata_conf['title'] | render }}</h1>
+    
+    {# include the actions section of the page  #}
+    {% include 'item_page_blocks/actions_bar.html.j2' %}
 
     {# include the viewer section of the page  #}
-    {% if metadata_conf['media_template'] %}
-        {% include metadata_conf['media_template'] %}
+    {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
+        {% include (metadata_conf['media_template'] | render)  %}
     {% endif %}
 
     {# include the downloads section of the page  #}
@@ -20,7 +23,7 @@
 
     {# include the metadata section of the page  #}
     {% for display_conf in metadata_conf['display'] %}
-        {% if display_conf['value'] and (display_conf['value'] | render(False)) %}
+        {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
             {% include display_conf['metadata_template'] %}
         {% endif %}
     {% endfor %}

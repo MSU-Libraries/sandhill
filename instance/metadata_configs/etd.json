@@ -1,26 +1,17 @@
 {
     "match_conditions": [
         {
-            "value": "{{ view_args.namespace }}",
-            "allowed": ["etd"]
+            "evaluate": "{{ view_args.namespace }}",
+            "match_when": ["etd"]
         },
         {
-            "value": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
-            "allowed": ["info:fedora/islandora:sp_pdf"]
+            "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
+            "match_when": ["info:fedora/islandora:sp_pdf"]
         }
     ],
     "title": "{{ item.fgs_label_s }}",
-    "media_template": "media_display/preview.html.j2",
-    "restriction_conditions": [
-        {
-            "value": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
-            "allowed": ["False"]
-        },
-        {
-            "value": "{{ True if view_args.label in item.embargo_datastream_ss else False }}",
-            "allowed": ["False"]
-        }
-    ],
+    "_comment": "TODO: Refactor the media_template section",
+    "media_template": "{{ 'media_display/pdf.html.j2' if not restriction  else 'media_display/preview_embargo.html.j2'  }}",
     "display": [
         {
             "value": "{{ item.description }}",
