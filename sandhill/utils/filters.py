@@ -108,7 +108,7 @@ def date_passed(value):
         if value_date.date() < current_date.date():
             return True
     except (ValueError, TypeError) as error:
-        app.logger.debug(f"{error}: Invalid date '{value}'")
+        app.logger.error(f"Unable to get a valid date in {value}. Error {err} ")
     return False
 
 @app.template_filter('render')
