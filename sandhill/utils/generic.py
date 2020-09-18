@@ -43,7 +43,9 @@ def combine_to_list(*args):
 
 def combine_to_unique_list(*args):
     """Remove duplicates from combined list."""
-    return list(set(combine_to_list(*args)))
+    unique_list = []
+    [unique_list.append(x) for x in combine_to_list(*args) if x not in unique_list]
+    return unique_list
 
 def get_descendant_from_dict(dict_obj, list_keys):
     '''
