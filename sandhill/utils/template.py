@@ -6,7 +6,7 @@ def render_template(template_str, context):
     """
     Renders jinja templates
     args:
-        template_str (string): jinja template
+        template_str (string): jinja template variable
         context (dict): Context for the jinja template
     raises:
         jinja2.TemplateError
