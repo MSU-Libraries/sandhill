@@ -6,25 +6,58 @@
 
 {% block content %}
     {# title of the page #}
-    <h1>{{ metadata_conf['title'] | render }}</h1>
+    <div class="row">
+        <div class="col-12">
+            <h1>{{ metadata_conf['title'] | render }}</h1>
+            {# include the actions section of the page  #}
+            {% include 'item_page_blocks/actions_bar.html.j2' %}
+        </div>
+    </div>
     
-    {# include the actions section of the page  #}
-    {% include 'item_page_blocks/actions_bar.html.j2' %}
+    {# check for the md_position and display the appropriate columns #}
+    {% if view_args.md_position == "right" %}
+        <div class="row">
+            <div class="bg-primary col-xl-6 col-lg-7 col-12 col-md-9 col-sm-12">   
+                {# include the viewer section of the page  #}
+                {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
+                    {% include (metadata_conf['media_template'] | render)  %}
+                {% endif %}
+            </div>
+            <div class="bg-danger col-xl-6 col-lg-5 col-12 col-md-3 col-sm-12">
+                {# include the metadata section of the page  #}
+                {% for display_conf in metadata_conf['display'] %}
+                    {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
+                        {% include display_conf['metadata_template'] %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% elif view_args.md_position == "wrap" %}
+        <div class="">
+            <div class="bg-success">   
+                {# include the viewer section of the page  #}
+                {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
+                    {% include (metadata_conf['media_template'] | render)  %}
+                {% endif %}
+            </div>
+            <div class="bg-warning d-flex flex-lg-wrap">
+                {# include the metadata section of the page  #}
+                {% for display_conf in metadata_conf['display'] %}
+                    {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
+                        {% include display_conf['metadata_template'] %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
 
-    {# include the viewer section of the page  #}
-    {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
-        {% include (metadata_conf['media_template'] | render)  %}
+    
     {% endif %}
+
+
 
     {# include the downloads section of the page  #}
-    {% if metadata_conf['downloads'] %}
-        {% include 'item_page_blocks/downloads_box.html.j2' %}
-    {% endif %}
+    {#% if metadata_conf['downloads'] %#}
+        {#% include 'item_page_blocks/downloads_box.html.j2' %#}
+    {#% endif %#}
 
-    {# include the metadata section of the page  #}
-    {% for display_conf in metadata_conf['display'] %}
-        {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
-            {% include display_conf['metadata_template'] %}
-        {% endif %}
-    {% endfor %}
 {% endblock %}
