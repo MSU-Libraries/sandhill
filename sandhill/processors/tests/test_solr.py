@@ -84,8 +84,6 @@ def test_select_record():
     assert http_error.type.code == 503
 
 def test_search():
-    app.instance_path = os.path.join(app.root_path, "test_instance/")
-
     data_dict = {
         "name": "search",
         "processor": "solr.search",

@@ -1,7 +1,9 @@
 import os
+import io
 import collections
 from operator import itemgetter
 from flask import json, abort
+from requests.models import Response as RequestsResponse
 from sandhill import app
 from sandhill.utils.config_loader import load_json_configs, load_json_config
 from sandhill.utils.template import render_template, evaluate_conditions
@@ -18,6 +20,26 @@ def load_json(data_dict):
                 break
 
     return file_data
+
+def create_json_response(data_dict):
+    '''
+    Wrapper for load_json that will return a json response object.
+    This can be used if you wish to stream json instead of use it's data
+    for a template.
+    args:
+        data_dict(dict): context data as defined in the route_config that has already been loaded
+    returns:
+        Response: response object with the json data loaded
+    '''
+    resp = RequestsResponse()
+    resp.status_code = 200
+
+    content = load_json(data_dict)
+
+    if content:
+        resp.raw = io.StringIO(json.dumps(content))
+
+    return resp
 
 def load_matched_json(data_dict):
     """

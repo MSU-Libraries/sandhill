@@ -5,7 +5,6 @@ from sandhill import app
 
 def test_handle_static():
     client = app.test_client()
-    app.instance_path = os.path.join(app.root_path, "test_instance/")
 
     # test getting a file from instance directory
     result = client.get("/static/test.txt")

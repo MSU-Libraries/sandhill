@@ -54,7 +54,7 @@ def main(*args, **kwargs):
 
 def handle_template(template, response_var, **data):
     try:
-        if response_var in data and isinstance(data[response_var], FlaskResponse) :
+        if response_var in data and isinstance(data[response_var], FlaskResponse):
             return data[response_var]
         return render_template(template, **data)
     except TemplateNotFound:

@@ -6,8 +6,6 @@ from sandhill.processors import base
 from sandhill import app
 
 def test_load_route_data():
-    app.instance_path = os.path.join(app.root_path, "test_instance/")
-
     route_data = [
          OrderedDict({
             "processor": "file.load_json",

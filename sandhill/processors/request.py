@@ -11,4 +11,3 @@ def get_url_components(data_dict):
         "query_args": request.args.to_dict(flat=False)
     }
     return url_components
-
