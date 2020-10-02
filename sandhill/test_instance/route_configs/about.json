@@ -2,5 +2,13 @@
     "route": "/about",
     "template": "about.html.j2",
     "data": [
+        {
+            "processor": "file.load_json",
+            "name": "test",
+            "on_fail": 501,
+            "paths": [
+                "static/test.json"
+            ]
+        }
     ]
 }

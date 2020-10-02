@@ -1,0 +1,9 @@
+{
+    "route": [
+        "/other"
+    ],
+    "template": "home.html.j2",
+    "data": [
+    ]
+}
+

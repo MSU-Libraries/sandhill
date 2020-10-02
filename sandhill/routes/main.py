@@ -12,14 +12,24 @@ from sandhill.processors.base import load_route_data
 
 @add_routes()
 def main(*args, **kwargs):
+    '''
+    Entry point for the whole application, handling all routes and determining 
+    if it should render a template or stream a result. 
+    Based on the route_config that the path matches to, it will load all the
+    required data processors before rendering the result.
+
+    args/kwargs: all of the variables defined in the route configs
+        ex: "/<string:namespace>/<int:id>" would have namespace and id passed in kwargs
+
+    returns:
+        Nothing, template is rendered or result is streamed
+    '''
     return_val = None
     route_used = request.url_rule.rule
-
     ## loop over all the configs in the instance dir looking at the "route"
     ## field to determine which configs to use
     route_config = load_route_config(route_used)
     response_var = ifnone(route_config, 'response', None)
-
     ## process and load data routes
     data = {}
     route_data = []
