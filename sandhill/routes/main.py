@@ -1,9 +1,13 @@
+'''
+Entry point for the web application
+'''
 import collections
 from flask import request, render_template, abort
 from flask import Response as FlaskResponse
 from requests.models import Response as RequestsResponse
 from jinja2.exceptions import TemplateNotFound
 from sandhill import app
+from flask import current_app as app
 from sandhill.utils.decorators import add_routes
 from sandhill.utils.generic import ifnone
 from sandhill.utils.config_loader import load_route_config
@@ -13,8 +17,8 @@ from sandhill.processors.base import load_route_data
 @add_routes()
 def main(*args, **kwargs):
     '''
-    Entry point for the whole application, handling all routes and determining 
-    if it should render a template or stream a result. 
+    Entry point for the whole application, handling all routes and determining
+    if it should render a template or stream a result.
     Based on the route_config that the path matches to, it will load all the
     required data processors before rendering the result.
 
@@ -39,7 +43,7 @@ def main(*args, **kwargs):
                 route_data.append(entry)
             else:
                 app.logger.warning("Unable to parse route data entry number {0} for: {1}"
-                                   .format(idx,','.join(route_config['route'])))
+                                   .format(idx, ','.join(route_config['route'])))
         data = load_route_data(route_data)
     ## if a template is provided, render the tempate with the data
     if 'template' in route_config:

@@ -1,3 +1,7 @@
+'''
+Handle static files being served
+'''
+
 import os
 from flask import send_from_directory
 from sandhill import app
@@ -6,7 +10,7 @@ from sandhill import app
 @app.route('/static/<path:static_file>')
 def handle_static(static_file):
     '''
-    Retrieve the requested static file first looking for /static in the instance 
+    Retrieve the requested static file first looking for /static in the instance
     directory and falling back to the sandhill/static directory if /static not found
     within the instance.
 
