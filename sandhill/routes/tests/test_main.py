@@ -66,25 +66,26 @@ def test_handle_stream():
         "test": test_resp
     }
 
-    # Test passing it the correct information
-    resp = main.handle_stream("test", **data_dict)
-    assert test_resp.status_code == resp.status_code
-    assert isinstance(resp, FlaskResponse)
-    assert test_resp.headers['Content-Type'] == resp.headers['Content-Type']
-
-    # Test returning a non-OK status code
-    test_resp.status_code = 400
-    with raises(HTTPException) as http_exc:
+    with app.test_request_context('/home'):
+        # Test passing it the correct information
         resp = main.handle_stream("test", **data_dict)
-    assert http_exc.type.code == 400
+        assert test_resp.status_code == resp.status_code
+        assert isinstance(resp, FlaskResponse)
+        assert test_resp.headers['Content-Type'] == resp.headers['Content-Type']
 
-    # Test not giving the correct key in data
-    with raises(HTTPException) as http_exc:
-        resp = main.handle_stream("invalid", **data_dict)
-    assert http_exc.type.code == 500
+        # Test returning a non-OK status code
+        test_resp.status_code = 400
+        with raises(HTTPException) as http_exc:
+            resp = main.handle_stream("test", **data_dict)
+        assert http_exc.type.code == 400
 
-    # Test giving no data in the key
-    data_dict["test2"] = None
-    with raises(HTTPException) as http_exc:
-        resp = main.handle_stream("test2", **data_dict)
-    assert http_exc.type.code == 503
+        # Test not giving the correct key in data
+        with raises(HTTPException) as http_exc:
+            resp = main.handle_stream("invalid", **data_dict)
+        assert http_exc.type.code == 500
+
+        # Test giving no data in the key
+        data_dict["test2"] = None
+        with raises(HTTPException) as http_exc:
+            resp = main.handle_stream("test2", **data_dict)
+        assert http_exc.type.code == 503

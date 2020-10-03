@@ -3,7 +3,7 @@ from flask import request, render_template, abort
 from flask import Response as FlaskResponse
 from requests.models import Response as RequestsResponse
 from jinja2.exceptions import TemplateNotFound
-from sandhill import app
+from flask import current_app as app
 from sandhill.utils.decorators import add_routes
 from sandhill.utils.generic import ifnone
 from sandhill.utils.config_loader import load_route_config
