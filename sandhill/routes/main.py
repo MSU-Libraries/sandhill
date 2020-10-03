@@ -63,6 +63,8 @@ def handle_template(template, response_var, **data):
 
 def handle_stream(stream_var, **data):
     allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
+    if stream_var not in data:
+        abort(500)
     resp = data[stream_var]
     if isinstance(resp, RequestsResponse) and not resp:
         abort(resp.status_code)
