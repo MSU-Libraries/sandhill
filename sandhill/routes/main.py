@@ -1,13 +1,11 @@
 '''
 Entry point for the web application
 '''
-import collections
 from flask import request, render_template, abort
 from flask import Response as FlaskResponse
+from flask import current_app as app
 from requests.models import Response as RequestsResponse
 from jinja2.exceptions import TemplateNotFound
-from sandhill import app
-from flask import current_app as app
 from sandhill.utils.decorators import add_routes
 from sandhill.utils.generic import ifnone
 from sandhill.utils.config_loader import load_route_config
@@ -15,7 +13,7 @@ from sandhill.processors.base import load_route_data
 
 
 @add_routes()
-def main(*args, **kwargs):
+def main(*args, **kwargs): # pylint: disable=unused-argument
     '''
     Entry point for the whole application, handling all routes and determining
     if it should render a template or stream a result.
@@ -57,6 +55,15 @@ def main(*args, **kwargs):
     return return_val
 
 def handle_template(template, response_var, **data):
+    '''
+    Render the response as a template or directly as a Flask Response
+    args:
+        template(str): name of the template to render
+        response_var(str): key within data where the FlaskResponse is stored
+        data(dict): data dictionary to be passed to the template or containing a Flask Response
+    returns:
+        Renders the response via a template or provided Flask Response
+    '''
     try:
         if response_var in data and isinstance(data[response_var], FlaskResponse):
             return data[response_var]
@@ -66,6 +73,14 @@ def handle_template(template, response_var, **data):
         abort(501)
 
 def handle_stream(stream_var, **data):
+    '''
+    Stream the response stored in data with the key of stream_var
+    args:
+        stream_var(str): key within data where the response is stored
+        data(dict): data dictionary containing the response object
+    returns:
+        streams the response
+    '''
     allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
     if stream_var not in data:
         abort(500)

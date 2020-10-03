@@ -1,14 +1,19 @@
-import os
+'''
+Tests the main.py route file
+'''
 import io
-from sandhill import app
 from flask import Response as FlaskResponse
+from werkzeug.exceptions import HTTPException
 from requests.models import Response as RequestsResponse
 from pytest import raises
-from werkzeug.exceptions import HTTPException
+from sandhill import app
 from sandhill.routes import main
 
 
 def test_main():
+    '''
+    Tests the main function
+    '''
     client = app.test_client()
 
     # test loading a page that has no data to load
@@ -36,6 +41,9 @@ def test_main():
     assert result.status_code == 404
 
 def test_handle_template():
+    '''
+    Tests the handle_template function
+    '''
     test_resp = FlaskResponse()
     data_dict = {
         "test": test_resp
@@ -58,6 +66,9 @@ def test_handle_template():
         assert http_exc.type.code == 501
 
 def test_handle_stream():
+    '''
+    Tests the handle_stream function
+    '''
     test_resp = RequestsResponse()
     test_resp.raw = io.StringIO("This is a test")
     test_resp.status_code = 200
@@ -66,25 +77,26 @@ def test_handle_stream():
         "test": test_resp
     }
 
-    # Test passing it the correct information
-    resp = main.handle_stream("test", **data_dict)
-    assert test_resp.status_code == resp.status_code
-    assert isinstance(resp, FlaskResponse)
-    assert test_resp.headers['Content-Type'] == resp.headers['Content-Type']
-
-    # Test returning a non-OK status code
-    test_resp.status_code = 400
-    with raises(HTTPException) as http_exc:
+    with app.test_request_context('/home'):
+        # Test passing it the correct information
         resp = main.handle_stream("test", **data_dict)
-    assert http_exc.type.code == 400
+        assert test_resp.status_code == resp.status_code
+        assert isinstance(resp, FlaskResponse)
+        assert test_resp.headers['Content-Type'] == resp.headers['Content-Type']
 
-    # Test not giving the correct key in data
-    with raises(HTTPException) as http_exc:
-        resp = main.handle_stream("invalid", **data_dict)
-    assert http_exc.type.code == 500
+        # Test returning a non-OK status code
+        test_resp.status_code = 400
+        with raises(HTTPException) as http_exc:
+            resp = main.handle_stream("test", **data_dict)
+        assert http_exc.type.code == 400
 
-    # Test giving no data in the key
-    data_dict["test2"] = None
-    with raises(HTTPException) as http_exc:
-        resp = main.handle_stream("test2", **data_dict)
-    assert http_exc.type.code == 503
+        # Test not giving the correct key in data
+        with raises(HTTPException) as http_exc:
+            resp = main.handle_stream("invalid", **data_dict)
+        assert http_exc.type.code == 500
+
+        # Test giving no data in the key
+        data_dict["test2"] = None
+        with raises(HTTPException) as http_exc:
+            resp = main.handle_stream("test2", **data_dict)
+        assert http_exc.type.code == 503

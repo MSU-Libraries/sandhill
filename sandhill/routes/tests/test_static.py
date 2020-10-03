@@ -1,9 +1,13 @@
-import os
-from pytest import raises
+'''
+Test the static.py file
+'''
 from sandhill import app
 
 
 def test_handle_static():
+    '''
+    tests the handle_static function
+    '''
     client = app.test_client()
 
     # test getting a file from instance directory
@@ -19,6 +23,9 @@ def test_handle_static():
     assert result.status_code == 404
 
 def test_favicon():
+    '''
+    tests the favicon function
+    '''
     # test retrieving the favicon.ico file
     client = app.test_client()
     result = client.get("/favicon.ico")
