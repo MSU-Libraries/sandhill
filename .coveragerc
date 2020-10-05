@@ -1,5 +1,6 @@
 [run]
 omit = */test_*
+        sandhill/utils/setup.py
 source = sandhill/*
 
 [report]
