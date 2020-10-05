@@ -13,9 +13,21 @@
             {% include 'item_page_blocks/actions_bar.html.j2' %}
         </div>
     </div>
-    
-    {# check for the md_position and display the appropriate columns #}
-    {% include 'item.' + view_args.md_position + '.html.j2' %}
+ 
+    {% if view_args.md_position %}
+        {# Display custom page render template if md_position passed in URL path #}
+        {% include 'item.' + view_args.md_position + '.html.j2' %}
+    {% else %}
+        {# Default page render if no md_position passed #}
+        {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
+            {% include (metadata_conf['media_template'] | render)  %}
+        {% endif %}
+        {% for display_conf in metadata_conf['display'] %}
+            {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
+                {% include display_conf['metadata_template'] %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 
     {# include the downloads section of the page  #}
     {#% if metadata_conf['downloads'] %#}
