@@ -1,3 +1,6 @@
+'''
+Runs functional tests
+'''
 import os
 import pytest
 from sandhill.utils.config_loader import load_json_config

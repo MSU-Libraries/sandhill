@@ -1,3 +1,4 @@
+import mimetypes
 from flask import request, abort
 from sandhill.utils.generic import combine_to_unique_list
 
@@ -6,7 +7,7 @@ def match_request_format(view_args_key, allowed_formats, default_format='text/ht
     Match a request mimetype to the given view_args_key or the allowed mimetypes provided by client.
 
     args:
-        view_args_key (str): the key in the url request to check within for matching format.
+        view_args_key (str|None): the key in the url request to check within for matching format.
         allowed_formats (list): list of acceptable mimetypes.
     kwargs:
         default_format (str): the mimetype to use by default if view_args_key value is not allowed.
@@ -21,13 +22,15 @@ def match_request_format(view_args_key, allowed_formats, default_format='text/ht
            break
 
     # check for ext; e.g. search.json
-    if view_args_key in request.view_args:
-        result_format = "text/" + request.view_args[view_args_key]  # TODO refactor into mimetype function
+    if request.view_args and view_args_key in request.view_args:
+        mimetypes.init()
+        result_format = mimetypes.types_map["." + request.view_args[view_args_key]]
 
     if result_format not in allowed_formats:
         abort(501)
 
     return result_format
+
 
 def overlay_with_query_args(query_config):
     """Given a query config, overlay request.args on the defaults to generate a combined

@@ -1,13 +1,12 @@
 import os
 from pytest import raises
+from requests.models import Response as RequestsResponse
 from collections import OrderedDict
 from sandhill.processors import file
 from sandhill import app
 from werkzeug.exceptions import HTTPException
 
 def test_load_json():
-    app.instance_path = os.path.join(app.root_path, "test_instance/")
-
     # Test loading config successfully
     data_dict = {
         'paths': [ 'route_configs/search.json' ]
@@ -32,10 +31,25 @@ def test_load_json():
     assert isinstance(file_data, OrderedDict)
     assert not file_data
 
+def test_create_json_response():
+    # Test loading a json
+    data_dict = {
+        'paths': [ 'route_configs/search.json' ]
+    }
+    resp = file.create_json_response(data_dict)
+    assert isinstance(resp, RequestsResponse)
+    assert resp.status_code == 200
+
+    # Test loading an invalid file
+    data_dict = {
+        'paths': [ 'invalid/test.json' ]
+    }
+    resp = file.create_json_response(data_dict)
+    assert isinstance(resp, RequestsResponse)
+    assert resp.status_code == 200
+    assert not resp.content
 
 def test_load_matched_json():
-    app.instance_path = os.path.join(app.root_path, "test_instance/")
-
     # Test matching etd config file successfully
     data_dict = {
         'location': 'metadata_configs_1',

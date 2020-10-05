@@ -1,9 +1,11 @@
 {
-    "route": "/about",
-    "template": "about.html.j2",
+    "route": [
+        "/stream"
+    ],
+    "stream": "test",
     "data": [
         {
-            "processor": "file.load_json",
+            "processor": "file.create_json_response",
             "name": "test",
             "on_fail": 501,
             "paths": [

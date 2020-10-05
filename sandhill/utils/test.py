@@ -18,7 +18,7 @@ def _test_api_get_json_error(url=None, params=None, stream=True):
     """Test function to simulate solr api call."""
     response = Response()
     response._content = b'{"error":"test"}'
-    response.status_code = 200
+    response.status_code = 400
     return response
 
 def _test_api_get_fail(url=None, params=None, stream=True):

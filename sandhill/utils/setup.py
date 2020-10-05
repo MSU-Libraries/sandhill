@@ -1,6 +1,7 @@
 import os
 import logging
 from flask import Flask
+from flask.logging import create_logger
 from sandhill import app
 from jinja2 import ChoiceLoader, FileSystemLoader
 
@@ -28,4 +29,5 @@ app.secret_key =  app.config["SECRET_KEY"]
 
 # Set log level
 # TODO make this a parameter
-app.logger.setLevel(logging.DEBUG) 
+app.logger = create_logger(app)
+app.logger.setLevel(logging.DEBUG)

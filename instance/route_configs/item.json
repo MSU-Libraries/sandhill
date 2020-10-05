@@ -1,7 +1,9 @@
 {
     "route": [
         "/<string:namespace>/<int:id>",
-        "/<string:namespace>:<int:id>"
+        "/<string:namespace>:<int:id>",
+        "/<string:namespace>:<int:id>/<string:md_position>",
+        "/<string:namespace>/<int:id>/<string:md_position>"
     ],
     "template": "item.html.j2",
     "data": [
