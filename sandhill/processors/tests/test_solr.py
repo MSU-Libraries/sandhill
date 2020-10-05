@@ -75,8 +75,9 @@ def test_select_record():
     assert response is None
 
     # Test a Solr error
-    response = solr.select_record(data_dict, url="https://test.example.edu", api_get_function=_test_api_get_json_error)
-    assert response is None
+    with raises(HTTPException) as http_error:
+        response = solr.select_record(data_dict, url="https://test.example.edu", api_get_function=_test_api_get_json_error)
+    assert http_error.type.code == 400
 
     # Test if a dictionary is not returned
     with raises(HTTPException) as http_error:

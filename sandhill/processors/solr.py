@@ -32,7 +32,12 @@ def select(data_dict, url=None, api_get_function=api_get):
         response = api_get_function(url=url, params=data_dict['params'])
 
         if not response.ok:
-            app.logger.warning("Call to Solr returned {0}".format(response.status_code))
+            app.logger.warning(f"Call to Solr returned {response.status_code}. {response}")
+            try:
+                if 'error' in response.json():
+                    app.logger.warning("Error returned from Solr: {0}".format(str(response.json()['error'])))
+            except JSONDecodeError:
+                pass
             abort(response.status_code)
 
         response = response.json()
@@ -65,9 +70,7 @@ def select_record(data_dict, url=None, api_get_function=api_get):
     record_keys = ifnone(data_dict, 'record_keys', 'response.docs')
     records = get_descendant_from_dict(json_data, record_keys.split('.') if record_keys else [])
 
-    if 'error' in json_data:
-        app.logger.warning("Error returned from Solr: {0}".format(str(json_data['error'])))
-    elif records:
+    if records:
         return records[0]
     return None
 
@@ -100,8 +103,8 @@ def search(data_dict, url=None, api_get_function=api_get):
     solr_results = select(data_dict, url, api_get_function)
 
     # check if the json results were requested
-    result_format = match_request_format('format', ['text/html', 'text/json'])
-    if result_format == 'text/json':
+    result_format = match_request_format('format', ['text/html', 'application/json'])
+    if result_format == 'application/json':
         solr_results = jsonify(solr_results)
 
     return solr_results

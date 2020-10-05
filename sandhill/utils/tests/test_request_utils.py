@@ -7,23 +7,23 @@ from werkzeug.exceptions import HTTPException
 def test_match_request_format():
     # Test standard search request using default format
     with app.test_request_context('/search?q=elephant'):
-        result_format = request.match_request_format("format", ["text/html", "text/json"])
+        result_format = request.match_request_format("format", ["text/html", "application/json"])
         assert result_format == "text/html"
 
     # Test standard search requesting json response with '.json'
     with app.test_request_context('/search.json?q=elephant'):
-        result_format = request.match_request_format("format", ["text/html", "text/json"])
-        assert result_format == "text/json"
+        result_format = request.match_request_format("format", ["text/html", "application/json"])
+        assert result_format == "application/json"
 
     # Test standard search requesting json via Accept header
-    with app.test_request_context('/search?q=elephant', headers=[("Accept", "text/json")]):
-        result_format = request.match_request_format("format", ["text/html", "text/json"])
-        assert result_format == "text/json"
+    with app.test_request_context('/search?q=elephant', headers=[("Accept", "application/json")]):
+        result_format = request.match_request_format("format", ["text/html", "application/json"])
+        assert result_format == "application/json"
 
     # Test passing in invalid format
     with app.test_request_context('/search.xml?q=elephant'):
         with raises(HTTPException) as http_error:
-            result_format = request.match_request_format("format", ["text/html", "text/json"])
+            result_format = request.match_request_format("format", ["text/html", "application/json"])
         assert http_error.type.code == 501
 
 

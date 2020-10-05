@@ -83,6 +83,7 @@ def handle_stream(stream_var, **data):
     '''
     allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
     if stream_var not in data:
+        app.logger.error("stream_var: {stream_var} not set in config. Unable to stream response.")
         abort(500)
     resp = data[stream_var]
     if isinstance(resp, RequestsResponse) and not resp:
