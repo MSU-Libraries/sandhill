@@ -35,7 +35,8 @@ def select(data_dict, url=None, api_get_function=api_get):
             app.logger.warning(f"Call to Solr returned {response.status_code}. {response}")
             try:
                 if 'error' in response.json():
-                    app.logger.warning("Error returned from Solr: {0}".format(str(response.json()['error'])))
+                    app.logger.warning(
+                        "Error returned from Solr: {0}".format(str(response.json()['error'])))
             except JSONDecodeError:
                 pass
             abort(response.status_code)

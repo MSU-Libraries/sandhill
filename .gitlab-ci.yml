@@ -3,7 +3,7 @@ services:
   - docker:dind
 
 stages:
-  - unittest
+  - unittest_and_lint
   - build
   - deploy_test
   - release
@@ -22,14 +22,15 @@ variables:
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-unittest_job:
-  stage: unittest
+unittest_and_lint_job:
+  stage: unittest_and_lint
   tags:
     - msul
   script:
     - virtualenv -p python3 $CI_PROJECT_DIR/env
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
     - $CI_PROJECT_DIR/env/bin/pytest
+    - $CI_PROJECT_DIR/env/bin/pylint
 
 build_job:
   stage: build

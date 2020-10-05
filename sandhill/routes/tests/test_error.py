@@ -1,7 +1,7 @@
 '''
 Test the error.py file
 '''
-from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.exceptions import NotFound
 from sandhill.routes import error
 from sandhill import app
 
@@ -23,4 +23,3 @@ def test_handle_http_abort():
         assert isinstance(resp, str)
         assert code == 404
         assert "404 Not Found" in resp
-

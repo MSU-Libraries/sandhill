@@ -1,16 +1,15 @@
 '''
 Processing functions for files
 '''
-# pylint: disable=cyclic-import
 import os
 import io
 import collections
 from operator import itemgetter
 from flask import json
 from requests.models import Response as RequestsResponse
+from sandhill import app
 from sandhill.utils.config_loader import load_json_configs, load_json_config
 from sandhill.utils.template import evaluate_conditions
-from sandhill import app
 
 
 def load_json(data_dict):

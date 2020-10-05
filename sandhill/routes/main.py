@@ -3,13 +3,13 @@ Entry point for the web application
 '''
 from flask import request, render_template, abort
 from flask import Response as FlaskResponse
-from flask import current_app as app
 from requests.models import Response as RequestsResponse
 from jinja2.exceptions import TemplateNotFound
 from sandhill.utils.decorators import add_routes
 from sandhill.utils.generic import ifnone
 from sandhill.utils.config_loader import load_route_config
 from sandhill.processors.base import load_route_data
+from sandhill import app
 
 
 @add_routes()
