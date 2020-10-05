@@ -30,7 +30,7 @@ unittest_and_lint_job:
     - virtualenv -p python3 $CI_PROJECT_DIR/env
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
     - $CI_PROJECT_DIR/env/bin/pytest
-    - $CI_PROJECT_DIR/env/bin/pylint sandhill/
+    - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
 
 build_job:
   stage: build

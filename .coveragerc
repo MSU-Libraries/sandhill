@@ -3,7 +3,7 @@ omit = */test_*
 source = sandhill/*
 
 [report]
-#fail_under = 100
+fail_under = 100
 skip_covered = 1
 show_missing = 1
 
