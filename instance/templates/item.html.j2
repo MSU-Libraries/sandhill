@@ -6,32 +6,34 @@
 
 {% block content %}
     {# title of the page #}
-    <div class="row">
-        <div class="col-12">
-            <h1>{{ metadata_conf['title'] | render }}</h1>
-            {# include the actions section of the page  #}
-            {% include 'item_page_blocks/actions_bar.html.j2' %}
+    <div class="px-3 p-md-4 p-lg-5 p-xl-5">
+        <div class="row">
+            <div class="col-12">
+                <h2>{{ metadata_conf['title'] | render }}</h2>
+                {# include the actions section of the page  #}
+                {% include 'item_page_blocks/actions_bar.html.j2' %}
+            </div>
         </div>
-    </div>
- 
-    {% if view_args.md_position %}
-        {# Display custom page render template if md_position passed in URL path #}
-        {% include 'item.' + view_args.md_position + '.html.j2' %}
-    {% else %}
-        {# Default page render if no md_position passed #}
-        {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
-            {% include (metadata_conf['media_template'] | render)  %}
-        {% endif %}
-        {% for display_conf in metadata_conf['display'] %}
-            {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
-                {% include display_conf['metadata_template'] %}
+     
+        {% if view_args.md_position %}
+            {# Display custom page render template if md_position passed in URL path #}
+            {% include 'item.' + view_args.md_position + '.html.j2' %}
+        {% else %}
+            {# Default page render if no md_position passed #}
+            {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
+                {% include (metadata_conf['media_template'] | render)  %}
             {% endif %}
-        {% endfor %}
-    {% endif %}
+            {% for display_conf in metadata_conf['display'] %}
+                {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
+                    {% include display_conf['metadata_template'] %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
-    {# include the downloads section of the page  #}
-    {#% if metadata_conf['downloads'] %#}
-        {#% include 'item_page_blocks/downloads_box.html.j2' %#}
-    {#% endif %#}
+        {# include the downloads section of the page  #}
+        {#% if metadata_conf['downloads'] %#}
+            {#% include 'item_page_blocks/downloads_box.html.j2' %#}
+        {#% endif %#}
+    </div>
 
 {% endblock %}

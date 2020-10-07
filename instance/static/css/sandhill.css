@@ -4,12 +4,23 @@ link color :    #18453b
 */
 h1 {
     font-size: 1.8rem;
+    color: #18453B;
 }
 h2 {
-    font-size:1.6rem;
+    font-size:2rem;
+    color: #1A1A1A;
+    font-weight: 900;
 }
-a, a:hover {
-    color:#18453b
+a {
+    color: #6E005F;
+}
+a:hover {
+    color: #9b0086;
+}
+
+body {
+    color: #1A1A1A;
+    font-size: 1.1rem;
 }
 /* bootstrap overrides */
 
@@ -18,18 +29,17 @@ a, a:hover {
 
 /* metadata expand block css */
 #sandhill_expand_block {
-  font-size: 1rem;
   line-height: 1.5;
 }
 
 #sandhill_expand_block #sandhill_block_collapse.collapse:not(.show) {
   display: block;
-  height: 3rem;
+  height: 15rem;
   overflow: hidden;
 }
 
 #sandhill_expand_block #sandhill_block_collapse.collapsing {
-  height: 3rem;
+  height: 15rem;
 }
 
 #sandhill_expand_block a.collapsed::after {
@@ -60,12 +70,41 @@ a, a:hover {
 #pdf-js-viewer{
     width:100%;
 }
+.pdf_container {
+    position: relative;
+    width: 100%;
+    padding-top: 125%;
+    border-bottom: .25rem rgba(69, 69, 69, 0.95) solid;
+}
+
+.pdf_frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 /* PDF Viewer css - END */
 /* Icon  and Image css */
 .action_bar_icon{
     height: 1.25rem;
+    margin-bottom:.25rem;
 }
 .actions_rights_badge{
     width: 5rem;
+    height:100%;
 }
+.actions_dropdown_link{
+    background-color: #ffffff;
+    font-size: 1.1rem;
+}
+.actions_dropdown_link:hover{
+    background-color: #e3e3e3;
+}
+.actions_hover:hover{
+    background:#e3e3e3;
+    border-radius:5px;
+}
+
 /* Icon and Image css - END */

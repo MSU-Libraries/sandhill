@@ -1,26 +1,41 @@
 <div class="mt-4 mb-2">
     <ul class="nav nav-pills">
-        <li class="pr-3">
-            <img class="actions_rights_badge img-fluid" alt="In copyright" src="{{ url_for('static', filename='images/InC.dark.svg') }}"/>
-        </li>
-        <li class="dropdown pr-3">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{{ url_for('static', filename='icons/Icon_Download.svg') }}" role="presentation" class="action_bar_icon pr-1"/><span class="align-middle">Download</span><span class="caret"></span></a>
+        <li class="mr-1">
+            <button class="btn actions_dropdown_link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
+                <img src="{{ url_for('static', filename='icons/Icon_Download.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+                Download
+            </button>
             <ul class="dropdown-menu">
                  <li class="dropdown-item"><a href="#">Original file</a></li>
                  <li class="dropdown-item"><a href="#">Low-resolution image</a></li>
                  <li class="dropdown-item"><a href="#">Full text</a></li>
             </ul>
         </li>
-        <li class="dropdown pr-3">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{{ url_for('static', filename='icons/Icon_Share.svg') }}" role="presentation" class="action_bar_icon pr-1"/><span class="align-middle">Share</span><span class="caret"></span></a>
+        <li class="mr-1">
+            <button class="btn actions_dropdown_link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
+                <img src="{{ url_for('static', filename='icons/Icon_Share.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+                Link
+            </button>
             <ul class="dropdown-menu">
-                 <li class="dropdown-item"><a href="#">Embed code</a></li>
+                 <li class="dropdown-item" style="width:25rem;"><!-- TODO: get rid of inline style -->
+                    {% set copy_link = "https://example.edu" %}
+                    {% include 'item_page_blocks/copy_field.html.j2' %}
+                 </li>
             </ul>
         </li>
-        <li class="dropdown pr-3">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false"><img src="{{ url_for('static', filename='icons/Icon_Contact.svg') }}" role="presentation" class="action_bar_icon pr-1"/><span class="align-middle">Contact Us</span><span class="caret"></span></a>
+        <li>
+            <button class="btn actions_dropdown_link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <img src="{{ url_for('static', filename='icons/Icon_Contact.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+                Contact Us
+            </button>
             <ul class="dropdown-menu">
-                 <li class="dropdown-item"><a href="#">Email</a></li>
+                 <div class="dropdown-header" style="font-size:1rem;">Digital Repository Team</div><!-- TODO: get rid of inline style -->
+                 <li class="dropdown-item" style="width:25rem;"><!-- TODO: get rid of inline style -->
+                    {% set copy_link = "repoteam@lib.msu.edu" %}
+                    {% include 'item_page_blocks/copy_field.html.j2' %}
+                 </li>
+                 <div class="dropdown-divider"></div>
+                <li class="dropdown-item"><a href="#">Report Accessibility Issue</a></li>
             </ul>
         </li>
     </ul>

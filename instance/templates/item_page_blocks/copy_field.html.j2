@@ -1,0 +1,28 @@
+{# Required to be set before calling this template: copy_link #}
+<script>
+    $(document).ready(function() {
+      // When the copy button is clicked, select the value of the text box, attempt
+      // to execute the copy command, and trigger event to update tooltip message
+      // to indicate whether the text was successfully copied.
+      $('#copy-button').bind('click', function() {
+        //var input = document.querySelector('#copy-input');
+        //input.setSelectionRange(0, input.value.length + 1);
+
+        var copyText = document.getElementById("copy-input");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+        document.execCommand('copy');
+      });
+    });
+</script>
+<form>
+  <div class="input-group">
+    <input type="text" class="form-control"
+        value="{{ copy_link }}" id="copy-input">
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="button" id="copy-button">
+        <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+      </button>
+    </span>
+  </div>
+</form>
