@@ -57,6 +57,9 @@ a, a:hover {
     border-radius: 5px;
 
 }
+#pdf-js-viewer{
+    width:100%;
+}
 /* PDF Viewer css - END */
 /* Icon  and Image css */
 .action_bar_icon{
