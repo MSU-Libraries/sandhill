@@ -8,7 +8,7 @@ h1 {
 }
 h2 {
     font-size:2rem;
-    color: #1A1A1A;
+    color: #1a1a1a;
     font-weight: 900;
 }
 a {
@@ -19,7 +19,7 @@ a:hover {
 }
 
 body {
-    color: #1A1A1A;
+    color: #1a1a1a;
     font-size: 1.1rem;
 }
 /* bootstrap overrides */
@@ -103,16 +103,28 @@ body {
     width: 5rem;
     height:100%;
 }
-.actions_dropdown_link{
+.actions_dropdown_button{
     background-color: #ffffff;
     font-size: 1.1rem;
 }
-.actions_dropdown_link:hover{
+.actions_dropdown_button:hover{
     background-color: #e3e3e3;
 }
 .actions_hover:hover{
     background:#e3e3e3;
     border-radius:5px;
 }
+.action_dropdown_link:hover{
+    background:#e3e3e3;
+}
+.action_dropdown_link a{
+    color: #1a1a1a;
+}
+.action_dropdown_link a:hover{
+    color: #1a1a1a;
+    text-decoration:none;
+}
+
+/* Icon and Image css - END */
 
 /* Icon and Image css - END */
