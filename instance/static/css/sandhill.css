@@ -27,18 +27,18 @@ body {
 
 /* bootstrap overrides - End*/
 
-/* metadata expand block css */
+/* metadata abstract block css */
 #sandhill_expand_block {
   line-height: 1.5;
 }
 
-#sandhill_expand_block #sandhill_block_collapse.collapse:not(.show) {
+#sandhill_expand_block #sandhill_block_collapse.collapse:not(.show), #sandhill_modal_block #sandhill_modal_block_collapse {
   display: block;
   height: 15rem;
   overflow: hidden;
 }
 
-#sandhill_expand_block #sandhill_block_collapse.collapsing {
+#sandhill_expand_block #sandhill_block_collapse.collapsing, #sandhill_modal_block #sandhill_modal_block_collapse{
   height: 15rem;
 }
 
@@ -49,7 +49,15 @@ body {
 #sandhill_expand_block a:not(.collapsed)::after {
   content: ' less';
 }
-/* metadata expand block css - End*/
+.abstract_more_button{
+    padding:0px;
+    color: #6E005F!important;
+}
+.abstract_more_button:hover{
+    text-decoration:underline!important;
+    color: #9b0086!important;
+}
+/* metadata abstract block css - End*/
 
 /* Item page css */
 #sandhill_downloads_header h2 button {

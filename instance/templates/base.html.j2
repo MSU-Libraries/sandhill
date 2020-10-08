@@ -39,6 +39,11 @@
     </div>
 </body>
 {# replaces the <i> tag with the actual icons #}
-<script>feather.replace()</script>
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+        feather.replace()
+    </script>
 </html>
 
