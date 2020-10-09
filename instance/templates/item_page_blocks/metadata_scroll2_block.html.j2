@@ -1,0 +1,31 @@
+<style>
+.abstract_scroll {
+    height: 12rem;
+    overflow: hidden;
+}
+.expand_scroll {
+    overflow: auto !important;
+    height: auto;
+    max-height: 28rem;
+    border: 0.1rem solid #e3e3e3;
+    padding: 0.25rem;
+}
+.abstract {
+    margin-bottom: 0.5rem;
+}
+</style>
+<script>
+$( document ).ready(function() {
+    $(".scroll_tgl").on('click', function() {
+        $(".abstract_scroll").toggleClass("expand_scroll", 200);
+        $(".scroll_tgl").hide();
+        return false;
+    });
+});
+</script>
+<div class="abstract">
+    <div class="abstract_scroll" class="p-2">
+        {{ display_conf['value'] | render }}
+    </div>
+    <a class="scroll_tgl" href="#">Expand Abstract</a>
+</div>

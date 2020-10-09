@@ -3,7 +3,7 @@
         <h2>{{ display_conf['label'] }}</h2>
     {% endif %}
     <div class="collapse" id="sandhill_block_collapse" aria-expanded="false">
-         {{ display_conf['value'] | render }}
+         {{ display_conf['value'] | render | safe}}
     </div>
     <a role="button" class="collapsed" data-toggle="collapse" href="#sandhill_block_collapse" aria-expanded="false" aria-controls="sandhill_block_collapse">Read</a>
 </div>
