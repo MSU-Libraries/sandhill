@@ -10,7 +10,6 @@
     "display": [
         {
             "value": "{{ item.description }}",
-            "label": "Summary",
             "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
         },
         {

@@ -1,0 +1,86 @@
+<style>
+    .sideways {
+        height: 12rem;
+    }
+    .cllps {
+        height: 10.5rem;
+        overflow: hidden;
+    }
+    div.expnd {
+        position: absolute;
+        width: 100%;
+        margin-left: -0.5rem;
+        margin-top: -0.125rem;
+        z-index: 100;
+        background: #fff;
+        border: solid 0.1rem #777;
+        border-radius: 0.4rem;
+        padding: 1rem;
+        padding-top: 1.5rem;
+    }
+
+@media (min-width: 768px) {
+    div.expnd {
+        width: 300% !important;
+        margin-left: calc(-200% - 0.3rem) !important;
+    }
+}
+@media (min-width: 992px) {
+    div.expnd {
+        width: 240% !important;
+        margin-left: calc(-140% - 0.2rem) !important;
+    }
+}
+@media (min-width: 1200px) {
+    div.expnd {
+        width: 200% !important;
+        margin-left: calc(-100% - 0.2rem) !important;
+    }
+}
+    a.expnd_click {
+        margin-right: 1rem;
+    }
+
+    span.expnd_click {
+        position: absolute;
+        top: 0.6rem;
+        right: 0.8rem;
+        cursor: pointer;
+    }
+
+    span.expnd_click:not(.expnd) {
+        display: none
+    }
+
+    .expnd_tgl a::after {
+      content: 'Close';
+    }
+
+    .expnd_tgl:not(.expnd) a::after {
+      content: 'Read more';
+    }
+</style>
+<script>
+$( document ).ready(function() {
+    $(".expnd_click").on('click', function() {
+        $(".cllps_tgl").toggleClass("cllps");
+        $(".expnd_tgl").toggleClass("expnd");
+        return false;
+    });
+    $(document).keyup(function(e) {
+        if (e.keyCode === 27 && $(".expnd_tgl").hasClass("expnd")) {
+            $(".cllps_tgl").toggleClass("cllps");
+            $(".expnd_tgl").toggleClass("expnd");
+        }
+    });
+});
+</script>
+<div class="sideways">
+    <div class='expnd_tgl'>
+        <span title="Close" aria-label="Close" class="close expnd_click expnd_tgl">×</span>
+        <div class='cllps_tgl cllps'>
+            {{ display_conf['value'] | render }}
+        </div>
+        <a class="expnd_click float-right d-inline-block" href="#"></a>
+    </div>
+</div>

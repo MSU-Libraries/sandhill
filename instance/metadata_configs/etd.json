@@ -15,8 +15,7 @@
     "display": [
         {
             "value": "{{ item.description }}",
-            "label": "Abstract",
-            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
+            "metadata_template": "item_page_blocks/metadata_abstract_block.html.j2"
         },
         {
             "value": "{{ item.collection_t }}",

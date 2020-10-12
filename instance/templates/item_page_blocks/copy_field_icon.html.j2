@@ -1,0 +1,17 @@
+{# Required to be set before calling this template: copy_str #}
+<script>
+  function copyText(val) {
+      const el = document.createElement('textarea');
+      el.value = val;
+      el.setAttribute('readonly', '');
+      el.style.position = 'absolute';
+      el.style.left = '-9999px';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+</script>
+<button class="btn btn-default px-0 py-0 copy-icon copy-icon-narrow" type="button" id="copy-button" onclick="copyText('{{ copy_str }}')">
+    <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+</button>

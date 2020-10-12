@@ -1,0 +1,21 @@
+<div class="row">
+    <div>
+        <div class="d-block col-12 col-md-6 col-lg-6 col-xl-6 float-left">
+            {# include the viewer section of the page #}
+            {% if metadata_conf['media_template'] and (metadata_conf['media_template'] | render) %}
+                {# % include (metadata_conf['media_template'] | render) % #}
+                    {% include (metadata_conf['media_template'] | render)  %}
+            {% endif %}
+        </div>
+        {# include the metadata section of the page #}
+        {% for display_conf in metadata_conf['display'] %}
+            {% if display_conf['value'] and (display_conf['value'] | render_literal) %}
+                <div class="d-inline-block col-12 col-md-6 col-lg-6 col-xl-6">
+                    {% include display_conf['metadata_template'] %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {# metadata download block #}
+        {% include 'item_page_blocks/metadata_download.html.j2' %}
+    </div>
+</div>
