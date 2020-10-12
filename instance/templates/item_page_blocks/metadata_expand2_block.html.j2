@@ -12,8 +12,6 @@
         margin-left: -0.5rem;
         margin-top: -0.125rem;
         z-index: 100;
-        max-height: 30rem;
-        overflow: auto;
         background: #fff;
         border: solid 0.1rem #777;
         border-radius: 0.4rem;
@@ -45,8 +43,8 @@
 
     span.expnd_click {
         position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
+        top: 0.6rem;
+        right: 0.8rem;
         cursor: pointer;
     }
 
@@ -78,9 +76,6 @@ $( document ).ready(function() {
 });
 </script>
 <div class="sideways">
-    {% if 'label' in display_conf %} 
-        <h2>{{ display_conf['label'] }}</h2>
-    {% endif %}
     <div class='expnd_tgl'>
         <span title="Close" aria-label="Close" class="close expnd_click expnd_tgl">×</span>
         <div class='cllps_tgl cllps'>
