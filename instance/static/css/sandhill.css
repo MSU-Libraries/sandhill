@@ -53,6 +53,7 @@ body {
     padding:0px;
     color: #6E005F!important;
     cursor:pointer;
+    background:none;
 }
 .abstract_more_button:hover{
     text-decoration:underline!important;
@@ -60,7 +61,7 @@ body {
 }
 .abstract_body{
     max-height: 25rem;
-    overflow: scroll;
+    overflow-y: auto;
 }
 .abstract_scroll{
     height: 15rem;
