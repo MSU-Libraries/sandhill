@@ -129,6 +129,11 @@
         "code": 200
     },
     {
+        "page": "/etd/100/MODS/view",
+        "code": 200,
+        "contains": ["mods:mods"]
+    },
+    {
         "_comment": "tests metadata elements on the page: title, linked list, expand field",
         "page":"/etd/1234",
         "code": 200,
