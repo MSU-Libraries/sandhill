@@ -1,33 +1,3 @@
-<style>
-.nav {
-    display:none;
-}
-.left_actions > :first-child {
-    margin-top:0px !important;
-}
-.left_actions .nav{
-    display:flex !important
-}
-.left_metadata .nav{
-    display:flex !important
-}
-#sandhill_expand_block #sandhill_block_collapse.collapse:not(.show), #sandhill_modal_block #sandhill_modal_block_collapse {
-    height:9rem !important;
-}
-#sandhill_expand_block #sandhill_block_collapse.collapsing, #sandhill_modal_block #sandhill_modal_block_collapse{
-  height: 9rem;
-}
-</style>
-
-<div class="row">
-    <div class="col-xl-6 col-lg-7 col-12 col-md-8 col-sm-12 order-xl-last order-lg-last order-md-last">
-        <div class="left_actions">
-            {# include the actions section of the page  #}
-            {% include 'item_page_blocks/actions_bar.html.j2' %}
-        </div>
-    </div>
-    <div class="col-xl-6 col-lg-5 col-12 col-md-4 col-sm-12"></div>
-</div>
 <div class="row">
     <div class="col-xl-6 col-lg-7 col-12 col-md-8 col-sm-12 order-xl-last order-lg-last order-md-last">   
         {# include the viewer section of the page  #}

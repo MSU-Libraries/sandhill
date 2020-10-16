@@ -5,21 +5,25 @@
 {% endblock %}
 
 {% block content %}
-    {# title of the page #}
     <div class="px-3 p-md-4 p-lg-5 p-xl-5">
+        {# title of the page #}
         <div class="row">
             <div class="col-12">
                 <h2>{{ metadata_conf['title'] | render }}</h2>
-                {# include the actions section of the page  #}
-                {% include 'item_page_blocks/actions_bar.html.j2' %}
             </div>
         </div>
-     
-        {% if view_args.md_position %}
-            {# Display custom page render template if md_position passed in URL path #}
-            {% include 'item.' + view_args.md_position + '.html.j2' %}
-        {% else %}
-            {% include 'item.right.html.j2' %}
-        {% endif %}
+
+        {# action bar #}
+        <div class="row">
+            <div class="col-xl-6 col-lg-7 col-12 col-md-8 col-sm-12 order-xl-last order-lg-last order-md-last">
+                <div>
+                    {% include 'item_page_blocks/actions_bar.html.j2' %}
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-5 col-12 col-md-4 col-sm-12"></div>
+        </div>
+
+        {# metadata and viewer #}
+        {% include 'item.left.html.j2' %}
     </div>
 {% endblock %}
