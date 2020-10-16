@@ -3,11 +3,7 @@
         "/<string:namespace>/<int:id>",
         "/<string:namespace>/<int:id>/",
         "/<string:namespace>:<int:id>",
-        "/<string:namespace>:<int:id>/",
-        "/<string:namespace>:<int:id>/<string:md_position>",
-        "/<string:namespace>/<int:id>/<string:md_position>",
-        "/<string:namespace>:<int:id>/<string:md_position>/<string:md_type>/<string:md_style>",
-        "/<string:namespace>/<int:id>/<string:md_position>/<string:md_type>/<string:md_style>"
+        "/<string:namespace>:<int:id>/"
     ],
     "template": "item.html.j2",
     "data": [

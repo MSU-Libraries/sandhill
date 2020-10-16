@@ -34,12 +34,12 @@ body {
 
 #sandhill_expand_block #sandhill_block_collapse.collapse:not(.show), #sandhill_modal_block #sandhill_modal_block_collapse {
   display: block;
-  height: 15rem;
+  height: 9rem;
   overflow: hidden;
 }
 
 #sandhill_expand_block #sandhill_block_collapse.collapsing, #sandhill_modal_block #sandhill_modal_block_collapse{
-  height: 15rem;
+  height: 9rem;
 }
 
 #sandhill_expand_block a.collapsed::after {
