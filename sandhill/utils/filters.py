@@ -160,3 +160,26 @@ def render_literal(context, value, fallback_to_str=True):
             raise err
     context.environment.autoescape = True
     return data_val
+
+@app.template_filter('format_embargo_end_date')
+def format_embargo_end_date(value: str, default: str ="Indefinite") -> str:
+    '''
+    Format the provided embargo end date as a human readable string
+    If there is no end date, it will show as 'Indefinite' (or the other 
+    default value prodived). It will only mark a valid date value as invalid
+    if it is the year 9999.
+    args:
+        value (str): Embargo end date
+    returns:
+        (str): Formatted end date
+    '''
+    result = default
+
+    try:
+        value_date =  datetime.strptime(value, "%Y-%m-%d")
+        if value_date.year != 9999:
+            result = value # it is a valid date, so set that as the result
+    except (ValueError, TypeError) as err:
+        pass
+
+    return result
