@@ -151,3 +151,34 @@ def test_render_literal():
     assert liter == "string with spaces"
     with raises(SyntaxError) as serror:
         liter = filters.render_literal(context, "string with spaces", False)
+
+def test_format_embargo_end_date():
+    # Test with valid end date
+    res = filters.format_embargo_end_date("2020-12-31")
+    assert res == "2020-12-31"
+    res = filters.format_embargo_end_date("2022-01-03")
+    assert res == "2022-01-03"
+    res = filters.format_embargo_end_date("8000-01-03")
+    assert res == "8000-01-03"
+
+    # Test with indenfinite end date
+    res = filters.format_embargo_end_date("9999-12-31")
+    assert res == "Indefinite"
+    res = filters.format_embargo_end_date("")
+    assert res == "Indefinite"
+    res = filters.format_embargo_end_date(None)
+    assert res == "Indefinite"
+
+    # Test with wrong datatype passed
+    res = filters.format_embargo_end_date(123)
+    assert res == "Indefinite"
+
+    # Test wrong format passed
+    res = filters.format_embargo_end_date("abc")
+    assert res == "Indefinite"
+    res = filters.format_embargo_end_date("01-01-2020")
+    assert res == "Indefinite"
+
+    # Test overriding the default value
+    res = filters.format_embargo_end_date("9999-12-31", "different")
+    assert res == "different"
