@@ -186,15 +186,14 @@ def test_format_date():
 
 def test_get_image_from_url_parts():
     image_path = "static/images/badges/"
-    image_full_path = os.path.join(app.instance_path, image_path)
 
     # Test with rights statement uris
     res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InC/1.0/", image_path, ".", "dark.svg")
-    assert os.path.join(image_full_path, "InC.dark.svg")==res
+    assert os.path.join(image_path, "InC.dark.svg")==res
 
     # Test with creative commons uris
     res = filters.get_image_from_url_parts("http://creativecommons.org/licenses/by-nc-sa/3.0/", image_path, ".", ".svg")
-    assert os.path.join(image_full_path, "by-nc-sa.svg")==res
+    assert os.path.join(image_path, "by-nc-sa.svg")==res
 
     # Test with invalid uris
     res = filters.get_image_from_url_parts("not a valid path", image_path, ".", ".svg")
