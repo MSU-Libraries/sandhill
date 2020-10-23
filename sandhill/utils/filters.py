@@ -1,5 +1,7 @@
 """Filters for jinja templating engine"""
 import urllib
+import validators
+import os
 from ast import literal_eval
 from sandhill import app
 from sandhill.utils.generic import ifnone
@@ -203,4 +205,25 @@ def get_image_from_url_parts(url: str, image_path: str, concat_to_part: str = ""
     returns:
         (str): full path to the matched image, empty string for no match found
     '''
+    img_src = ""
+    image_full_path = os.path.join(app.instance_path, image_path.lstrip('/'))
+    if validators.url(url) and os.path.exists(image_full_path):
+        #split the url into parts
+        parsed_url = urllib.parse.urlparse(url)
+        url_parts = parsed_url.path.split('/')
+        #remove empty strings from the list
+        url_parts = [i for i in url_parts if i]
 
+        for img_file in os.listdir(image_full_path):
+            for part in url_parts:
+                #concat the "concat_to_part" 
+                part = part+concat_to_part
+                if part in img_file and additional_filter in img_file:
+                    img_src = os.path.join(image_path, img_file)
+                    break
+            if img_src:
+                break
+    else:
+        app.logger.debug(f"Invalid url or path provided. Url: {url}, Images folder path: {image_full_path}")
+    print(img_src)
+    return img_src

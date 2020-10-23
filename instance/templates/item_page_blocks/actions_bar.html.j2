@@ -6,7 +6,10 @@
                 Download
             </button>
             <ul class="dropdown-menu bg-light mw-25">
-                 <li class="dropdown-item"><img class="actions_rights_badge img-fluid" alt="In copyright" src="{{ url_for('static', filename='images/InC.dark.svg') }}"/></li>
+
+                 <li class="dropdown-item">
+                    <a href="{{ item.rights_dpla_uri | first }}"><img src="{{ item.rights_dpla_uri |first | get_image_from_url_parts(url_for('static', filename='images/badges'), '.', '.svg') }}" alt="{{ item.rights_dpla | head }}" class="action_bar_icon pr-1"/></a>
+                </li>
                  <div class="dropdown-divider"></div>
                  <li class="dropdown-item action_dropdown_link"><a href="#">Original file (PDF) 1.6 MB</a></li>
                  <li class="dropdown-item action_dropdown_link"><a href="#">Low-resolution image (JPG) 1.2 MB</a></li>
