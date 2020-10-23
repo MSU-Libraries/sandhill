@@ -161,8 +161,8 @@ def render_literal(context, value, fallback_to_str=True):
     context.environment.autoescape = True
     return data_val
 
-@app.template_filter('format_embargo_end_date')
-def format_embargo_end_date(value: str, default: str ="Indefinite") -> str:
+@app.template_filter('format_date')
+def format_date(value: str, default: str ="Indefinite") -> str:
     '''
     Format the provided embargo end date as a human readable string
     If there is no end date, it will show as 'Indefinite' (or the other 
@@ -178,8 +178,29 @@ def format_embargo_end_date(value: str, default: str ="Indefinite") -> str:
     try:
         value_date =  datetime.strptime(value, "%Y-%m-%d")
         if value_date.year != 9999:
-            result = value # it is a valid date, so set that as the result
+            suf = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
+            result = value_date.strftime("%B %d %Y") # it is a valid date, so set that as the result
+            day = value_date.strftime('%d')
+            result = result.replace(f" {day} ", f" {suf(int(day))} ") # Add in the suffix (st, th, rd, nd)
     except (ValueError, TypeError) as err:
         pass
 
     return result
+
+@app.template_filter('get_image_from_url_parts')
+def get_image_from_url_parts(url: str, image_path: str, concat_to_part: str = "", additional_filter: str = "") -> str:
+    '''
+    Given a URL, search the provided image path for each "part" of the
+    URL (splitting on slash) and return the first found match.
+    Optionally include the additional filter to match on,
+    For example http://google.com/test and "white" would search the image_path
+    for an image that contained "test" and "white" in the name.
+    args:
+        url (str): URL to search with
+        image_path (str): path to look for images in relative to the app instance path
+            ex: "static/images"
+        additional_filter (str): Additional text to look for in the image 
+    returns:
+        (str): full path to the matched image, empty string for no match found
+    '''
+

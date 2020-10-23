@@ -152,33 +152,55 @@ def test_render_literal():
     with raises(SyntaxError) as serror:
         liter = filters.render_literal(context, "string with spaces", False)
 
-def test_format_embargo_end_date():
+def test_format_date():
     # Test with valid end date
-    res = filters.format_embargo_end_date("2020-12-31")
-    assert res == "2020-12-31"
-    res = filters.format_embargo_end_date("2022-01-03")
-    assert res == "2022-01-03"
-    res = filters.format_embargo_end_date("8000-01-03")
-    assert res == "8000-01-03"
+    res = filters.format_date("2020-12-31")
+    assert res == "December 31st 2020"
+    res = filters.format_date("2022-01-03")
+    assert res == "January 3rd 2022"
+    res = filters.format_date("8000-01-03")
+    assert res == "January 3rd 8000"
 
     # Test with indenfinite end date
-    res = filters.format_embargo_end_date("9999-12-31")
+    res = filters.format_date("9999-12-31")
     assert res == "Indefinite"
-    res = filters.format_embargo_end_date("")
+    res = filters.format_date("")
     assert res == "Indefinite"
-    res = filters.format_embargo_end_date(None)
+    res = filters.format_date(None)
     assert res == "Indefinite"
 
     # Test with wrong datatype passed
-    res = filters.format_embargo_end_date(123)
+    res = filters.format_date(123)
     assert res == "Indefinite"
 
     # Test wrong format passed
-    res = filters.format_embargo_end_date("abc")
+    res = filters.format_date("abc")
     assert res == "Indefinite"
-    res = filters.format_embargo_end_date("01-01-2020")
+    res = filters.format_date("01-01-2020")
     assert res == "Indefinite"
 
     # Test overriding the default value
-    res = filters.format_embargo_end_date("9999-12-31", "different")
+    res = filters.format_date("9999-12-31", "different")
     assert res == "different"
+
+def test_get_image_from_url_parts():
+    image_path = "static/images/badges/"
+    image_full_path = os.path.join(app.instance_path, image_path)
+
+    # Test with rights statement uris
+    res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InC/1.0/", image_path, ".", ".dark.svg")
+    assert res
+    assert isinstance(res, str)
+    assert res == os.path.join(image_full_path,"")
+
+    # Test with creative commons uris
+
+    # Test with invalid uris
+
+    # Test with invalid formatted uris (i.e. no / to split on)
+
+    # Test with no match found on valid uris
+
+    # Test providing additional filter
+
+    # Test for invalid image path

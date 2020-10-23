@@ -22,11 +22,12 @@
 </script>
 <form>
   <div class="input-group sandhill-input-group">
+    <label for="input_permalink">Permalink</label>
     <input type="text" class="form-control"
-        value="{{ copy_link }}" id="copy-input">
+        id="input_permalink" value="{{ copy_link }}" id="copy-input">
     <span class="input-group-btn">
       <button class="btn btn-default copy-icon" type="button" id="copy-button" onclick="copyField('copy-input')">
-        <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+        <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" aria-label="Copy permalink" alt="Copy permalink" class="action_bar_icon pr-1"/>
       </button>
     </span>
   </div>

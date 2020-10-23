@@ -2,7 +2,7 @@
     <ul class="nav nav-pills">
         <li class="mr-1">
             <button class="btn px-0 mr-2 actions_dropdown_button dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
-                <img src="{{ url_for('static', filename='icons/Icon_Download.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+                <img src="{{ url_for('static', filename='icons/Icon_Download.svg') }}" role="presentation" alt="" class="action_bar_icon pr-1"/>
                 Download
             </button>
             <ul class="dropdown-menu bg-light mw-25">
@@ -15,12 +15,11 @@
         </li>
         <li class="mr-1">
             <button class="btn px-0 mr-2 actions_dropdown_button dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
-                <img src="{{ url_for('static', filename='icons/Icon_Share.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+                <img src="{{ url_for('static', filename='icons/Icon_Share.svg') }}" role="presentation" alt="" class="action_bar_icon pr-1"/>
                 Share
             </button>
             <ul class="dropdown-menu bg-light mw-25">
                  <li class="dropdown-item">
-                    Permalink
                     {% set copy_link = "https://n2t.net/ark:/99999/fk49323622" %}
                     {% include 'item_page_blocks/copy_field.html.j2' %}
                  </li>
@@ -28,7 +27,7 @@
         </li>
         <li>
             <button class="btn px-0 mr-2 actions_dropdown_button dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <img src="{{ url_for('static', filename='icons/Icon_Contact.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+                <img src="{{ url_for('static', filename='icons/Icon_Contact.svg') }}" role="presentation" alt="" class="action_bar_icon pr-1"/>
                 Contact Us
             </button>
             <ul class="dropdown-menu bg-light mw-25">

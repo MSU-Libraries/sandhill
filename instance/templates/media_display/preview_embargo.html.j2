@@ -1,2 +1,7 @@
+<p class="alert embargo_help_text">This object is not available for download
+    {%- set end_date = item.embargo_end_date_ss | first | format_date -%}
+    {% if (end_date != "Indefinite") %} 
+        until {{ end_date }}
+    {% endif %}. 
+    To request a copy, contact <a href="mailto:ill@lib.msu.edu">ill@lib.msu.edu</a></p>
 {% include 'media_display/preview.html.j2' %}
-<p>This object is not available for download. To request a copy, contact <a href="mailto:ill@lib.msu.edu">ill@lib.msu.edu</a></p>
