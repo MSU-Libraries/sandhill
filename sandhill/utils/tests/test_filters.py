@@ -156,11 +156,11 @@ def test_render_literal():
 def test_format_date():
     # Test with valid end date
     res = filters.format_date("2020-12-31")
-    assert res == "December 31st 2020"
+    assert res == "December 31st, 2020"
     res = filters.format_date("2022-01-03")
-    assert res == "January 3rd 2022"
+    assert res == "January 3rd, 2022"
     res = filters.format_date("8000-01-03")
-    assert res == "January 3rd 8000"
+    assert res == "January 3rd, 8000"
 
     # Test with indenfinite end date
     res = filters.format_date("9999-12-31")
