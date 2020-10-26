@@ -183,7 +183,7 @@ def format_date(value: str, default: str ="Indefinite") -> str:
             suf = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
             result = value_date.strftime("%B %d %Y") # it is a valid date, so set that as the result
             day = value_date.strftime('%d')
-            result = result.replace(f" {day} ", f" {suf(int(day))} ") # Add in the suffix (st, th, rd, nd)
+            result = result.replace(f" {day} ", f" {suf(int(day))}, ") # Add in the suffix (st, th, rd, nd)
     except (ValueError, TypeError) as err:
         pass
 
