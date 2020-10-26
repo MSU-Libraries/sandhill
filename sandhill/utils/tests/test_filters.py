@@ -184,35 +184,3 @@ def test_format_date():
     res = filters.format_date("9999-12-31", "different")
     assert res == "different"
 
-def test_get_image_from_url_parts():
-    image_path = "static/images/badges/"
-
-    # Test with rights statement uris
-    res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InC/1.0/", image_path, ".", "dark.svg")
-    assert os.path.join(image_path, "InC.dark.svg")==res
-
-    # Test with creative commons uris
-    res = filters.get_image_from_url_parts("http://creativecommons.org/licenses/by-nc-sa/3.0/", image_path, ".", ".svg")
-    assert os.path.join(image_path, "by-nc-sa.svg")==res
-
-    # Test with invalid uris
-    res = filters.get_image_from_url_parts("not a valid path", image_path, ".", ".svg")
-    assert res == ""
-
-    # Test with invalid formatted uris (i.e. no / to split on)
-    res = filters.get_image_from_url_parts("http://creativecommons.org/licenses/by-nc-sa\3.0/", image_path, ".", ".svg")
-    assert res == ""
-
-    # Test with no match found on valid uris
-    res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InCInvalid/1.0/", image_path, ".", "dark.svg")
-    assert res == ""
-
-    # Providing no additional filters
-    res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InC/1.0/", image_path)
-    assert "InC" in res
-
-    # Test for invalid image path
-    image_path = "invalid img dir"
-    res = filters.get_image_from_url_parts("not a valid path", image_path, ".", ".svg")
-    assert res == ""
-

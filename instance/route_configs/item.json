@@ -24,6 +24,14 @@
             "location": "metadata_configs"
         },
         {
+            "name": "rights",
+            "processor": "file.load_json",
+            "on_fail": 404,
+            "paths": [
+                "configs/rights.json"
+            ]
+        },
+        {
             "processor": "evaluate.template",
             "name": "datastream_label",
             "value": "OBJ",
