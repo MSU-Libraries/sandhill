@@ -1,3 +1,4 @@
+import os
 from sandhill.utils import filters
 from sandhill import app
 from jinja2.runtime import new_context
@@ -152,33 +153,66 @@ def test_render_literal():
     with raises(SyntaxError) as serror:
         liter = filters.render_literal(context, "string with spaces", False)
 
-def test_format_embargo_end_date():
+def test_format_date():
     # Test with valid end date
-    res = filters.format_embargo_end_date("2020-12-31")
-    assert res == "2020-12-31"
-    res = filters.format_embargo_end_date("2022-01-03")
-    assert res == "2022-01-03"
-    res = filters.format_embargo_end_date("8000-01-03")
-    assert res == "8000-01-03"
+    res = filters.format_date("2020-12-31")
+    assert res == "December 31st 2020"
+    res = filters.format_date("2022-01-03")
+    assert res == "January 3rd 2022"
+    res = filters.format_date("8000-01-03")
+    assert res == "January 3rd 8000"
 
     # Test with indenfinite end date
-    res = filters.format_embargo_end_date("9999-12-31")
+    res = filters.format_date("9999-12-31")
     assert res == "Indefinite"
-    res = filters.format_embargo_end_date("")
+    res = filters.format_date("")
     assert res == "Indefinite"
-    res = filters.format_embargo_end_date(None)
+    res = filters.format_date(None)
     assert res == "Indefinite"
 
     # Test with wrong datatype passed
-    res = filters.format_embargo_end_date(123)
+    res = filters.format_date(123)
     assert res == "Indefinite"
 
     # Test wrong format passed
-    res = filters.format_embargo_end_date("abc")
+    res = filters.format_date("abc")
     assert res == "Indefinite"
-    res = filters.format_embargo_end_date("01-01-2020")
+    res = filters.format_date("01-01-2020")
     assert res == "Indefinite"
 
     # Test overriding the default value
-    res = filters.format_embargo_end_date("9999-12-31", "different")
+    res = filters.format_date("9999-12-31", "different")
     assert res == "different"
+
+def test_get_image_from_url_parts():
+    image_path = "static/images/badges/"
+
+    # Test with rights statement uris
+    res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InC/1.0/", image_path, ".", "dark.svg")
+    assert os.path.join(image_path, "InC.dark.svg")==res
+
+    # Test with creative commons uris
+    res = filters.get_image_from_url_parts("http://creativecommons.org/licenses/by-nc-sa/3.0/", image_path, ".", ".svg")
+    assert os.path.join(image_path, "by-nc-sa.svg")==res
+
+    # Test with invalid uris
+    res = filters.get_image_from_url_parts("not a valid path", image_path, ".", ".svg")
+    assert res == ""
+
+    # Test with invalid formatted uris (i.e. no / to split on)
+    res = filters.get_image_from_url_parts("http://creativecommons.org/licenses/by-nc-sa\3.0/", image_path, ".", ".svg")
+    assert res == ""
+
+    # Test with no match found on valid uris
+    res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InCInvalid/1.0/", image_path, ".", "dark.svg")
+    assert res == ""
+
+    # Providing no additional filters
+    res = filters.get_image_from_url_parts("http://rightsstatements.org/vocab/InC/1.0/", image_path)
+    assert "InC" in res
+
+    # Test for invalid image path
+    image_path = "invalid img dir"
+    res = filters.get_image_from_url_parts("not a valid path", image_path, ".", ".svg")
+    assert res == ""
+

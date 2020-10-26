@@ -13,5 +13,5 @@
     }
 </script>
 <button class="btn btn-default px-0 py-0 copy-icon copy-icon-narrow" type="button" id="copy-button" onclick="copyText('{{ copy_str }}')">
-    <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" role="presentation" class="action_bar_icon pr-1"/>
+    <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" aria-label="Copy email" alt="Copy email" class="action_bar_icon pr-1"/>
 </button>

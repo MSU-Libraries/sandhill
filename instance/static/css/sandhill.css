@@ -92,6 +92,9 @@ body {
     margin-top:0rem !important;
     margin-bottom:1rem !important;
 }
+.embargo_help_text{
+    background: #f1e7fe;
+}
 /* Item page css - End */
 /* PDF Viewer css */
 #sandhill_pdf_viewer{

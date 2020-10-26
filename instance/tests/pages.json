@@ -150,6 +150,14 @@
         "contains": [
             "<div id=\"mainContainer\">"
         ]
+    },
+    {
+        "page": "/etd/100",
+        "code": 200,
+        "_comment": "Confirm that the item page has rights badge",
+        "contains": [
+            "rightsstatements.org",
+            "alt=\"In Copyright\""
+        ]
     }
-
 ]

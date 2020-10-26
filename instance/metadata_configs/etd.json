@@ -203,6 +203,11 @@
             "value": "{{ item.catalog_record }}",
             "label": "Catalog Record",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "value": "{{ item.embargo_end_date_ss | first | format_date }}",
+            "label": "Embargo End Date",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         }
     ],
     "downloads": [

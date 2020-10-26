@@ -1,5 +1,7 @@
 """Filters for jinja templating engine"""
 import urllib
+import validators
+import os
 from ast import literal_eval
 from sandhill import app
 from sandhill.utils.generic import ifnone
@@ -161,8 +163,8 @@ def render_literal(context, value, fallback_to_str=True):
     context.environment.autoescape = True
     return data_val
 
-@app.template_filter('format_embargo_end_date')
-def format_embargo_end_date(value: str, default: str ="Indefinite") -> str:
+@app.template_filter('format_date')
+def format_date(value: str, default: str ="Indefinite") -> str:
     '''
     Format the provided embargo end date as a human readable string
     If there is no end date, it will show as 'Indefinite' (or the other 
@@ -178,8 +180,50 @@ def format_embargo_end_date(value: str, default: str ="Indefinite") -> str:
     try:
         value_date =  datetime.strptime(value, "%Y-%m-%d")
         if value_date.year != 9999:
-            result = value # it is a valid date, so set that as the result
+            suf = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
+            result = value_date.strftime("%B %d %Y") # it is a valid date, so set that as the result
+            day = value_date.strftime('%d')
+            result = result.replace(f" {day} ", f" {suf(int(day))} ") # Add in the suffix (st, th, rd, nd)
     except (ValueError, TypeError) as err:
         pass
 
     return result
+
+@app.template_filter('get_image_from_url_parts')
+def get_image_from_url_parts(url: str, image_path: str, concat_to_part: str = "", additional_filter: str = "") -> str:
+    '''
+    Given a URL, search the provided image path for each "part" of the
+    URL (splitting on slash) and return the first found match.
+    Optionally include the additional filter to match on,
+    For example http://google.com/test and "white" would search the image_path
+    for an image that contained "test" and "white" in the name.
+    args:
+        url (str): URL to search with
+        image_path (str): path to look for images in relative to the app instance path
+            ex: "static/images"
+        additional_filter (str): Additional text to look for in the image 
+    returns:
+        (str): full path to the matched image, empty string for no match found
+    '''
+    img_src = ""
+    image_full_path = os.path.join(app.instance_path, image_path.lstrip('/'))
+    if validators.url(url) and os.path.exists(image_full_path):
+        #split the url into parts
+        parsed_url = urllib.parse.urlparse(url)
+        url_parts = parsed_url.path.split('/')
+        #remove empty strings from the list
+        url_parts = [i for i in url_parts if i]
+
+        for img_file in os.listdir(image_full_path):
+            for part in url_parts:
+                #concat the "concat_to_part" 
+                part = part+concat_to_part
+                if part in img_file and additional_filter in img_file:
+                    img_src = os.path.join(image_path, img_file)
+                    break
+            if img_src:
+                break
+    else:
+        app.logger.debug(f"Invalid url or path provided. Url: {url}, Images folder path: {image_full_path}")
+    print(img_src)
+    return img_src
