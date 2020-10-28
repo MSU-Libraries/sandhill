@@ -24,29 +24,21 @@
 
     {# load custom js from child templates as necessary #}
     {% block plugin_js %}{% endblock %}
-
 </head>
 <body>
     <div class="container-fluid">
         <header>
+            {% set variation = '.' + view_args.variation + '.' if 'variation' in view_args else '.' %}
             {% block header %}
-                {% include 'header.html.j2' %}
+                {% include ['header' + variation + 'html.j2', 'header.html.j2'] %}
             {% endblock %}
         </header>
         <div id="content">{% block content %}{% endblock %}</div>
         <footer>
             {% block footer %}
-                 {% include 'footer.html.j2' %}
+                {% include ['footer' + variation + 'html.j2', 'footer.html.j2'] %}
             {% endblock %}
         </footer>
     </div>
 </body>
-{# replaces the <i> tag with the actual icons #}
-    <script>
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        })
-        feather.replace()
-    </script>
 </html>
-

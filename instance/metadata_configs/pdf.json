@@ -5,7 +5,7 @@
             "match_when": ["info:fedora/islandora:sp_pdf"]
         }
     ],
-    "title": "{{ item.fgs_label_s }}",
+    "title": "{{ item.fgs_label_s  | render | safe }}",
     "media_template": "media_display/pdf.html.j2",
     "display": [
         {
