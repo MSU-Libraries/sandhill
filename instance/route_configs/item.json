@@ -3,7 +3,8 @@
         "/<string:namespace>/<int:id>",
         "/<string:namespace>/<int:id>/",
         "/<string:namespace>:<int:id>",
-        "/<string:namespace>:<int:id>/"
+        "/<string:namespace>:<int:id>/",
+        "/<string:namespace>/<int:id>/<string:variation>"
     ],
     "template": "item.html.j2",
     "data": [

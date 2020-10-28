@@ -27,6 +27,29 @@ body {
 
 /* bootstrap overrides - End*/
 
+/* Header css - Start */
+.sandhill_header {
+    background-image: url('/static/images/header.jpg');
+    background-repeat: no-repeat;
+    background-position: 0% 37%;
+    background-size: 100%;
+    height: 15rem;
+}
+.sandhill_search_input {
+    background: rgba(255,255,255, 0.9);
+    border-top-left-radius: 10rem;
+    border-bottom-left-radius: 10rem;
+}
+.sandhill_search_btn {
+    background: rgba(255,255,255, 0.9);
+    border-top-right-radius: 10rem;
+    border-bottom-right-radius: 10rem;
+}
+.sandhill_breadcrumb {
+    background: none;
+}
+/* Header css - End */
+
 /* metadata abstract block css */
 #sandhill_expand_block {
   line-height: 1.5;

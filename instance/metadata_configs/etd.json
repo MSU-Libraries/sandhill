@@ -9,7 +9,7 @@
             "match_when": ["info:fedora/islandora:sp_pdf"]
         }
     ],
-    "title": "{{ item.fgs_label_s }}",
+    "title": "{{ item.fgs_label_s | render | safe }}",
     "_comment": "TODO: Refactor the media_template section",
     "media_template": "{{ 'media_display/pdf.html.j2' if not restriction  else 'media_display/preview_embargo.html.j2'  }}",
     "display": [
