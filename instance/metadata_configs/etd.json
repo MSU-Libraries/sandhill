@@ -11,7 +11,7 @@
     ],
     "title": "{{ item.fgs_label_s | render | safe }}",
     "_comment": "TODO: Refactor the media_template section",
-    "media_template": "{{ 'media_display/pdf.html.j2' if not restriction  else 'media_display/preview_embargo.html.j2'  }}",
+    "media_template": "{{ 'media_display/pdf.html.j2' if not restriction else 'media_display/preview_embargo.html.j2' }}",
     "display": [
         {
             "value": "{{ item.description }}",
@@ -26,33 +26,14 @@
         {
             "value": "{{ item.genre_aat }}",
             "label": "Material Type",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=genre_aat:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_author }}",
             "label": "Authors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_author:{{ metadata_value | solr_escape | urlencode }}"
-        },
-        {
-            "value": "{{ item.name_editor }}",
-            "label": "Editors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "value": "{{ item.name_contributor }}",
-            "label": "Contributors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "value": "{{ item.name_publisher }}",
-            "label": "Publishers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "value": "{{ item.name_signer }}",
-            "label": "Signers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.name_thesis_advisor }}",
@@ -63,7 +44,8 @@
         {
             "value": "{{ item.name_committee_member }}",
             "label": "Committee Members",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_committee_member:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_degree_committee_member }}",
@@ -91,16 +73,6 @@
             "label": "Subjects",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=subject_display:{{ metadata_value | solr_escape | urlencode }}"
-        },
-        {
-            "value": "{{ item.subject_local_topic }}",
-            "label": "Category",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
-        },
-        {
-            "value": "{{ item.subject_tic }}",
-            "label": "Turfgrass Thesaurus Terms",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item['ndltd.discipline'] }}",
@@ -208,6 +180,12 @@
             "value": "{{ item.embargo_end_date_ss | first | format_date }}",
             "label": "Embargo End Date",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
+            "value": "{{ item.doi_url }}",
+            "label": "Permalink",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "{{ item.doi_url }}"
         }
     ],
     "downloads": [
