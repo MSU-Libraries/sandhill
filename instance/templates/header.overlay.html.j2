@@ -1,0 +1,58 @@
+<div class="sh-header-overlay">
+    <div class="row no-gutters sandhill_header px-3 px-md-4 px-lg-5 px-xl-5">
+        <div class="col-6 col-sm-6 col-md-4 mt-3">
+                {% include 'masthead.html.j2' %}
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 offset-md-2 mt-3">
+            <form action="/search" method="GET">
+                <div class="input-group">
+                    <input type="text" class="form-control sandhill_search_input" name="q" placeholder="Search the repository" aria-label="Search the repository" aria-describedby="button-addon4">
+                    <div class="input-group-append" id="button-addon4">
+                        <button type="submit" class="btn btn-outline-secondary sandhill_search_btn" type="button"><img src="{{ url_for('static', filename='icons/search.svg') }}"</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <!-- Ribbon bar -->
+    <div class="row no-gutters sh-ribbon-bar  px-3 px-md-4 px-lg-5 px-xl-5 mt-3">
+        <div class="col-12  col-xl-9">
+            <div class="row no-gutters">
+                <div class="col-12 col-md-auto">
+                    <h1 class="d-flex h-100 flex-wrap align-items-center">
+                        <a href="https://lib.msu.edu"><span class="align-middle sh-heading-border text-nowrap pr-md-2">MSU Libraries</span></a>
+                    </h1>
+                </div>
+                <div class="col-7 col-md-auto">
+                    <h2 class="h1 d-flex h-100 flex-wrap align-items-center">
+                        <a href="/"><span class="align-middle text-nowrap pl-md-2">Digital Repository</span></a>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-3">
+            <nav class="sh-navbar navbar navbar-expand-lg navbar-light pl-0">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse sh-nav-expanded" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="sh-nav-item nav-item">
+                            <a class="nav-link pl-0" href="/">Home</a>
+                        </li>
+                        <li class="sh-nav-item nav-item">
+                            <a class="nav-link" href="/about">About</a>
+                        </li>
+                        <li class="sh-nav-item nav-item">
+                            <a class="nav-link" href="/collections">Collections</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav> 
+        </div>
+    </div>
+    <!-- Ribbon bar end -->
+</div>
+
+
