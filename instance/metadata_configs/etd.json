@@ -177,7 +177,7 @@
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
-            "value": "{{ item.embargo_end_date_ss | first | format_date }}",
+            "value": "{% if item.embargo_end_date_ss and restriction %}{{ item.embargo_end_date_ss | first | format_date }} {% endif %}",
             "label": "Embargo End Date",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
