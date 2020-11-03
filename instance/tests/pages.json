@@ -159,5 +159,22 @@
             "rightsstatements.org",
             "alt=\"In Copyright\""
         ]
+    },
+    {
+        "page": "/etd/2016",
+        "code": 200,
+        "_comment": "Test indefinite embargo",
+        "contains": [
+            "Indefinite",
+            "This item is not available to view or download."
+        ]
+    },
+    {
+        "page": "/etd/100",
+        "code": 200,
+        "_comment": "Test no embargo",
+        "excludes": [
+            "Embargo End Date"
+        ]
     }
 ]
