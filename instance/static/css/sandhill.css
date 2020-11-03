@@ -52,7 +52,7 @@ body {
     color: #18453b;
 }
 .sh-heading-link a:hover {
-    color: #18533b;
+    color: #107045;
 }
 
 .sh-nav-expanded {
@@ -89,7 +89,7 @@ body {
 .sh-navbar .sh-nav-item .nav-link:hover {
     text-decoration:underline;
 }
-.sh-header-overlay form {
+.sh-header form, .sh-header-overlay form {
     padding-top: .6rem;
 }
 .sh-heading-link a {
