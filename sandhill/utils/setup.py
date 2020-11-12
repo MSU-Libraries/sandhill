@@ -4,6 +4,7 @@ from flask import Flask
 from flask.logging import create_logger
 from sandhill import app
 from jinja2 import ChoiceLoader, FileSystemLoader
+from sassutils.wsgi import SassMiddleware
 
 # Ability to load templates from instance/templates/ directory
 loader = ChoiceLoader([
@@ -16,6 +17,23 @@ app.jinja_loader = loader
 for rule in app.url_map.iter_rules('static'):
     # Remove the default rule as our static files are handled in routes/static.py
     app.url_map._rules.remove(rule)
+
+# Add Sass middleware. This should help us complie CSS from Sass
+# TODO only when in Developer (aka DEBUG) mode
+app.wsgi_app = SassMiddleware(
+    app.wsgi_app,
+    {
+        'instance': {
+            'sass_path': 'static/scss',
+            'css_path': 'static/css',
+            'wsgi_path': 'static/css',
+            'strip_extension': True
+        }
+    },
+    {
+        'instance': app.instance_path
+    }
+)
 
 # Set default config file
 app.config.from_pyfile(os.path.join(app.instance_path, 'sandhill.default_settings.cfg'))
