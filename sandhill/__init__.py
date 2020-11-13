@@ -19,6 +19,7 @@ def init():
     Wraps the app.run for test coverage purposes
     '''
     if __name__ == "__main__":
+        # This does not apply when running through uWSGI
         app.run(debug=True)
 
 init()
