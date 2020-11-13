@@ -4,6 +4,7 @@ import logging
 from flask import Flask
 from flask.logging import create_logger
 from sandhill import app
+from sandhill.commands.compile_scss import run_compile
 from jinja2 import ChoiceLoader, FileSystemLoader
 from sassutils.wsgi import SassMiddleware
 
@@ -59,4 +60,4 @@ else:
     # If we're not in debug mode, we don't need the scss recompiled each page load,
     # so we just load it when the application is started.
     # If this starts taking too long, we can move it to docker build or CI/CD
-    sass.compile(dirname=(os.path.join(app.instance_path,'static/scss'), os.path.join(app.instance_path,'static/css')))
+    run_compile()
