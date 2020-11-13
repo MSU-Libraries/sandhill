@@ -41,7 +41,7 @@ else:
     app.logger.setLevel(logging.WARN)
 
 # Add Sass middleware. This should help us complie CSS from Sass
-if bool(app.config['COMPILE_SCSS_ON_REQUEST']):
+if 'COMPILE_SCSS_ON_REQUEST' in app.config and bool(app.config['COMPILE_SCSS_ON_REQUEST']):
     app.wsgi_app = SassMiddleware(
         app.wsgi_app,
         {

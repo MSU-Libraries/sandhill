@@ -46,9 +46,15 @@ def run_compile(scss_dir = None, css_dir = None):
     returns:
         (str): any error that occured
     '''
+    # Validate we actually got strings here
+    if (scss_dir and not isinstance(scss_dir, str)) or (css_dir and not isinstance(css_dir, str)):
+        return "One or both of the provided arguments were not string values"
+
     # Set the default to the instance path location
     scss_dir = os.path.join(app.instance_path, 'static/scss') if not scss_dir else scss_dir
     css_dir = os.path.join(app.instance_path, 'static/css/compiled') if not css_dir else css_dir
+
+    print(css_dir)
 
     # Make sure the directories exist
     if not os.path.exists(scss_dir):
@@ -59,8 +65,8 @@ def run_compile(scss_dir = None, css_dir = None):
     # Try to compile!
     try:
         sass.compile(dirname=(scss_dir, css_dir))
-    except sass.CompileError as serr:
-        return f"Unable to compile scss in dir {scss_dir}: {exc.code} {exc.name} {exc.description}"
+    except sass.CompileError as exc:
+        return f"Unable to compile scss in dir {scss_dir}: {exc}"
 
     # Everything went fine
     return ""
