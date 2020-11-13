@@ -27,7 +27,7 @@ if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
     app.config.from_pyfile('sandhill.cfg')
 
 # load the secret key 
-app.secret_key =  app.config["SECRET_KEY"]
+app.secret_key = app.config["SECRET_KEY"]
 
 # set debug mode
 app.debug = bool(app.config["DEBUG"])
@@ -40,7 +40,7 @@ else:
     app.logger.setLevel(logging.WARN)
 
 # Add Sass middleware. This should help us complie CSS from Sass
-if app.debug:
+if bool(app.config['COMPILE_SCSS_ON_REQUEST']):
     app.wsgi_app = SassMiddleware(
         app.wsgi_app,
         {
@@ -59,4 +59,4 @@ else:
     # If we're not in debug mode, we don't need the scss recompiled each page load,
     # so we just load it when the application is started.
     # If this starts taking too long, we can move it to docker build or CI/CD
-    sass.compile(dirname=(os.path.join(app.instance_path,'static/scss'),os.path.join(app.instance_path,'static/css')))
+    sass.compile(dirname=(os.path.join(app.instance_path,'static/scss'), os.path.join(app.instance_path,'static/css')))
