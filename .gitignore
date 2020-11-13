@@ -7,6 +7,4 @@ env
 TODO.md
 sandhill.sock
 .coverage
-instance/static/css/*.css.map
-instance/static/css/*.css
-!sandhill.css
+instance/static/css/compiled

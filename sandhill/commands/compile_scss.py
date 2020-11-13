@@ -13,9 +13,9 @@ def compile_scss(scss_dir = None, css_dir = None):
     and save the results to the css directory.
     args:
         scc_dir (str) [Optional]: Path to search for scss files
-            default: instance directory + static/scss
+            default: instance directory + static/css/compiled
         css_dir (str) [Optional]: Path to output the compiled css
-            default: instance directory + static/css
+            default: instance directory + static/css/compiled
     returns:
         (int): exit code. 
             0 for success 
@@ -48,7 +48,7 @@ def run_compile(scss_dir = None, css_dir = None):
     '''
     # Set the default to the instance path location
     scss_dir = os.path.join(app.instance_path, 'static/scss') if not scss_dir else scss_dir
-    css_dir = os.path.join(app.instance_path, 'static/css') if not css_dir else css_dir
+    css_dir = os.path.join(app.instance_path, 'static/css/compiled') if not css_dir else css_dir
 
     # Make sure the directories exist
     if not os.path.exists(scss_dir):

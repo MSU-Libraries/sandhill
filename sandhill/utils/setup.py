@@ -47,8 +47,8 @@ if bool(app.config['COMPILE_SCSS_ON_REQUEST']):
         {
             'instance': {
                 'sass_path': 'static/scss',
-                'css_path': 'static/css',
-                'wsgi_path': 'static/css',
+                'css_path': 'static/css/compiled',
+                'wsgi_path': 'static/css/compiled',
                 'strip_extension': True
             }
         },
