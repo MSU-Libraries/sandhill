@@ -1,6 +1,7 @@
 import os
 import pytest
 import shutil
+from click.testing import CliRunner
 from sandhill.commands import compile_scss
 from sandhill import app
 
@@ -10,7 +11,18 @@ def cleanup_compiled_css():
     os.mkdir(os.path.join(app.instance_path, 'static/css/compiled'))
 
 def test_compile_scss(cleanup_compiled_css):
-    pass # TODO
+    # Test calling through the click event with failure
+    runner = CliRunner()
+    result = runner.invoke(compile_scss.compile_scss, ['--scss-dir', '/dsffs', '--css-dir', 'ffs'])
+    assert result.exit_code == 1
+    assert 'does not exist' in result.output
+    assert 'Command failed' in result.output
+
+    # Test calling through the click event successfully
+    runner = CliRunner()
+    result = runner.invoke(compile_scss.compile_scss, [])
+    assert result.exit_code == 0
+    assert 'Success' in result.output
 
 def test_run_compile_no_params(cleanup_compiled_css):
     # Test with defaults of instance directory

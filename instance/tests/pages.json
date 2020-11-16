@@ -176,5 +176,10 @@
         "excludes": [
             "Embargo End Date"
         ]
+    },
+    {
+        "page": "/static/css/compiled/crane.css",
+        "code": 200,
+        "_comment": "scss compiles and creates the css file"
     }
 ]
