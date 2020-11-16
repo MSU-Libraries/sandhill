@@ -7,8 +7,8 @@ Sandhill
 * [Docker](#docker)
 * [Developer Notes](#developer-notes)
 * [Rollback](#rollback)
-* [Metadata Configuration](instance/metadata_configs/README.md)
-* [Page Creation](instance/route_configs/README.md)
+* [Metadata Configuration](instance/config/metadata/README.md)
+* [Page Creation](instance/config/routes/README.md)
 
 
 Developer Environment Setup
@@ -181,14 +181,14 @@ Routes
 
 Note: root pids will continue to be handled in apache
 
-All routes are dynamically added as needed by the `route_configs` 
+All routes are dynamically added as needed by the `config/routes/` 
 json files within the `instance` directory of the project. The `route` variable 
 in that file defines what route rule will be associated with the contents 
 of that file. Variable names can be included in the rules, which will be 
 available for use in the `data` section via the `view_args` variable.  
 
 All that is needed to add a new content page or type is to create a new 
-`route_configs` file and it's corresponding template.
+`config/routes/` file and it's corresponding template.
 
 For file streaming, instead of providing a `template` variable in the config, 
 provide a `stream` variable, which will reference a `name` field within the 

@@ -88,7 +88,7 @@ def test_search():
     data_dict = {
         "name": "search",
         "processor": "solr.search",
-        "paths": [ 'search_configs/main.json' ]
+        "paths": [ 'config/search/main.json' ]
     }
 
     # Test for successful request with a dict response
@@ -111,7 +111,7 @@ def test_search():
 
     # Test for missing solr params
     with app.test_request_context('/search'):
-        data_dict['paths'] = [ 'search_configs/invalid.json' ]
+        data_dict['paths'] = [ 'config/search/invalid.json' ]
         with raises(HTTPException) as http_error:
             response = solr.search(data_dict, url="https://test.example.edu", api_get_function=_test_api_get_json)
         assert http_error.type.code == 500
@@ -122,4 +122,4 @@ def test_search():
         with raises(HTTPException) as http_error:
             response = solr.search(data_dict, url="https://test.example.edu", api_get_function=_test_api_get_json)
         assert http_error.type.code == 500
-    data_dict["paths"] = [ 'search_configs/main.json' ]
+    data_dict["paths"] = [ 'config/search/main.json' ]

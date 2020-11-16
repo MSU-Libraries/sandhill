@@ -18,7 +18,7 @@ def load_json(data_dict):
     search for those files within the instance directory. It will stop
     when it finds a file and will return the contents as json.
     args:
-        data_dict(dict): all of the route_config data and previous data loaded
+        data_dict(dict): all of the previously loaded data, typically from a route
     returns:
         json: The first file found in the instance_path with the given path
     '''
@@ -39,7 +39,7 @@ def create_json_response(data_dict):
     This can be used if you wish to stream json instead of use it's data
     for a template.
     args:
-        data_dict(dict): context data as defined in the route_config that has already been loaded
+        data_dict(dict): all of the previously loaded data, typically from a route
     returns:
         Response: response object with the json data loaded
     '''
@@ -57,7 +57,7 @@ def load_matched_json(data_dict):
     """
     Loads all the config files and returns the file that has the maximum matched conditions
     args:
-        data_dict(dict): context data as defined in the route_configs
+        data_dict(dict): context data as previously loaded, typically from a route
     returns:
         json: data from the matched route config based on the most match_conditions
     """

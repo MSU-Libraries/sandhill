@@ -25,12 +25,12 @@ def load_json_config(file_path):
         app.logger.error(f"Malformed json at path: {file_path} Error: {j_err}")
     return loaded_config
 
-def get_all_routes(routes_dir="route_configs"):
+def get_all_routes(routes_dir="config/routes/"):
     '''
-    Finds all the json files with within /instance/route_configs
+    Finds all the json files with within given directory
     that contain a "route" key
     args:
-        (str): the directory to look for route configs. Default = route_configs
+        (str): the directory to look for route configs. Default = config/routes/
     returns:
         (list of str): all of the route rules found
     '''
@@ -61,12 +61,12 @@ def get_all_routes(routes_dir="route_configs"):
     # return the list of the sorted routes
     return [r[0] for r in var_counts]
 
-def load_route_config(route_rule, routes_dir="route_configs"):
+def load_route_config(route_rule, routes_dir="config/routes/"):
     '''
-    Return the json data for the provided route_config
+    Return the json data for the provided directory
     args:
         route_rule (str): the route rule to match to in the json configs (the `route` key)
-        routes_dir (str): the path to look for route configs. Default = route_configs
+        routes_dir (str): the path to look for route configs. Default = config/routes/
     returns:
         (dict): The loaded json of the matched route config
     '''

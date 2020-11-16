@@ -9,7 +9,7 @@ from werkzeug.exceptions import HTTPException
 def test_load_json():
     # Test loading config successfully
     data_dict = {
-        'paths': [ 'route_configs/search.json' ]
+        'paths': [ 'config/routes/search.json' ]
     }
     file_data = file.load_json(data_dict)
     assert isinstance(file_data, OrderedDict)
@@ -17,7 +17,7 @@ def test_load_json():
 
     # Test loading file where the first file isn't there
     data_dict = {
-        'paths': [ 'invalid/test.json', 'route_configs/search.json' ]
+        'paths': [ 'invalid/test.json', 'config/routes/search.json' ]
     }
     file_data = file.load_json(data_dict)
     assert isinstance(file_data, OrderedDict)
@@ -34,7 +34,7 @@ def test_load_json():
 def test_create_json_response():
     # Test loading a json
     data_dict = {
-        'paths': [ 'route_configs/search.json' ]
+        'paths': [ 'config/routes/search.json' ]
     }
     resp = file.create_json_response(data_dict)
     assert isinstance(resp, RequestsResponse)
@@ -52,7 +52,7 @@ def test_create_json_response():
 def test_load_matched_json():
     # Test matching etd config file successfully
     data_dict = {
-        'location': 'metadata_configs_1',
+        'location': 'config/metadata_1',
         'view_args': {
             'namespace': 'etd'
         },
@@ -68,7 +68,7 @@ def test_load_matched_json():
 
     # Test loading directory with invalid match conditions
     data_dict = {
-        'location': 'metadata_configs_2',
+        'location': 'config/metadata_2',
         'view_args': {
             'namespace': 'etd'
         },
