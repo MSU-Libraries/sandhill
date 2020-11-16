@@ -54,8 +54,6 @@ def run_compile(scss_dir = None, css_dir = None):
     scss_dir = os.path.join(app.instance_path, 'static/scss') if not scss_dir else scss_dir
     css_dir = os.path.join(app.instance_path, 'static/css/compiled') if not css_dir else css_dir
 
-    print(css_dir)
-
     # Make sure the directories exist
     if not os.path.exists(scss_dir):
         return f"scss-dir path does not exist. {scss_dir}"
