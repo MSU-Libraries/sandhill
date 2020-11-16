@@ -60,4 +60,7 @@ else:
     # If we're not in debug mode, we don't need the scss recompiled each page load,
     # so we just load it when the application is started.
     # If this starts taking too long, we can move it to docker build or CI/CD
-    run_compile()
+    try:
+        run_compile()
+    except Exception as exc:
+        app.logger.error(f"Error compiling scss: {exc}")
