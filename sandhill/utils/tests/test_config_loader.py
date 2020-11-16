@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 def test_load_json_config():
     # test valid file path which has properly formatted json
-    config_path = os.path.join(app.instance_path, "route_configs/home.json")
+    config_path = os.path.join(app.instance_path, "config/routes/home.json")
     data = config_loader.load_json_config(config_path)
     assert isinstance(data, dict)
     assert "route" in data
@@ -17,7 +17,7 @@ def test_load_json_config():
     assert not data
 
     # test a malformatted json in a valid file path
-    config_path = os.path.join(app.instance_path, "route_configs/invalid_format.json")
+    config_path = os.path.join(app.instance_path, "config/routes/invalid_format.json")
     data = config_loader.load_json_config(config_path)
     assert isinstance(data, dict)
     assert not data
@@ -34,7 +34,7 @@ def test_get_all_routes():
     assert '/about' in data
 
     # test valid path containing no route configs
-    data = config_loader.get_all_routes("search_configs")
+    data = config_loader.get_all_routes("config/search/")
     assert isinstance(data, list)
     assert not data
 
@@ -61,7 +61,7 @@ def test_load_route_config():
 
 def test_load_json_configs():
     # test providing a valid path
-    config_path = os.path.join(app.instance_path, "route_configs")
+    config_path = os.path.join(app.instance_path, "config/routes/")
     data = config_loader.load_json_configs(config_path)
     assert isinstance(data, dict)
     assert os.path.join(config_path, "home.json") in data
@@ -81,5 +81,5 @@ def test_load_json_configs():
     config_path = app.instance_path
     data = config_loader.load_json_configs(config_path, True)
     assert isinstance(data, dict)
-    assert os.path.join(config_path, "route_configs", "home.json") in data
+    assert os.path.join(config_path, "config/routes/", "home.json") in data
 

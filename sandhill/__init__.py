@@ -13,12 +13,4 @@ app = Flask(__name__,
 # Local imports requiring the Flask app
 from sandhill.utils import setup, filters # pylint: disable=wrong-import-position
 from sandhill.routes import main, static, error # pylint: disable=wrong-import-position
-
-def init():
-    '''
-    Wraps the app.run for test coverage purposes
-    '''
-    if __name__ == "__main__":
-        app.run(debug=True)
-
-init()
+from sandhill.commands import compile_scss # pylint: disable=wrong-import-position

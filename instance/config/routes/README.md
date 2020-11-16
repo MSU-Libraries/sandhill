@@ -8,7 +8,7 @@ Most routes are configured to render a Jinja2 _template_ (typically resulting in
 also return a _stream_ of data (such as an image or downloadable file), or even use a _processor_
 built to return a response that doesn't conform to either of the above.  
 
-To create a new route, create a uniquely named `.json` file inside `instance/route_configs/`. JSON files
+To create a new route, create a uniquely named `.json` file inside `instance/config/routes/`. JSON files
 in this directory will be automatically loaded _when Sandhlll is started_ (note, adding new routes requires
 restarting of Sandhill).  
 

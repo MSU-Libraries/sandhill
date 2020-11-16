@@ -22,14 +22,14 @@
             "name": "metadata_conf",
             "processor": "file.load_matched_json",
             "on_fail": 501,
-            "location": "metadata_configs"
+            "location": "config/metadata/"
         },
         {
             "name": "rights",
             "processor": "file.load_json",
             "on_fail": 404,
             "paths": [
-                "configs/rights.json"
+                "config/rights.json"
             ]
         },
         {
@@ -44,7 +44,7 @@
             "on_fail": 501,
             "paths":
             [
-                "restriction_configs/embargo.json"
+                "config/restrictions/embargo.json"
             ]
         },
         {

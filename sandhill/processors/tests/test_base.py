@@ -12,7 +12,7 @@ def test_load_route_data():
             "name": "search_conf",
             "on_fail": 501,
             "paths": [
-                "search_configs/main.json"
+                "config/search/main.json"
             ]
         }),
         OrderedDict({

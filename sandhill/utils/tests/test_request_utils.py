@@ -28,7 +28,7 @@ def test_match_request_format():
 
 
 def test_overlay_with_query_args():
-    # Test configs analagous to those in search_configs
+    # Test configs analagous to those in config/search/
     query_config = {
         "q": {
             "base": ["elephant"]

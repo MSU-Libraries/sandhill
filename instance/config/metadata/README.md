@@ -149,7 +149,7 @@ These configurations are used to render the downloads section on the page.
 * `file_size_field`: Filesize of the object.
 * `datastream`: Fedora datastream of the object. This is used to generate the "view" and "download" links.
 * (Optional) `restricted`: If provided and set to true, the object will not be displayed in the downloads box given that the restriction conditions are met. 
-See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/metadata_configs/README.md#restriction-conditions)
+See [Restriction Conditions](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/blob/itempage/instance/config/metadata/README.md#restriction-conditions)
 for more information
 
 Example `downloads` field:
