@@ -24,6 +24,11 @@
             "link": "/{{ view_args.namespace }}"
         },
         {
+            "value": "{{ item.rights_dpla }}",
+            "label": "Copyright Status",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+        },
+        {
             "value": "{{ item.genre_aat }}",
             "label": "Material Type",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
