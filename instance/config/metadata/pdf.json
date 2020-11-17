@@ -21,12 +21,6 @@
         {
             "value": "{{ item.rights_dpla }}",
             "label": "Copyright Status",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=rights_dpla:{{ metadata_value | solr_escape | urlencode }}"
-        },
-        {
-            "value": "{{ item.rights }}",
-            "label": "Copyright Status",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
