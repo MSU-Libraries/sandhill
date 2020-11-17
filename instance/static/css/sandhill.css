@@ -9,7 +9,7 @@ header, footer, main {
 }
 h1 {
     font-size: 2.3rem;
-    color: #18453B;
+   color: #18453B;
 }
 h2 {
     font-size:2rem;
@@ -189,6 +189,7 @@ body {
 }
 
 .sandhill_metadata_descriptive_list {
+    /* moved to scss */
     margin-top:0rem !important;
     margin-bottom:1rem !important;
 }
@@ -201,7 +202,6 @@ body {
     height:40rem;
     border: 0.4rem solid #e3e3e3;
     border-radius: 0.4rem;
-
 }
 #pdf-js-viewer{
     width:100%;
@@ -231,6 +231,7 @@ body {
     height:2.5rem;
 }
 .actions_dropdown_button{
+    /* moved to scss */
     background-color: #ffffff;
     font-size: 1.1rem;
 }
@@ -245,12 +246,15 @@ body:focus, body:active, .btn:focus, .btn:active, a:focus, a:active {
     border-radius:0.5rem;
 }
 .action_dropdown_link:hover{
+    /* moved to scss */
     background:#e3e3e3;
 }
 .action_dropdown_link a{
+    /* moved to scss */
     color: #1a1a1a;
 }
 .action_dropdown_link a:hover{
+    /* moved to scss */
     color: #1a1a1a;
     text-decoration:none;
 }

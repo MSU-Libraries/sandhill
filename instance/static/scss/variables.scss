@@ -1,0 +1,25 @@
+$clr-purple: #9b0086;
+$clr-purple-light: #9b0086;
+$clr-green-msu: #18453B;
+$clr-gray-dark: #333333;
+$clr-white: #ffffff;
+$clr-gray-light: #e3e3e3;
+
+// reminder that we wanted to confirm the use case for maps rather than straight defs
+$colors: (
+  "purple-light": #9b0086,
+  "purple": #9b0086,
+  "gray": #333333,
+  "gray-light": #444444
+);
+
+$fonts: (
+  "h1": 2.3rem,
+  "h2": 2.0rem,
+  "xs": 0.6rem,
+  "sm": 0.8rem,
+  "md": 1.0rem,
+  "lg": 1.2rem,
+  "xl": 2.5rem,
+);
+

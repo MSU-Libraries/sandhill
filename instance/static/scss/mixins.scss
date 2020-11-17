@@ -1,0 +1,24 @@
+@import 'variables', 'functions';
+
+@mixin set-background($background-color) {
+      background: $background-color;
+}
+
+@mixin make-background-class($utility-class) {
+  .#{$utility-class} {
+      background: get-color($utility-class);
+  }
+}
+@mixin make-font-class($utility-class) {
+  .#{$utility-class} {
+      font-size: get-font($utility-class);
+  }
+}
+
+@mixin set-text-color($utility-class) {
+  .#{$utility-class} {
+      color: get-color($utility-class);
+  }
+}
+
+

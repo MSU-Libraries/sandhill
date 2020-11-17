@@ -1,6 +1,77 @@
-.test {
-    color: #dddddd;
-    a {
-        color: #18453b;
+@import 'mixins', 'variables', 'functions';
+
+header, footer, main {
+    font-family: 'Gotham SSm A', 'Gotham SSm B', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+h1 {
+    font-size: 2.3rem;
+    color: $clr-green-msu;
+}
+h2 {
+    font-size:2rem;
+    color: $clr-purple;
+    font-weight: 900;
+}
+a {
+    color: #6E005F;
+}
+a:hover {
+    color: $clr-purple-light;
+}
+
+body {
+    color: $clr-gray-dark;
+    :focus,
+    :active {
+        box-shadow: 0 0 0 0.1rem $clr-gray-light;
     }
 }
+
+/* Utility classes - Start */
+/* Utility classes - End */
+
+/* Buttons - Start */
+/* Dropdown buttons - Start */
+
+.sh-button-dropdown {
+    @include set-background($clr-white) 
+    font-size: 1.1rem;
+    :hover {
+        @include set-background($clr-gray-light)
+    }
+}
+
+.sh-button-dropdown-link {
+    @include set-background($clr-gray-light)
+    a {
+        color: $clr-gray;
+        :hover {
+            text-decoration: none;
+        }
+    }
+}
+
+/* Dropdown buttons - End */
+/* Buttons - End */
+
+
+.sh-descriptive-list {
+    margin-top:0rem !important;
+    margin-bottom:1rem !important;
+}
+
+.dropdown_link a{
+    color: #1a1a1a;
+}
+.dropdown_link a:hover{
+    color: #1a1a1a;
+    text-decoration:none;
+}
+
+.sh-background-gray {
+    background:#e3e3e3;
+}
+
+
