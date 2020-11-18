@@ -3,7 +3,7 @@
 @function get-color($utility-class) {
   $index: str-index($utility-class,"-");
   $class-clr: str-slice($utility-class, $index+1);
-  @if map-has-key($colors, $class-clr) {
+  @if variable-exists($class-clr) {
     @return map-get($colors, $class-clr);
   } @else {
     @error "ERROR: Specified index does not exist in the mapping";
@@ -14,11 +14,18 @@
 @function get-font($utility-class) {
   $index: str-index($utility-class,"-");
   $size: str-slice($utility-class, $index+1);
-  @if map-has-key($fonts, $size) {
+  @if variable-exists($fonts, $size) {
     @return map-get($fonts, $size);
   } @else {
     @error "ERROR: Specified index does not exist in the mapping";
   }  
 
 }  
+
+
+@function variable-exists($var) {
+  $var: false !default;
+  return $var; 
+}  
+
 

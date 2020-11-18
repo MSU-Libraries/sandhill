@@ -231,11 +231,12 @@ body {
     height:2.5rem;
 }
 .actions_dropdown_button{
-    /* moved to scss */
+    /* moved to scss:  sh-button-dropdown-link */
     background-color: #ffffff;
     font-size: 1.1rem;
 }
 .actions_dropdown_button:hover{
+    /* moved to scss:  sh-button-dropdown-link */
     background-color: #e3e3e3;
 }
 body:focus, body:active, .btn:focus, .btn:active, a:focus, a:active {

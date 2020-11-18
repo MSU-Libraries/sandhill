@@ -1,26 +1,5 @@
 @import 'mixins', 'variables', 'functions';
 
-header, footer, main {
-    font-family: 'Gotham SSm A', 'Gotham SSm B', Arial, Helvetica, sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-h1 {
-    font-size: 2.3rem;
-    color: $clr-green-msu;
-}
-h2 {
-    font-size:2rem;
-    color: $clr-purple;
-    font-weight: 900;
-}
-a {
-    color: #6E005F;
-}
-a:hover {
-    color: $clr-purple-light;
-}
-
 body {
     color: $clr-gray-dark;
     :focus,
@@ -29,33 +8,93 @@ body {
     }
 }
 
+header, 
+footer, 
+main {
+    font-family: 'Gotham SSm A', 'Gotham SSm B', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1 {
+    @include set-font(h1)
+}
+
+h2 {
+    @include set-font(h2)
+    font-weight: 900;
+}
+
+a {
+    color: $clr-purple;
+    :hover {
+        color: $clr-purple-dark;
+        text-decoration: underline;
+    }
+}
+
 /* Utility classes - Start */
+@include make-background-class(shbackground-purple-light)
 /* Utility classes - End */
 
 /* Buttons - Start */
 /* Dropdown buttons - Start */
 
-.sh-button-dropdown {
-    @include set-background($clr-white) 
+.sh-button-dropdown {    
+    background-color: $clr-white; 
     font-size: 1.1rem;
     :hover {
-        @include set-background($clr-gray-light)
+        background-color: $clr-gray-light;
     }
 }
 
 .sh-button-dropdown-link {
-    @include set-background($clr-gray-light)
+    background-color: $clr-gray-light;
     a {
         color: $clr-gray;
-        :hover {
+        &:hover {
             text-decoration: none;
         }
     }
 }
 
+
 /* Dropdown buttons - End */
 /* Buttons - End */
 
+.sandhill-expand-block {
+    line-height: 1.5;
+    a.collapsed {
+        &:after {
+            content: ' more';
+        }
+    }
+    a {
+        &:not.collapsed {
+            &:after {
+                content: ' less';
+            }
+        }
+    }
+}
+
+.sandhill-expand-block,
+.sandhill-block-collapse.collapse:not(.show),
+.sandhill-modal-block,
+.sandhill-modal-block-collapse {
+    display: block;
+    height: 9rem;
+    overflow: hidden;
+}
+
+.sandhill-block-collapse.collapsing {
+    height: 9rem;
+}
+
+.expand-body {
+    max-height: 25rem;
+    overflow-y: auto;
+}
 
 .sh-descriptive-list {
     margin-top:0rem !important;
