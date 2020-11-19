@@ -1,9 +1,11 @@
 // We use variables when we're only working with a single property or line of code
 // syntax example
-$clr-purple-dark: #9b0086;
-$clr-purple: #f1e7fe;
+$clr-purple-dark: #6E005F;
+$clr-purple: #9b0086;
+$clr-purple-light: #f1e7fe;
 $clr-green-msu: #18453B;
 $clr-gray-dark: #333333;
+$clr-gray-light: #f8f9fa;
 $clr-gray: #e3e3e3;
 $clr-white: #ffffff;
 
@@ -13,16 +15,14 @@ $clr-white: #ffffff;
 $colors: (
   "purple-dark": $clr-purple-dark,
   "purple": $clr-purple,
+  "purple-light": $clr-purple-light,
   "green-msu": $clr-green-msu,
   "gray-dark": $clr-gray-dark,
   "gray": $clr-gray,
   "white": $clr-white,
 );
 
-// this is using the map to define variables so we only have to update in one place
-//@each $key, $value in $colors {
-//
-//}
+// We use the font variables when we are working with s single property
 
 // we use maps in [x,y,z,] cases because they allow us to debug invalid font sizes
 // syntax example

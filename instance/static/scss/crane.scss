@@ -1,4 +1,5 @@
 @import 'mixins', 'variables', 'functions';
+@import 'buttons', 'dropdowns''expand';
 
 body {
     color: $clr-gray-dark;
@@ -17,18 +18,18 @@ main {
 }
 
 h1 {
-    @include set-font(h1)
+    @include set-font-size(h1)
 }
 
 h2 {
-    @include set-font(h2)
+    @include set-font-size(h2)
     font-weight: 900;
 }
 
 a {
-    color: $clr-purple;
-    :hover {
-        color: $clr-purple-dark;
+    color: $clr-purple-dark;
+    &:hover {
+        color: $clr-purple;
         text-decoration: underline;
     }
 }
@@ -37,80 +38,24 @@ a {
 @include make-background-class(shbackground-purple-light)
 /* Utility classes - End */
 
-/* Buttons - Start */
-/* Dropdown buttons - Start */
 
-.sh-button-dropdown {    
-    background-color: $clr-white; 
-    font-size: 1.1rem;
-    :hover {
-        background-color: $clr-gray-light;
+/* Rights badge - Start */
+.sh-rights-badge {
+    height:2.5rem;
+}
+
+/* Rights badge - End */
+
+.sh-icon {
+    background: transparent;
+    &:hover {
+        background: $clr-gray-light;
     }
 }
 
-.sh-button-dropdown-link {
-    background-color: $clr-gray-light;
-    a {
-        color: $clr-gray;
-        &:hover {
-            text-decoration: none;
-        }
-    }
-}
-
-
-/* Dropdown buttons - End */
-/* Buttons - End */
-
-.sandhill-expand-block {
-    line-height: 1.5;
-    a.collapsed {
-        &:after {
-            content: ' more';
-        }
-    }
-    a {
-        &:not.collapsed {
-            &:after {
-                content: ' less';
-            }
-        }
-    }
-}
-
-.sandhill-expand-block,
-.sandhill-block-collapse.collapse:not(.show),
-.sandhill-modal-block,
-.sandhill-modal-block-collapse {
-    display: block;
-    height: 9rem;
-    overflow: hidden;
-}
-
-.sandhill-block-collapse.collapsing {
-    height: 9rem;
-}
-
-.expand-body {
-    max-height: 25rem;
-    overflow-y: auto;
-}
-
-.sh-descriptive-list {
-    margin-top:0rem !important;
-    margin-bottom:1rem !important;
-}
-
-.dropdown_link a{
-    color: #1a1a1a;
-}
-.dropdown_link a:hover{
-    color: #1a1a1a;
-    text-decoration:none;
-}
-
-.sh-background-gray {
-    background:#e3e3e3;
+.sh-icon-narrow {
+    padding-bottom: .2rem !important;
+    padding-left:.2rem !important;
 }
 
 

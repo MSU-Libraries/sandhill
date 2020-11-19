@@ -1,6 +1,7 @@
 @import 'variables', 'functions';
 
 // setting background colors to use the colors map from variables.css
+//
 // @params {String} $color: key from $color map in 'variables.css'
 // @return value: css property
 @mixin set-background($background-color) {
@@ -8,7 +9,8 @@
 }
 
 // setting font colors to use the font size map from variables.css
-// params:
+//
+// @params {String} $font-size: key from $fonts map in 'variables.css'
 // return value: css property
 @mixin set-font-size($font-size) {
     font-size: $font-size;

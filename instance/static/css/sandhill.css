@@ -127,75 +127,8 @@ body {
 
 /* Footer css - End */
 
-/* metadata abstract block css */
-#sandhill_expand_block {
-  line-height: 1.5;
-}
-
-#sandhill_expand_block #sandhill_block_collapse.collapse:not(.show), #sandhill_modal_block #sandhill_modal_block_collapse {
-  display: block;
-  height: 9rem;
-  overflow: hidden;
-}
-
-#sandhill_expand_block #sandhill_block_collapse.collapsing, #sandhill_modal_block #sandhill_modal_block_collapse{
-  height: 9rem;
-}
-
-#sandhill_expand_block a.collapsed::after {
-  content: ' more';
-}
-
-#sandhill_expand_block a:not(.collapsed)::after {
-  content: ' less';
-}
-.abstract_more_button{
-    padding:0rem;
-    color: #6E005F!important;
-    cursor:pointer;
-    background:none;
-}
-.abstract_more_button:hover{
-    text-decoration:underline!important;
-    color: #9b0086!important;
-}
-.abstract_body{
-    max-height: 25rem;
-    overflow-y: auto;
-}
-.abstract_scroll{
-    height: 15rem;
-    overflow-y: auto;
-}
-.abstract_scroll::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 0.5rem;
-}
-.abstract_scroll::-webkit-scrollbar-thumb {
-  border-radius: 0.5rem;
-  background-color: rgba(0,0,0,.3);
-  -webkit-box-shadow: 0 0 0.2rem rgba(255,255,255,.5);
-}
-
-/* metadata abstract block css - End*/
 
 /* Item page css */
-#sandhill_downloads_header h2 button {
-    font-size: 1.6rem;
-    color: #18453b;
-    text-decoration: none;
-    width: 100%;
-    text-align: left;
-}
-
-.sandhill_metadata_descriptive_list {
-    /* moved to scss */
-    margin-top:0rem !important;
-    margin-bottom:1rem !important;
-}
-.embargo_help_text{
-    background: #f1e7fe;
-}
 /* Item page css - End */
 /* PDF Viewer css */
 #sandhill_pdf_viewer{
@@ -223,55 +156,6 @@ body {
 
 /* PDF Viewer css - END */
 /* Icon  and Image css */
-.action_bar_icon{
-    height: 1.25rem;
-    margin-bottom:.15rem;
-}
-.actions_rights_badge{
-    height:2.5rem;
-}
-.actions_dropdown_button{
-    /* moved to scss:  sh-button-dropdown-link */
-    background-color: #ffffff;
-    font-size: 1.1rem;
-}
-.actions_dropdown_button:hover{
-    /* moved to scss:  sh-button-dropdown-link */
-    background-color: #e3e3e3;
-}
-body:focus, body:active, .btn:focus, .btn:active, a:focus, a:active {
-    box-shadow: 0 0 0 0.1rem #e3e3e3;
-}
-.actions_hover:hover{
-    background:#e3e3e3;
-    border-radius:0.5rem;
-}
-.action_dropdown_link:hover{
-    /* moved to scss */
-    background:#e3e3e3;
-}
-.action_dropdown_link a{
-    /* moved to scss */
-    color: #1a1a1a;
-}
-.action_dropdown_link a:hover{
-    /* moved to scss */
-    color: #1a1a1a;
-    text-decoration:none;
-}
-
-.copy-icon {
-    background: transparent;
-}
-
-.copy-icon-narrow {
-    padding-bottom: .2rem !important;
-    padding-left:.2rem !important;
-}
-
-.copy-icon:hover {
-    background: #e3e3e3;
-}
 /* Icon and Image css - END */
 
 /* Icon and Image css - END */
