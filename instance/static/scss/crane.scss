@@ -1,5 +1,5 @@
 @import 'mixins', 'variables', 'functions';
-@import 'buttons', 'dropdowns', 'expand';
+@import 'buttons', 'dropdowns', 'expand', 'media_viewer';
 
 body {
     color: $clr-gray-dark;
@@ -57,5 +57,4 @@ a {
     padding-bottom: .2rem !important;
     padding-left:.2rem !important;
 }
-
 

@@ -112,7 +112,7 @@
         "code": 200,
         "excludes": [
             "/etd/1655/OBJ/view",
-            "<iframe id=\"pdf-js-viewer\""
+            "<iframe class=\"sh-pdf-viewer\""
         ]
     },
     {
@@ -121,7 +121,7 @@
         "_comment": "Confirm that the item page loads with the PDF.js viewer",
         "contains": [
             "/etd/100/OBJ/view",
-            "<iframe id=\"pdf-js-viewer\""
+            "<iframe id=\"sh-pdf-viewer\""
         ]
     },
     {
