@@ -1,6 +1,60 @@
-.test {
-    color: #dddddd;
-    a {
-        color: #18453b;
+@import 'mixins', 'variables', 'functions';
+@import 'buttons', 'dropdowns', 'expand', 'media_viewer';
+
+body {
+    color: $clr-gray-dark;
+    :focus,
+    :active {
+        box-shadow: 0 0 0 0.1rem $clr-gray-light;
     }
 }
+
+header, 
+footer, 
+main {
+    font-family: 'Gotham SSm A', 'Gotham SSm B', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1 {
+    @include set-font-size(h1)
+}
+
+h2 {
+    @include set-font-size(h2)
+    font-weight: 900;
+}
+
+a {
+    color: $clr-purple-dark;
+    &:hover {
+        color: $clr-purple;
+        text-decoration: underline;
+    }
+}
+
+/* Utility classes - Start */
+@include make-background-class(shbackground-purple-light)
+/* Utility classes - End */
+
+
+/* Rights badge - Start */
+.sh-rights-badge {
+    height:2.5rem;
+}
+
+/* Rights badge - End */
+
+.sh-icon {
+    background: transparent;
+    &:hover {
+        background: $clr-gray-light;
+    }
+}
+
+.sh-icon-narrow {
+    padding-bottom: .2rem !important;
+    padding-left:.2rem !important;
+}
+

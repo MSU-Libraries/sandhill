@@ -1,0 +1,15 @@
+.sh-dropdown {
+    li:not(.sh-no-highlight) {
+        a {
+            color: $clr-gray-dark;
+            &:hover {
+                text-decoration:none;
+            }
+        }
+        &:hover {
+            background: $clr-gray;
+        }
+    }
+
+}
+
