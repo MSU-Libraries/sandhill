@@ -1,8 +1,9 @@
 @import 'mixins', 'variables', 'functions';
-@import 'buttons', 'dropdowns', 'expand', 'media_viewer';
+@import 'buttons', 'dropdowns', 'expand', 'header', 'media_viewer';
 
 body {
     color: $clr-gray-dark;
+    @include set-font-size(md)
     :focus,
     :active {
         box-shadow: 0 0 0 0.1rem $clr-gray-light;
@@ -35,7 +36,10 @@ a {
 }
 
 /* Utility classes - Start */
-@include make-background-class(shbackground-purple-light)
+@include make-background-class(sh-background-green-msu)
+@include make-background-class(sh-background-purple-light)
+@include make-background-class(sh-background-none)
+@include make-background-class(sh-background-white)
 /* Utility classes - End */
 
 
@@ -57,4 +61,23 @@ a {
     padding-bottom: .2rem !important;
     padding-left:.2rem !important;
 }
+
+/* Footer section - Start */
+footer {
+    .sh-footer-sm-text {
+        li, a {
+            @include set-font(sm);
+            color: $clr-white;
+            white-space: nowrap;
+        }
+    }
+    .sh-footer-xs-text {
+        li, a {
+            @include set-font(xs);
+            color: $clr-white;
+            white-space: nowrap;
+        }
+    }
+}
+/* Footer section - End */ 
 

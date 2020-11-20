@@ -1,107 +1,4 @@
-/* Colors used
-border     :    #dee2e6
-link color :    #18453b
-*/
-header, footer, main {
-    font-family: 'Gotham SSm A', 'Gotham SSm B', Arial, Helvetica, sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-h1 {
-    font-size: 2.3rem;
-   color: #18453B;
-}
-h2 {
-    font-size:2rem;
-    color: #333333;
-    font-weight: 900;
-}
-a {
-    color: #6E005F;
-}
-a:hover {
-    color: #9b0086;
-}
-
-body {
-    color: #333333;
-    font-size: 1rem;
-}
-/* bootstrap overrides */
-
-
-/* bootstrap overrides - End*/
-
-/* Header css - Start */
-.sh-header {
-    background-image: url('/static/images/header.jpg');
-    background-repeat: no-repeat;
-    background-position: 0% 37%;
-    background-size: cover;
-    height: 20rem;
-}
-.sh-header-overlay {
-    background: linear-gradient(0deg, rgba(24, 69, 59, 0.4), rgba(24, 69, 59, 0.4)), url('/static/images/header.jpg');
-    background-repeat: no-repeat;
-    background-position: 0% 37%;
-    background-size: cover;
-    height: 20rem;
-
-}
-.sh-heading-link a {
-    color: #18453b;
-}
-.sh-heading-link a:hover {
-    color: #107045;
-}
-
-.sh-nav-expanded {
-    z-index:10;
-    background: #ffffff
-}
-.sandhill_search_input {
-    background: rgba(255,255,255, 0.9);
-    border-top-left-radius: 10rem;
-    border-bottom-left-radius: 10rem;
-}
-.sandhill_search_btn {
-    background: rgba(255,255,255, 0.9);
-    border-top-right-radius: 10rem;
-    border-bottom-right-radius: 10rem;
-}
-.sandhill_breadcrumb {
-    background: none;
-}
-
-.sh-ribbon-bar {
-    background-color: white;
-}
-
-.sh-navbar {
-    background-color:white;
-}
-
-.sh-navbar .sh-nav-item .nav-link {
-    color: #18453B;
-    font-size: 1.2rem;
-}
-
-.sh-navbar .sh-nav-item .nav-link:hover {
-    text-decoration:underline;
-}
-.sh-header form, .sh-header-overlay form {
-    padding-top: .6rem;
-}
-.sh-heading-link a {
-    text-decoration: none !important;
-}
-
-/* Header css - End */
-
 /* Footer css - Start */
-.sh-footer-green {
-    background:#18453b;    
-}
 .sh-footer-sm-text li, .sh-footer-sm-text li a{
     font-size: 0.8rem;
     white-space: nowrap;
@@ -126,61 +23,12 @@ body {
 }
 
 /* Footer css - End */
-
-
-
 /* TODO - Use bootstrap mixins when we start using sass */
-/* Small devices (landscape phones, 576px and up) */
-@media (min-width: 576px) { 
-    .sh-navbar, .sh-navbar {
-        float:left;
-    }
-    .sh-nav-item a {
-        padding-right: 0.8rem;
-        padding-left: 0;
-    }
-}
-
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) { 
-    .sh-heading-border {
-        border-right :0.2rem solid #18453b;
-    }
-    .sh-header, .sh-header-overlay {
-        background-size: 100%;
-        height: 17rem;
-    }
-    .sh-navbar, .sh-navbar {
-        float:left;
-    }
-    .sh-nav-item a {
-        padding-right: 0.8rem;
-        padding-left: 0;
-    }
     .sh-footer-list-item {
         width: auto;
         border-right: 1px solid #dee2e6 ; /* bootstrap grey - possibly decide on the color */
         border-right: auto;
     }
-}
-
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) { 
-    .sh-header, .sh-header-overlay {
-        background-size: 100%;
-        height: 15rem;
-    }
-    .sh-navbar, .sh-navbar {
-        float:right;
-    }
-    .sh-nav-item a {
-        padding-left: 0.8rem;
-        padding-right: 0;
-    }
-
-}
-
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) { 
-
 }

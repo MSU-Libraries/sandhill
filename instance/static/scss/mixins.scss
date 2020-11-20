@@ -13,7 +13,7 @@
 // @params {String} $font-size: key from $fonts map in 'variables.css'
 // return value: css property
 @mixin set-font-size($font-size) {
-    font-size: $font-size;
+    font-size: map-get($fonts, $font-size);
 }
 
 // setting colors to use the colors map from variables.css
@@ -25,7 +25,9 @@
 
 @mixin make-background-class($utility-class) {
     .#{$utility-class} {
-        background: get-color($utility-class);
+        $strln: str-length(sh-background-);
+        $clr: str-slice($utility-class, $strln+1); //purple
+        background: get-color($clr);
     }
 }
 
@@ -41,4 +43,30 @@
   }
 }
 
+// Media of at least the minimum breakpoint width. No query for the smallest breakpoint.
+// Makes the @content apply to the given breakpoint.
+@mixin wrap-media-min($name) {
+  $min: breakpoint-min($name);
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+// Set the borders
+//
+// @pramas {String} $color: border color
+// @pramas {String} $width: border width
+// @pramas {String} $top-left: radius for the top left corner
+// @pramas {String} $top-right: radius for the top right corner
+// @pramas {String} $bottom-right: radius for the top right corner
+// @pramas {String} $bottom-left: radius for the top left corner
+// @return value: border css properties
+@mixin set-borders($color, $width, $top-left: 0, $top-right: 0, $bottom-right: 0, $bottom-left: 0) {
+    border: $width solid $color;
+    border-radius: $top-left $top-right $bottom-right $bottom-left;
+}
 

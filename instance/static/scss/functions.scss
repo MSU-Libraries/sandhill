@@ -1,16 +1,20 @@
 @import 'variables';
 
-@function get-color($utility-class) {
-  $index: str-index($utility-class,"-");
-  $class-clr: str-slice($utility-class, $index+1);
-  @if map-has-key($colors, $class-clr) {
-    @return map-get($colors, $class-clr);
+//
+//
+//
+@function get-color($clr) {
+  @if map-has-key($colors, $clr) {
+    @return map-get($colors, $clr);
   } @else {
     @error "ERROR: Specified index does not exist in the mapping";
   }  
 
 }  
 
+//
+//
+//
 @function get-font($utility-class) {
   $index: str-index($utility-class,"-");
   $size: str-slice($utility-class, $index+1);
@@ -23,4 +27,11 @@
 }  
 
 
-
+// Minimum breakpoint width. Null for the smallest (first) breakpoint.
+//
+//    >> breakpoint-min(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+//    576px
+@function breakpoint-min($name) {
+  $min: map-get($breakpoints, $name);
+  @return if($min != 0, $min, null);
+}

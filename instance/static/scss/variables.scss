@@ -4,11 +4,12 @@ $clr-purple-dark: #6E005F;
 $clr-purple: #9b0086;
 $clr-purple-light: #f1e7fe;
 $clr-green-msu: #18453B;
+$clr-green: #107045;
 $clr-gray-dark: #333333;
 $clr-gray-light: #f8f9fa;
 $clr-gray: #e3e3e3;
 $clr-white: #ffffff;
-$clr-white: #ffffff;
+$clr-none: none;
 
 // We use maps to create mixins when mixins let us replace several lines of code with one in the .scss file
 // syntax example
@@ -18,9 +19,11 @@ $colors: (
   "purple": $clr-purple,
   "purple-light": $clr-purple-light,
   "green-msu": $clr-green-msu,
+  "green": $clr-green,
   "gray-dark": $clr-gray-dark,
   "gray": $clr-gray,
   "white": $clr-white,
+  "none": $clr-none,
 );
 
 // We use the font variables when we are working with s single property
@@ -37,4 +40,15 @@ $fonts: (
   "lg": 1.2rem,
   "xl": 2.5rem,
 );
+
+//Bootstrap breakpoints
+
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;
 

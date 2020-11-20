@@ -1,4 +1,4 @@
-<p class="alert shbackground-purple-light">This item is not available to view or download
+<p class="alert sh-background-purple-light">This item is not available to view or download
     {%- set end_date = item.embargo_end_date_ss | first | format_date -%}
     {% if (end_date != "Indefinite") %} 
         until {{ end_date }}
