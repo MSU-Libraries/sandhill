@@ -1,13 +1,13 @@
 // Default import (must be imported first)
-@import 'defaults';
+@import '_defaults';
 
-/* button imports */        @import 'buttons';
-/* dropdowns imports */     @import 'dropdowns';
-/* expand imports */        @import 'expand';
-/* footer imports */        @import 'footer';
-/* header imports */        @import 'header';
-/* icons imports */         @import 'icons';
-/* media_viewer imports */  @import 'media_viewer';
+/* button imports */        @import '_buttons';
+/* dropdowns imports */     @import '_dropdowns';
+/* expand imports */        @import '_expand';
+/* footer imports */        @import '_footer';
+/* header imports */        @import '_header';
+/* icons imports */         @import '_icons';
+/* media_viewer imports */  @import '_media_viewer';
 
 /* Utility classes - Start */
 /* Background utility classes */
