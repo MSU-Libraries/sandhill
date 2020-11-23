@@ -1,0 +1,36 @@
+// Core imports (order of import matters)
+@import 'variables', 'functions', 'mixins';
+
+body {
+    color: $clr-gray-dark;
+    @include set-font-size('md');
+    :focus,
+    :active {
+        box-shadow: 0 0 0 0.1rem $clr-gray-light;
+    }
+}
+
+header,
+footer,
+main {
+    font-family: 'Gotham SSm A', 'Gotham SSm B', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+h1 {
+    @include set-font-size('h1');
+}
+
+h2 {
+    @include set-font-size('h2');
+    font-weight: 900;
+}
+
+a {
+    color: $clr-purple-dark;
+    &:hover {
+        color: $clr-purple;
+        text-decoration: underline;
+    }
+}
