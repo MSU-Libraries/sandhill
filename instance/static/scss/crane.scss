@@ -1,83 +1,24 @@
-@import 'mixins', 'variables', 'functions';
-@import 'buttons', 'dropdowns', 'expand', 'header', 'media_viewer';
+// Default import (must be imported first)
+@import 'defaults';
 
-body {
-    color: $clr-gray-dark;
-    @include set-font-size(md)
-    :focus,
-    :active {
-        box-shadow: 0 0 0 0.1rem $clr-gray-light;
-    }
-}
-
-header, 
-footer, 
-main {
-    font-family: 'Gotham SSm A', 'Gotham SSm B', Arial, Helvetica, sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-h1 {
-    @include set-font-size(h1)
-}
-
-h2 {
-    @include set-font-size(h2)
-    font-weight: 900;
-}
-
-a {
-    color: $clr-purple-dark;
-    &:hover {
-        color: $clr-purple;
-        text-decoration: underline;
-    }
-}
+/* button imports */        @import 'buttons';
+/* dropdowns imports */     @import 'dropdowns';
+/* expand imports */        @import 'expand';
+/* footer imports */        @import 'footer';
+/* header imports */        @import 'header';
+/* icons imports */         @import 'icons';
+/* media_viewer imports */  @import 'media_viewer';
 
 /* Utility classes - Start */
-@include make-background-class(sh-background-green-msu)
-@include make-background-class(sh-background-purple-light)
-@include make-background-class(sh-background-none)
-@include make-background-class(sh-background-white)
+/* Background utility classes */
+@include make-background-class('sh-background-green-msu');
+@include make-background-class('sh-background-purple-light');
+@include make-background-class('sh-background-none');
+@include make-background-class('sh-background-white');
+/* Font utility classes */
+@include make-font-size-class('sh-font-size-sm');
+@include make-font-size-class('sh-font-size-xs');
+@include make-color-class('sh-color-green-light');
+@include make-color-class('sh-color-white');
 /* Utility classes - End */
-
-
-/* Rights badge - Start */
-.sh-rights-badge {
-    height:2.5rem;
-}
-
-/* Rights badge - End */
-
-.sh-icon {
-    background: transparent;
-    &:hover {
-        background: $clr-gray-light;
-    }
-}
-
-.sh-icon-narrow {
-    padding-bottom: .2rem !important;
-    padding-left:.2rem !important;
-}
-
-/* Footer section - Start */
-footer {
-    .sh-footer-sm-text {
-        li, a {
-            @include set-font(sm);
-            color: $clr-white;
-            white-space: nowrap;
-        }
-    }
-    .sh-footer-xs-text {
-        li, a {
-            @include set-font(xs);
-            color: $clr-white;
-            white-space: nowrap;
-        }
-    }
-}
-/* Footer section - End */ 
 

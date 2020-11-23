@@ -1,54 +1,48 @@
-// We use variables when we're only working with a single property or line of code
-// syntax example
+// Defined instance colors
 $clr-purple-dark: #6E005F;
 $clr-purple: #9b0086;
 $clr-purple-light: #f1e7fe;
 $clr-green-msu: #18453B;
 $clr-green: #107045;
+$clr-green-light: #84d123;
 $clr-gray-dark: #333333;
 $clr-gray-light: #f8f9fa;
 $clr-gray: #e3e3e3;
 $clr-white: #ffffff;
 $clr-none: none;
 
-// We use maps to create mixins when mixins let us replace several lines of code with one in the .scss file
-// syntax example
-// As of 11-18 we are checking whether there's another way to confirm that variables exist and whether we still need maps
+// Defined instance colors as a map
 $colors: (
-  "purple-dark": $clr-purple-dark,
-  "purple": $clr-purple,
-  "purple-light": $clr-purple-light,
-  "green-msu": $clr-green-msu,
-  "green": $clr-green,
-  "gray-dark": $clr-gray-dark,
-  "gray": $clr-gray,
-  "white": $clr-white,
-  "none": $clr-none,
+    "purple-dark": $clr-purple-dark,
+    "purple": $clr-purple,
+    "purple-light": $clr-purple-light,
+    "green-msu": $clr-green-msu,
+    "green": $clr-green,
+    "green-light": $clr-green-light,
+    "gray-dark": $clr-gray-dark,
+    "gray": $clr-gray,
+    "white": $clr-white,
+    "none": $clr-none,
 );
 
-// We use the font variables when we are working with s single property
-
-// we use maps in [x,y,z,] cases because they allow us to debug invalid font sizes
-// syntax example
+// Defined instance font sizes
 $fonts: (
-  "h1": 2.3rem,
-  "h2": 2.0rem,
-  "btn": 1.1rem,
-  "xs": 0.6rem,
-  "sm": 0.8rem,
-  "md": 1.0rem,
-  "lg": 1.2rem,
-  "xl": 2.5rem,
+    "h1": 2.3rem,
+    "h2": 2.0rem,
+    "btn": 1.1rem,
+    "xs": 0.6rem,
+    "sm": 0.8rem,
+    "md": 1.0rem,
+    "lg": 1.2rem,
+    "xl": 2.5rem,
 );
 
-//Bootstrap breakpoints
-
+// Breakpoints copied over from Bootstrap 4
 $breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px
-) !default;
-
+    "xs": 0,
+    "sm": 576px,
+    "md": 768px,
+    "lg": 992px,
+    "xl": 1200px,
+    "xxl": 1400px,
+);
