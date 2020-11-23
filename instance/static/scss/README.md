@@ -1,5 +1,5 @@
 
-#Sass styleguide 
+# Sass styleguide 
 
 ## Formatting
 - Always use a space after the class name and before the opening `{`.
@@ -33,7 +33,8 @@
   - Example: `shbackground-gray`, `shfontsize-xs` 
 
 
-### When should uitility classes be used. 
+### When should uitility classes be used
+- When there are at least two immediate uses for it
 
 ## Variables
 - Variables must be names using dash-case instead of using camelCase or  snake_cased. 
