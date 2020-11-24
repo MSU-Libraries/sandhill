@@ -1,0 +1,24 @@
+// Default import (must be imported first)
+@import '_defaults';
+
+/* button imports */        @import '_buttons';
+/* dropdowns imports */     @import '_dropdowns';
+/* expand imports */        @import '_expand';
+/* footer imports */        @import '_footer';
+/* header imports */        @import '_header';
+/* icons imports */         @import '_icons';
+/* media_viewer imports */  @import '_media_viewer';
+
+/* Utility classes - Start */
+/* Background utility classes */
+@include make-background-class('sh-background-green-msu');
+@include make-background-class('sh-background-purple-light');
+@include make-background-class('sh-background-none');
+@include make-background-class('sh-background-white');
+/* Font utility classes */
+@include make-font-size-class('sh-font-size-sm');
+@include make-font-size-class('sh-font-size-xs');
+@include make-color-class('sh-color-green-light');
+@include make-color-class('sh-color-white');
+/* Utility classes - End */
+

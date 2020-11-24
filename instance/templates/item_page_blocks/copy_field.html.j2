@@ -1,0 +1,34 @@
+{# Required to be set before calling this template: copy_link #}
+<style>
+.sandhill-input-group span {
+    border-left: 1px solid #ced4da;
+}
+.sandhill-input-group input {
+    border: none !important;
+}
+.sandhill-input-group {
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+</style>
+<script>
+    function copyField(fieldId) {
+        var copyText = document.getElementById(fieldId);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+        document.execCommand('copy');
+    }
+</script>
+<form>
+  <div class="input-group sandhill-input-group">
+    <label for="input_permalink">Permalink</label>
+    <input type="text" class="form-control"
+        id="input_permalink" value="{{ copy_link }}" id="copy-input">
+    <span class="input-group-btn">
+      <button class="btn btn-default sh-icon" type="button" id="copy-button" onclick="copyField('copy-input')">
+        <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" aria-label="Copy permalink" alt="Copy permalink" class="action_bar_icon pr-1"/>
+      </button>
+    </span>
+  </div>
+</form>

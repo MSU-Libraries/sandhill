@@ -1,0 +1,59 @@
+{
+    "route": [
+        "/<string:namespace>/<int:id>",
+        "/<string:namespace>/<int:id>/",
+        "/<string:namespace>:<int:id>",
+        "/<string:namespace>:<int:id>/",
+        "/<string:namespace>/<int:id>/<string:variation>"
+    ],
+    "template": "item.html.j2",
+    "data": [
+        {
+            "name": "item",
+            "processor": "solr.select_record",
+            "record_key":"response.docs",
+            "on_fail": 404,
+            "params": {
+                "q": "PID:\"{{ view_args.namespace }}:{{ view_args.id }}\"",
+                "wt": "json"
+            }
+        },
+        {
+            "name": "metadata_conf",
+            "processor": "file.load_matched_json",
+            "on_fail": 501,
+            "location": "config/metadata/"
+        },
+        {
+            "name": "rights",
+            "processor": "file.load_json",
+            "on_fail": 404,
+            "paths": [
+                "config/rights.json"
+            ]
+        },
+        {
+            "processor": "evaluate.template",
+            "name": "datastream_label",
+            "value": "OBJ",
+            "on_fail": 500
+        },
+        {
+            "name": "embargo",
+            "processor": "file.load_json",
+            "on_fail": 501,
+            "paths":
+            [
+                "config/restrictions/embargo.json"
+            ]
+        },
+        {
+            "name": "restriction",
+            "processor": "evaluate.conditions",
+            "on_fail": 403,
+            "conditions": "embargo.restriction_conditions",
+            "match_all": true
+        }
+    ]
+}
+

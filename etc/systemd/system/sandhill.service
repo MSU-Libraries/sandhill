@@ -9,7 +9,7 @@ WorkingDirectory=/var/www/sandhill
 Environment="PATH=/var/www/sandhill/env/bin"
 Environment="SOLR_URL=https://solr.devel.lib.msu.edu/solr/fedcom"
 Environment="FEDORA_URL=http://localhost:8080/fedora"
-ExecStart=/var/www/sandhill/env/bin/uwsgi --socket 127.0.0.1:8081 --protocol=http --py-autoreload 1 -w wsgi:application
+ExecStart=/var/www/sandhill/env/bin/uwsgi --buffer-size=8192 --socket 127.0.0.1:8081 --protocol=http --py-autoreload 1 -w wsgi:application
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=sandhill

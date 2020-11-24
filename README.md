@@ -7,8 +7,8 @@ Sandhill
 * [Docker](#docker)
 * [Developer Notes](#developer-notes)
 * [Rollback](#rollback)
-* [Metadata Configuration](instance/metadata_configs/README.md)
-* [Page Creation](instance/route_configs/README.md)
+* [Metadata Configuration](instance/config/metadata/README.md)
+* [Page Creation](instance/config/routes/README.md)
 
 
 Developer Environment Setup
@@ -56,6 +56,7 @@ do not support file redirection in Ubuntu 16.04.
 ```
 sudo cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
 sudo chown -R syslog:adm /var/log/sandhill
+sudo systemctl restart rsyslog
 ```
 
 ### Create the service
@@ -180,14 +181,14 @@ Routes
 
 Note: root pids will continue to be handled in apache
 
-All routes are dynamically added as needed by the `route_configs` 
+All routes are dynamically added as needed by the `config/routes/` 
 json files within the `instance` directory of the project. The `route` variable 
 in that file defines what route rule will be associated with the contents 
 of that file. Variable names can be included in the rules, which will be 
 available for use in the `data` section via the `view_args` variable.  
 
 All that is needed to add a new content page or type is to create a new 
-`route_configs` file and it's corresponding template.
+`config/routes/` file and it's corresponding template.
 
 For file streaming, instead of providing a `template` variable in the config, 
 provide a `stream` variable, which will reference a `name` field within the 
@@ -225,25 +226,18 @@ In the future, we will update the `.coveragerc` file to fail if any of the files
 
 Rollback
 ===============
-To rollback to a previous image, instead of using the service (which points to the `latest` release image), 
-we will override that by providing the git commit sha of the version we want to rollback to.  
+To rollback an environment to a previous commit, you first need to identify the commit (i.e. tag in the 
+container registry) you want to rollback to.
 
 Navigate to the [container registry](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/container_registry) 
 to identify the tag you want to rollback to, which is based on the git commit. For example the image tagged 
 `4f991a07` references https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/tree/4f991a07 that code base. 
 
-To perform the rollback, stop the running service:  
-```
-systemctl stop sandhill-stack
-```
+Now navigate to the [environment](https://gitlab.msu.edu/msu-libraries/repo-team/sandhill/-/environments) and 
+select the affected environment. Find the commit that matches the tag you want to rollback to and click the 
+icon that looks like a refresh arrow that says "rollback environment" when you hover on it.
 
-Now bring up the instance providing the tag and using this override docker-compose file:  
-```
-# Replace the TAG value with the image tag you wish to rollback to
-TAG=4f991a07 docker-compose -f /home/deploy/sandhill/docker-compose.yml -f /home/deploy/sandhill/docker-compose.rollback.yml up
-```
+This will kick of the job the re-deploys that git commit to the server. The environment will stay in that state until another 
+rollback to the latest (or any other) version is triggered. Another merge to the branch linked to that environment will also 
+override whatever rolled back state you are in.  
 
-NOTE: If you want to keep this image tag deploy past a server reboot, you will need to update the service file to use it as well. 
-To do this, replace the variables in the [sandhill-stack.server](/etc/systemd/system/sandhill-stack.service) for 
-`ExecStart`, `ExecStop`, and `ExecReload` to match the command you used above (adding in the environment variable for `TAG` and 
-adding an additional docker-compose to the command, `docker-compose.rollback.yml`).  

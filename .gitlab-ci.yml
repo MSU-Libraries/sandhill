@@ -3,7 +3,7 @@ services:
   - docker:dind
 
 stages:
-  - unittest
+  - unittest_and_lint
   - build
   - deploy_test
   - release
@@ -11,156 +11,145 @@ stages:
   - deploy_prod
 
 variables:
-  CONTAINER_BUILD_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  CONTAINER_BUILD_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:$CI_COMMIT_SHORT_SHA
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
-  CONTAINER_TEST_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:test
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  CONTAINER_RELEASE_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:latest
-  PATH_TEST: "/home/deploy/sandhill"
-  PATH_STAGE: "/home/deploy/sandhill"
-  PATH_PROD: "/home/deploy/sandhill"
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  CONTAINER_IMAGE_NGINX: $CI_REGISTRY_IMAGE/nginx:$CI_COMMIT_SHORT_SHA
+  REPO_PATH: "/home/deploy/sandhill"
   CONNECT_TEST: "deploy@fedcomd4.lib.msu.edu"
   CONNECT_STAGE: "deploy@fedcoms4.lib.msu.edu"
   CONNECT_PROD1: "deploy@fedcom4a.lib.msu.edu"
   CONNECT_PROD2: "deploy@fedcom4b.lib.msu.edu"
-  SITE_TEST: "http://sandhill.test.lib.msu.edu/"
-  SITE_STAGE: "http://sandhill.stage.lib.msu.edu/"
-  SITE_PROD: "http://sandhill.lib.msu.edu/"
-  SITE_PROD2: "http://sandhillm.lib.msu.edu/"
 
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-unittest_job:
-  stage: unittest
+unittest_and_lint_job:
+  stage: unittest_and_lint
   tags:
     - msul
-  except:
-    - stage
-    - master
   script:
     - virtualenv -p python3 $CI_PROJECT_DIR/env
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
     - $CI_PROJECT_DIR/env/bin/pytest
+    - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
 
 build_job:
   stage: build
   tags:
     - msul
   only:
-    - development
+    - master
   script:
-    - docker build --pull -t $CONTAINER_BUILD_IMAGE .
-    - docker push $CONTAINER_BUILD_IMAGE
-    - docker build --pull -t $CONTAINER_BUILD_IMAGE_NGINX ./nginx
-    - docker push $CONTAINER_BUILD_IMAGE_NGINX
-
-tag_build_job:
-  stage: build
-  tags:
-    - msul
-  only:
-    - development
-  script:
-    - docker pull $CONTAINER_BUILD_IMAGE
-    - docker tag $CONTAINER_BUILD_IMAGE $CONTAINER_TEST_IMAGE
-    - docker push $CONTAINER_TEST_IMAGE
-    - docker pull $CONTAINER_BUILD_IMAGE_NGINX
-    - docker tag $CONTAINER_BUILD_IMAGE_NGINX $CONTAINER_TEST_IMAGE_NGINX
-    - docker push $CONTAINER_TEST_IMAGE_NGINX
+    - docker build --pull -t $CONTAINER_IMAGE .
+    - docker push $CONTAINER_IMAGE
+    - docker build --pull -t $CONTAINER_IMAGE_NGINX ./nginx
+    - docker push $CONTAINER_IMAGE_NGINX
 
 deploy_test_job:
   stage: deploy_test
   tags:
     - msul
+  environment:
+    name: test
+    url: http://sandhill.test.lib.msu.edu
   only:
-    - development
+    - master
   script: 
-    - ssh $CONNECT_TEST git -C $PATH_TEST fetch origin development
-    - ssh $CONNECT_TEST git -C $PATH_TEST checkout development
-    - ssh $CONNECT_TEST git -C $PATH_TEST pull origin development
+    - ssh $CONNECT_TEST git -C $REPO_PATH reset HEAD --hard
+    - ssh $CONNECT_TEST git -C $REPO_PATH fetch origin
+    - ssh $CONNECT_TEST git -C $REPO_PATH checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_TEST docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - ssh $CONNECT_TEST sudo /bin/cp $PATH_TEST/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
+    - ssh $CONNECT_TEST echo "Replacing _TAG_ with $CI_COMMIT_SHORT_SHA in docker-compose.yml"
+    - ssh $CONNECT_TEST sed -i "s/_TAG_/$CI_COMMIT_SHORT_SHA/g" $REPO_PATH/docker-compose.yml
+    - ssh $CONNECT_TEST sudo /bin/cp $REPO_PATH/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/
     - ssh $CONNECT_TEST sudo /bin/systemctl daemon-reload
     - ssh $CONNECT_TEST sudo /bin/systemctl enable sandhill-stack.test
-    - ssh $CONNECT_TEST TAG=$CI_COMMIT_SHORT_SHA docker-compose -f $PATH_TEST/docker-compose.yml -f $PATH_TEST/docker-compose.test.yml pull
+    - ssh $CONNECT_TEST docker-compose -f $REPO_PATH/docker-compose.yml -f $REPO_PATH/docker-compose.test.yml pull
     - ssh $CONNECT_TEST sudo /bin/systemctl restart sandhill-stack.test
     - sleep 4
     - ssh $CONNECT_TEST sudo /bin/systemctl status sandhill-stack.test
-    - ssh $CONNECT_TEST "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_TEST ) -eq 200 ]]"
-
-
-release_job:
-  stage: release
-  tags:
-    - msul
-  only:
-    - stage
-  script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
-    - docker pull $CONTAINER_TEST_IMAGE_NGINX
-    - docker tag $CONTAINER_TEST_IMAGE_NGINX $CONTAINER_RELEASE_IMAGE_NGINX
-    - docker push $CONTAINER_RELEASE_IMAGE_NGINX
+    - ssh $CONNECT_TEST "docker exec sandhill pytest -m functional --no-cov"
 
 deploy_stage_job:
   stage: deploy_stage
   tags:
     - msul
+  environment:
+    name: stage
+    url: http://sandhill.stage.lib.msu.edu
+  when: manual
+  dependencies:
+    - deploy_test_job
   only:
-    - stage
+    - master
   script:
-    - ssh $CONNECT_STAGE git -C $PATH_STAGE fetch origin stage
-    - ssh $CONNECT_STAGE git -C $PATH_STAGE checkout stage
-    - ssh $CONNECT_STAGE git -C $PATH_STAGE pull origin stage
+    - ssh $CONNECT_STAGE git -C $REPO_PATH reset HEAD --hard
+    - ssh $CONNECT_STAGE git -C $REPO_PATH fetch origin
+    - ssh $CONNECT_STAGE git -C $REPO_PATH checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_STAGE docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - ssh $CONNECT_STAGE sudo cp $PATH_STAGE/etc/systemd/system/sandhill-stack.stage.service /etc/systemd/system/
+    - ssh $CONNECT_STAGE echo "Replacing _TAG_ with $CI_COMMIT_SHORT_SHA in docker-compose.yml"
+    - ssh $CONNECT_STAGE sed -i "s/_TAG_/$CI_COMMIT_SHORT_SHA/g" $REPO_PATH/docker-compose.yml
+    - ssh $CONNECT_STAGE sudo cp $REPO_PATH/etc/systemd/system/sandhill-stack.stage.service /etc/systemd/system/
     - ssh $CONNECT_STAGE sudo systemctl daemon-reload
     - ssh $CONNECT_STAGE sudo systemctl enable sandhill-stack.stage
-    - ssh $CONNECT_STAGE docker-compose -f $PATH_STAGE/docker-compose.yml -f $PATH_STAGE/docker-compose.stage.yml pull
+    - ssh $CONNECT_STAGE docker-compose -f $REPO_PATH/docker-compose.yml -f $REPO_PATH/docker-compose.stage.yml pull
     - ssh $CONNECT_STAGE sudo systemctl restart sandhill-stack.stage
     - sleep 4
     - ssh $CONNECT_STAGE sudo systemctl status sandhill-stack.stage
-    - ssh $CONNECT_STAGE "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_STAGE ) -eq 200 ]]"
+    - ssh $CONNECT_STAGE "docker exec sandhill pytest -m functional --no-cov"
 
 deploy_prod_primary_job:
   stage: deploy_prod
   tags:
     - msul
+  environment:
+    name: production
+    url: http://sandhill.lib.msu.edu
+  when: manual
   only:
     - master
+  dependencies:
+    - deploy_stage_job
   script:
-    - ssh $CONNECT_PROD1 git -C $PATH_PROD fetch origin master
-    - ssh $CONNECT_PROD1 git -C $PATH_PROD checkout master
-    - ssh $CONNECT_PROD1 git -C $PATH_PROD pull origin master
+    - ssh $CONNECT_PROD1 git -C $REPO_PATH reset HEAD --hard
+    - ssh $CONNECT_PROD1 git -C $REPO_PATH fetch origin
+    - ssh $CONNECT_PROD1 git -C $REPO_PATH checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_PROD1 docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - ssh $CONNECT_PROD1 sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
+    - ssh $CONNECT_PROD1 echo "Replacing _TAG_ with $CI_COMMIT_SHORT_SHA in docker-compose.yml"
+    - ssh $CONNECT_PROD1 sed -i "s/_TAG_/$CI_COMMIT_SHORT_SHA/g" $REPO_PATH/docker-compose.yml
+    - ssh $CONNECT_PROD1 sudo cp $REPO_PATH/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
     - ssh $CONNECT_PROD1 sudo systemctl daemon-reload
     - ssh $CONNECT_PROD1 sudo systemctl enable sandhill-stack
-    - ssh $CONNECT_PROD1 docker-compose -f $PATH_PROD/docker-compose.yml pull
+    - ssh $CONNECT_PROD1 docker-compose -f $REPO_PATH/docker-compose.yml pull
     - ssh $CONNECT_PROD1 sudo systemctl restart sandhill-stack
     - sleep 4
     - ssh $CONNECT_PROD1 sudo systemctl status sandhill-stack
-    - ssh $CONNECT_PROD1 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD ) -eq 200 ]]"
+    - ssh $CONNECT_PROD1 "docker exec sandhill pytest -m functional --no-cov"
 
 deploy_prod_secondary_job:
   stage: deploy_prod
   tags:
     - msul
+  environment:
+    name: production secondary
+    url: http://sandhillm.lib.msu.edu
+  when: manual
   only:
     - master
+  dependencies:
+    - deploy_stage_job
   script:
-    - ssh $CONNECT_PROD2 git -C $PATH_PROD fetch origin master
-    - ssh $CONNECT_PROD2 git -C $PATH_PROD checkout master
-    - ssh $CONNECT_PROD2 git -C $PATH_PROD pull origin master
+    - ssh $CONNECT_PROD2 git -C $REPO_PATH reset HEAD --hard
+    - ssh $CONNECT_PROD2 git -C $REPO_PATH fetch origin
+    - ssh $CONNECT_PROD2 git -C $REPO_PATH checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_PROD2 docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - ssh $CONNECT_PROD2 sudo cp $PATH_PROD/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
+    - ssh $CONNECT_PROD2 echo "Replacing _TAG_ with $CI_COMMIT_SHORT_SHA in docker-compose.yml"
+    - ssh $CONNECT_PROD2 sed -i "s/_TAG_/$CI_COMMIT_SHORT_SHA/g" $REPO_PATH/docker-compose.yml
+    - ssh $CONNECT_PROD2 sudo cp $REPO_PATH/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
     - ssh $CONNECT_PROD2 sudo systemctl daemon-reload
     - ssh $CONNECT_PROD2 sudo systemctl enable sandhill-stack
-    - ssh $CONNECT_PROD2 docker-compose -f $PATH_PROD/docker-compose.yml pull
+    - ssh $CONNECT_PROD2 docker-compose -f $REPO_PATH/docker-compose.yml pull
     - ssh $CONNECT_PROD2 sudo systemctl restart sandhill-stack
     - sleep 4
     - ssh $CONNECT_PROD2 sudo systemctl status sandhill-stack
-    - ssh $CONNECT_PROD2 "[[ $( curl -s -o /dev/null -I -w \"%{http_code}\" $SITE_PROD2 ) -eq 200 ]]"
+    - ssh $CONNECT_PROD2 "docker exec sandhill pytest -m functional --no-cov"
+

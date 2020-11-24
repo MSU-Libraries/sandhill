@@ -2,7 +2,7 @@ version: '2'
 
 services:
     sandhill:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:_TAG_
       container_name: sandhill
       restart: always
       expose:
@@ -11,10 +11,10 @@ services:
         nonroutable_net:
       environment:
         - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom-prod
-        - FEDORA_URL=http://d.lib.msu.edu:8080/fedora
+        - FEDORA_URL=http://repo-web.lib.msu.edu:8080/fedora
 
     nginx:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:latest
+      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:_TAG_
       container_name: nginx
       restart: always
       ports:

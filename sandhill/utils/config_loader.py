@@ -1,39 +1,53 @@
 import os
 import re
 import collections
+import operator
 import json
+from json.decoder import JSONDecodeError
 from collections import OrderedDict
 from sandhill import app
 
-route_path = os.path.join(app.instance_path, "route_configs")
-
 def load_json_config(file_path):
-    """Load a json config file"""
+    """Load a json config file
+    args:
+        file_path (str): the full path to the json file to load
+    returns:
+        (dict): the contents of the loaded json file
+    """
     loaded_config = collections.OrderedDict()
     try:
         app.logger.info("Loading json file at {0}".format(file_path))
         with open(file_path) as json_config_file:
             loaded_config = json.load(json_config_file, object_pairs_hook=collections.OrderedDict)
-    except IOError as io_exe:
-        app.logger.error("IOError loading file occured: {0}".format(io_exe))
+    except OSError as o_err:
+        app.logger.error(f"Unable to read json file at path: {file_path} Error: {o_err}")
+    except JSONDecodeError as j_err:
+        app.logger.error(f"Malformed json at path: {file_path} Error: {j_err}")
     return loaded_config
 
-def get_all_routes():
+def get_all_routes(routes_dir="config/routes/"):
     '''
-    Finds all the json files with within /instance/route_configs
+    Finds all the json files with within given directory
     that contain a "route" key
+    args:
+        (str): the directory to look for route configs. Default = config/routes/
+    returns:
+        (list of str): all of the route rules found
     '''
+    route_path = os.path.join(app.instance_path, routes_dir)
     routes = []
     var_counts = {}
-
-    for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
-        data = load_json_config(conf_file)
-        if "route" in data:
-            if isinstance(data["route"],list):
-                for r in data["route"]:
-                    routes.append(r)
-            else:
-                routes.append(data["route"])
+    try:
+        for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
+            data = load_json_config(conf_file)
+            if "route" in data:
+                if isinstance(data["route"],list):
+                    for r in data["route"]:
+                        routes.append(r)
+                else:
+                    routes.append(data["route"])
+    except FileNotFoundError as f_err:
+        app.logger.error(f"Route dir not found at path {route_path}. Error: {f_err}")
 
     # determine the number of variables in each route and add to dictionary
     for rule in routes:
@@ -42,32 +56,35 @@ def get_all_routes():
         var_counts[rule] = len(matches)
 
     # order the dictionary by lowest number of variables to greatest
-    var_counts = sorted(var_counts.items(), key=lambda x: x[1])
+    var_counts = sorted(var_counts.items(), key=operator.itemgetter(1))
 
     # return the list of the sorted routes
     return [r[0] for r in var_counts]
 
-def load_route_config(route_rule):
+def load_route_config(route_rule, routes_dir="config/routes/"):
     '''
-    Return the json data for the provided route_config
+    Return the json data for the provided directory
+    args:
+        route_rule (str): the route rule to match to in the json configs (the `route` key)
+        routes_dir (str): the path to look for route configs. Default = config/routes/
+    returns:
+        (dict): The loaded json of the matched route config
     '''
-    for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
-        data = load_json_config(conf_file)
-        if "route" in data:
-            if isinstance(data["route"],list):
-                if route_rule in data["route"]:
-                    break
-            else:
-                if data["route"] == route_rule:
-                    break
+    route_path = os.path.join(app.instance_path, routes_dir)
+    data = OrderedDict()
+    try:
+        for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
+            data = load_json_config(conf_file)
+            if "route" in data:
+                if isinstance(data["route"],list):
+                    if route_rule in data["route"]:
+                        break
+                else:
+                    if data["route"] == route_rule:
+                        break
+    except FileNotFoundError as f_err:
+        app.logger.error(f"Route dir not found at path {route_path}. Error: {f_err}")
     return data
-
-def load_search_config(file_name):
-    """
-    loads the search config file from instance/search/basic_search.json
-    """
-    config_path = os.path.join(app.instance_path, "search_configs", file_name)
-    return load_json_config(config_path)
 
 def load_json_configs(path, recurse=False):
     """
@@ -75,8 +92,12 @@ def load_json_configs(path, recurse=False):
     args:
         path (string): path to the dir for the configs
         recurse (bool): if set does the recursive walk into the dir
+    returns:
+        (dict): dictionary with a key of the file path and a value of the loaded json
     """
     config_files = {}
+    if not os.path.isdir(path):
+        app.logger.warning(f"Failed to load json configs; invalid directory: {path}")
     for root, dirs, files in  os.walk(path):
         for config_file in files:
             if config_file.endswith('.json'):
@@ -84,4 +105,5 @@ def load_json_configs(path, recurse=False):
                 config_files[config_file_path] = load_json_config(config_file_path)
         if not recurse:
             break
+
     return config_files

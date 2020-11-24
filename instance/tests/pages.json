@@ -1,0 +1,185 @@
+[
+    {
+        "page": "/",
+        "code": 200,
+        "contains": [
+            "Welcome to the MSU Libraries Digital Repository"
+        ]
+    },
+    {
+        "page": "/favicon.ico",
+        "code": 200
+    },
+    {
+        "page": "/etd/1000",
+        "code": 200
+    },
+    {
+        "page": "/path/does/not/exist",
+        "code": 404
+    },
+    {
+        "page": "/search.xml",
+        "code": 501
+    },
+    {
+        "page": "/search",
+        "code": 200
+    },
+    {
+        "_comment": "Testing ampersand use in the search query",
+        "page": "/search?fq=name_primary:O.M.%5C%20Scott%5C%20%5C%26%5C%20Sons",
+        "code": 200
+    },
+    {
+        "page": "/search.json",
+        "code": 200,
+        "contains": [
+            "\"responseHeader\"",
+            "\"status\": 0"
+        ]
+    },
+    {
+        "page": "/dmhsp/10",
+        "code": 501
+    },
+    {
+        "page": "/wosl/9000",
+        "code": 404
+    },
+    {
+        "page": "/zzzzzz/1234",
+        "code": 404
+    },
+    {
+        "page": "/etd/100/TN/view",
+        "code": 200
+    },
+    {
+        "page": "/etd/100/TN",
+        "code": 404
+    },
+    {
+        "page": "/etd/100/TN/invalidaction",
+        "code": 400
+    },
+    {
+        "page": "/etd/100/INVALID/view",
+        "code": 404
+    },
+    {
+        "page": "/iiif/dmhsp%3A558/info.json",
+        "code": 200,
+        "contains": [
+            "\"protocol\":\"http://iiif.io/api/image\""
+        ]
+    },
+    {
+        "page": "/iiif/invalidpid/info.json",
+        "code": 404
+    },
+    {
+        "_comment": "test an embargoed datastream",
+        "page": "/etd/988/OBJ/view",
+        "code": 403
+    },
+    {
+        "_comment": "test an embargoed etd with allowed datastream",
+        "page": "/etd/988/MODS/view",
+        "code": 200
+    },
+    {
+        "_comment": "test that the OBJ datastream is not on the item page",
+        "page": "/etd/988",
+        "code": 200,
+        "excludes": [
+            "/etd/988/OBJ/view"
+        ]
+    },
+    {
+        "_comment": "test embargoed etd with no embargo_datastream_ss set",
+        "page": "/etd/1655/OBJ/view",
+        "code": 403
+    },
+    {
+        "_comment": "test embargoed etd with no embargo_datastream_ss set",
+        "page": "/etd/1655/MODS/view",
+        "code": 403
+    },
+    {
+        "_comment": "test that the item page loads on an embargoed etd with no embargo_datastream_ss set and it does not load the iframe that dislays the pdf in PDF.js viewer",
+        "page": "/etd/1655",
+        "code": 200,
+        "excludes": [
+            "/etd/1655/OBJ/view",
+            "<iframe class=\"sh-pdf-viewer\""
+        ]
+    },
+    {
+        "page": "/etd/100",
+        "code": 200,
+        "_comment": "Confirm that the item page loads with the PDF.js viewer",
+        "contains": [
+            "/etd/100/OBJ/view",
+            "<iframe id=\"sh-pdf-viewer\""
+        ]
+    },
+    {
+        "page": "/etd/100/OBJ/view",
+        "code": 200
+    },
+    {
+        "page": "/etd/100/MODS/view",
+        "code": 200,
+        "contains": ["mods:mods"]
+    },
+    {
+        "_comment": "tests metadata elements on the page: title, linked list, expand field",
+        "page":"/etd/1234",
+        "code": 200,
+        "contains": [
+            "<h1>Broadening the concept of civic agriculture : the history of civic food systems in Progressive Era Grand Rapids, Michigan</h1>",
+            "<a href=\"/search?fq=subject_display:Agriculture%5C-%5C-Social%5C%20aspects\">Agriculture--Social aspects</a>",
+            "A decade ago, Thomas Lyson coined the term"
+        ]
+    },
+    {
+        "page":"/static/repo_pdfjs/web/viewer.html",
+        "code": 200,
+        "_comment": "Test that the static viewer files are loaded on to the page",
+        "contains": [
+            "<div id=\"mainContainer\">"
+        ]
+    },
+    {
+        "page": "/etd/100",
+        "code": 200,
+        "_comment": "Confirm that the item page has rights badge",
+        "contains": [
+            "rightsstatements.org",
+            "alt=\"In Copyright\""
+        ]
+    },
+    {
+        "page": "/etd/2016",
+        "code": 200,
+        "_comment": "Test indefinite embargo",
+        "contains": [
+            "Indefinite",
+            "This item is not available to view or download."
+        ]
+    },
+    {
+        "page": "/etd/100",
+        "code": 200,
+        "_comment": "Test no embargo",
+        "excludes": [
+            "Embargo End Date"
+        ]
+    },
+    {
+        "page": "/static/css/compiled/crane.css",
+        "code": 200,
+        "_comment": "scss compiles and creates the css file"
+    }
+]

@@ -1,0 +1,48 @@
+<div class="mt-4 mb-2">
+    <ul class="nav nav-pills">
+        <li class="mr-1">
+            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
+                <img src="{{ url_for('static', filename='icons/Icon_Download.svg') }}" role="presentation" alt="" class="pr-1"/>
+                Download
+            </button>
+            <ul class="dropdown-menu sh-dropdown bg-light mw-25">
+                {% if item.rights_dpla_uri | first in rights and 'dark' in rights[item.rights_dpla_uri | first] %}
+                     <li class="dropdown-item sh-no-highlight">
+                            <a href="{{ item.rights_dpla_uri | first }}"><img src="{{ rights[item.rights_dpla_uri | first]['dark'] }}" alt="{{ item.rights_dpla | head }}" class="pr-1 sh-rights-badge"/></a>
+                    </li>
+                    <div class="dropdown-divider"></div>
+                {% endif %}
+                 <li class="dropdown-item"><a href="#">Original file (PDF) 1.6 MB</a></li>
+                 <li class="dropdown-item"><a href="#">Low-resolution image (JPG) 1.2 MB</a></li>
+                 <li class="dropdown-item"><a href="#">Full text (TXT) 763 KB</a></li>
+            </ul>
+        </li>
+        <li class="mr-1">
+            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
+                <img src="{{ url_for('static', filename='icons/Icon_Share.svg') }}" role="presentation" alt="" class="pr-1"/>
+                Share
+            </button>
+            <ul class="dropdown-menu sh-dropdown bg-light mw-25">
+                 <li class="dropdown-item sh-no-highlight">
+                    {% set copy_link = "https://n2t.net/ark:/99999/fk49323622" %}
+                    {% include 'item_page_blocks/copy_field.html.j2' %}
+                 </li>
+            </ul>
+        </li>
+        <li>
+            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <img src="{{ url_for('static', filename='icons/Icon_Contact.svg') }}" role="presentation" alt="" class="pr-1"/>
+                Contact Us
+            </button>
+            <ul class="dropdown-menu sh-dropdown bg-light mw-25">
+                 <li class="dropdown-item sh-no-highlight">
+                    Email us at <a href="mailto:repoteam@lib.msu.edu?subject=Inquiry on https://d.lib.msu.edu/{{ view_args.namespace }}/{{ view_args.id}}">repoteam@lib.msu.edu</a>
+                    {% set copy_str = "repoteam@lib.msu.edu" %}
+                    {% include 'item_page_blocks/copy_field_icon.html.j2' %}
+                 </li>
+                 <div class="dropdown-divider"></div>
+                <li class="dropdown-item"><a href="https://lib.msu.edu/general/access-remediation/">Report accessibility issue</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

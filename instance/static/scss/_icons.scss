@@ -1,0 +1,22 @@
+/* Icons - Start */
+.sh-icon {
+    background: transparent;
+
+    &:hover {
+        background: $clr-gray;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.sh-icon-narrow {
+    padding-bottom: 0.2rem !important;
+    padding-left: 0.2rem !important;
+}
+/* Icons - End */
+
+/* Rights badge - Start */
+.sh-rights-badge {
+    height: 2.5rem;
+}
+/* Rights badge - End */
