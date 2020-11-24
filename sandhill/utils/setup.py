@@ -2,6 +2,7 @@ import os
 import sass
 import logging
 from flask import Flask
+from flask_debugtoolbar import DebugToolbarExtension
 from flask.logging import create_logger
 from sandhill import app
 from sandhill.commands.compile_scss import run_compile
@@ -32,6 +33,8 @@ app.secret_key = app.config["SECRET_KEY"]
 
 # set debug mode
 app.debug = bool(app.config["DEBUG"])
+if app.debug:
+    toolbar = DebugToolbarExtension(app)
 
 # Set log level
 app.logger = create_logger(app)
