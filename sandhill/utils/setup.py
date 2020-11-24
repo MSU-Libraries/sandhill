@@ -35,7 +35,6 @@ app.secret_key = app.config["SECRET_KEY"]
 app.debug = bool(app.config["DEBUG"])
 if app.debug:
     toolbar = DebugToolbarExtension(app)
-    #toolbar.init_app(app)
 
 # Set log level
 app.logger = create_logger(app)
