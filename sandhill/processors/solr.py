@@ -22,6 +22,7 @@ def select(data_dict, url=None, api_get_function=api_get):
     returns:
         json: response from solr
     '''
+
     response = None
     url = establish_url(url, os.environ.get('SOLR_URL', None))
     url = url + "/select"
