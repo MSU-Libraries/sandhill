@@ -184,3 +184,6 @@ def test_format_date():
     res = filters.format_date("9999-12-31", "different")
     assert res == "different"
 
+def test_sandbug():
+    # calling the debug logger
+    filters.sandbug("test") 

@@ -65,6 +65,12 @@ def test_handle_template():
             resp = main.handle_template("note-there.html.j2", "not_there", **data_dict)
         assert http_exc.type.code == 501
 
+    # Test with a syntax error in the template
+    with app.test_request_context('/home'):
+        with raises(HTTPException) as http_exc:
+            resp = main.handle_template("invalid.html.j2", "invalid", **data_dict)
+        assert http_exc.type.code == 500
+
 def test_handle_stream():
     '''
     Tests the handle_stream function
