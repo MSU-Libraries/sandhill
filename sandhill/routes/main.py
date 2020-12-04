@@ -69,7 +69,8 @@ def handle_template(template, response_var, **data):
             return data[response_var]
         return render_template(template, **data)
     except TemplateNotFound as tmpl_exe:
-        app.logger.warning(f"Failure when rendering {template}. Could not find template to render: {tmpl_exe}")
+        app.logger.warning(f"Failure when rendering {template}."
+                           f"Could not find template to render: {tmpl_exe}")
         abort(501)
     except TemplateError as tmpl_exe:
         app.logger.warning(f"An error has occured when rendering {template}: {tmpl_exe}")
