@@ -31,6 +31,7 @@ def establish_url(url, fallback):
     """
     url = url if url else fallback
     if not url or not validators.url(url):
+        app.logger.debug(f"Api url provided is not valid. Url: {url}")
         abort(400)
     return url
 

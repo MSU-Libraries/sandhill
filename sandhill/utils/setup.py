@@ -35,6 +35,8 @@ app.secret_key = app.config["SECRET_KEY"]
 app.debug = bool(app.config["DEBUG"])
 if app.debug:
     toolbar = DebugToolbarExtension(app)
+    toolbar._success_codes.extend([400, 401, 403, 404, 500, 501])
+
 
 # Set log level
 app.logger = create_logger(app)

@@ -4,7 +4,7 @@ Entry point for the web application
 from flask import request, render_template, abort
 from flask import Response as FlaskResponse
 from requests.models import Response as RequestsResponse
-from jinja2.exceptions import TemplateNotFound
+from jinja2.exceptions import TemplateNotFound, TemplateError
 from sandhill.utils.decorators import add_routes
 from sandhill.utils.generic import ifnone
 from sandhill.utils.config_loader import load_route_config
@@ -68,9 +68,13 @@ def handle_template(template, response_var, **data):
         if response_var in data and isinstance(data[response_var], FlaskResponse):
             return data[response_var]
         return render_template(template, **data)
-    except TemplateNotFound:
-        app.logger.warning("Could not find template to render: {0}".format(template))
+    except TemplateNotFound as tmpl_exe:
+        app.logger.warning(f"Failure when rendering {template}."
+                           f"Could not find template to render: {tmpl_exe}")
         abort(501)
+    except TemplateError as tmpl_exe:
+        app.logger.warning(f"An error has occured when rendering {template}: {tmpl_exe}")
+        abort(500)
 
 def handle_stream(stream_var, **data):
     '''
