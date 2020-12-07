@@ -4,6 +4,7 @@ services:
 
 stages:
   - unittest_and_lint
+  - scan
   - build
   - deploy_test
   - release
@@ -31,6 +32,48 @@ unittest_and_lint_job:
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
     - $CI_PROJECT_DIR/env/bin/pytest
     - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
+
+code_quality:
+  stage: scan
+  tags:
+    - msul
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+
+# NOTE: Can't have both this and `code_quality` job enabled at the same time.
+# This job will save the quality report to a pretty html document that
+# allows filtering.
+#code_quality_report:
+#  stage: scan
+#  tags:
+#    - msul
+#  variables:
+#    REPORT_FORMAT: html
+#  artifacts:
+#    paths: [gl-code-quality-report.html]
+
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+sast:
+  stage: scan
+  tags:
+    - msul
+  image: registry.gitlab.com/gitlab-org/gl-sast:latest
+  script:
+    - docker run 
+        --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}" 
+        --env SAST_DISABLE_REMOTE_CHECKS="${SAST_DISABLE_REMOTE_CHECKS:-false}" 
+        --volume "$PWD:/code" 
+        --volume /var/run/docker.sock:/var/run/docker.sock 
+        "registry.gitlab.com/gitlab-org/security-products/sast:11-2-stable" /app/bin/run /code
+  artifacts:
+    paths: [gl-sast-report.json]
+    reports:
+      sast: gl-sast-report.json
+
 
 build_job:
   stage: build

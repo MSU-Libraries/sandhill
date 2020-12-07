@@ -1,0 +1,36 @@
+
+version: "2"
+# https://docs.codeclimate.com/docs/list-of-engines
+plugins:
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - javascript
+        - python
+  eslint:
+    enabled: true
+    channel: __ESLINT_CHANNEL__
+  fixme:
+    enabled: true
+  markdownlint:
+    enabled: true
+  pep8:
+    enabled: true
+  radon: 
+    enabled: true
+  scss-lint:
+    enabled: true
+  shellcheck:
+    enabled: true
+  sonar-python:
+    enabled: true
+exclude_patterns:
+  - env/
+  - "**/repo_pdfjs"
+  - "**/test/"
+  - "**/tests/"
+  - "**/test_instance/"
+  - coverage/
