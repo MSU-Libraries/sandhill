@@ -1,0 +1,52 @@
+{
+    "files": [
+        {
+            "label": "Original file",
+            "mime_type_field": "fedora_datastream_latest_OBJ_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_OBJ_SIZE_ms",
+            "datastream": "OBJ",
+            "restricted": true 
+        },
+        {
+            "label": "Cover image",
+            "mime_type_field": "fedora_datastream_latest_PREVIEW_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_PREVIEW_SIZE_ms",
+            "datastream": "PREVIEW"
+        },
+        {
+            "label": "Full text",
+            "mime_type_field": "fedora_datastream_latest_FULL_TEXT_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_FULL_TEXT_SIZE_ms",
+            "datastream": "FULL_TEXT",
+            "restricted": true
+        },
+        {
+            "label": "Supplemental data",
+            "mime_type_field": "fedora_datastream_latest_DATA_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_DATA_SIZE_ms",
+            "datastream": "DATA",
+            "restricted": true
+        }
+    ],
+
+    "metadata": [
+        {
+            "label": "Descriptive metadata (MODS)",
+            "mime_type_field": "fedora_datastream_latest_MODS_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_MODS_SIZE_ms",
+            "datastream": "MODS"
+        },
+        {
+            "label": "Descriptive metadata (Dublin Core)",
+            "mime_type_field": "fedora_datastream_latest_DC_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_DC_SIZE_ms",
+            "datastream": "DC"
+        },
+        {
+            "label": "Descriptive metadata (NDLTD)",
+            "mime_type_field": "fedora_datastream_latest_NDLTD_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_NDLTD_SIZE_ms",
+            "datastream": "NDLTD"
+        }
+    ]
+}

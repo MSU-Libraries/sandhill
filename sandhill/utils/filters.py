@@ -3,6 +3,7 @@ import urllib
 import validators
 import os
 from ast import literal_eval
+import mimetypes
 from sandhill import app
 from sandhill.utils.generic import ifnone
 from datetime import datetime
@@ -26,6 +27,23 @@ def size_format(value):
 def is_list(value):
     """ Check if a value is a list """
     return isinstance(value, list)
+
+@app.template_filter()
+def get_extension(value):
+    """Take in mimetype and return extension."""
+    extension = None
+    preferred = [".txt", ".jpg"]
+    all_extensions = mimetypes.guess_all_extensions(value)
+    if all_extensions:
+        for ext in all_extensions:
+            if ext in preferred:
+                extension = ext
+                break
+        if not extension:
+            extension = all_extensions[0]
+    else:
+        extension = "???"
+    return extension.upper()[1:]
 
 @app.template_filter()
 def generate_datastream_url(value, obj_type='OBJ', action="view"):
@@ -167,7 +185,7 @@ def render_literal(context, value, fallback_to_str=True):
 def format_date(value: str, default: str ="Indefinite") -> str:
     '''
     Format the provided embargo end date as a human readable string
-    If there is no end date, it will show as 'Indefinite' (or the other 
+    If there is no end date, it will show as 'Indefinite' (or the other
     default value prodived). It will only mark a valid date value as invalid
     if it is the year 9999.
     args:
@@ -197,3 +215,4 @@ def sandbug(value: str):
         value (str): Message to write to the log
     '''
     app.logger.debug(f"SANDBUG: {value}")
+    return ""

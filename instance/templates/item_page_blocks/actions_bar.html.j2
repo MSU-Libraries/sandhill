@@ -5,6 +5,7 @@
                 <img src="{{ url_for('static', filename='icons/Icon_Download.svg') }}" role="presentation" alt="" class="pr-1"/>
                 Download
             </button>
+
             <ul class="dropdown-menu sh-dropdown bg-light mw-25">
                 {% if item.rights_dpla_uri | first in rights and 'dark' in rights[item.rights_dpla_uri | first] %}
                      <li class="dropdown-item sh-no-highlight">
@@ -12,9 +13,7 @@
                     </li>
                     <div class="dropdown-divider"></div>
                 {% endif %}
-                 <li class="dropdown-item"><a href="#">Original file (PDF) 1.6 MB</a></li>
-                 <li class="dropdown-item"><a href="#">Low-resolution image (JPG) 1.2 MB</a></li>
-                 <li class="dropdown-item"><a href="#">Full text (TXT) 763 KB</a></li>
+                {% include 'item_page_blocks/downloads.html.j2' %}
             </ul>
         </li>
         <li class="mr-1">
