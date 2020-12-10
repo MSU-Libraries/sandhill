@@ -2330,7 +2330,8 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 .visibleLargeView,
 .visibleMediumView,
-.visibleSmallView {
+.visibleSmallView,
+.visibleXSmallView{
   display: none;
 }
 
@@ -2403,6 +2404,13 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 
 @media all and (max-width: 535px) {
+  .hiddenXSmallView, .hiddenXSmallView * {
+    display: none;
+  }
+
+  .visibleXSmallView {
+    display: inherit;
+  }
   #scaleSelectContainer {
     display: none;
   }
