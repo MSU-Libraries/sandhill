@@ -20,7 +20,7 @@ def size_format(value):
     while nbytes >= 1024 and i < len(suffixes)-1:
         nbytes /= 1024
         i += 1
-    f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
+    f = ('%.1f' % nbytes).rstrip('0').rstrip('.')
     return '%s %s' % (f, suffixes[i])
 
 @app.template_filter()

@@ -1,7 +1,7 @@
 <div class="mt-4 mb-2">
     <ul class="nav nav-pills">
         <li class="mr-1">
-            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
+            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-flip="false" data-offset="-1,0,0,0" data-toggle="dropdown" aria-expanded="false"> 
                 <img src="{{ url_for('static', filename='icons/Icon_Download.svg') }}" role="presentation" alt="" class="pr-1"/>
                 Download
             </button>
@@ -22,27 +22,41 @@
             </ul>
         </li>
         <li class="mr-1">
-            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> 
+            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-expanded="false"> 
                 <img src="{{ url_for('static', filename='icons/Icon_Share.svg') }}" role="presentation" alt="" class="pr-1"/>
                 Share
             </button>
             <ul class="dropdown-menu sh-dropdown bg-light mw-25">
-                 <li class="dropdown-item sh-no-highlight">
-                    {% set copy_link = "https://n2t.net/ark:/99999/fk49323622" %}
-                    {% include 'item_page_blocks/copy_field.html.j2' %}
+                 <li class="dropdown-header sh-color-gray-dark sh-font-size-md sh-no-highlight disable-close-on-click">
+                    <form>
+                      <div class="sh-no-highlight">
+                        {% if not item.ark_url|length > 0 and not item.doi_url|length > 0 %}
+                            <span>Coming soon!</span>
+                        {% else %}
+                            <label for="permalink">Permalink</label>
+                            <input type="text" id="permalink" value="{{ item.ark_url if item.ark_url else item.doi_url }}" id="copy-input">
+                            <span class="input-group-btn">
+                              <button class="btn btn-default copy-on-click" data-copytarget='#permalink' type="button" id="copy-button">
+                                <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" aria-label="Copy permalink" alt="Copy permalink" class="action_bar_icon pr-1"/>
+                              </button>
+                            </span>
+                        {% endif %}
+                      </div>
+                    </form>
                  </li>
             </ul>
         </li>
         <li>
-            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button class="btn px-0 mr-2 sh-button-dropdown dropdown-toggle" data-flip="false" data-toggle="dropdown" aria-expanded="false">
                 <img src="{{ url_for('static', filename='icons/Icon_Contact.svg') }}" role="presentation" alt="" class="pr-1"/>
                 Contact Us
             </button>
             <ul class="dropdown-menu sh-dropdown bg-light mw-25">
-                 <li class="dropdown-item sh-no-highlight">
-                    Email us at <a href="mailto:repoteam@lib.msu.edu?subject=Inquiry on https://d.lib.msu.edu/{{ view_args.namespace }}/{{ view_args.id}}">repoteam@lib.msu.edu</a>
-                    {% set copy_str = "repoteam@lib.msu.edu" %}
-                    {% include 'item_page_blocks/copy_field_icon.html.j2' %}
+                 <li class="dropdown-header sh-color-gray-dark sh-font-size-md sh-no-highlight disable-close-on-click">
+                    Email us at <a id='email_link' href="mailto:repoteam@lib.msu.edu?subject=Inquiry on https://d.lib.msu.edu/{{ view_args.namespace }}/{{ view_args.id}}">repoteam@lib.msu.edu</a>
+                    <button class="btn btn-default px-0 py-0 sh-icon sh-icon-narrow copy-on-click" data-copytarget="#email_link" type="button" id="copy-button">
+                        <img src="{{ url_for('static', filename='icons/Icon_Clipboard.svg') }}" aria-label="Copy email" alt="Copy email" class="pr-1"/>
+                    </button>
                  </li>
                  <div class="dropdown-divider"></div>
                 <li class="dropdown-item"><a href="https://lib.msu.edu/general/access-remediation/">Report accessibility issue</a></li>
