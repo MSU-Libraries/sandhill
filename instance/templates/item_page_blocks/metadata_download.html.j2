@@ -6,9 +6,9 @@
                 Download Metadata
             </button>
             <ul class="dropdown-menu sh-dropdown bg-light">
-                 <li class="dropdown-item"><a href="#">MODS</a></li>
-                 <li class="dropdown-item"><a href="#">Dublin Core</a></li>
-                 <li class="dropdown-item"><a href="#">NDLTD</a></li>
+            {% with download_type="metadata"%}
+                {% include 'item_page_blocks/downloads.html.j2' %}
+            {% endwith %}
             </ul>
         </li>
     </ul>

@@ -1,12 +1,13 @@
-{% set displayed = False %}
-
-{% for ds in download_conf.files %}
+{% set displayed = namespace(any=False) %}
+<h6 class="dropdown-header">{{ download_type | title }}</h6>
+{% for ds in download_conf[download_type] %}
     {% if ds.datastream in item['fedora_datastreams_ms'] and not (ds.restricted and restriction) %}
-        {% set displayed = True %}
+        {% set displayed.any = True %}
         <li class="dropdown-item"><a href="{{ item['PID'] | generate_datastream_url(ds.datastream, "download")  }}">{{ ds.label }} ({{ item[ds.mime_type_field] | head | get_extension }}) {{ item[ds.file_size_field] | head | size_format }}</a></li>
     {% endif %}
 {% endfor %}
 
-{% if not displayed %}
+{% if not displayed.any %}
     <li class="dropdown-item">No downloads available</li>
 {% endif %}
+

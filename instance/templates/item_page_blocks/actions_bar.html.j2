@@ -13,7 +13,12 @@
                     </li>
                     <div class="dropdown-divider"></div>
                 {% endif %}
-                {% include 'item_page_blocks/downloads.html.j2' %}
+                {% for download_type in download_conf %}
+                    {% include 'item_page_blocks/downloads.html.j2' %}
+                    {% if not loop.last %}
+                        <div class="dropdown-divider"></div>
+                    {% endif %}
+                {% endfor %}
             </ul>
         </li>
         <li class="mr-1">

@@ -31,19 +31,19 @@
 
     "metadata": [
         {
-            "label": "Descriptive metadata (MODS)",
+            "label": "MODS",
             "mime_type_field": "fedora_datastream_latest_MODS_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_MODS_SIZE_ms",
             "datastream": "MODS"
         },
         {
-            "label": "Descriptive metadata (Dublin Core)",
+            "label": "Dublin Core",
             "mime_type_field": "fedora_datastream_latest_DC_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_DC_SIZE_ms",
             "datastream": "DC"
         },
         {
-            "label": "Descriptive metadata (NDLTD)",
+            "label": "NDLTD",
             "mime_type_field": "fedora_datastream_latest_NDLTD_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_NDLTD_SIZE_ms",
             "datastream": "NDLTD"
