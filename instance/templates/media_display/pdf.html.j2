@@ -1,3 +1,3 @@
 <div class="sh-pdf-container">
-    <iframe class="sh-pdf-viewer" src="{{ url_for('static', filename='repo_pdfjs') }}/web/viewer.html?file={{ item['PID'] | generate_datastream_url("OBJ") }}" title="webviewer" frameborder="0"></iframe>
+    <iframe class="sh-pdf-viewer border-0" src="{{ url_for('static', filename='repo_pdfjs') }}/web/viewer.html?file={{ item['PID'] | generate_datastream_url("OBJ") }}" title="webviewer"></iframe>
 </div>

@@ -1,5 +1,5 @@
 {% set displayed = namespace(any=False) %}
-<span class="dropdown-header disable-close-on-click sh-color-gray-dark h5">{{ download_type | title }}</span>
+<li class="dropdown-header disable-close-on-click sh-color-gray-dark h5">{{ download_type | title }}</li>
 {% for ds in download_conf[download_type] %}
     {% if ds.datastream in item['fedora_datastreams_ms'] and not (ds.restricted and restriction) %}
         {% set displayed.any = True %}
