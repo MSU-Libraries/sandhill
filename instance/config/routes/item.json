@@ -53,6 +53,14 @@
             "on_fail": 403,
             "conditions": "embargo.restriction_conditions",
             "match_all": true
+        },
+        {
+            "name": "download_conf",
+            "processor": "file.load_json",
+            "on_fail": 501,
+            "paths": [
+                "config/downloads/{{ metadata_conf.download_conf }}"
+            ]
         }
     ]
 }

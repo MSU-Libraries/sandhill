@@ -1,6 +1,7 @@
+{% set aria_label_id = "sh-metadata-field-"+display_conf['label'] | replace(' ', '')  %} 
 <dl class="row my-3">
-    <dt class="col-12 col-lg-3 col-xl-3" id="sandhill_metadata_field">{{ display_conf['label'] }}</dt>
-    <dd class="col-12 col-lg-9 col-xl-9" aria-labelledby="sandhill_metadata_field">
+    <dt class="col-12 col-lg-3 col-xl-3" id="{{ aria_label_id }}">{{ display_conf['label'] }}</dt>
+    <dd class="col-12 col-lg-9 col-xl-9">
         {% if (display_conf['value'] | render_literal) | is_list %}
             {% for metadata_value in (display_conf['value'] | render_literal) %}
                 {% include 'item_page_blocks/display_field.html.j2' %}
