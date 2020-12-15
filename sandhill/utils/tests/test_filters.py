@@ -9,10 +9,17 @@ def test_size_format():
     assert filters.size_format(100) == "100 B"
     assert filters.size_format(2048) == "2 KB"
     assert filters.size_format(2411725) == "2.3 MB"
-    assert filters.size_format(1202590843) == "1.12 GB"
-    assert filters.size_format(2245202743919) == "2.04 TB"
+    assert filters.size_format(1202590843) == "1.1 GB"
+    assert filters.size_format(2245202743919) == "2 TB"
     assert filters.size_format("big file") == "0 B"
     assert filters.size_format("5138022") == "4.9 MB"
+
+def test_get_extension():
+    assert filters.get_extension('application/pdf') == "PDF"
+    assert filters.get_extension('image/jpeg') == "JPG"
+    assert filters.get_extension('image/png') == "PNG"
+    assert filters.get_extension('text/plain') == "TXT"
+    assert filters.get_extension('undefined/undefined') == "??"
 
 def test_islist():
     assert filters.is_list([]) == True
