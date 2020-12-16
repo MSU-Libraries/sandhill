@@ -188,7 +188,8 @@
         {
             "value": "{{ item.catalog_record }}",
             "label": "Catalog Record",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "{{ item.catalog_record }}"
         },
         {
             "value": "{{ item.doi_url }}",
