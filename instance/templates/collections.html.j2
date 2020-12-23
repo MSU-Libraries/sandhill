@@ -1,0 +1,67 @@
+{% extends 'base.html.j2' %}
+
+{% block title %}Collections A-Z{% endblock %}
+
+{% block plugin_js %}
+    <script>
+        // Construct dictionary splitting collections by first letter
+        var collections = [
+                {% for collection in item.response.docs %}
+                    "{{ collection.fgs_label_s|safe }}"{% if loop.index != loop.length %},{% endif %}
+                {% endfor %}
+            ];
+    </script>
+    <script src="{{ url_for('static', filename='js/collections.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scrolltop.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="px-3 px-md-4 px-lg-5 px-xl-5">
+        {# Breadcrumbs TODO -- move this to template #}
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb sh-background-none px-0">
+            <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          </ol>
+        </nav>
+
+        {# title of the page #}
+        <div class="row">
+            <div class="col-12">
+                <h2>Collections A-Z</h2>
+            </div>
+        </div>
+
+        {# A - Z navigation #}
+        <div class='pagination row'>
+            <div class='col-12'>
+                <nav aria-label='A-Z list'>
+                    <ul id="az-list" class="pagination justify-content-center"></ul>
+                </nav>
+            </div>
+        </div>
+
+        {# List all collections #}
+        {% set ns = namespace(letter = '') %} {# Using namespace because variables lose values in loops #}
+        {% for collection in item.response.docs %}
+            {% if collection.fgs_label_s.0 != ns.letter %}
+                {% set ns.letter = collection.fgs_label_s.0 %}
+                <h3 id="{{ ns.letter }}" class='{% if not loop.first %}pt-5{% endif %}'>{{ ns.letter }}</h3>
+            {% endif %}
+            <div>
+                <!--
+                <img class="border rounded img-fluid w-100"
+                    src="{{ collection.PID | generate_datastream_url("PREVIEW") }}"
+                    alt="{{ collection.fgs_label_s }}"/>
+                -->
+                <a href='/{{ collection.PID }}'>{{ collection.fgs_label_s }}</a>
+            </div>
+        {% endfor %}
+
+        {# scroll to top link #}
+        <button onclick="topFunction()" id="top" class='sh-button-return-to-top btn btn-lg' title="Go to top">
+            <img src="{{ url_for('static', filename='icons/chevron-up.svg') }}" aria-label="Return to top of page" alt="Return to top"/>
+        </button>
+
+    </div>
+{% endblock %}
+

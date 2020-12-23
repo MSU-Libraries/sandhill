@@ -25,4 +25,12 @@
         }
     }
 }
+
+.sh-button-return-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px; /* TODO -- more sassy way to do this? */
+    right: 30px; /* TODO -- more sassy way to do this? */
+    z-index: 99;
+}
 /* Dropdown buttons - End */
