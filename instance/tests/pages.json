@@ -181,5 +181,12 @@
         "page": "/static/css/compiled/crane.css",
         "code": 200,
         "_comment": "scss compiles and creates the css file"
+    },
+    {
+        "page": "/collections",
+        "code": 200,
+        "contains": [
+            "Electronic Theses & Dissertations"
+        ]
     }
 ]
