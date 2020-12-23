@@ -53,7 +53,7 @@
                     src="{{ collection.PID | generate_datastream_url("PREVIEW") }}"
                     alt="{{ collection.fgs_label_s }}"/>
                 -->
-                <a href='/{{ collection.PID }}'>{{ collection.fgs_label_s }}</a>
+                <a href='/{{ collection.PID.split(':').0 }}'>{{ collection.fgs_label_s }}</a>
             </div>
         {% endfor %}
 

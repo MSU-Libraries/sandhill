@@ -1,1 +1,39 @@
-<title>Collection Page</title>
+{% extends 'base.html.j2' %}
+
+{% block title %}{{ item.fgs_label_s }}{% endblock %}
+
+{% block content %}
+    <div class="px-3 px-md-4 px-lg-5 px-xl-5">
+        {# Breadcrumbs TODO -- move this to template #}
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb sh-background-none px-0">
+            <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          </ol>
+        </nav>
+
+        {# title of the page #}
+        <div class="row">
+            <div class="col-12">
+                <h2>{{ item.fgs_label_s }}</h2>
+            </div>
+        </div>
+
+        {# random image #}
+        <div class='row'>
+            {% for r_item in rand_items.response.docs %}
+                {% if 'PREVIEW' in r_item.fedora_datastreams_ms %}
+                    <a class="card m-4 mh-50" style="width:18rem;" href="/{{ r_item.PID }}">
+                        <img class="card-img-top"
+                            src="{{ r_item.PID | generate_datastream_url("PREVIEW") }}"
+                            alt="{{ r_item.fgs_label_s }}"/>
+                        <div class="card-title h5">{{ r_item.fgs_label_s }}</div>
+                        {% if 'dc.description' in r_item %}
+                            <div class="card-text">{{ r_item['dc.description'].0|truncate(100, True) }}</div>
+                        {% endif %}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
