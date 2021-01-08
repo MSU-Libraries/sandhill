@@ -1,0 +1,30 @@
+<div class="w-100">
+    {% if restriction %}
+        {% if item['fedora_datastream_latest_JPG_MIMETYPE_ms'] %}
+            <img class="border rounded img-fluid w-100"
+                src="{{ item['PID'] | generate_datastream_url("JPG") }}"
+                alt="{{ item[metadata_conf['title_field']] }}"/>
+        {% else %}
+            <img class="border rounded img-fluid w-100"
+                src="{{ item['PID'] | generate_datastream_url("TN") }}"
+                alt="{{ item[metadata_conf['title_field']] }}"/>
+        {% endif %}
+
+    {% else %}
+        {% if item['fedora_datastream_latest_JPG_MIMETYPE_ms'] %}
+            <a href="{{ item['PID'] | generate_datastream_url }}">
+                <img class="border rounded img-fluid w-100"
+                    src="{{ item['PID'] | generate_datastream_url("JPG") }}"
+                    alt="{{ item[metadata_conf['title_field']] }}"/>
+            </a>
+        {% else %}
+            <a href="{{ item['PID'] | generate_datastream_url }}">
+                <img class="border rounded img-fluid w-100"
+                    src="{{ item['PID'] | generate_datastream_url("TN") }}"
+                    alt="{{ item[metadata_conf['title_field']] }}"/>
+            </a>
+        {% endif %}
+
+    {% endif %}
+</div>
+

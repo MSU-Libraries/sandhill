@@ -8,6 +8,12 @@
             "restricted": true 
         },
         {
+            "label": "High-resolution image",
+            "mime_type_field": "fedora_datastream_latest_JPG_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_JPG_SIZE_ms",
+            "datastream": "JPG"
+        },
+        {
             "label": "Cover image",
             "mime_type_field": "fedora_datastream_latest_PREVIEW_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_PREVIEW_SIZE_ms",

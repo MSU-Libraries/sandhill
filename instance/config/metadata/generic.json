@@ -1,21 +1,18 @@
 {
     "match_conditions": [
         {
-            "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
-            "match_when": ["info:fedora/islandora:sp_pdf"]
-        },
-        {
-            "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
-            "match_when": ["info:fedora/islandora:sp_pdf"]
+            "evaluate": "match all",
+            "match_when": "match all"
         }
     ],
     "title": "{{ item.fgs_label_s  | render | safe }}",
-    "media_template": "media_display/pdf.html.j2",
+    "media_template": "media_display/jpg.html.j2",
     "download_conf": "default.json",
     "display": [
         {
+            "label": "Description",
             "value": "{{ item.description }}",
-            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.collection_t }}",
@@ -105,7 +102,7 @@
         },
         {
             "value": "{{ item.extent }}",
-            "label": "Pages",
+            "label": "Extent",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
         },
         {
