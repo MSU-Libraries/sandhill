@@ -3,10 +3,6 @@
         {
             "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
             "match_when": ["info:fedora/islandora:sp_pdf"]
-        },
-        {
-            "evaluate": "{{ item['RELS_EXT_info:fedora/fedora-system:def/model#hasModel_uri_s'] }}",
-            "match_when": ["info:fedora/islandora:sp_pdf"]
         }
     ],
     "title": "{{ item.fgs_label_s  | render | safe }}",

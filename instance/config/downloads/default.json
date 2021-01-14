@@ -8,6 +8,13 @@
             "restricted": true 
         },
         {
+            "label": "Audio file",
+            "mime_type_field": "fedora_datastream_latest_PROXY_MP3_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_PROXY_MP3_SIZE_ms",
+            "datastream": "PROXY_MP3",
+            "restricted": true
+        },
+        {
             "label": "High-resolution image",
             "mime_type_field": "fedora_datastream_latest_JPG_MIMETYPE_ms",
             "file_size_field": "fedora_datastream_latest_JPG_SIZE_ms",

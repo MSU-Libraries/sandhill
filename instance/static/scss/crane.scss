@@ -19,6 +19,7 @@
 @include make-font-size-class('sh-font-size-sm');
 @include make-font-size-class('sh-font-size-xs');
 @include make-font-size-class('sh-font-size-md');
+@include make-min-w-class('sh-min-w-50');
 @include make-color-class('sh-color-green-light');
 @include make-color-class('sh-color-white');
 @include make-color-class('sh-color-gray-dark');

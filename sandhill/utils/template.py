@@ -29,13 +29,17 @@ def evaluate_conditions(conditions, context, match_all=True):
     return:
         (int): returns the number of matches matched ONLY if all are matched, else returns 0
     raises
-        KeyError: when "match_when" or "evaluate" is not in conditions
+        KeyError: when "match_when"/"match_when_not" or "evaluate" is not in conditions
     """
     matched = 0
     for match in conditions:
+        # Idea: use boosts if the matched value for 2 config files is the same, e.g. matched += boost
         check_value = render_template(match['evaluate'], context)
-        if check_value in match['match_when']:
-            # Idea: use boosts if the matched value for 2 config files is the same, e.g. matched += boost
+        if 'match_when' in match and check_value in match['match_when']:
             matched += 1
+        elif 'match_when_not' in match and check_value not in match['match_when_not']:
+            matched += 1
+        elif not any(key in ['match_when', 'match_not_when'] for key in match.keys()):
+            raise KeyError("Missing match_when or match_when_not parameter")
     # Only assigned matched value if ALL matches are successful
     return matched if matched == len(conditions) or not match_all else 0

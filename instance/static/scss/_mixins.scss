@@ -24,6 +24,19 @@
     }
 }
 
+// Generates the css for the utility class that sets a minimum width
+//
+// @params {String} $utility-class: name of the utility class
+//         Example: "sh-min-w-50" where "sh-min-w" is the prefix and "50" is the percentage
+// @return value: class with css font-size property
+@mixin make-min-w-class($utility-class) {
+    $strln: str-length(sh-min-w-);
+    $size: str-slice($utility-class, $strln+1);
+    .#{$utility-class} {
+        min-width: #{$size}#{'%'};
+    }
+}
+
 // Generates the css for the utility class that sets the font color
 //
 // @params {String} $utility-class: name of the utility class
