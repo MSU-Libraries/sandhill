@@ -181,5 +181,13 @@
         "page": "/static/css/compiled/crane.css",
         "code": 200,
         "_comment": "scss compiles and creates the css file"
+    },
+    {
+        "page": "/dmhsp/50",
+        "code": 200,
+        "_comment": "Test generic item page render",
+        "contains": [
+            "alt=\"Mauthausen Concentration Camp : View down the quarry steps\""
+        ]
     }
 ]

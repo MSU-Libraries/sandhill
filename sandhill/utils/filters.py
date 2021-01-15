@@ -31,8 +31,9 @@ def is_list(value):
 @app.template_filter()
 def get_extension(value):
     """Take in mimetype and return extension."""
+    mimetypes.add_type("audio/wav", '.wav')
     extension = None
-    preferred = [".txt", ".jpg"]
+    preferred = [".txt", ".jpg", ".mp3"]
     all_extensions = mimetypes.guess_all_extensions(value)
     if all_extensions:
         for ext in all_extensions:
@@ -42,7 +43,7 @@ def get_extension(value):
         if not extension:
             extension = all_extensions[0]
     else:
-        extension = "???"
+        extension = ".???"
     return extension.upper()[1:]
 
 @app.template_filter()
