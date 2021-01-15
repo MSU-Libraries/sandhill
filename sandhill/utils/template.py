@@ -35,11 +35,12 @@ def evaluate_conditions(conditions, context, match_all=True):
     for match in conditions:
         # Idea: use boosts if the matched value for 2 config files is the same, e.g. matched += boost
         check_value = render_template(match['evaluate'], context)
-        if 'match_when' in match and check_value in match['match_when']:
+        if not any(key in ['match_when', 'match_when_not'] for key in match.keys()) or \
+            {'match_when', 'match_when_not'}.issubset(set(match.keys())):
+            raise KeyError("One (and only one) of the keys 'match_when' or 'match_when_not' must be present")
+        elif 'match_when' in match and check_value in match['match_when']:
             matched += 1
         elif 'match_when_not' in match and check_value not in match['match_when_not']:
             matched += 1
-        elif not any(key in ['match_when', 'match_not_when'] for key in match.keys()):
-            raise KeyError("Missing match_when or match_when_not parameter")
     # Only assigned matched value if ALL matches are successful
     return matched if matched == len(conditions) or not match_all else 0

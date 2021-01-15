@@ -1,0 +1,16 @@
+{% macro gen_thumbnail_img() -%}
+<img class="img-fluid"
+    src="{{ item['PID'] | generate_datastream_url("TN") }}"
+    alt="{{ metadata_conf['title'] | render }}"/>
+{%- endmacro -%}
+
+<div class="w-100">
+    {% if restriction %}
+        {{ gen_thumbnail_img() }}
+    {% else %}
+        <a href="{{ item['PID'] | generate_datastream_url }}">
+            {{ gen_thumbnail_img() }}
+        </a>
+    {% endif %}
+</div>
+

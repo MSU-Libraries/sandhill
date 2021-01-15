@@ -183,10 +183,11 @@
         "_comment": "scss compiles and creates the css file"
     },
     {
-        "page": "/collections",
+        "page": "/dmhsp/50",
         "code": 200,
+        "_comment": "Test generic item page render",
         "contains": [
-            "Electronic Theses & Dissertations"
+            "alt=\"Mauthausen Concentration Camp : View down the quarry steps\""
         ]
     }
 ]

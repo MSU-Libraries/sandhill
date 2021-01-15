@@ -39,9 +39,78 @@
             "file_size_field": "fedora_datastream_latest_DATA_SIZE_ms",
             "datastream": "DATA",
             "restricted": true
+        },
+        {
+            "label": "Author biography",
+            "mime_type_field": "fedora_datastream_latest_BIO_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_BIO_SIZE_ms",
+            "datastream": "BIO",
+            "restricted": true
+        },
+        {
+            "label": "Contributor biography",
+            "mime_type_field": "fedora_datastream_latest_BIO_CONTRIB_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_BIO_CONTRIB_SIZE_ms",
+            "datastream": "BIO_CONTRIB",
+            "restricted": true
+        },
+        {
+            "label": "Introductory essay",
+            "mime_type_field": "fedora_datastream_latest_INTRO_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_INTRO_SIZE_ms",
+            "datastream": "INTRO",
+            "restricted": true
+        },
+        {
+            "label": "Full text with added markup",
+            "mime_type_field": "fedora_datastream_latest_MARKUP_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_MARKUP_SIZE_ms",
+            "datastream": "MARKUP",
+            "restricted": true
+        },
+        {
+            "label": "OCR full text",
+            "mime_type_field": "fedora_datastream_latest_OCR_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_OCR_SIZE_ms",
+            "datastream": "OCR",
+            "restricted": true
+        },
+        {
+            "label": "PDF",
+            "mime_type_field": "fedora_datastream_latest_PDF_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_PDF_SIZE_ms",
+            "datastream": "PDF",
+            "restricted": true
+        },
+        {
+            "label": "View accessible PDF",
+            "mime_type_field": "fedora_datastream_latest_PDF_REM_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_PDF_REM_SIZE_ms",
+            "datastream": "PDF_REM",
+            "restricted": true
+        },
+        {
+            "label": "PDF transcript",
+            "mime_type_field": "fedora_datastream_latest_TEXTPDF_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_TEXTPDF_SIZE_ms",
+            "datastream": "TEXTPDF",
+            "restricted": true
+        },
+        {
+            "label": "MS Word transcript",
+            "mime_type_field": "fedora_datastream_latest_TEXTWORD_DOC_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_TEXTWORD_DOC_SIZE_ms",
+            "datastream": "TEXTWORD_DOC",
+            "restricted": true
+        },
+        {
+            "label": "MS Word transcript",
+            "mime_type_field": "fedora_datastream_latest_TEXTWORD_DOCX_MIMETYPE_ms",
+            "file_size_field": "fedora_datastream_latest_TEXTWORD_DOCX_SIZE_ms",
+            "datastream": "TEXTWORD_DOCX",
+            "restricted": true
         }
     ],
-
     "metadata": [
         {
             "label": "MODS",

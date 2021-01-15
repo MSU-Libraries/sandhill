@@ -6,7 +6,7 @@
         }
     ],
     "title": "{{ item.fgs_label_s  | render | safe }}",
-    "media_template": "media_display/jpg.html.j2",
+    "media_template": "media_display/thumbnail.html.j2",
     "download_conf": "default.json",
     "display": [
         {

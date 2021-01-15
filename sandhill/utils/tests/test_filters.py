@@ -19,7 +19,7 @@ def test_get_extension():
     assert filters.get_extension('image/jpeg') == "JPG"
     assert filters.get_extension('image/png') == "PNG"
     assert filters.get_extension('text/plain') == "TXT"
-    assert filters.get_extension('undefined/undefined') == "??"
+    assert filters.get_extension('undefined/undefined') == "???"
 
 def test_islist():
     assert filters.is_list([]) == True
