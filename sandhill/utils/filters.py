@@ -215,5 +215,5 @@ def sandbug(value: str):
     args:
         value (str): Message to write to the log
     '''
-    app.logger.debug(f"SANDBUG: {value}")
+    app.logger.debug(f"SANDBUG: {value} TYPE: {type(value)}")
     return ""

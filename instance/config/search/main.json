@@ -1,16 +1,29 @@
 {
-    "facet_mincount": 1,
-    "facet_limit": 20,
     "facet_fields": [
+        {
+            "field": "collection",
+            "label": "Collection",
+            "initial_display_count": 10
+        },
         {
             "field": "genre_aat",
             "label": "Material Types",
-            "display_limit": "10"
+            "initial_display_count": 10
+        },
+        {
+            "field": "language",
+            "label": "Languages",
+            "initial_display_count": 10
+        },
+        {
+            "field": "copyright_category",
+            "label": "Copyright",
+            "initial_display_count": 10
         },
         {
             "field": "subject_display",
             "label": "Subjects",
-            "display_limit": "10"
+            "initial_display_count": 10
         }
     ],
     "solr_params": {
@@ -35,7 +48,7 @@
             "base": "json"
         },
         "fl": {
-            "default": "PID, fgs_label_s,name_primary,date_key,collection,description"
+            "default": "PID,fgs_label_s,name_primary,date_key,collection,description"
         },
         "sort": {
             "default": "score DESC,fgs_label_s ASC,date_key ASC"
@@ -44,16 +57,31 @@
             "base": "dismax"
         },
         "facet": {
-            "default": ""
+            "default": "true"
         },
         "facet.field": {
-            "default": ""
-        },
-        "facet.mincount": {
-            "default": ""
+            "default": ["collection", "genre_aat", "language", "copyright_category", "subject_display"]
         },
         "facet.limit": {
-            "default": ""
+            "default": "25"
+        },
+        "facet.mincount": {
+            "default": "5"
+        },
+        "f.collection.facet.sort": {
+            "default": "index"
+        },
+        "f.genre_aat.facet.sort": {
+            "default": "count"
+        },
+        "f.language.facet.sort": {
+            "default": "index"
+        },
+        "f.copyright_category.facet.sort": {
+            "default": "index"
+        },
+        "f.subject_display.facet.sort": {
+            "default": "index"
         }
     },
     "display_fields": [
