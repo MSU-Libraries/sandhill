@@ -79,6 +79,48 @@
             "link": "/search?fq=name_performer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
+            "value": "{{ item.name_composer }}",
+            "label": "Composers",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_composer:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
+            "value": "{{ item.name_commentator }}",
+            "label": "Commentators",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_commentator:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
+            "value": "{{ item.name_curator }}",
+            "label": "Curators",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_curator:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
+            "value": "{{ item.name_judge }}",
+            "label": "Judges",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_judge:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
+            "value": "{{ item.name_lead }}",
+            "label": "Leads",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_lead:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
+            "value": "{{ item.name_printer }}",
+            "label": "Printers",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_printer:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
+            "value": "{{ item.name_translator }}",
+            "label": "Translators",
+            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "link": "/search?fq=name_translator:{{ metadata_value | solr_escape | urlencode }}"
+        },
+        {
             "value": "{{ item.name_host }}",
             "label": "Hosts",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
