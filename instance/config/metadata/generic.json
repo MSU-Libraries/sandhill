@@ -166,7 +166,7 @@
             "value": "{{ item.name_editor }}",
             "label": "Editors",
             "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=name_host:{{ metadata_value | solr_escape | urlencode }}"
+            "link": "/search?fq=name_editor:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_contributor }}",
