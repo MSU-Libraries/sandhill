@@ -9,7 +9,7 @@ from sandhill.utils.generic import ifnone
 from datetime import datetime
 from jinja2 import contextfilter, TemplateError
 from collections.abc import Hashable
-
+import copy
 
 @app.template_filter()
 def size_format(value):
@@ -217,3 +217,24 @@ def sandbug(value: str):
     '''
     app.logger.debug(f"SANDBUG: {value} TYPE: {type(value)}")
     return ""
+
+
+@app.template_filter('deepcopy')
+def deepcopy(obj):
+    return copy.deepcopy(obj)
+
+@app.template_filter('addfilterquery')
+def addfilterquery(old_query: dict, field: str, value: str):
+    """
+    """
+    query = copy.deepcopy(old_query)
+    if not 'fq' in query:
+        query['fq'] = []
+
+    if not isinstance(query['fq'], list):
+        query['fq'] = [query['fq']]
+
+    fquery = ': '.join([field, solr_escape(value)])
+    query['fq'].append(fquery)
+    return query
+

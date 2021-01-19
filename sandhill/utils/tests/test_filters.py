@@ -194,3 +194,10 @@ def test_format_date():
 def test_sandbug():
     # calling the debug logger
     filters.sandbug("test") 
+
+def test_addfilterquery():
+    query = {
+        'q': "frogs"
+    }
+    res = filters.addfilterquery(query, 'location', "East Lansing")
+    assert res == {'q': "frogs", 'fq': ["location: East\\ Lansing"]}
