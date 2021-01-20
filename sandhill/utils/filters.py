@@ -83,6 +83,24 @@ def solr_escape(value):
             value = value.replace(k, v)
     return value
 
+@app.template_filter('solr_decode')
+def solr_decode(value):
+    """Filter to decode a value previously encoded for Solr
+    args:
+        value (str): string with Solr escapes to be decoded
+    returns:
+        (str): same string after being decoded
+    """
+    if isinstance(value, str):
+        escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
+                    '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
+                    '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
+                    ';': r'\;' }
+        for k, v in escapes.items():
+            value = value.replace(v, k)
+        value = value.replace(r'\\', '\\')  # must be last replacement
+    return value
+
 @app.template_filter('set_child_key')
 def set_child_key(parent_dict, parent_key, key, value):
     """Take dictionary of url components, and update 'key' with 'value'.
@@ -223,18 +241,65 @@ def sandbug(value: str):
 def deepcopy(obj):
     return copy.deepcopy(obj)
 
+@app.template_filter('getfilterqueries')
+def getfilterqueries(query: dict):
+    """
+    """
+    def parse_fq_into_dict(fq_dict, fq_str):
+        fq_pair = fq_str.split(":", 1)
+        if not fq_pair[0] in fq_dict:
+            fq_dict[fq_pair[0]] = []
+        fq_dict[fq_pair[0]].append(solr_decode(fq_pair[1]))
+
+    fqueries = {}
+    if 'fq' in query:
+        if isinstance(query['fq'], list):
+            for fq in query['fq']:
+                parse_fq_into_dict(fqueries, fq)
+        else:
+            parse_fq_into_dict(fqueries, query['fq'])
+    return fqueries
+
 @app.template_filter('addfilterquery')
-def addfilterquery(old_query: dict, field: str, value: str):
+def addfilterquery(query: dict, field: str, value: str):
     """
     """
-    query = copy.deepcopy(old_query)
     if not 'fq' in query:
         query['fq'] = []
 
     if not isinstance(query['fq'], list):
         query['fq'] = [query['fq']]
 
-    fquery = ': '.join([field, solr_escape(value)])
-    query['fq'].append(fquery)
+    fquery = ':'.join([field, solr_escape(value)])
+    if fquery not in query['fq']:
+        query['fq'].append(fquery)
     return query
 
+@app.template_filter('hasfilterquery')
+def hasfilterquery(query: dict, field: str, value: str):
+    """
+    """
+    fquery = ':'.join([field, solr_escape(value)])
+    found = False
+    if 'fq' in query:
+        if not isinstance(query['fq'], list):
+            if query['fq'] == fquery:
+                found = True
+        else:
+            if fquery in query['fq']:
+                found = True
+    return found
+
+@app.template_filter('removefilterquery')
+def removefilterquery(query: dict, field: str, value: str):
+    """
+    """
+    fquery = ':'.join([field, solr_escape(value)])
+    if 'fq' in query:
+        if not isinstance(query['fq'], list):
+            if query['fq'] == fquery:
+                query['fq'] = []
+        else:
+            if fquery in query['fq']:
+                query['fq'].remove(fquery)
+    return query

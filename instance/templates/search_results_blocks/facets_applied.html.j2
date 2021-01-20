@@ -1,0 +1,14 @@
+{% set filterqueries = url_components['query_args'] | getfilterqueries %}
+{% for facet in search_conf["facet_fields"] %}
+    {% if facet['field'] in filterqueries %}
+        {% for fq_val in filterqueries[facet['field']] %}
+            <span class="badge badge-light p-1 m-1">
+                {{ facet['label'] }}: {{ fq_val }}
+                {% set search_params = url_components['query_args'] | deepcopy %}
+                {% set _ = search_params | removefilterquery(facet['field'], fq_val) %}
+                <a href="{{ url_for(request.endpoint, **search_params) }}">X</a>
+            </span>
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+

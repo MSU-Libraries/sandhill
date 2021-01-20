@@ -1,4 +1,5 @@
 <h2>Facets</h2>
+{% set filterqueries = url_components['query_args'] | getfilterqueries %}
 {% for facet_field in search_conf["facet_fields"] %}
     <ul class="sh-facet-term">
     <h3>{{ facet_field["label"] }}</h3>
@@ -6,9 +7,15 @@
         {% if loop.index0 < facet_field["initial_display_count"] * 2 %}
             {% if loop.index is divisibleby 2 %}
                 <li>
-                    {% set search_params = search["responseHeader"]["params"] | addfilterquery(facet_field['field'], loop.previtem) %}
+                    {% set search_params = url_components['query_args'] | deepcopy %}
+                    {% set _ = search_params | addfilterquery(facet_field['field'], loop.previtem) %}
                     <a href="{{ url_for(request.endpoint, **search_params) }}">{{ loop.previtem }}</a>
                     <span class="badge badge-dark">{{ value }}</span>
+                    {% if facet_field['field'] in filterqueries and loop.previtem in filterqueries[facet_field['field']]  %}
+                        {% set search_params = url_components['query_args'] | deepcopy %}
+                        {% set _ = search_params | removefilterquery(facet_field['field'], loop.previtem) %}
+                        <a href="{{ url_for(request.endpoint, **search_params) }}">X</a>
+                    {% endif %}
                 </li>
             {% endif %}
         {% endif %}
