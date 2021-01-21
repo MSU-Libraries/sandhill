@@ -211,9 +211,11 @@ def test_deepcopy():
     child_obj = {'z': 'z'}
     first_obj = {'a': 'b', 'c': child_obj}
     second_obj = filters.deepcopy(first_obj)
+    # assert both the dict's contain same values and  do not point to the same memory location
     assert first_obj == second_obj
     assert first_obj is not second_obj
     first_obj['c']['z'] = 'NOT Z'
+    # modifying the child object to verify the memeory location is not the same
     assert first_obj != second_obj
 
 def test_getfilterquery():
@@ -221,6 +223,7 @@ def test_getfilterquery():
         'q': "frogs",
         'fq': ["dessert:cake", "dessert:pie", "location:East\\ Lansing", "location:St\\ John's", "colon:value:with:colons"]
     }
+    # get the filter query as a dict with a list of values
     res = filters.getfilterqueries(query)
     assert res == {'dessert': ['cake', 'pie'], 'location': ["East Lansing", "St John's"], "colon": ["value:with:colons"]}
 
@@ -228,6 +231,7 @@ def test_getfilterquery():
         'q': "frogs",
         'fq': "dessert:custard"
     }
+    # get the filter query as a dict with a list of values
     res = filters.getfilterqueries(query)
     assert res == {'dessert': ['custard']}
 
@@ -246,6 +250,8 @@ def test_addfilterquery():
         'q': "frogs",
         'fq': "dessert:cake"
     }
+
+    # adding field and value to the filter query
     res = filters.addfilterquery(query, 'dessert', "pie")
     assert res == {'q': "frogs", 'fq': ["dessert:cake", "dessert:pie"]}
 
@@ -261,6 +267,7 @@ def test_hasfilterquery():
         'q': "frogs",
         'fq': ["dessert:cake", "location:East\\ Lansing"]
     }
+    # Pass a non existing field and value to compare with the filter query
     res = filters.hasfilterquery(query, 'dessert', "ice cream")
     assert res == False
 
@@ -268,8 +275,12 @@ def test_hasfilterquery():
         'q': "frogs",
         'fq': "dessert:cake"
     }
+
+    # Pass a non existing field and value to compare with the filter query
     res = filters.hasfilterquery(query, 'dessert', "ice cream")
     assert res == False
+
+    # Pass an existing field and value to compare with the filter query
     res = filters.hasfilterquery(query, 'dessert', "cake")
     assert res == True
 
@@ -291,3 +302,19 @@ def test_removefilterquery():
     }
     res = filters.removefilterquery(query, 'dessert', "cake")
     assert res == {'q': "frogs", 'fq': []}
+
+def test_maketuplelist():
+    example_list = ['xyz', 1, 'abc', 3]
+    # test with a list with evenly divisible tuple count
+    res = filters.maketuplelist(example_list, 2)
+    assert [('xyz', 1), ('abc', 3)] == res
+
+    # test with a list with evenly divisible tuple count
+    example_list = ['xyz', 1, 2, 'abc', 3, 4]
+    res = filters.maketuplelist(example_list, 3)
+    assert [('xyz', 1, 2), ('abc', 3, 4)] == res
+
+    # test with a list with unevenly divisible tuple count
+    example_list = ['xyz', 1, 2, 'abc', 3, 4]
+    res = filters.maketuplelist(example_list, 4)
+    assert [('xyz', 1, 2, 'abc')] == res

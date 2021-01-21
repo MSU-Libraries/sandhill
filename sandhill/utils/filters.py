@@ -239,11 +239,23 @@ def sandbug(value: str):
 
 @app.template_filter('deepcopy')
 def deepcopy(obj):
+    """
+    Returns the deepcopy of the input object
+    args:
+        obj (dict, list, tuple): Any value which is not a scalar type.
+    """
     return copy.deepcopy(obj)
 
 @app.template_filter('getfilterqueries')
 def getfilterqueries(query: dict):
     """
+    Extracts the filter queries from the solr query
+    args:
+        query (dict): solr query
+            (ex {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2", "dc.creator:example_creator1", "dc.creator:example_creator2"]})
+    return:
+        (dict)
+        (ex. {"dc.title": ["example_title1", "example_title2"], "dc.creator": ["example_creator1", "example_creator2"]})
     """
     def parse_fq_into_dict(fq_dict, fq_str):
         fq_pair = fq_str.split(":", 1)
@@ -263,6 +275,14 @@ def getfilterqueries(query: dict):
 @app.template_filter('addfilterquery')
 def addfilterquery(query: dict, field: str, value: str):
     """
+    Adds the field and value to the filter query
+    args:
+        query (dict): solr query
+            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
+        field (str): field that needs to be checked in the fliter query
+            (ex: dc.creator)
+        value (str): value that needs to be checked in  the filter query
+            (ex: example_creator)
     """
     if not 'fq' in query:
         query['fq'] = []
@@ -278,6 +298,14 @@ def addfilterquery(query: dict, field: str, value: str):
 @app.template_filter('hasfilterquery')
 def hasfilterquery(query: dict, field: str, value: str):
     """
+    Ensure the filter query has the field and value
+    args:
+        query (dict): solr query
+            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
+        field (str): field that needs to be checked in the fliter query
+            (ex: dc.title)
+        value (str): value that needs to be checked in  the filter query
+            (ex: example_title)
     """
     fquery = ':'.join([field, solr_escape(value)])
     found = False
@@ -293,6 +321,14 @@ def hasfilterquery(query: dict, field: str, value: str):
 @app.template_filter('removefilterquery')
 def removefilterquery(query: dict, field: str, value: str):
     """
+    Removes the filter query and returns the revised query
+    args:
+        query (dict): solr query
+            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
+        field (str): field that needs to be removed from the fliter query
+            (ex: dc.title)
+        value (str): value that needs to be removed from the filter query
+            (ex: example_title)
     """
     fquery = ':'.join([field, solr_escape(value)])
     if 'fq' in query:
@@ -303,3 +339,14 @@ def removefilterquery(query: dict, field: str, value: str):
             if fquery in query['fq']:
                 query['fq'].remove(fquery)
     return query
+
+@app.template_filter('maketuplelist')
+def maketuplelist(input_list: list, tuple_length: int):
+    """
+    Convert a list into tuples of lenth tuple_length
+    args:
+        input_list (list): list with values that need to be converted into tuples
+        tuple_length (int): length of tuples in the list
+    """
+    # if not evenly divisible by tuple_length excess values are discarded
+    return list(zip(*[iter(input_list)]*tuple_length))
