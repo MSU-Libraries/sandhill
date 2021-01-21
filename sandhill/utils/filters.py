@@ -9,7 +9,7 @@ from sandhill.utils.generic import ifnone
 from datetime import datetime
 from jinja2 import contextfilter, TemplateError
 from collections.abc import Hashable
-
+import copy
 
 @app.template_filter()
 def size_format(value):
@@ -81,6 +81,24 @@ def solr_escape(value):
         value = value.replace('\\', r'\\')  # must be first replacement
         for k, v in escapes.items():
             value = value.replace(k, v)
+    return value
+
+@app.template_filter('solr_decode')
+def solr_decode(value):
+    """Filter to decode a value previously encoded for Solr
+    args:
+        value (str): string with Solr escapes to be decoded
+    returns:
+        (str): same string after being decoded
+    """
+    if isinstance(value, str):
+        escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
+                    '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
+                    '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
+                    ';': r'\;' }
+        for k, v in escapes.items():
+            value = value.replace(v, k)
+        value = value.replace(r'\\', '\\')  # must be last replacement
     return value
 
 @app.template_filter('set_child_key')
@@ -215,5 +233,120 @@ def sandbug(value: str):
     args:
         value (str): Message to write to the log
     '''
-    app.logger.debug(f"SANDBUG: {value}")
+    app.logger.debug(f"SANDBUG: {value} TYPE: {type(value)}")
     return ""
+
+
+@app.template_filter('deepcopy')
+def deepcopy(obj):
+    """
+    Returns the deepcopy of the input object
+    args:
+        obj (dict, list, tuple): Any value which is not a scalar type.
+    """
+    return copy.deepcopy(obj)
+
+@app.template_filter('getfilterqueries')
+def getfilterqueries(query: dict):
+    """
+    Extracts the filter queries from the solr query
+    args:
+        query (dict): solr query
+            (ex {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2", "dc.creator:example_creator1", "dc.creator:example_creator2"]})
+    return:
+        (dict)
+        (ex. {"dc.title": ["example_title1", "example_title2"], "dc.creator": ["example_creator1", "example_creator2"]})
+    """
+    def parse_fq_into_dict(fq_dict, fq_str):
+        fq_pair = fq_str.split(":", 1)
+        if not fq_pair[0] in fq_dict:
+            fq_dict[fq_pair[0]] = []
+        fq_dict[fq_pair[0]].append(solr_decode(fq_pair[1]))
+
+    fqueries = {}
+    if 'fq' in query:
+        if isinstance(query['fq'], list):
+            for fq in query['fq']:
+                parse_fq_into_dict(fqueries, fq)
+        else:
+            parse_fq_into_dict(fqueries, query['fq'])
+    return fqueries
+
+@app.template_filter('addfilterquery')
+def addfilterquery(query: dict, field: str, value: str):
+    """
+    Adds the field and value to the filter query
+    args:
+        query (dict): solr query
+            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
+        field (str): field that needs to be checked in the fliter query
+            (ex: dc.creator)
+        value (str): value that needs to be checked in  the filter query
+            (ex: example_creator)
+    """
+    if not 'fq' in query:
+        query['fq'] = []
+
+    if not isinstance(query['fq'], list):
+        query['fq'] = [query['fq']]
+
+    fquery = ':'.join([field, solr_escape(value)])
+    if fquery not in query['fq']:
+        query['fq'].append(fquery)
+    return query
+
+@app.template_filter('hasfilterquery')
+def hasfilterquery(query: dict, field: str, value: str):
+    """
+    Ensure the filter query has the field and value
+    args:
+        query (dict): solr query
+            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
+        field (str): field that needs to be checked in the fliter query
+            (ex: dc.title)
+        value (str): value that needs to be checked in  the filter query
+            (ex: example_title)
+    """
+    fquery = ':'.join([field, solr_escape(value)])
+    found = False
+    if 'fq' in query:
+        if not isinstance(query['fq'], list):
+            if query['fq'] == fquery:
+                found = True
+        else:
+            if fquery in query['fq']:
+                found = True
+    return found
+
+@app.template_filter('removefilterquery')
+def removefilterquery(query: dict, field: str, value: str):
+    """
+    Removes the filter query and returns the revised query
+    args:
+        query (dict): solr query
+            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
+        field (str): field that needs to be removed from the fliter query
+            (ex: dc.title)
+        value (str): value that needs to be removed from the filter query
+            (ex: example_title)
+    """
+    fquery = ':'.join([field, solr_escape(value)])
+    if 'fq' in query:
+        if not isinstance(query['fq'], list):
+            if query['fq'] == fquery:
+                query['fq'] = []
+        else:
+            if fquery in query['fq']:
+                query['fq'].remove(fquery)
+    return query
+
+@app.template_filter('maketuplelist')
+def maketuplelist(input_list: list, tuple_length: int):
+    """
+    Convert a list into tuples of lenth tuple_length
+    args:
+        input_list (list): list with values that need to be converted into tuples
+        tuple_length (int): length of tuples in the list
+    """
+    # if not evenly divisible by tuple_length excess values are discarded
+    return list(zip(*[iter(input_list)]*tuple_length))

@@ -6,27 +6,41 @@ Search Results
 
 {% block content %}
 
+<div class="row">
 
-{#% include 'basic_search.html.j2' %#}
+    <div class="col-md-3 col-12">
+        {% if search['response']['docs'] %}
+            {% include 'search_results_blocks/facet_bar.html.j2' %}
+        {% else %}
+            <p>None available</p>
+        {% endif %}
 
-<h1>Search Results</h1>
-{% if search['response']['docs'] %}
-    <p>Found {{ "{:,}".format(search['response']['numFound']) }} results</p>
-    {% for item in search['response']['docs'] %}
-        <div class="search_results row border-dark border-bottom py-3">
-            {% include 'search_results_blocks/preview.html.j2' %}
-            <div class="col-md-9">
-                {% for field in search_conf.display_fields %}
-                    {% if item[field.solr_field] %}
-                        {% include field.template %}
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-    {% endfor %} 
-{% else %}
-    <p>No results found</p>
-{% endif %}
+    </div>
+    <div class="col-md-9 col-12">
+        <h1>Search Results</h1>
+
+        {#% include 'search_basic.html.j2' %#}
+        {% include 'search_results_blocks/facets_applied.html.j2' %}
+
+        {% if search['response']['docs'] %}
+            <p>Found {{ "{:,}".format(search['response']['numFound']) }} results</p>
+            {% for item in search['response']['docs'] %}
+                <div class="search_results row border-dark border-bottom py-3">
+                    {% include 'search_results_blocks/preview.html.j2' %}
+                    <div class="col-md-9">
+                        {% for field in search_conf.display_fields %}
+                            {% if item[field.solr_field] %}
+                                {% include field.template %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %} 
+        {% else %}
+            <p>No results found</p>
+        {% endif %}
+    </div>
+</div>
 
 {# Set pagination variable before including pagination template #}
 {% set start = search.response.start %}

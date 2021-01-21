@@ -59,6 +59,18 @@ def test_solr_escape():
     assert filters.solr_escape(['test']) == ['test']
     assert filters.solr_escape(None) == None
 
+def test_solr_decode():
+    # test decode
+    assert filters.solr_decode(r"a\ test\ string") == "a test string"
+    assert filters.solr_decode(r"a\ with\+") == "a with+"
+    assert filters.solr_decode(r"a\ \\with\+") == "a \\with+"
+    assert filters.solr_decode("") == ""
+    assert filters.solr_decode("hello") == "hello"
+
+    # test non-string
+    assert filters.solr_decode(['test']) == ['test']
+    assert filters.solr_decode(None) == None
+
 def test_set_child_key():
     args = {}
 
@@ -194,3 +206,115 @@ def test_format_date():
 def test_sandbug():
     # calling the debug logger
     filters.sandbug("test") 
+
+def test_deepcopy():
+    child_obj = {'z': 'z'}
+    first_obj = {'a': 'b', 'c': child_obj}
+    second_obj = filters.deepcopy(first_obj)
+    # assert both the dict's contain same values and  do not point to the same memory location
+    assert first_obj == second_obj
+    assert first_obj is not second_obj
+    first_obj['c']['z'] = 'NOT Z'
+    # modifying the child object to verify the memeory location is not the same
+    assert first_obj != second_obj
+
+def test_getfilterquery():
+    query = {
+        'q': "frogs",
+        'fq': ["dessert:cake", "dessert:pie", "location:East\\ Lansing", "location:St\\ John's", "colon:value:with:colons"]
+    }
+    # get the filter query as a dict with a list of values
+    res = filters.getfilterqueries(query)
+    assert res == {'dessert': ['cake', 'pie'], 'location': ["East Lansing", "St John's"], "colon": ["value:with:colons"]}
+
+    query = {
+        'q': "frogs",
+        'fq': "dessert:custard"
+    }
+    # get the filter query as a dict with a list of values
+    res = filters.getfilterqueries(query)
+    assert res == {'dessert': ['custard']}
+
+def test_addfilterquery():
+    query = {
+        'q': "frogs"
+    }
+    res = filters.addfilterquery(query, 'location', "East Lansing")
+    assert res == {'q': "frogs", 'fq': ["location:East\\ Lansing"]}
+
+    # adding multiple times only results in a single entry
+    res = filters.addfilterquery(res, 'location', "East Lansing")
+    assert res == {'q': "frogs", 'fq': ["location:East\\ Lansing"]}
+
+    query = {
+        'q': "frogs",
+        'fq': "dessert:cake"
+    }
+
+    # adding field and value to the filter query
+    res = filters.addfilterquery(query, 'dessert', "pie")
+    assert res == {'q': "frogs", 'fq': ["dessert:cake", "dessert:pie"]}
+
+def test_hasfilterquery():
+    query = {
+        'q': "frogs",
+        'fq': ["dessert:cake", "location:East\\ Lansing"]
+    }
+    res = filters.hasfilterquery(query, 'location', "East Lansing")
+    assert res == True
+
+    query = {
+        'q': "frogs",
+        'fq': ["dessert:cake", "location:East\\ Lansing"]
+    }
+    # Pass a non existing field and value to compare with the filter query
+    res = filters.hasfilterquery(query, 'dessert', "ice cream")
+    assert res == False
+
+    query = {
+        'q': "frogs",
+        'fq': "dessert:cake"
+    }
+
+    # Pass a non existing field and value to compare with the filter query
+    res = filters.hasfilterquery(query, 'dessert', "ice cream")
+    assert res == False
+
+    # Pass an existing field and value to compare with the filter query
+    res = filters.hasfilterquery(query, 'dessert', "cake")
+    assert res == True
+
+def test_removefilterquery():
+    query = {
+        'q': "frogs",
+        'fq': ["dessert:cake", "location:East\\ Lansing"]
+    }
+    res = filters.removefilterquery(query, 'location', "East Lansing")
+    assert res == {'q': "frogs", 'fq': ["dessert:cake"]}
+
+    # removing a filterquery that doesn't exist doesn't do anything
+    res = filters.removefilterquery(query, 'notafield', "Not a value")
+    assert res == {'q': "frogs", 'fq': ["dessert:cake"]}
+
+    query = {
+        'q': "frogs",
+        'fq': "dessert:cake"
+    }
+    res = filters.removefilterquery(query, 'dessert', "cake")
+    assert res == {'q': "frogs", 'fq': []}
+
+def test_maketuplelist():
+    example_list = ['xyz', 1, 'abc', 3]
+    # test with a list with evenly divisible tuple count
+    res = filters.maketuplelist(example_list, 2)
+    assert [('xyz', 1), ('abc', 3)] == res
+
+    # test with a list with evenly divisible tuple count
+    example_list = ['xyz', 1, 2, 'abc', 3, 4]
+    res = filters.maketuplelist(example_list, 3)
+    assert [('xyz', 1, 2), ('abc', 3, 4)] == res
+
+    # test with a list with unevenly divisible tuple count
+    example_list = ['xyz', 1, 2, 'abc', 3, 4]
+    res = filters.maketuplelist(example_list, 4)
+    assert [('xyz', 1, 2, 'abc')] == res

@@ -1,0 +1,21 @@
+<h2>Facets</h2>
+{% set filterqueries = url_components['query_args'] | getfilterqueries %}
+{% for facet_field in search_conf["facet_fields"] %}
+    <h3>{{ facet_field["label"] }}</h3>
+    <ul class="sh-facet-term overflow-auto list-unstyled" style="max-height: 20rem">
+    {% set facet_field_values = search["facet_counts"]["facet_fields"][facet_field["field"]] | maketuplelist(2) %}
+    {% for value, count in facet_field_values %}
+        <li>
+            {% set search_params = url_components['query_args'] | deepcopy %}
+            {% set _ = search_params | addfilterquery(facet_field['field'], value) %}
+            <a href="{{ url_for(request.endpoint, **search_params) }}">{{ value }}</a>
+            <span class="badge badge-dark">{{ count }}</span>
+            {% if facet_field['field'] in filterqueries and value in filterqueries[facet_field['field']]  %}
+                {% set search_params = url_components['query_args'] | deepcopy %}
+                {% set _ = search_params | removefilterquery(facet_field['field'], value) %}
+                <a href="{{ url_for(request.endpoint, **search_params) }}">X</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endfor %}
