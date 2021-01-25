@@ -255,6 +255,11 @@ def test_addfilterquery():
     res = filters.addfilterquery(query, 'dessert', "pie")
     assert res == {'q': "frogs", 'fq': ["dessert:cake", "dessert:pie"]}
 
+    # test with a 'start' param to make sure it is removed
+    query['start'] = 20
+    res = filters.addfilterquery(query, 'test', 'coolthing')
+    assert res == {'q': "frogs", 'fq': ["dessert:cake", "dessert:pie", "test:coolthing"]}
+
 def test_hasfilterquery():
     query = {
         'q': "frogs",
@@ -301,6 +306,11 @@ def test_removefilterquery():
         'fq': "dessert:cake"
     }
     res = filters.removefilterquery(query, 'dessert', "cake")
+    assert res == {'q': "frogs", 'fq': []}
+
+    # test with a 'start' param to make sure it is removed
+    query['start'] = 20
+    res = filters.removefilterquery(query, 'test', 'coolthing')
     assert res == {'q': "frogs", 'fq': []}
 
 def test_maketuplelist():
