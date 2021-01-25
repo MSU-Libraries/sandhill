@@ -4,7 +4,7 @@ Fedora data processor
 import os
 from urllib.parse import urlencode
 from requests import RequestException
-from flask import abort
+from flask import abort, Response as FlaskResponse
 from sandhill.utils.api import api_get, establish_url
 from sandhill import app
 
@@ -16,7 +16,7 @@ def load_datastream(data_dict, url=None, api_get_function=api_get):
         url(str): Override the fedora URL stored in FEDORA_URL of the configs
         api_get_function(function): function to use to make the Fedora call
     returns:
-        Response: response data from Fedora
+        Response: FlaskResponse build from the response from Fedora
     '''
     fedora = None
     allowed_actions = ['view', 'download']
@@ -46,4 +46,5 @@ def load_datastream(data_dict, url=None, api_get_function=api_get):
     except KeyError as exc:
         app.logger.error("Missing url component: {0}".format(exc))
         abort(400)
+
     return fedora

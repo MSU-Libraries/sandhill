@@ -1,0 +1,13 @@
+{
+    "route": [
+        "/home2"
+    ],
+    "data": [
+        {
+            "processor": "template.render",
+            "file": "home.html.j2",
+            "name": "home2"
+        }
+    ]
+}
+

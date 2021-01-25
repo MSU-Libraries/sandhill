@@ -2,7 +2,6 @@
     "route": [
         "/stream"
     ],
-    "stream": "test",
     "data": [
         {
             "processor": "file.create_json_response",

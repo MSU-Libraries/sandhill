@@ -3,7 +3,6 @@
         "/<string:namespace>/<int:id>/<string:label>/<string:action>",
         "/<string:namespace>:<int:id>/<string:label>/<string:action>"
     ],
-    "stream": "datastream",
     "data": [
         {
             "processor": "solr.select_record",
@@ -40,6 +39,11 @@
         {
             "processor": "fedora3.load_datastream",
             "name": "datastream"
+        },
+        {
+            "processor": "stream.stream",
+            "stream": "datastream",
+            "name": "stream"
         }
     ]
 }

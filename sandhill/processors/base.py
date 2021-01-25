@@ -5,7 +5,7 @@ requiring code changes to load it.
 '''
 import json
 from importlib import import_module
-from flask import request, abort
+from flask import request, abort, Response as FlaskResponse
 from sandhill import app
 from sandhill.utils.template import render_template
 
@@ -47,6 +47,11 @@ def load_route_data(route_data):
             except ValueError:
                 app.logger.error(f"Invalid on_fail set, must be int: {route_data[i]['on_fail']}")
                 abort(500)
+
+        # If the result from the processor is a FlaskResponse, stop processing, unless 'template'
+        # is in the route_data
+        if isinstance(loaded_data, FlaskResponse):
+            return loaded_data
 
     return loaded_data
 

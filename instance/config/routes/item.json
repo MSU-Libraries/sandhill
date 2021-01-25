@@ -6,7 +6,6 @@
         "/<string:namespace>:<int:id>/",
         "/<string:namespace>/<int:id>/<string:variation>"
     ],
-    "template": "item.html.j2",
     "data": [
         {
             "name": "item",
@@ -61,6 +60,11 @@
             "paths": [
                 "config/downloads/{{ metadata_conf.download_conf }}"
             ]
+        },
+        {
+            "name": "render",
+            "processor": "template.render",
+            "file": "item.html.j2"
         }
     ]
 }
