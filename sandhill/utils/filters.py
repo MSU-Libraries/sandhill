@@ -275,7 +275,10 @@ def getfilterqueries(query: dict):
 @app.template_filter('addfilterquery')
 def addfilterquery(query: dict, field: str, value: str):
     """
-    Adds the field and value to the filter query
+    Adds the field and value to the filter query.
+    Also removes the 'start' query param if it exists under the
+    assumption that a user removing facets would want to return
+    to the first page.
     args:
         query (dict): solr query
             (ex: {"q": "frogs", "fq": "dc.title:example_title"})
@@ -293,6 +296,11 @@ def addfilterquery(query: dict, field: str, value: str):
     fquery = ':'.join([field, solr_escape(value)])
     if fquery not in query['fq']:
         query['fq'].append(fquery)
+
+    # removing the start query param when new filters are applied
+    if 'start' in query:
+        del query['start']
+
     return query
 
 @app.template_filter('hasfilterquery')
@@ -321,7 +329,10 @@ def hasfilterquery(query: dict, field: str, value: str):
 @app.template_filter('removefilterquery')
 def removefilterquery(query: dict, field: str, value: str):
     """
-    Removes the filter query and returns the revised query
+    Removes the filter query and returns the revised query.
+    Also removes the 'start' query param if it exists under the
+    assumption that a user removing facets would want to return
+    to the first page.
     args:
         query (dict): solr query
             (ex: {"q": "frogs", "fq": "dc.title:example_title"})
@@ -338,6 +349,11 @@ def removefilterquery(query: dict, field: str, value: str):
         else:
             if fquery in query['fq']:
                 query['fq'].remove(fquery)
+
+    # removing the start query param when new filters are applied
+    if 'start' in query:
+        del query['start']
+
     return query
 
 @app.template_filter('maketuplelist')

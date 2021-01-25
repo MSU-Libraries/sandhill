@@ -14,25 +14,25 @@
 {% endif %}
 
 {% set page_list = ([0] + (range(min_range,max_range)|list) + [max_page]) | unique %}
-
+{% set pagination_url = url_components | deepcopy %}
 <div class="pagination row">
   <div class="col-12">
 	<nav aria-label="Page list">
 	  <ul class="pagination justify-content-center">
 		<li class="page-item {% if cur_page <= 0 %}disabled{% endif %}">
-		  <a class="page-link" href="{{ url_components | set_child_key("query_args", "start", start - rows) | assemble_url }}">Previous</a>
+		  <a class="page-link" href="{{ pagination_url | set_child_key("query_args", "start", start - rows) | assemble_url }}">Previous</a>
 		</li>
         {% for p in page_list %}
 		<li class="page-item {% if p == cur_page %}active{% endif %}">
             {% if p == cur_page %}
                 <span class="page-link">{{ p + 1 }}<span class="sr-only">(current)</span></span>
             {% else %}
-                <a class="page-link" href="{{ url_components | set_child_key("query_args", "start", p * rows) | assemble_url }}">{{ p + 1 }}</a>
+                <a class="page-link" href="{{ pagination_url | set_child_key("query_args", "start", p * rows) | assemble_url }}">{{ p + 1 }}</a>
             {% endif %}
 		</li>
         {% endfor %}
 		<li class="page-item {% if cur_page >= max_page %}disabled{% endif %}">
-		  <a class="page-link" href="{{ url_components | set_child_key("query_args", "start", start + rows) | assemble_url }}">Next</a>
+		  <a class="page-link" href="{{ pagination_url | set_child_key("query_args", "start", start + rows) | assemble_url }}">Next</a>
 		</li>
 	  </ul>
 	</nav>
