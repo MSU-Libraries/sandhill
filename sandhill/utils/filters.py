@@ -120,9 +120,9 @@ def set_child_key(parent_dict, parent_key, key, value):
 
 @app.template_filter('assemble_url')
 def assemble_url(url_components):
-    """Take url_components (derived from Flask Request object) and return url.
+    """Take url_components (derived from Flask Request object) and returns a url.
     args:
-        url_components (dict): compoents of the URL to build
+        url_components (dict): components of the URL to build
     returns:
         (str): fully combined URL with query arguments
     """
