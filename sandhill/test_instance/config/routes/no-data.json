@@ -1,0 +1,6 @@
+{
+    "route": [
+        "/no-data"
+    ],
+    "template": "home.html.j2"
+}
