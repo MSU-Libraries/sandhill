@@ -10,6 +10,11 @@
             "paths": [
                 "static/test.json"
             ]
+        },
+        {
+             "processor": "stream.stream",
+             "name": "stream_test",
+             "stream": "test"
         }
     ]
 }

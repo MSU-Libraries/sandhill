@@ -18,12 +18,13 @@ def test_stream():
     test_resp.status_code = 200
     test_resp.headers['Content-Type'] = 'application/json'
     data_dict = {
-        "test": test_resp
+        "test": test_resp,
+        "stream": 'test'
     }
 
     with app.test_request_context('/home'):
         # Test passing it the correct information
-        resp = stream.stream("test", **data_dict)
+        resp = stream.stream(data_dict)
         assert test_resp.status_code == resp.status_code
         assert isinstance(resp, FlaskResponse)
         assert test_resp.headers['Content-Type'] == resp.headers['Content-Type']
@@ -31,16 +32,18 @@ def test_stream():
         # Test returning a non-OK status code
         test_resp.status_code = 400
         with raises(HTTPException) as http_exc:
-            resp = stream.stream("test", **data_dict)
+            resp = stream.stream(data_dict)
         assert http_exc.type.code == 400
 
         # Test not giving the correct key in data
+        data_dict['stream'] = 'invalid'
         with raises(HTTPException) as http_exc:
-            resp = stream.stream("invalid", **data_dict)
+            resp = stream.stream(data_dict)
         assert http_exc.type.code == 500
 
         # Test giving no data in the key
         data_dict["test2"] = None
+        data_dict['stream'] = 'test2'
         with raises(HTTPException) as http_exc:
-            resp = stream.stream("test2", **data_dict)
+            resp = stream.stream(data_dict)
         assert http_exc.type.code == 503

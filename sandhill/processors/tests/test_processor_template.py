@@ -14,27 +14,32 @@ def test_render():
     '''
     test_resp = FlaskResponse()
     data_dict = {
-        "test": test_resp
+        "test": test_resp,
+        "file": "home.html.j2"
     }
-
-    # Test for passing it a data set with a FlaskResponse in the given key
-    resp = template.render("home.html.j2", "test", **data_dict)
-    assert isinstance(resp, FlaskResponse)
-    assert resp == test_resp
-
+    
     # Test passing data without the FlaskResponse
     with app.test_request_context('/home'):
-        resp = template.render("home.html.j2", "not_there", **data_dict)
-        assert isinstance(resp, str)
+        resp = template.render(data_dict)
+        assert isinstance(resp, FlaskResponse)
 
     # Test passing in an invalid template
+    data_dict["file"] = "not-there-file.html.j2"
     with app.test_request_context('/home'):
         with raises(HTTPException) as http_exc:
-            resp = template.render("note-there.html.j2", "not_there", **data_dict)
+            resp = template.render(data_dict)
         assert http_exc.type.code == 501
 
     # Test with a syntax error in the template
+    data_dict["file"] = "invalid.html.j2"
     with app.test_request_context('/home'):
         with raises(HTTPException) as http_exc:
-            resp = template.render("invalid.html.j2", "invalid", **data_dict)
+            resp = template.render(data_dict)
         assert http_exc.type.code == 500
+
+    # Test a template render where a file was not given 
+    del data_dict["file"]
+    with app.test_request_context('/home'):
+        with raises(HTTPException) as http_exc:
+            resp = template.render(data_dict)
+        assert http_exc.type.code == 500 

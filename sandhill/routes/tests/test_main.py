@@ -1,14 +1,7 @@
 '''
 Tests the main.py route file
 '''
-import io
-from flask import Response as FlaskResponse
-from werkzeug.exceptions import HTTPException
-from requests.models import Response as RequestsResponse
-from pytest import raises
 from sandhill import app
-from sandhill.routes import main
-
 
 def test_main():
     '''
@@ -38,4 +31,14 @@ def test_main():
 
     # test an invalid route config
     result = client.get('/missing')
-    assert result.status_code == 404
+    assert result.status_code == 500
+
+    # test whether jsonify(data) is returned when app.debug is true
+    app.debug = True
+    result = client.get('/missing')
+    assert result.status_code == 200
+    assert result.headers["Content-Type"] == "application/json"
+
+    # test passing in a route config that contains no data
+    result = client.get('/no-data')
+    assert result.status_code == 200

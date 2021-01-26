@@ -1,9 +1,9 @@
 '''
 Processor for streaming data
 '''
-import io
+from flask import abort, Response as FlaskResponse
+from requests.models import Response as RequestsResponse
 from sandhill import app
-from flask import request, render_template, abort, Response as FlaskResponse
 
 def stream(data_dict):
     '''
@@ -14,8 +14,11 @@ def stream(data_dict):
         streams the response
     '''
     allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
-    if 'stream' not in data_dict:
-        app.logger.error("stream variable: 'stream' not set in config. Unable to stream response.")
+    if 'stream' not in data_dict or data_dict['stream'] not in data_dict:
+        app.logger.error((
+            "stream variable: 'stream' not set in config, or references"
+            "unavailable stream. Unable to stream response."
+        ))
         abort(500)
     resp = data_dict[data_dict["stream"]]
     if isinstance(resp, RequestsResponse) and not resp:
@@ -23,8 +26,8 @@ def stream(data_dict):
     elif not resp:
         abort(503)
 
-    stream = FlaskResponse(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
+    stream_response = FlaskResponse(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
     for header in allowed_headers:
         if header in resp.headers.keys():
-            stream.headers.set(header, resp.headers.get(header))
-    return stream
+            stream_response.headers.set(header, resp.headers.get(header))
+    return stream_response

@@ -48,10 +48,9 @@ def load_route_data(route_data):
                 app.logger.error(f"Invalid on_fail set, must be int: {route_data[i]['on_fail']}")
                 abort(500)
 
-        # If the result from the processor is a FlaskResponse, stop processing, unless 'template'
-        # is in the route_data
-        if isinstance(loaded_data, FlaskResponse):
-            return loaded_data
+        # If the result from the processor is a FlaskResponse, stop processing
+        if name in loaded_data and isinstance(loaded_data[name], FlaskResponse):
+            return loaded_data[name]
 
     return loaded_data
 
