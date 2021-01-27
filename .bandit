@@ -1,0 +1,3 @@
+[bandit]
+exclude: /tests,/env
+skips: B101
