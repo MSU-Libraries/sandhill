@@ -38,3 +38,4 @@ exclude_patterns:
   - coverage/
   - .pylintrc
   - .coveragerc
+  - .gitignore
