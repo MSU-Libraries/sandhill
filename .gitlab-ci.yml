@@ -68,6 +68,8 @@ sast:
     - docker run 
         --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}" 
         --env SAST_DISABLE_REMOTE_CHECKS="${SAST_DISABLE_REMOTE_CHECKS:-false}" 
+        --env SECURE_LOG_LEVEL="warn"
+        --env SAST_BANDIT_EXCLUDED_PATHS="*/tests/*, */env/*"
         --volume "$PWD:/code" 
         --volume /var/run/docker.sock:/var/run/docker.sock 
         "registry.gitlab.com/gitlab-org/security-products/sast:11-2-stable" /app/bin/run /code
