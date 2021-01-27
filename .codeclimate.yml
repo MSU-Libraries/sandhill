@@ -21,6 +21,8 @@ plugins:
     enabled: true
   radon: 
     enabled: true
+    config:
+      threshold: "C"
   scss-lint:
     enabled: true
   shellcheck:
@@ -34,3 +36,5 @@ exclude_patterns:
   - "**/tests/"
   - "**/test_instance/"
   - coverage/
+  - .pylintrc
+  - .coveragerc
