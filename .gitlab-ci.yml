@@ -40,8 +40,7 @@ code_quality:
   variables:
     REPORT_FORMAT: html
   artifacts:
-    reports:
-      codequality: gl-code-quality-report.html
+    paths: [gl-code-quality-report.html]
 
 include:
   - template: Code-Quality.gitlab-ci.yml
