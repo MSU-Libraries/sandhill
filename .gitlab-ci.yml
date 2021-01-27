@@ -34,7 +34,7 @@ unittest_and_lint_job:
     - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
 
 ## Use to populate Code Quality report
-code_quality_report:
+code_quality:
   stage: scan
   tags:
     - msul
@@ -42,11 +42,12 @@ code_quality_report:
     reports:
       codequality: gl-code-quality-report.json
 
-include:
-  - template: Code-Quality.gitlab-ci.yml
-
-## Use to generate html report
-code_quality_export:
+## Used to populate the Code Quality html report
+## Can't be used at the same time as the other
+## code_quality job (as the job name must be 
+## 'code_quality' for the template to recognize it
+## and we can't have duplicate job names.
+code_quality:
   stage: scan
   tags:
     - msul
@@ -56,7 +57,7 @@ code_quality_export:
     paths: [gl-code-quality-report.html]
 
 include:
-  - template: /Code-Quality.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
 
 sast:
   stage: scan
