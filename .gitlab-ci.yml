@@ -30,8 +30,12 @@ unittest_and_lint_job:
   script:
     - virtualenv -p python3 $CI_PROJECT_DIR/env
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
-    - $CI_PROJECT_DIR/env/bin/pytest
     - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
+    - $CI_PROJECT_DIR/env/bin/pytest --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
 
 ## Use to populate Code Quality report
 code_quality:
