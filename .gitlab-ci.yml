@@ -33,6 +33,17 @@ unittest_and_lint_job:
     - $CI_PROJECT_DIR/env/bin/pytest
     - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
 
+## Use to populate Code Quality report
+#code_quality:
+#  stage: scan
+#  tags:
+#    - msul
+#  artifacts:
+#    reports:
+#      codequality: gl-code-quality-report.json
+
+
+## Use to generate html report
 code_quality:
   stage: scan
   tags:
