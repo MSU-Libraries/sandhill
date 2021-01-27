@@ -33,25 +33,25 @@ unittest_and_lint_job:
     - $CI_PROJECT_DIR/env/bin/pytest
     - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
 
-code_quality:
-  stage: scan
-  tags:
-    - msul
-  artifacts:
-    reports:
-      codequality: gl-code-quality-report.json
+#code_quality:
+#  stage: scan
+#  tags:
+#    - msul
+#  artifacts:
+#    reports:
+#      codequality: gl-code-quality-report.json
 
 # NOTE: Can't have both this and `code_quality` job enabled at the same time.
 # This job will save the quality report to a pretty html document that
 # allows filtering.
-#code_quality_report:
-#  stage: scan
-#  tags:
-#    - msul
-#  variables:
-#    REPORT_FORMAT: html
-#  artifacts:
-#    paths: [gl-code-quality-report.html]
+code_quality_report:
+  stage: scan
+  tags:
+    - msul
+  variables:
+    REPORT_FORMAT: html
+  artifacts:
+    paths: [gl-code-quality-report.html]
 
 
 include:
