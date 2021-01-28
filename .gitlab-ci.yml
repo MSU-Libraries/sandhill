@@ -82,25 +82,8 @@ sast:
     reports:
       sast: gl-sast-report.json
 
-license_scanning:
-  stage: license_check
-  image: "registry.gitlab.com/gitlab-org/security-products/analyzers/license-finder:3"
-  tags:
-    - msul
-  allow_failure: false
-  script:
-    - docker run 
-        --env LM_REPORT_VERSION="2.1" 
-        --volume "$PWD:/code" 
-        --volume /var/run/docker.sock:/var/run/docker.sock 
-        "registry.gitlab.com/gitlab-org/security-products/analyzers/license-finder:3" /app/bin/run /code
-  artifacts:
-    reports:
-      license_scanning: gl-license-scanning-report.json
-
 include:
   - template: Code-Quality.gitlab-ci.yml
-  - template: Security/License-Scanning.gitlab-ci.yml
 
 build_job:
   stage: build
