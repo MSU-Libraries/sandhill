@@ -5,6 +5,7 @@ services:
 stages:
   - unittest_and_lint
   - scan
+  - license_check
   - build
   - deploy_test
   - release
@@ -38,13 +39,13 @@ unittest_and_lint_job:
       junit: report.xml
 
 ## Use to populate Code Quality report
-code_quality:
-  stage: scan
-  tags:
-    - msul
-  artifacts:
-    reports:
-      codequality: gl-code-quality-report.json
+#code_quality:
+#  stage: scan
+#  tags:
+#    - msul
+#  artifacts:
+#    reports:
+#      codequality: gl-code-quality-report.json
 
 ## Used to populate the Code Quality html report
 ## Can't be used at the same time as the other
@@ -57,16 +58,15 @@ code_quality:
     - msul
   variables:
     REPORT_FORMAT: html
+  allow_failure: false
   artifacts:
     paths: [gl-code-quality-report.html]
-
-include:
-  - template: Code-Quality.gitlab-ci.yml
 
 sast:
   stage: scan
   tags:
     - msul
+  allow_failure: false
   image: registry.gitlab.com/gitlab-org/gl-sast:latest
   script:
     - docker run 
@@ -82,6 +82,25 @@ sast:
     reports:
       sast: gl-sast-report.json
 
+license_scanning:
+  stage: license_check
+  image: "registry.gitlab.com/gitlab-org/security-products/analyzers/license-finder:3"
+  tags:
+    - msul
+  allow_failure: false
+  script:
+    - docker run 
+        --env LM_REPORT_VERSION="2.1" 
+        --volume "$PWD:/code" 
+        --volume /var/run/docker.sock:/var/run/docker.sock 
+        "registry.gitlab.com/gitlab-org/security-products/analyzers/license-finder:3" /app/bin/run /code
+  artifacts:
+    reports:
+      license_scanning: gl-license-scanning-report.json
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
+  - template: Security/License-Scanning.gitlab-ci.yml
 
 build_job:
   stage: build
