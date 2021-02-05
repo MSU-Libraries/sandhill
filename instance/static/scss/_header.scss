@@ -1,41 +1,53 @@
 header {
-    background: linear-gradient(0deg, rgba(24, 69, 59, 0.4), rgba(24, 69, 59, 0.4)), url('/static/images/header.jpg');
-    background-repeat: no-repeat;
-    background-position: 0% 37%;
-    background-size: cover;
-    height: 20rem;
-
-    @include wrap-media-min('md') {
-        background-size: 100%;
-        height: 17rem;
-    }
-
-    @include wrap-media-min('lg') {
-        height: 15rem;
-    }
-
-    .sh-heading-link a {
-        color: $clr-green-msu;
-        text-decoration: none !important;
-        &:hover {
-            color: $clr-green;
+    > div.sh-home-header {
+        height: 22rem;
+        
+        .sh-home-search input{
+            font-size: 1.2rem;
         }
     }
+    > div.sh-header {
+        height: 20rem;
 
-    .sh-search-input {
-        background: rgba(255,255,255, 0.9);
-        @include set-borders($clr-white, 0, 10rem, 0, 0, 10rem);
-
-    }
-
-    .sh-search-btn {
-        background: rgba(255,255,255, 0.9);
-        @include set-borders($clr-white, 0, 0, 10rem, 10rem, 0);
-    }
-
-    .sh-heading-divider {
         @include wrap-media-min('md') {
-            border-right :0.2rem solid $clr-green-msu;
+            background-size: 100%;
+            height: 17rem;
+        }
+
+        @include wrap-media-min('lg') {
+            height: 15rem;
+        }
+    }
+    > div {
+        background: linear-gradient(0deg, rgba(24, 69, 59, 0.4), rgba(24, 69, 59, 0.4)), url('/static/images/header.jpg');
+        background-repeat: no-repeat;
+        background-position: 0% 37%;
+        background-size: cover;
+
+        .sh-heading-link a {
+            color: $clr-green-msu;
+            text-decoration: none !important;
+            &:hover {
+                color: $clr-green;
+            }
+
+        }
+
+        .sh-search-input {
+            background: rgba(255,255,255, 0.9);
+            @include set-borders($clr-white, 0, 10rem, 0, 0, 10rem);
+
+        }
+
+        .sh-search-btn {
+            background: rgba(255,255,255, 0.9);
+            @include set-borders($clr-white, 0, 0, 10rem, 10rem, 0);
+        }
+
+        .sh-heading-divider {
+            @include wrap-media-min('md') {
+                border-right :0.2rem solid $clr-green-msu;
+            }
         }
     }
 }
@@ -47,3 +59,4 @@ header {
          text-decoration: underline;
     }
 }
+

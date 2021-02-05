@@ -19,9 +19,24 @@
 @mixin make-font-size-class($utility-class) {
     $strln: str-length(sh-font-size-);
     $size: str-slice($utility-class, $strln+1);
-    .#{$utility-class} {
-        font-size: get-font($size);
+    $hiphen-index: str-index($size, '-');
+    $min: null;
+    @if $hiphen-index {
+        $break_size: str-slice($size, $hiphen-index+1);
+        $min: breakpoint-min($break_size);
     }
+    @if $min {
+        .#{$utility-class} {
+            @media (min-width: $min) {
+                font-size: get-font($size);
+            }
+        }
+    } @else {
+        .#{$utility-class} {
+            font-size: get-font($size);
+        }
+    }
+
 }
 
 // Generates the css for the utility class that sets a minimum width

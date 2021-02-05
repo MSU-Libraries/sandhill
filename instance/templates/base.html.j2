@@ -28,9 +28,8 @@
 <body>
     <div class="container-fluid p-0">
         <header>
-            {% set variation = '.' + view_args.variation + '.' if 'variation' in view_args else '.' %}
             {% block header %}
-                {% include ['header' + variation + 'html.j2', 'header.html.j2'] %}
+                {% include 'header.html.j2' %}
             {% endblock %}
         </header>
         <main>
@@ -38,7 +37,7 @@
         </main>
         <footer>
             {% block footer %}
-                {% include ['footer' + variation + 'html.j2', 'footer.html.j2'] %}
+                {% include 'footer.html.j2' %}
             {% endblock %}
         </footer>
     </div>
