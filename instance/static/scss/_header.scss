@@ -34,13 +34,13 @@ header {
         }
 
         .sh-search-input {
-            background: rgba(255,255,255, 0.9);
+            background: $clr-white;
             @include set-borders($clr-white, 0, 10rem, 0, 0, 10rem);
 
         }
 
         .sh-search-btn {
-            background: rgba(255,255,255, 0.9);
+            background: $clr-white;
             @include set-borders($clr-white, 0, 0, 10rem, 10rem, 0);
         }
 
