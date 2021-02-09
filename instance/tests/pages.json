@@ -125,60 +125,111 @@
         ]
     },
     {
+        "_comment": "Test that the static viewer files are loaded on to the page",
         "page":"/static/repo_pdfjs/web/viewer.html",
         "code": 200,
-        "_comment": "Test that the static viewer files are loaded on to the page",
         "contains": [
             "<div id=\"mainContainer\">"
         ]
     },
     {
+        "_comment": "Confirm that the item page has rights badge",
         "page": "/etd/100",
         "code": 200,
-        "_comment": "Confirm that the item page has rights badge",
         "contains": [
             "rightsstatements.org",
             "alt=\"In Copyright\""
         ]
     },
     {
+        "_comment": "Test indefinite embargo",
         "page": "/etd/2016",
         "code": 200,
-        "_comment": "Test indefinite embargo",
         "contains": [
             "Indefinite",
             "This item is not available to view or download."
         ]
     },
     {
+        "_comment": "Test no embargo",
         "page": "/etd/100",
         "code": 200,
-        "_comment": "Test no embargo",
         "excludes": [
             "Embargo End Date"
         ]
     },
     {
+        "_comment": "scss compiles and creates the css file",
         "page": "/static/css/compiled/crane.css",
-        "code": 200,
-        "_comment": "scss compiles and creates the css file"
+        "code": 200
     },
     {
+        "_comment": "Test generic item page render",
         "page": "/dmhsp/50",
         "code": 200,
-        "_comment": "Test generic item page render",
         "contains": [
             "alt=\"Mauthausen Concentration Camp : View down the quarry steps\""
         ]
     },
     {
+        "_comment": "Check if the facets are displayed on the search results page",
         "page": "/search?q=frogs",
         "code": 200,
-        "_comment": "Check if the facets are displayed on the search results page",
         "contains": [
             "<a href=\"/search?q=frogs&amp;fq=collection%3AAustralian%5C+Turfgrass%5C+Management%5C+Journal\">Australian Turfgrass Management Journal</a>",
             "<span class=\"badge badge-dark\">49</span>",
             "<a class=\"page-link\" href=\"/search?q=frogs&amp;start=20\">2</a>"
+        ]
+    },
+    {
+        "_comment": "Test search with diacritics",
+        "page": "/search?q=Sobibór+%28Concentration+Camp%29",
+        "code": 200,
+        "contains": [
+           "<a href=\"/search?q=Sobib%C3%B3r+%28Concentration+Camp%29&amp;fq=collection%3ADuane%5C+Mezga%5C+Holocaust%5C+Sites%5C+Photograph%5C+Collection\">Duane Mezga Holocaust Sites Photograph Collection</a>"
+        ]
+    },
+    {
+        "_comment": "Test search with Boolean operators and parentheses",
+        "page": "/search?q=%28Kourouma+OR+Punjab%29+AND+Mulumba",
+        "code": 200,
+        "contains": [
+            "Found 2 results",
+            "Farm level study of the rice production system at the Office Du Niger in Mali",
+            "Increasing the productivity of rice based farming systems of the Pakistan Punjab"
+        ]
+    },
+    {
+        "_comment": "Test search with Boolean operators",
+        "page": "/search?q=frogs+AND+NOT+frogs", 
+        "code": 200,
+        "contains": [
+            "No results found"
+        ]
+    },
+    {
+        "_comment": "Test search to show lower-case 'and' and 'not' do not work as Boolean operators",
+        "page": "/search?q=frogs+and+not+frogs", 
+        "code": 200,
+        "excludes": [
+            "No results found"
+        ]
+    },
+    {
+        "_comment": "Test search with non-ascii characters",
+        "page": "/search?q=δ18O",
+        "code": 200,
+        "contains": [
+            "Emily Beatrice Peterson"
+        ]
+    },
+    {
+        "_comment": "Test search with title with quotes and question mark",
+        "page": "/search?q=\"%27Can+you+imagine+anything+more+Australian%3F%27\"+Bruce+Beresford%27s+\"Breaker+Morant\"",
+        "code": 200,
+        "contains": [
+            "Found 1 result",
+            "Gardner Susan"
         ]
     }
 ]
