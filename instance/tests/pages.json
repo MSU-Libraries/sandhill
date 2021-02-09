@@ -41,7 +41,7 @@
     },
     {
         "page": "/dmhsp/10",
-        "code": 501
+        "code": 200
     },
     {
         "page": "/wosl/9000",
@@ -80,39 +80,20 @@
     },
     {
         "_comment": "test an embargoed datastream",
-        "page": "/etd/988/OBJ/view",
+        "page": "/etd/2016/OBJ/view",
         "code": 403
     },
     {
         "_comment": "test an embargoed etd with allowed datastream",
-        "page": "/etd/988/MODS/view",
+        "page": "/etd/2016/MODS/view",
         "code": 200
     },
     {
         "_comment": "test that the OBJ datastream is not on the item page",
-        "page": "/etd/988",
+        "page": "/etd/2016",
         "code": 200,
         "excludes": [
             "/etd/988/OBJ/view"
-        ]
-    },
-    {
-        "_comment": "test embargoed etd with no embargo_datastream_ss set",
-        "page": "/etd/1655/OBJ/view",
-        "code": 403
-    },
-    {
-        "_comment": "test embargoed etd with no embargo_datastream_ss set",
-        "page": "/etd/1655/MODS/view",
-        "code": 403
-    },
-    {
-        "_comment": "test that the item page loads on an embargoed etd with no embargo_datastream_ss set and it does not load the iframe that dislays the pdf in PDF.js viewer",
-        "page": "/etd/1655",
-        "code": 200,
-        "excludes": [
-            "/etd/1655/OBJ/view",
-            "<iframe class=\"sh-pdf-viewer\""
         ]
     },
     {
@@ -121,7 +102,7 @@
         "_comment": "Confirm that the item page loads with the PDF.js viewer",
         "contains": [
             "/etd/100/OBJ/view",
-            "<iframe id=\"sh-pdf-viewer\""
+            "<iframe class=\"sh-pdf-viewer"
         ]
     },
     {
@@ -139,7 +120,7 @@
         "code": 200,
         "contains": [
             "<h1>Broadening the concept of civic agriculture : the history of civic food systems in Progressive Era Grand Rapids, Michigan</h1>",
-            "<a href=\"/search?fq=subject_display:Agriculture%5C-%5C-Social%5C%20aspects\">Agriculture--Social aspects</a>",
+            "<a href=\"/search?fq=subject_display:Agriculture%5C-%5C-Social%5C%20aspects\" aria-describedby=\"sh-metadata-field-Subjects\">Agriculture--Social aspects</a>",
             "A decade ago, Thomas Lyson coined the term"
         ]
     },
