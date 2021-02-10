@@ -11,7 +11,9 @@ The `edismax` syntax supports `AND`, `OR`, and `NOT` as Boolean operators, which
 [frogs AND toads](http://sandhill.devel.lib.msu.edu/search?q=frogs+AND+toads) vs. [frogs OR toads](http://sandhill.devel.lib.msu.edu/search?q=frogs+OR+toads)  
 [frogs AND NOT frogs](http://sandhill.devel.lib.msu.edu/search?q=frogs+AND+NOT+frogs) (returns the expected 0 results)
 
-Wildcard searches can be performed with the `*` character, which matches any sequence of 0 or more characters, and the `?` character, which matches any single character.
+Wildcard searches can be performed with the `*` character, which matches any sequence of 0 or more characters, and the `?` character, which matches any single character.  
+
+Complex boolean queries can be done using parenthesis `()` such as `(frogs AND toads) OR lizards`  
 
 [frog* -frog -frogs](http://sandhill.devel.lib.msu.edu/search?q=frog*+-frog+-frogs) (searches for any words starting with "frog" but that aren't "frog" or "frogs" — I checked and we get results for "frogging", "froggy", "frog2" (software), and "frogy" (OCR error), etc.)
 
