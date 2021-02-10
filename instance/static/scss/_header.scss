@@ -1,7 +1,7 @@
 header {
     > div.sh-home-header {
         height: 22rem;
-        
+
         .sh-home-search input{
             font-size: 1.2rem;
         }
@@ -35,14 +35,53 @@ header {
 
         .sh-search-input {
             background: $clr-white;
-            @include set-borders($clr-white, 0, 10rem, 0, 0, 10rem);
+			padding-left: 1rem;
+			padding-right: 1rem;
+            @include set-borders($clr-white, 0, .3rem, 0, 0, .3rem);
+			&:focus {
+				box-shadow: none;
+			}
+			&:placeholder-shown  ~ .sh-close-icon {
+				display: none;
+			}
+			&:not(:placeholder-shown) ~ div > .sh-search-btn {
+				background: $clr-green-msu;
+				color: $clr-white;
+				&:hover, &:focus {
+					background: $clr-green;
+				}
+			}
 
         }
+        .sh-close-icon {
+			display: inline-block;
+			vertical-align: middle;
+			outline: 0;
+			cursor: pointer;
+			padding: 0;
+			background: $clr-white;
+			border: none;
+			font-size: 150%;
+			&:after {
+				content: "×";
+				padding-right: 1rem;
+				color: $clr-gray-dark;
+				cursor: pointer;
+				}
+	        }
 
         .sh-search-btn {
             background: $clr-white;
-            @include set-borders($clr-white, 0, 0, 10rem, 10rem, 0);
+			color: $clr-green-msu;
+			font-size: 110%;
+            @include set-borders($clr-white, 0, 0, .3rem, .3rem, 0);
+			&:focus, &:hover {
+				box-shadow: none;
+				background: $clr-green;
+				color: $clr-white;
+			}
         }
+
 
         .sh-heading-divider {
             @include wrap-media-min('md') {
@@ -59,4 +98,3 @@ header {
          text-decoration: underline;
     }
 }
-

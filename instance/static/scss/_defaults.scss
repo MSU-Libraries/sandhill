@@ -4,10 +4,6 @@
 body {
     color: $clr-gray-dark;
     @include set-font-size('md');
-    :focus,
-    :active {
-        box-shadow: 0 0 0 0.1rem $clr-gray-light;
-    }
 }
 
 header,
