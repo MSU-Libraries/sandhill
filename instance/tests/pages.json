@@ -177,7 +177,6 @@
         "code": 200,
         "contains": [
             "<a href=\"/search?q=frogs&amp;fq=collection%3AAustralian%5C+Turfgrass%5C+Management%5C+Journal\">Australian Turfgrass Management Journal</a>",
-            "<span class=\"badge badge-dark\">49</span>",
             "<a class=\"page-link\" href=\"/search?q=frogs&amp;start=20\">2</a>"
         ]
     },
