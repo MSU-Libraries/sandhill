@@ -8,6 +8,7 @@
 /* header imports */        @import '_header';
 /* icons imports */         @import '_icons';
 /* media_viewer imports */  @import '_media_viewer';
+/* homepage imports */      @import '_homepage';
 
 /* Utility classes - Start */
 /* Background utility classes */
@@ -21,7 +22,6 @@
 @include make-font-size-class('sh-font-size-sm');
 @include make-font-size-class('sh-font-size-xs');
 @include make-font-size-class('sh-font-size-md');
-@include make-font-size-class('sh-font-size-icon');
 @include make-min-w-class('sh-min-w-50');
 @include make-color-class('sh-color-green-light');
 @include make-color-class('sh-color-green-msu');
@@ -29,3 +29,11 @@
 @include make-color-class('sh-color-gray-dark');
 /* Utility classes - End */
 
+/* Faux bootstrap */
+// Column of 1.5 == 9 column layout
+.sh-col-lg-1-5 {
+    @include wrap-media-min('lg') {
+        flex-basis: 11.1%
+    }
+}
+/* Faux bootstrap - End */

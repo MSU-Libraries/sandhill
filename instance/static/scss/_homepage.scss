@@ -1,0 +1,8 @@
+
+.sh-browse-link {
+    &:hover {
+        text-decoration: none;
+        background-color: $clr-gray;
+        border-radius: 0.3rem;
+    }
+}
