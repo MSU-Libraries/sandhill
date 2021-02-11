@@ -6,7 +6,7 @@ For multi-word search queries, all words must be present for a positive result.
 
 ## Booleans and Other Operators
 
-The `edismax` syntax supports `AND`, `OR`, and `NOT` as Boolean operators, which must be written as shown in all caps to work as expected. Also supported are similar terms `+` (to indicate that a term *must* be present in results) and `-` (to indicate a term that must *not* be present).
+The `edismax` syntax supports `AND`, `OR`, and `NOT` as Boolean operators, which must be written as shown in all caps to work as expected. Alternate symbols with the same effect are, respectively, `&&`, `||`, and `!`. Also supported are similar terms `+` (to indicate that a term *must* be present in results) and `-` (to indicate a term that must *not* be present).
 
 [frogs AND toads](http://sandhill.devel.lib.msu.edu/search?q=frogs+AND+toads) vs. [frogs OR toads](http://sandhill.devel.lib.msu.edu/search?q=frogs+OR+toads)  
 [frogs AND NOT frogs](http://sandhill.devel.lib.msu.edu/search?q=frogs+AND+NOT+frogs) (returns the expected 0 results)
