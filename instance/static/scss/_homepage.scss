@@ -4,5 +4,13 @@
         text-decoration: none;
         background-color: $clr-gray;
         border-radius: 0.3rem;
+
+        .sh-icon-browse {
+            color: $clr-green;
+        }
+
+        span {
+            color: $clr-green;
+        }
     }
 }
