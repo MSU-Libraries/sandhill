@@ -6,6 +6,7 @@ import pytest
 from sandhill.utils.config_loader import load_json_config
 from sandhill import app
 
+# TODO pytest parameterization to run test multiple times (once for each item in pages.json
 @pytest.mark.functional
 def test_pages():
     """
@@ -18,7 +19,6 @@ def test_pages():
 
     with app.test_client() as client:
         for page in pages:
-            print(page)
             app.logger.info("Testing page: {0}".format(page['page']))
             resp = client.get(page['page'])
             assert resp.status_code == page['code']
