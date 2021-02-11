@@ -7,7 +7,11 @@
 {% block header %}
     {% include 'home_header.html.j2' %} 
 {% endblock %}
-
 {% block content %}
+    {% if view_args.variation == "flex" %}
+        {% include 'browse_bar_flex.html.j2' %}
+    {% else %}
+        {% include 'browse_bar.html.j2' %}
+    {% endif %}
     <h2>Welcome to the MSU Libraries Digital Repository</h2>
 {% endblock %}

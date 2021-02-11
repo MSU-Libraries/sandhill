@@ -1,7 +1,8 @@
 {
     "route": [
         "/",
-        "/home"
+        "/home",
+        "/home/<string:variation>"
     ],
     "template": "home.html.j2",
     "data": [
