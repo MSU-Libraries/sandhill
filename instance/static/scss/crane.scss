@@ -16,6 +16,8 @@
 @include make-background-class('sh-background-none');
 @include make-background-class('sh-background-white');
 /* Font utility classes */
+@include make-font-size-class('sh-font-size-h1-xs');
+@include make-font-size-class('sh-font-size-h1-sm');
 @include make-font-size-class('sh-font-size-sm');
 @include make-font-size-class('sh-font-size-xs');
 @include make-font-size-class('sh-font-size-md');

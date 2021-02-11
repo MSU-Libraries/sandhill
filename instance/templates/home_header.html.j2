@@ -1,19 +1,8 @@
-<div class="sh-header">
-    <div class="row no-gutters sh-header px-3 px-md-4 px-lg-5 px-xl-5">
+<div class="sh-home-header d-flex flex-column">
+    <div class="row no-gutters px-3 px-md-4 px-lg-5 px-xl-5">
         <div class="col-6 col-sm-6 col-md-4 mt-3">
             <a href="https://msu.edu" aria-label="Michigan State University Home"><img alt="Michigan State University Home" src="https://cdn.cabs.msu.edu/brand/images/masthead-helmet-white.svg"></a>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 offset-md-2 mt-3">
-            <form action="/search" method="GET">
-                <div class="input-group">
-                    <input type="text" maxlength="4096" class="form-control sh-search-input" name="q" placeholder="Search the repository" aria-label="Search the repository" aria-describedby="button-addon4">
-                    <div class="input-group-append" id="button-addon4">
-                        <button type="submit" class="btn sh-search-btn" aria-label="Search"><img src="{{ url_for('static', filename='icons/search.svg') }}" role="presentation" alt=""></button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
     </div>
     <!-- Ribbon bar -->
     <div class="row no-gutters sh-background-white justify-content-between px-3 px-md-4 px-lg-5 px-xl-5 mt-3">
@@ -31,7 +20,7 @@
         </div>
         <div class="col-12 col-lg-auto d-flex align-items-center">
             {# TODO -- switch to float left on 2 row view, switch right and left paddings #}
-            <nav class="sh-background-white pl-0">
+            <nav class="sh-background-white pl-0" aria-label="Main">
                 <ul class="nav">
                     <li class="sh-nav-item nav-item">
                         <a class="nav-link pl-0 pr-sm-3" href="/">Home</a>
@@ -47,4 +36,18 @@
         </div>
     </div>
     <!-- Ribbon bar end -->
+    <!-- Search bar -->
+    <div class="row no-gutters sh-home-search align-content-center flex-grow-1">
+        <div class="col-10 col-md-6 offset-md-3 offset-1">
+            <form action="/search" method="GET">
+                <div class="input-group">
+                    <input type="text" maxlength="4096" class="form-control sh-search-input" name="q" placeholder="Search the repository" aria-label="Search the repository" aria-describedby="button-addon4">
+                    <div class="input-group-append" id="button-addon4">
+                        <button type="submit" class="btn sh-search-btn" aria-label="Search"><img src="{{ url_for('static', filename='icons/search.svg') }}" role="presentation" alt=""></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Search bar end -->
 </div>

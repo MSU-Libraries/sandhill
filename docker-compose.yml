@@ -12,6 +12,7 @@ services:
       environment:
         - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom-prod
         - FEDORA_URL=http://repo-web.lib.msu.edu:8080/fedora
+        - TEST_INSTANCE_DIR=/sandhill/instance
 
     nginx:
       image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:_TAG_

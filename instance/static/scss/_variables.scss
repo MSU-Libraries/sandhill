@@ -27,8 +27,10 @@ $colors: (
 
 // Defined instance font sizes
 $fonts: (
-    "h1": 2.3rem,
-    "h2": 2.0rem,
+    "h1": 2.0rem,
+    "h1-sm": 2.5rem,
+    "h1-xs": 2.0rem,
+    "h2": 1.8rem,
     "btn": 1.1rem,
     "xs": 0.6rem,
     "sm": 0.8rem,
@@ -39,7 +41,7 @@ $fonts: (
 
 // Breakpoints copied over from Bootstrap 4
 $breakpoints: (
-    "xs": 0,
+    "xs": 1px,
     "sm": 576px,
     "md": 768px,
     "lg": 992px,

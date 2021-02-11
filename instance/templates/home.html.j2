@@ -3,6 +3,11 @@
 {% block title %}Digital Repository | MSU Libraries
 {% endblock %}
 
+{# override the header block to include the home page header #}
+{% block header %}
+    {% include 'home_header.html.j2' %} 
+{% endblock %}
+
 {% block content %}
     <h2>Welcome to the MSU Libraries Digital Repository</h2>
 {% endblock %}

@@ -3,8 +3,7 @@
         "/<string:namespace>/<int:id>",
         "/<string:namespace>/<int:id>/",
         "/<string:namespace>:<int:id>",
-        "/<string:namespace>:<int:id>/",
-        "/<string:namespace>/<int:id>/<string:variation>"
+        "/<string:namespace>:<int:id>/"
     ],
     "data": [
         {
