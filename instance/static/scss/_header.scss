@@ -37,6 +37,7 @@ header {
             background: $clr-white;
 			padding-left: 1rem;
 			padding-right: 1rem;
+            padding-bottom: 0.3rem;
             @include set-borders($clr-white, 0, .3rem, 0, 0, .3rem);
 			&:focus {
 				box-shadow: none;
@@ -55,20 +56,21 @@ header {
         }
         .sh-close-icon {
 			display: inline-block;
-			vertical-align: middle;
 			outline: 0;
 			cursor: pointer;
 			padding: 0;
+            padding-top: 0.1rem;
 			background: $clr-white;
 			border: none;
 			font-size: 150%;
+            padding-right: 1rem;
+            color: $clr-gray-dark;
+            cursor: pointer;
 			&:after {
 				content: "×";
-				padding-right: 1rem;
-				color: $clr-gray-dark;
-				cursor: pointer;
-				}
-	        }
+                
+            }
+        }
 
         .sh-search-btn {
             background: $clr-white;
@@ -81,7 +83,6 @@ header {
 				color: $clr-white;
 			}
         }
-
 
         .sh-heading-divider {
             @include wrap-media-min('md') {
