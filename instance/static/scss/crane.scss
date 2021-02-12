@@ -30,8 +30,8 @@
 /* Utility classes - End */
 
 /* Faux bootstrap */
-// Column of 1.5 == 9 column layout
-.sh-col-lg-1-5 {
+// 9 Column layout = 1.33 (12 / 1.33 = 9)
+.sh-col-lg-1_33 {
     @include wrap-media-min('lg') {
         flex-basis: 11.1%
     }

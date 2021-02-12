@@ -1,16 +1,11 @@
 {% extends 'base.html.j2' %}
 
-{% block title %}Digital Repository | MSU Libraries
-{% endblock %}
+{% block title %}Digital Repository | MSU Libraries{% endblock %}
 
 {# override the header block to include the home page header #}
 {% block header %}
     {% include 'home_header.html.j2' %} 
 {% endblock %}
 {% block content %}
-    {% if view_args.variation == "flex" %}
-        {% include 'browse_bar_flex.html.j2' %}
-    {% else %}
-        {% include 'browse_bar.html.j2' %}
-    {% endif %}
+    {% include 'browse_bar.html.j2' %}
 {% endblock %}
