@@ -27,7 +27,7 @@
     ],
     "solr_params": {
         "q": {
-            "default": ""
+            "default": "*"
         },
         "q.alt": {
             "base": "*"
@@ -53,7 +53,7 @@
             "default": "score DESC,fgs_label_s ASC,date_key ASC"
         },
         "defType": {
-            "base": "dismax"
+            "base": "edismax"
         },
         "facet": {
             "default": "true"

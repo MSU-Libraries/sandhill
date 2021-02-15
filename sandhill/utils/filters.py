@@ -366,3 +366,13 @@ def maketuplelist(input_list: list, tuple_length: int):
     """
     # if not evenly divisible by tuple_length excess values are discarded
     return list(zip(*[iter(input_list)]*tuple_length))
+
+@app.template_filter('makedict')
+def makedict(input_list: list):
+    """
+    Convert a list into a dictionary
+    args:
+        input_list (list): list with values that need to be converted into a dictionary
+    """
+    return dict(maketuplelist(input_list, 2))
+

@@ -328,3 +328,14 @@ def test_maketuplelist():
     example_list = ['xyz', 1, 2, 'abc', 3, 4]
     res = filters.maketuplelist(example_list, 4)
     assert [('xyz', 1, 2, 'abc')] == res
+
+def test_makedict():
+    example_list = ['xyz', 1, 'abc', 3]
+    # test with a list with evenly divisible count
+    res = filters.makedict(example_list)
+    assert {'xyz':1, 'abc': 3} == res
+
+    # test with a list with unevenly divisible count
+    example_list = ['xyz', 1, 2, 'abc', 3]
+    res = filters.makedict(example_list)
+    assert {'xyz': 1, 2:'abc'} == res

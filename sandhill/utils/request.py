@@ -32,7 +32,7 @@ def match_request_format(view_args_key, allowed_formats, default_format='text/ht
     return result_format
 
 
-def overlay_with_query_args(query_config):
+def overlay_with_query_args(query_config, request_args=None):
     """Given a query config, overlay request.args on the defaults to generate a combined
     list of query arguments
     args:
@@ -51,9 +51,10 @@ def overlay_with_query_args(query_config):
             able to be overridded by requests.args; the "base" will remain unchanged.
     return: A dict of the combined query arguments
     """
-    # grab the query string params and convert to a flat dict
+    # grab the query string params and convert to a flat dict if request args not passed in
     # i.e. duplicative keys will be converted to a list of strings
-    request_args = request.args.to_dict(flat=False)
+    if request_args is None:
+        request_args = request.args.to_dict(flat=False)
 
     query_params = {}
     for field_name, field_conf in query_config.items():

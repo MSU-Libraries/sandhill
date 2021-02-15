@@ -1,6 +1,6 @@
 {% macro gen_browse_icon(icon, text, number, link) -%}
-    <div class="col-4 col-md-3 mx-3 my-3 sh-col-lg-1_33">
-        <a class="px-4 py-3 sh-browse-link d-block" href="{{ link }}">
+    <div class="col-3 col-md-3 mx-1 mx-md-3 my-3 sh-col-lg-1_33">
+        <a class="px-2 px-md-4 py-3 sh-browse-link d-block" href='{{ link }}'>
             <div class="row justify-content-center" role="presentation">
                 <i class="sh-icon-browse" data-feather="{{ icon }}"></i>
             </div>
@@ -11,11 +11,12 @@
     </div>
 {%- endmacro -%}
 
+{% set item_counts = counts['facet_counts']['facet_fields']['RELS_EXT_hasModel_uri_ms'] | makedict %}
 <div class="row no-gutters justify-content-center">
-    {{ gen_browse_icon("globe", "Browse All", 34567, "/search") }}
-    {{ gen_browse_icon("book", "Books", 23456, "/") }}
-    {{ gen_browse_icon("book-open", "Newspapers", 12345, "/") }}
-    {{ gen_browse_icon("volume-2", "Audio", 6789, "/") }}
-    {{ gen_browse_icon("image", "Images", 967, "/") }}
-    {{ gen_browse_icon("file-text", "PDFs", 6543, "/") }}
+    {{ gen_browse_icon("globe", "Browse All", counts['response']['numFound'], "/search") }}
+    {{ gen_browse_icon("book", "Books", item_counts['info:fedora/islandora:bookCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:bookCModel"') }}
+    {{ gen_browse_icon("book-open", "Newspapers", item_counts['info:fedora/islandora:newspaperIssueCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:newspaperIssueCModel"') }}
+    {{ gen_browse_icon("volume-2", "Audio", item_counts['info:fedora/islandora:sp-audioCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:sp-audioCModel"') }}
+    {{ gen_browse_icon("image", "Images", item_counts['info:fedora/islandora:sp_large_image_cmodel'] + item_counts['info:fedora/islandora:sp_basic_image'], '/search?fq=RELS_EXT_hasModel_uri_ms:("info:fedora/islandora:sp_basic_image"+OR+"info:fedora/islandora:sp_large_image_cmodel")') }}
+    {{ gen_browse_icon("file-text", "PDFs", item_counts['info:fedora/islandora:sp_pdf'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:sp_pdf"') }}
 </div>

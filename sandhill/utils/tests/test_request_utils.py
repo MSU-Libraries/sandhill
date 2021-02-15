@@ -50,8 +50,21 @@ def test_overlay_with_query_args():
         },
         "q.alt": {
             "default": ""
+        },
+        "fq": {
+            "default": ["name:Pat"]
         }
     }
+    # Testing passing in params to combine with default configs.
+    params = {
+        "fq": "title:Hello",
+        "q": "*"
+    }
+    query_params = request.overlay_with_query_args(query_config, request_args=params)
+    assert ["title:Hello"] == query_params["fq"]
+    assert len(query_params["fq"]) == 1
+    assert query_params["q"] == ["elephant"]
+
     # Testing that base values will override user-input params; max is implemented; default is overwritten; lists are combined as expected
     with app.test_request_context('/search?q=antelope&rows=120&rows_min=abc&start=5&fl=author&fl=date'):
         query_params = request.overlay_with_query_args(query_config)

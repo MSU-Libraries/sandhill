@@ -22,8 +22,13 @@
 /* Rights badge - End */
 
 .sh-icon-browse {
-    width: 5rem;
-    height: 5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     stroke-width: 0.05rem;
     color: $clr-green-msu;
+    @include wrap-media-min('md') {
+        width: 5rem;
+        height: 5rem;
+    }
+
 }
