@@ -101,7 +101,7 @@ def search(data_dict, url=None, api_get_function=api_get):
 
     # override default parameters with request query parameters (if allowed by config)
     data_dict['params'] = overlay_with_query_args(solr_config, \
-        request_args=data_dict.get('params', None))
+            request_args=data_dict.get('params', None))
 
     solr_results = select(data_dict, url, api_get_function)
 
