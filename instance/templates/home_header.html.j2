@@ -41,7 +41,7 @@
         <div class="col-10 col-md-6 offset-md-3 offset-1">
             <form action="/search" method="GET">
                 <div class="input-group">
-                    <input type="text" class="form-control sh-search-input" name="q" placeholder="Search the repository" aria-label="Search the repository" aria-describedby="sh-search">
+                    <input type="text" maxlength="4096" class="form-control sh-search-input" name="q" placeholder="Search the repository" aria-label="Search the repository" aria-describedby="sh-search">
                     <button class="sh-close-icon" type="reset"></button>
                     <div class="input-group-append" id="sh-search">
                         <button type="submit" class="btn sh-search-btn px-3" aria-label="Search"><i class="fa fa-search"></i></button>

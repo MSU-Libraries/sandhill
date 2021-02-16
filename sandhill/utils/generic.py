@@ -1,6 +1,8 @@
 """
 Generic function that can be used in any context
 """
+import os
+from sandhill import app
 
 def ifnone(*args):
     '''
@@ -62,3 +64,20 @@ def get_descendant_from_dict(dict_obj, list_keys):
             dict_obj = None
     return dict_obj if list_keys else None
 
+def get_config(name, default=None):
+    '''
+    Get the value of the given config name. It will first
+    check in the environment for the variable name, otherwise
+    look in the app.config, otherwise use the default param
+    args:
+        name (str): Name of the config variable to look for
+        default(str/None): The defaut value if not found elsewhere
+    returns:
+        (str): Value of the config variable, default value otherwise
+    '''
+    value = default
+    if name in os.environ:
+        value = os.environ[name]
+    elif name in app.config:
+        value = app.config[name]
+    return value

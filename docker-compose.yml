@@ -9,9 +9,15 @@ services:
         - 8080
       networks:
         nonroutable_net:
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
       environment:
         - SOLR_URL=https://solr.lib.msu.edu/solr/fedcom-prod
         - FEDORA_URL=http://repo-web.lib.msu.edu:8080/fedora
+        - TEST_INSTANCE_DIR=/sandhill/instance
+        - EMAIL_FROM=${EMAIL_FROM}
+      volumes:
+        - app_logs:/var/log/sandhill
 
     nginx:
       image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:_TAG_
@@ -32,3 +38,4 @@ networks:
           - subnet: 192.168.0.0/16
 volumes:
   nginx_logs:
+  app_logs:
