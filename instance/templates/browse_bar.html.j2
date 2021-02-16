@@ -1,5 +1,5 @@
 {% macro gen_browse_icon(icon, text, number, link) -%}
-    <div class="col-3 col-md-3 mx-1 mx-md-3 my-3 sh-col-lg-1_33">
+    <div class="col-3 m-2 m-md-3 col-lg">
         <a class="px-2 px-md-4 py-3 sh-browse-link d-block" href='{{ link }}'>
             <div class="row justify-content-center" role="presentation">
                 <i class="sh-icon-browse" data-feather="{{ icon }}"></i>
@@ -12,11 +12,35 @@
 {%- endmacro -%}
 
 {% set item_counts = counts['facet_counts']['facet_fields']['RELS_EXT_hasModel_uri_ms'] | makedict %}
-<div class="row no-gutters justify-content-center">
+<div class="row no-gutters justify-content-center mx-lg-5 mx-xl-0">
+    <div class="col-0 col-lg-auto col-xl-1"></div>
+    
     {{ gen_browse_icon("globe", "Browse All", counts['response']['numFound'], "/search") }}
     {{ gen_browse_icon("book", "Books", item_counts['info:fedora/islandora:bookCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:bookCModel"') }}
-    {{ gen_browse_icon("book-open", "Newspapers", item_counts['info:fedora/islandora:newspaperIssueCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:newspaperIssueCModel"') }}
+    <!-- TODO : placeholder image for newspaper -->
+    <div class="col-3 m-2 m-md-3 col-lg">
+        <a class="px-2 px-md-4 py-3 sh-browse-link d-block" href='{{ link }}'>
+            <div class="row justify-content-center" role="presentation">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.11 14.48" class="sh-icon-browse">
+                    <path d="M21.16,18H3a1.22,1.22,0,0,1-1.2-1.2V5.57A1.31,1.31,0,0,1,3,4.27H18.9a1.22,1.22,0,0,1,1.2,1.2v11.2" transform="translate(-1.42 -3.89)" fill="none" stroke="#18453b" stroke-miterlimit="10" stroke-width="0.75"/>
+                    <line x1="2.07" y1="3.49" x2="16.92" y2="3.49" fill="none" stroke="#18453b" stroke-miterlimit="10" stroke-width="0.75"/><line x1="2.07" y1="7.12" x2="16.92" y2="7.12" fill="none" stroke="#18453b" stroke-miterlimit="10" stroke-width="0.75"/>
+                    <line x1="2.07" y1="10.75" x2="16.92" y2="10.75" fill="none" stroke="#18453b" stroke-miterlimit="10" stroke-width="0.75"/>
+                    <path d="M20,7.1h1.31a.85.85,0,0,1,.85.83h0v9.18a.85.85,0,0,1-.85.85H21a.85.85,0,0,1-.84-.84h0V7.94" transform="translate(-1.42 -3.89)" fill="none" stroke="#18453b" stroke-miterlimit="10" stroke-width="0.75"/>
+                </svg>
+            </div>
+            <div class="row justify-content-center">
+                <span class="text-center sh-color-green-msu" href="/">Newspapers<br />{{ "{:,}".format(item_counts['info:fedora/islandora:newspaperIssueCModel']) }}</span>
+            </div>
+        </a>
+    </div>
+    <!-- TODO : placeholder image for newspaper convert this to a font -->
+
+    {# {{ gen_browse_icon("book-open", "Newspapers", item_counts['info:fedora/islandora:newspaperIssueCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:newspaperIssueCModel"') }} #}
+    <!-- TODO : placeholder image for newspaper -->
+
     {{ gen_browse_icon("volume-2", "Audio", item_counts['info:fedora/islandora:sp-audioCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:sp-audioCModel"') }}
     {{ gen_browse_icon("image", "Images", item_counts['info:fedora/islandora:sp_large_image_cmodel'] + item_counts['info:fedora/islandora:sp_basic_image'], '/search?fq=RELS_EXT_hasModel_uri_ms:("info:fedora/islandora:sp_basic_image"+OR+"info:fedora/islandora:sp_large_image_cmodel")') }}
     {{ gen_browse_icon("file-text", "PDFs", item_counts['info:fedora/islandora:sp_pdf'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:sp_pdf"') }}
+
+    <div class="col-0 col-lg-auto col-xl-1"></div>
 </div>
