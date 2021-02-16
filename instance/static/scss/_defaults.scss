@@ -16,11 +16,11 @@ main {
 
 h1 {
     @include set-font-size('h1');
+    font-weight: 900;
 }
 
 h2 {
     @include set-font-size('h2');
-    font-weight: 900;
 }
 
 a {
