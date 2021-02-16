@@ -8,6 +8,7 @@ from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
 from sandhill import app
 from sandhill.commands.compile_scss import run_compile
+from sandhill.utils.generic import get_config
 from jinja2 import ChoiceLoader, FileSystemLoader
 from sassutils.wsgi import SassMiddleware
 
@@ -16,44 +17,29 @@ def configure_logging():
     Configure application logging. Includes: default logger, file logger, 
     and email based on the application configuration file.
     '''
-    # TODO -- CI/CD options for the config file
-    #       1) use the default config for test, stage, and prod
-    #       2) make separate configs and have the deploy job copy appropriately
-    #           (ex: sandhill.test.cfg -> sandhill.cfg, sandhill.prod.cfg -> sandhill.cfg, ...)
-    #       3) make a sandhill.cicd.cfg which has placeholders that we do a sed command to set
-    #       4) have the deploy job echo configs into a new file
-    # TODO -- do we want the format string to be in the config file too?
-    #           https://docs.python.org/3/library/logging.html#logrecord-attributes
-    # TODO -- how much validation do we want to do? valid emails? valid log levels? file path?
 
     # Default logger
     app.logger = create_logger(app)
-    log_level = logging.WARNING
-    if 'LOG_LEVEL' in app.config and app.config['LOG_LEVEL']:
-        log_level = app.config['LOG_LEVEL']
-    app.logger.setLevel(log_level)
+    app.logger.setLevel(get_config('LOG_LEVEL', logging.WARNING))
 
     # File logger
-    if 'LOG_FILE' in app.config and app.config['LOG_FILE']:
-        file_handler = RotatingFileHandler(app.config['LOG_FILE'], maxBytes=1024 * 1024 * 100, backupCount=5)
-        file_handler.setLevel(log_level)
+    if get_config('LOG_FILE'):
+        file_handler = RotatingFileHandler(get_config('LOG_FILE'), maxBytes=1024 * 1024 * 100, backupCount=5)
+        file_handler.setLevel(get_config('LOG_LEVEL', logging.WARNING))
         file_handler.setFormatter(logging.Formatter(
             '[%(asctime)s] %(levelname)s [%(filename)s %(lineno)d]: %(message)s'
         ))
         app.logger.addHandler(file_handler)
 
     # Email logger
-    if 'EMAIL' in app.config and app.config['EMAIL']:
+    if get_config('EMAIL'):
         email_log_level = logging.ERROR
-        if 'EMAIL_LOG_LEVEL' in app.config and app.config['EMAIL_LOG_LEVEL']:
-            email_log_level = app.config['EMAIL_LOG_LEVEL']
+        email_log_level = get_config('EMAIL_LOG_LEVEL', logging.ERROR)
         mail_handler = SMTPHandler(
-            mailhost='127.0.0.1',
-            fromaddr=app.config['EMAIL_FROM'] if 'EMAIL_FROM' \
-                in app.config and app.config['EMAIL_FROM'] else "sandhill@sandhill.com",
-            toaddrs=[app.config['EMAIL']],
-            subject=app.config['EMAIL_SUBJECT'] if 'EMAIL_SUBJECT' \
-                in app.config and app.config['EMAIL_SUBJECT'] else 'Sandhill Error'
+            mailhost=get_config('EMAIL_HOST', '127.0.01'),
+            fromaddr=get_config('EMAIL_FROM'),
+            toaddrs=[get_config('EMAIL')],
+            subject=get_config('EMAIL_SUBJECT', 'Sandhill Error')
         )
         mail_handler.setLevel(email_log_level)
         mail_handler.setFormatter(logging.Formatter(
@@ -81,10 +67,10 @@ if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
     app.config.from_pyfile('sandhill.cfg')
 
 # load the secret key
-app.secret_key = app.config["SECRET_KEY"]
+app.secret_key = get_config("SECRET_KEY")
 
 # Set debug mode
-app.debug = bool(app.config["DEBUG"])
+app.debug = bool(get_config("DEBUG","False"))
 # Add debug toolbar if debug mode is on and not running code via pytest
 if app.debug and not "pytest" in sys.modules:
     toolbar = DebugToolbarExtension(app)
@@ -94,7 +80,7 @@ if app.debug and not "pytest" in sys.modules:
 configure_logging()
 
 # Add Sass middleware. This should help us complie CSS from Sass
-if 'COMPILE_SCSS_ON_REQUEST' in app.config and bool(app.config['COMPILE_SCSS_ON_REQUEST']):
+if bool(get_config('COMPILE_SCSS_ON_REQUEST','False')):
     app.wsgi_app = SassMiddleware(
         app.wsgi_app,
         {
