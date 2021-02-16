@@ -5,5 +5,18 @@
     ],
     "template": "home.html.j2",
     "data": [
+        {
+            "name": "counts",
+            "processor": "solr.search",
+            "paths": ["config/search/main.json"],
+            "params": {
+                "facet.field": "RELS_EXT_hasModel_uri_ms",
+                "facet": "on",
+                "q": "*",
+                "rows":"0",
+                "wt": "json"
+            }
+        }
+
     ]
 }

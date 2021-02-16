@@ -27,7 +27,7 @@
     ],
     "solr_params": {
         "q": {
-            "default": ""
+            "default": "*"
         },
         "q.alt": {
             "base": "*"

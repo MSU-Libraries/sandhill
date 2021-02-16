@@ -36,3 +36,8 @@ $(document).ready(function() {
         e.stopPropagation();
     });
 });
+
+/* Activate Feather Icons */
+$(document).ready(function() {
+    feather.replace();
+});

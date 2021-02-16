@@ -39,19 +39,19 @@ header {
 			padding-right: 1rem;
             padding-bottom: 0.3rem;
             @include set-borders($clr-white, 0, .3rem, 0, 0, .3rem);
-			&:focus {
-				box-shadow: none;
-			}
-			&:placeholder-shown  ~ .sh-close-icon {
-				display: none;
-			}
-			&:not(:placeholder-shown) ~ div > .sh-search-btn {
-				background: $clr-green-msu;
-				color: $clr-white;
-				&:hover, &:focus {
-					background: $clr-green;
-				}
-			}
+            &:focus {
+                box-shadow: none;
+            }
+            &:placeholder-shown  ~ .sh-close-icon {
+                display: none;
+            }
+            &:not(:placeholder-shown) ~ div > .sh-search-btn {
+                background: $clr-green-msu;
+                color: $clr-white;
+                &:hover, &:focus {
+                    background: $clr-green;
+                }
+            }
 
         }
         .sh-close-icon {
@@ -74,14 +74,14 @@ header {
 
         .sh-search-btn {
             background: $clr-white;
-			color: $clr-green-msu;
-			font-size: 110%;
+            color: $clr-green-msu;
+            font-size: 110%;
             @include set-borders($clr-white, 0, 0, .3rem, .3rem, 0);
-			&:focus, &:hover {
-				box-shadow: none;
-				background: $clr-green;
-				color: $clr-white;
-			}
+            &:focus, &:hover {
+                box-shadow: none;
+                background: $clr-green;
+                color: $clr-white;
+            }
         }
 
         .sh-heading-divider {
