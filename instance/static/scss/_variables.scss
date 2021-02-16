@@ -22,6 +22,7 @@ $colors: (
     "green-light": $clr-green-light,
     "gray-hover": $clr-gray-hover,
     "gray-dark": $clr-gray-dark,
+    "gray-hover": $clr-gray-hover,
     "gray": $clr-gray,
     "white": $clr-white,
     "none": $clr-none,
@@ -29,10 +30,10 @@ $colors: (
 
 // Defined instance font sizes
 $fonts: (
-    "h1": 2.5rem,
+    "h1": 2.0rem,
     "h1-sm": 2.5rem,
     "h1-xs": 2.0rem,
-    "h2": 2.0rem,
+    "h2": 1.8rem,
     "btn": 1.1rem,
     "xs": 0.6rem,
     "sm": 0.8rem,

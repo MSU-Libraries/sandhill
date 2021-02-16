@@ -1,13 +1,51 @@
 import os
 import sass
 import logging
+import sys
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
+from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
 from sandhill import app
 from sandhill.commands.compile_scss import run_compile
+from sandhill.utils.generic import get_config
 from jinja2 import ChoiceLoader, FileSystemLoader
 from sassutils.wsgi import SassMiddleware
+
+def configure_logging():
+    '''
+    Configure application logging. Includes: default logger, file logger, 
+    and email based on the application configuration file.
+    '''
+
+    # Default logger
+    app.logger = create_logger(app)
+    app.logger.setLevel(get_config('LOG_LEVEL', logging.WARNING))
+
+    # File logger
+    if get_config('LOG_FILE'):
+        file_handler = RotatingFileHandler(get_config('LOG_FILE'), maxBytes=1024 * 1024 * 100, backupCount=5)
+        file_handler.setLevel(get_config('LOG_LEVEL', logging.WARNING))
+        file_handler.setFormatter(logging.Formatter(
+            '[%(asctime)s] %(levelname)s [%(filename)s %(lineno)d]: %(message)s'
+        ))
+        app.logger.addHandler(file_handler)
+
+    # Email logger
+    if get_config('EMAIL'):
+        email_log_level = logging.ERROR
+        email_log_level = get_config('EMAIL_LOG_LEVEL', logging.ERROR)
+        mail_handler = SMTPHandler(
+            mailhost=get_config('EMAIL_HOST', '127.0.01'),
+            fromaddr=get_config('EMAIL_FROM'),
+            toaddrs=[get_config('EMAIL')],
+            subject=get_config('EMAIL_SUBJECT', 'Sandhill Error')
+        )
+        mail_handler.setLevel(email_log_level)
+        mail_handler.setFormatter(logging.Formatter(
+            '[%(asctime)s] %(levelname)s: %(filename)s %(lineno)d\n%(message)s'
+        ))
+        app.logger.addHandler(mail_handler)
 
 # Ability to load templates from instance/templates/ directory
 loader = ChoiceLoader([
@@ -28,25 +66,21 @@ app.config.from_pyfile(os.path.join(app.instance_path, 'sandhill.default_setting
 if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
     app.config.from_pyfile('sandhill.cfg')
 
-# load the secret key 
-app.secret_key = app.config["SECRET_KEY"]
+# load the secret key
+app.secret_key = get_config("SECRET_KEY")
 
-# set debug mode
-app.debug = bool(app.config["DEBUG"])
-if app.debug:
+# Set debug mode
+app.debug = bool(get_config("DEBUG","False"))
+# Add debug toolbar if debug mode is on and not running code via pytest
+if app.debug and not "pytest" in sys.modules:
     toolbar = DebugToolbarExtension(app)
     toolbar._success_codes.extend([400, 401, 403, 404, 500, 501])
 
-
-# Set log level
-app.logger = create_logger(app)
-if app.debug:
-    app.logger.setLevel(logging.DEBUG)
-else:
-    app.logger.setLevel(logging.WARN)
+# Configure logging
+configure_logging()
 
 # Add Sass middleware. This should help us complie CSS from Sass
-if 'COMPILE_SCSS_ON_REQUEST' in app.config and bool(app.config['COMPILE_SCSS_ON_REQUEST']):
+if bool(get_config('COMPILE_SCSS_ON_REQUEST','False')):
     app.wsgi_app = SassMiddleware(
         app.wsgi_app,
         {

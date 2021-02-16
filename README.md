@@ -48,6 +48,29 @@ sudo mkdir -p /var/log/sandhill
 ## Setup logrotate on logs
 TODO
 
+## Update the environment file
+TODO -- move this to CI/CD later
+In order for the docker container to know the hostname of the server it is 
+running on, we need to pass it as an environment variable. Modify the 
+`/etc/environment` file to add the following line:  
+```
+EMAIL_FROM=sandhill@sandhill.lib.msu.edu
+```
+
+## Allow emails to be sent from the container
+In order for error emails to be sent from the sandhill container 
+you will need to update postfix on the host and ufw
+
+Edit the postfix config (`/etc/postfix/main.cf`) and update this line:  
+```
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.0.0 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+```
+```
+ufw allow from 192.168.0.0/16 to any port 25
+ufw allow from 172.16.0.0/12 to any port 25
+systemctl restart postfix
+```
+
 ## Create the rsyslog config
 This step is required to have filtered logging for only this application go to 
 a file other than syslog. This is only because `StandardOutput` and `StandardError` 

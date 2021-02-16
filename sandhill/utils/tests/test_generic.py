@@ -1,5 +1,6 @@
 from pytest import raises
 from sandhill.utils import generic
+from sandhill import app
 
 def test_is_none():
     # Test dictionary path
@@ -60,3 +61,21 @@ def test_get_descendant_from_dict():
     assert generic.get_descendant_from_dict(test_dict, ['level1', 'invalid_level']) is None
     assert generic.get_descendant_from_dict('invalid_dict', ['level1', 'invalid_level']) is None
 
+def test_get_config():
+    # Test getting a value from the environment when also present in config
+    response = generic.get_config("PATH")
+    assert isinstance(response, str)
+    assert response
+
+    # Test getting a value from the config when not in the environment
+    response = generic.get_config("DEBUG")
+    assert response == app.config["DEBUG"]
+
+    # Test getting a value for a config not set in the environment or config
+    response = generic.get_config("NOT_SET")
+    assert response is None
+
+    # Test getting a value for a config that is empty in the config
+    response = generic.get_config("TEST_EMPTY")
+    assert isinstance(response, str)
+    assert not response
