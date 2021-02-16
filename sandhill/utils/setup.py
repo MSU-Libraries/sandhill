@@ -1,6 +1,7 @@
 import os
 import sass
 import logging
+import sys
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.logging import create_logger
@@ -28,15 +29,15 @@ app.config.from_pyfile(os.path.join(app.instance_path, 'sandhill.default_setting
 if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
     app.config.from_pyfile('sandhill.cfg')
 
-# load the secret key 
+# load the secret key
 app.secret_key = app.config["SECRET_KEY"]
 
-# set debug mode
+# Set debug mode
 app.debug = bool(app.config["DEBUG"])
-if app.debug:
+# Add debug toolbar if debug mode is on and not running code via pytest
+if app.debug and not "pytest" in sys.modules:
     toolbar = DebugToolbarExtension(app)
     toolbar._success_codes.extend([400, 401, 403, 404, 500, 501])
-
 
 # Set log level
 app.logger = create_logger(app)
