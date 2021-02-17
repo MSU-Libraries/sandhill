@@ -5,7 +5,7 @@
                 <i class="sh-icon-browse" data-feather="{{ icon }}"></i>
             </div>
             <div class="row justify-content-center">
-                <span class="text-center sh-color-green-msu" href="/">{{ text }}<br />{{ "{:,}".format(number) }}</span>
+                <span class="text-center sh-color-green-msu">{{ text }}<br />{{ "{:,}".format(number) }}</span>
             </div>
         </a>
     </div>
@@ -19,7 +19,7 @@
     {{ gen_browse_icon("book", "Books", item_counts['info:fedora/islandora:bookCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:bookCModel"') }}
     <!-- TODO : placeholder image for newspaper -->
     <div class="col-3 m-2 m-md-3 col-lg">
-        <a class="px-2 px-md-4 py-3 sh-browse-link d-block" href='{{ link }}'>
+        <a class="px-2 px-md-4 py-3 sh-browse-link d-block" href='/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:newspaperIssueCModel"'>
             <div class="row justify-content-center" role="presentation">
                 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.11 14.48" class="sh-icon-browse">
                     <path d="M21.16,18H3a1.22,1.22,0,0,1-1.2-1.2V5.57A1.31,1.31,0,0,1,3,4.27H18.9a1.22,1.22,0,0,1,1.2,1.2v11.2" transform="translate(-1.42 -3.89)" fill="none" stroke="#18453b" stroke-miterlimit="10" stroke-width="0.75"/>
@@ -29,7 +29,7 @@
                 </svg>
             </div>
             <div class="row justify-content-center">
-                <span class="text-center sh-color-green-msu" href="/">Newspapers<br />{{ "{:,}".format(item_counts['info:fedora/islandora:newspaperIssueCModel']) }}</span>
+                <span class="text-center sh-color-green-msu">Newspapers<br />{{ "{:,}".format(item_counts['info:fedora/islandora:newspaperIssueCModel']) }}</span>
             </div>
         </a>
     </div>
