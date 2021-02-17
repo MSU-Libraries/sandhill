@@ -76,7 +76,7 @@ def get_config(name, default=None):
         (str): Value of the config variable, default value otherwise
     '''
     value = default
-    if name in os.environ:
+    if name in os.environ and os.environ[name]:
         value = os.environ[name]
     elif name in app.config:
         value = app.config[name]
