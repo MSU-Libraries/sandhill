@@ -11,7 +11,7 @@ def render_template(template_str, context):
     raises:
         jinja2.TemplateError
     """
-    env = Environment()
+    env = Environment(autoescape=True)
     sandhill_filters = dict([f for f in getmembers(filters) if isfunction(f[1])])
     env.filters = {**env.filters, **sandhill_filters}
     data_template = env.from_string(template_str)
