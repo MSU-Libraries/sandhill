@@ -8,7 +8,7 @@ from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
 from sandhill import app
-from sandhill.utils.generic import get_descendant_from_dict, ifnone
+from sandhill.utils.generic import get_descendant_from_dict, ifnone, get_config
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 
@@ -24,7 +24,7 @@ def select(data_dict, url=None, api_get_function=api_get):
     '''
 
     response = None
-    url = establish_url(url, os.environ.get('SOLR_URL', None))
+    url = establish_url(url, get_config('SOLR_URL', None))
     url = url + "/select"
 
     try:
