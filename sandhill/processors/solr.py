@@ -1,7 +1,6 @@
 '''
 Processor for Solr requests
 '''
-import os
 from urllib.parse import urlencode
 from json.decoder import JSONDecodeError
 from requests.exceptions import RequestException

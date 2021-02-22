@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 from requests import RequestException
 from flask import abort
 from sandhill.utils.api import api_get, establish_url
-from sandhill.utils.generic import get_config 
+from sandhill.utils.generic import get_config
 from sandhill import app
 
 def load_datastream(data_dict, url=None, api_get_function=api_get):
