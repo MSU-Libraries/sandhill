@@ -1,7 +1,0 @@
-version: '2'
-
-services:
-    sandhill:
-      environment:
-        - SOLR_URL=https://solr.stage.lib.msu.edu/solr/fedcom
-        - FEDORA_URL=http://d.stage.lib.msu.edu:8080/fedora
