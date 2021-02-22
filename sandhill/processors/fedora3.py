@@ -6,6 +6,7 @@ from urllib.parse import urlencode
 from requests import RequestException
 from flask import abort
 from sandhill.utils.api import api_get, establish_url
+from sandhill.utils.generic import get_config
 from sandhill import app
 
 def load_datastream(data_dict, url=None, api_get_function=api_get):
@@ -23,7 +24,7 @@ def load_datastream(data_dict, url=None, api_get_function=api_get):
     if data_dict['view_args']['action'] not in allowed_actions:
         abort(400)
 
-    url = establish_url(url, os.environ.get('FEDORA_URL', None))
+    url = establish_url(url, get_config('FEDORA_URL', None))
     try:
         params = {}
         params['download'] = 'true' if data_dict['view_args']['action'] == "download" else 'false'

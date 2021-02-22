@@ -55,6 +55,8 @@ running on, we need to pass it as an environment variable. Modify the
 `/etc/environment` file to add the following line:  
 ```
 EMAIL_FROM=sandhill@sandhill.lib.msu.edu
+SOLR_URL=https://solr.lib.msu.edu/solr/fedcom-prod
+FEDORA_URL=http://repo-web.lib.msu.edu:8080/fedora
 ```
 
 ## Allow emails to be sent from the container
@@ -180,7 +182,7 @@ sudo adduser deploy docker
 
 ### Allow the CI/CD deploy user to execute the commands on the server. Run `sudo visudo` to add:  
 ```
-deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack.test, /bin/cp /home/deploy/sandhill/etc/systemd/system/sandhill-stack.test.service /etc/systemd/system/, /bin/systemctl daemon-reload, /bin/systemctl enable sandhill-stack.test, /bin/systemctl status sandhill-stack.test
+deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack, /bin/cp /home/deploy/sandhill/etc/systemd/system/sandhill-stack.service /etc/systemd/system/, /bin/systemctl daemon-reload, /bin/systemctl enable sandhill-stack, /bin/systemctl status sandhill-stack
 ```
 TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
 
