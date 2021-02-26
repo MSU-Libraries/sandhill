@@ -1,0 +1,23 @@
+<div class="input-group">
+    <form method="GET" action="{{ url_components["path"] }}">
+        {% for param, values in url_components["query_args"].items() %}
+            {% if param not in ["sort", "start"] %}
+                {% for value in values %}
+                    <input type="hidden" name="{{ param }}" value="{{ value }}"/>
+                {% endfor %}    
+            {% endif %}
+        {% endfor %}
+        <select class="custom-select" name="sort" aria-label="Example select with button addon">
+            <option value="score desc">Most Relevant</option>
+            <option value="title asc">Title (A-Z)</option>
+            <option value="title desc">Title (Z-A)</option>
+            <option value="date desc">Date (Newest)</option>
+            <option value="date asc">Date (Oldest)</option>
+            <option value="score asc">Least Relevant</option>
+        </select>
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
