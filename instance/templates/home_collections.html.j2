@@ -1,59 +1,21 @@
 {% macro gen_collection_browse(img_link, text, link) -%}
-    <div class="col-6 col-md-2">
-        <a class="d-block" href='{{ link }}'>
-            <img class="w-100 mb-2" alt="" role="presentation" src='{{ img_link }}'>
-        <span class="d-block text-center small">{{ text }}</span>
+    <div class="col-5 col-md-2 col-xl-auto m-2 ml-md-5">
+        <a class="d-block border rounded p-3 text-center sh-background-hover-gray-hover" href='{{ link }}' style="max-width:12.5rem">
+            <img class="w-100" alt="" role="presentation" src='{{ img_link }}'/>
+            <span class="d-block my-3">{{ text }}</span>
         </a>
     </div>
 {%- endmacro -%}
 
 <div class="mx-5">
-    <h2 class="mb-4">Featured Primary Sources</h2>
-    <div class="row mb-5">
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_MICHILAC_UFW_ufw900001_JPG_HIGH.jpg", "Activism", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_VBI_Brooks.jpg", "Interviews", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Map_Michigan.jpg", "Maps", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_GNN_Becassine2.jpg", "Cultural Studies", "/") }}
-    </div>
-    <h2 class="mb-4">Electronic Theses and Dissertations</h2>
-    <div class="row mb-5">
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_05062016_MainLibrary_0029_Edit_1500.jpg", "Recently Added", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Field_20080714kbs_ks0762-1-(ZF-8953-82790-1-001).jpg", "Browse by Program", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Lab_20100723.KAS.9640-(ZF-8953-82790-1-002).jpg", "Browse by Degree Level", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Sparty_20100422.DLT_2748-(ZF-5246-37318-1-001).jpg", "ETDs about MSU", "/") }}
-    </div>
-    <h2>Publications</h2>
-    <div class="row">
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Chocolate.jpg",	"Cookbooks", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_RedCedarReview.jpg", "Red Cedar Review", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_AEJ_AfricaMediaReview.jpg", "African e-Journals Project", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_PotatoReports_Cover.jpg", "Michigan Potato Research Reports", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_ErgoReports.jpg", "Ergonomics Reports", "/") }}
-    </div>        
-    <h2>G. Robert Vincent Voice Library</h2>
-    <div class="row">
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_WritersSeries_AmyHassinger.jpg", "Michigan Writers Series", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_VVLAuto_BobilloMarta.jpg", "Lansing Auto Town Gallery", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_VBI_Brooks.jpg", "Voices of the Black Imaginary", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_WOSL.jpg", "Women's Overseas Service League", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_MISupremeCourtLogo.jpg", "Michigan Supreme Court Justices", "/") }}
-    </div>    
-    <h2>Turfgrass Information Center</h2>
-    <div class="row">
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_TurfSlides_Grass_824_JPG_HIGH.jpg", "Browse all Turfgrass", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_ManPointingAtGrass_37_JPG_HIGH.jpg", "Slides", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_Periodicals.jpg", "Periodicals", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_Newsletter.jpg", "Newsletters", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_ConferenceProceedings_Pg.jpg", "Conference Proceedings", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_ScottsMonographs.jpg", "Monographs", "/") }}
-    </div>    
-    <h2>Agriculture</h2>
-    <div class="row">
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Ag_ThesesDissertations_Pg69.jpg", "Agricultural Theses & Dissertations", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Ag_MIFarming.jpg", "Historical Newspapers", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_PotatoReports_Cover.jpg", "Michigan Potato Research Reports", "/") }}
-        {{ gen_collection_browse("https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_GrassClump_1468_JPG_HIGH.jpg", "Turfgrass", "/") }}
-    </div>    
-    
+    {% for section in sections %}
+        <h2 class="mb-2">{{ section.heading }} </h2>
+        <div class="row mb-4 justify-content-center justify-content-md-start">
+        {% for object in section.objects %}
+            {{ gen_collection_browse(object.img_link, object.caption, object.link_out) }}
+
+        {% endfor %}
+        </div>
+    {% endfor %}
 </div>
 
