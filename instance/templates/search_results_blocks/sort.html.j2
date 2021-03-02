@@ -1,23 +1,23 @@
-<div class="input-group">
-    <form method="GET" action="{{ url_components["path"] }}">
-        {% for param, values in url_components["query_args"].items() %}
-            {% if param not in ["sort", "start"] %}
-                {% for value in values %}
-                    <input type="hidden" name="{{ param }}" value="{{ value }}"/>
-                {% endfor %}    
+<form method="GET" action="{{ url_components["path"] }}" class="col-12 col-md-6">
+    {% for param, values in url_components["query_args"].items() %}
+        {% if param not in ["sort", "start"] %}
+            {% for value in values %}
+                <input type="hidden" name="{{ param }}" value="{{ value }}"/>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    <div class="input-group">
+        <select class="custom-select" name="sort" aria-label="Example select with button addon">
+        {% for sort_opt in search_conf.sort_options %}
+            {% if 'sort' in url_components.query_args and url_components.query_args['sort'] | head == sort_opt['value'] %}
+                <option selected value="{{ sort_opt['value'] }}">{{ sort_opt['label'] }}</option>
+            {% else %}
+                <option value="{{ sort_opt['value'] }}">{{ sort_opt['label'] }}</option>
             {% endif %}
         {% endfor %}
-        <select class="custom-select" name="sort" aria-label="Example select with button addon">
-            <option value="score desc">Most Relevant</option>
-            <option value="title asc">Title (A-Z)</option>
-            <option value="title desc">Title (Z-A)</option>
-            <option value="date desc">Date (Newest)</option>
-            <option value="date asc">Date (Oldest)</option>
-            <option value="score asc">Least Relevant</option>
         </select>
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="submit">Submit</button>
         </div>
-    </form>
-</div>
-
+    </div>
+</form>

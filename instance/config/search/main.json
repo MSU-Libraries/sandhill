@@ -1,4 +1,30 @@
 {
+    "sort_options": [
+        {
+            "value": "score desc",
+            "label": "Most Relevant"
+        },
+        {
+            "value": "title asc",
+            "label": "Title (A-Z)"
+        },
+        {
+            "value": "title desc",
+            "label": "Title (Z-A)"
+        },
+        {
+            "value": "date desc",
+            "label": "Date (Newest)"
+        },
+        {
+            "value": "date asc",
+            "label": "Date (Oldest)"
+        },
+        {
+            "value": "score asc",
+            "label": "Least Relevant"
+        }
+    ],
     "facet_fields": [
         {
             "field": "collection",
