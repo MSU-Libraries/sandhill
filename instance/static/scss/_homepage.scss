@@ -14,3 +14,20 @@
         }
     }
 }
+
+.sh-collection-link {
+    &:hover {
+        text-decoration: none;
+        span, h2 {
+            color: $clr-green;
+        }
+    }
+
+    span, h2 {
+        color: $clr-green-msu;
+    }
+}
+
+.sh-collection-image {
+    max-width: 12.5rem;
+}
