@@ -7,7 +7,7 @@
         {% endif %}
     {% endfor %}
     <div class="input-group">
-        <select class="custom-select" name="sort" aria-label="Example select with button addon">
+        <select class="custom-select" name="sort" aria-label="Sort the search results">
         {% for sort_opt in search_conf.sort_options %}
             {% if 'sort' in url_components.query_args and url_components.query_args['sort'] | head == sort_opt['value'] %}
                 <option selected value="{{ sort_opt['value'] }}">{{ sort_opt['label'] }}</option>
@@ -17,7 +17,7 @@
         {% endfor %}
         </select>
         <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            <button class="btn btn-outline-secondary" type="submit">Apply</button>
         </div>
     </div>
 </form>
