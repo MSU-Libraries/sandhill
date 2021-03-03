@@ -112,7 +112,8 @@ deploy_test_job:
     - ssh $CONNECT_TEST git -C $REPO_PATH checkout $CI_COMMIT_SHORT_SHA
     - ssh $CONNECT_TEST docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - ssh $CONNECT_TEST echo "Replacing _TAG_ with $CI_COMMIT_SHORT_SHA in docker-compose.yml"
-    - ssh $CONNECT_TEST sed -i "s/_TAG_/$CI_COMMIT_SHORT_SHA/g" $REPO_PATH/docker-compose.yml
+    - ssh $CONNECT_TEST "sed -i 's|^\( *\)sandhill:$|&\n\1  image:\ registry.gitlab.msu.edu\/msu-libraries\/repo-team\/sandhill:$CI_COMMIT_SHORT_SHA|' $REPO_PATH/docker-compose.yml"
+    - ssh $CONNECT_TEST "sed -i 's|^\( *\)nginx:$|&\n\1  image:\ registry.gitlab.msu.edu\/msu-libraries\/repo-team\/sandhill/nginx:$CI_COMMIT_SHORT_SHA|' $REPO_PATH/docker-compose.yml"
     - ssh $CONNECT_TEST sudo /bin/cp $REPO_PATH/etc/systemd/system/sandhill-stack.service /etc/systemd/system/
     - ssh $CONNECT_TEST sudo /bin/systemctl daemon-reload
     - ssh $CONNECT_TEST sudo /bin/systemctl enable sandhill-stack

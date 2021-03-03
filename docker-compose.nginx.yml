@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+    nginx:
+      container_name: nginx
+      image: sandhill-nginx
+      build: nginx/
+      restart: always
+      ports:
+        - "81:80"
+      networks:
+        nonroutable_net:
+      volumes:
+        - nginx_logs:/var/log/nginx
+
+volumes:
+  nginx_logs:

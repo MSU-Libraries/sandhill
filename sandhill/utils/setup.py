@@ -1,16 +1,14 @@
 import os
-import sass
 import logging
 import sys
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
+from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
 from sandhill import app
-from sandhill.commands.compile_scss import run_compile
 from sandhill.utils.generic import get_config
 from jinja2 import ChoiceLoader, FileSystemLoader
-from sassutils.wsgi import SassMiddleware
 
 def configure_logging():
     '''
@@ -79,27 +77,13 @@ if app.debug and not "pytest" in sys.modules:
 # Configure logging
 configure_logging()
 
-# Add Sass middleware. This should help us complie CSS from Sass
-if bool(get_config('COMPILE_SCSS_ON_REQUEST','False')):
-    app.wsgi_app = SassMiddleware(
-        app.wsgi_app,
-        {
-            'instance': {
-                'sass_path': 'static/scss',
-                'css_path': 'static/css/compiled',
-                'wsgi_path': 'static/css/compiled',
-                'strip_extension': True
-            }
-        },
-        {
-            'instance': app.instance_path
-        }
-    )
-else:
-    # If we're not in debug mode, we don't need the scss recompiled each page load,
-    # so we just load it when the application is started.
-    # If this starts taking too long, we can move it to docker build or CI/CD
-    try:
-        run_compile()
-    except Exception as exc:
-        app.logger.error(f"Error compiling scss: {exc}")
+# Load any included bootstrap modules (ex: scss)
+if os.path.exists('instance/bootstrap'):
+    for module in os.listdir('instance/bootstrap'):
+        try:
+            mod = import_module(module)
+            mod()
+        except Exception as exc:
+            app.logger.error(f"Exception attempting to run bootstrap module '{module}' "
+                               f"Error: {exc}")
+            raise exc
