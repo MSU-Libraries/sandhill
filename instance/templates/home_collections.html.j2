@@ -9,9 +9,7 @@
 
 <div class="mx-5">
     {% for section in sections %}
-        <a class="sh-collection-link" href="/">
-            <h2 class="mb-2">{{ section.heading }}</h2>
-        </a>
+        <h2 class="mb-2 sh-color-green-msu">{{ section.heading }}</h2>
         <div class="row pl-3 mb-4 justify-content-center justify-content-md-start flex-md-wrap align-content-md-start">
         {% for object in section.objects %}
             {{ gen_collection_browse(object.img_link, object.caption, object.link_out) }}

@@ -18,12 +18,12 @@
 .sh-collection-link {
     &:hover {
         text-decoration: none;
-        span, h2 {
+        span {
             color: $clr-green;
         }
     }
 
-    span, h2 {
+    span {
         color: $clr-green-msu;
     }
 }
