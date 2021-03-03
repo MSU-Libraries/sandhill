@@ -4,12 +4,12 @@
     <dd class="col-12 col-lg-9 col-xl-9">
         {% if (display_conf['value'] | render_literal) | is_list %}
             {% for metadata_value in (display_conf['value'] | render_literal) %}
-                {% include 'item_page_blocks/display_field.html.j2' %}
+                {% include 'item_blocks/display_field.html.j2' %}
                 <br/>
             {% endfor %}
         {% else %}
             {% set metadata_value = (display_conf['value'] | render) %}
-            {% include 'item_page_blocks/display_field.html.j2' %}
+            {% include 'item_blocks/display_field.html.j2' %}
         {% endif %}
     </dd>
 </dl>

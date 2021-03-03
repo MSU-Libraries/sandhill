@@ -12,434 +12,434 @@
         {
             "label": "Description",
             "value": "{{ item.description }}",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.collection_t }}",
             "label": "In Collections",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/{{ view_args.namespace }}"
         },
         {
             "value": "{{ item.rights_dpla }}",
             "label": "Copyright Status",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.date_key }}",
             "label": "Date",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.name_author }}",
             "label": "Authors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_author:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_interviewee }}",
             "label": "Interviewees",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_interviewee:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_interviewer }}",
             "label": "Interviewers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_interviewer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_narrator }}",
             "label": "Narrators",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_narrator:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_speaker }}",
             "label": "Speakers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_speaker:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_actor }}",
             "label": "Actors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_actor:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_singer }}",
             "label": "Singers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_singer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_performer }}",
             "label": "Performers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_performer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_composer }}",
             "label": "Composers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_composer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_commentator }}",
             "label": "Commentators",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_commentator:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_curator }}",
             "label": "Curators",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_curator:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_judge }}",
             "label": "Judges",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_judge:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_lead }}",
             "label": "Leads",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_lead:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_printer }}",
             "label": "Printers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_printer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_translator }}",
             "label": "Translators",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_translator:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_host }}",
             "label": "Hosts",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_host:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_moderator }}",
             "label": "Moderators",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_moderator:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_panelist }}",
             "label": "Panelists",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_panelist:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_reporter }}",
             "label": "Reporters",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_reporter:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_broadcaster }}",
             "label": "Broadcasters",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_broadcaster:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_recordist }}",
             "label": "Recordist",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_recordist:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_producer }}",
             "label": "Producers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_producer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_editor }}",
             "label": "Editors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_editor:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_contributor }}",
             "label": "Contributors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_contributor:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_signer }}",
             "label": "Signers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_signer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_photographer }}",
             "label": "Photographers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_photographer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_creator }}",
             "label": "Creators",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_creator:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_artist }}",
             "label": "Artists",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_artist:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_cartographer }}",
             "label": "Cartographers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_cartographer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_surveyor }}",
             "label": "Surveyors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_surveyor:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_engraver }}",
             "label": "Engravers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_engraver:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_lithographer }}",
             "label": "Lithographers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_lithographer:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_illustrator }}",
             "label": "Illustrators",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_illustrator:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_sponsor }}",
             "label": "Sponsors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_sponsor:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_host_institution }}",
             "label": "Host Institutions",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_host_institution:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.name_issuing_body }}",
             "label": "Issuing Bodies",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_issuing_body:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.subject_display }}",
             "label": "Subjects",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=subject_display:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.subject_tic }}",
             "label": "Turfgrass Thesaurus Terms",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=subject_tic:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.subject_local_topic }}",
             "label": "Category",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=subject_local_topic:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.genre_aat }}",
             "label": "Material Type",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=genre_aat:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.coordinates }}",
             "label": "Coordinates",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.scale }}",
             "label": "Scale",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.name_publisher }}",
             "label": "Publishers",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_publisher:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.edition }}",
             "label": "Edition",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.series_info }}",
             "label": "Series",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=series_info:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.language }}",
             "label": "Language",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.extent }}",
             "label": "Extent",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.note_noType }}",
             "label": "Note",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.note_biographical_historical }}",
             "label": "Historical Note",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.note_biographical }}",
             "label": "Biographical Note",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.note_local }}",
             "label": "Local Note",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.note_venue }}",
             "label": "Venue Note",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.note_geographicCoverage }}",
             "label": "Photographed Site",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.external_content_url }}",
             "label": "Additional Content",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.archived_version_url }}",
             "label": "Archived Version",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.physical_location }}",
             "label": "Location of Original",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.name_owner }}",
             "label": "Holding Institution",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.otherVersion }}",
             "label": "Other Versions",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.isReferencedBy_object_in_context }}",
             "label": "Referenced In",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.relatedMaterials_object_in_context }}",
             "label": "Related Items",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.title_uniform }}",
             "label": "Related Titles",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=title_uniform:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.containedIn_title }}",
             "label": "Part of",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=containedIn_title:{{ metadata_value | solr_escape | urlencode }}"
         },
         {
             "value": "{{ item.constituent }}",
             "label": "Contains",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.rightsholder_name }}",
             "label": "Rights Holder",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.rightsholder_contact }}",
             "label": "Rights Holder Contact Information",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.rightsholder_note }}",
             "label": "Conditions of Use",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.toc_entry }}",
             "label": "Table of Contents",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.classification }}",
             "label": "Call Number",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.isbn }}",
             "label": "ISBN",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.issn }}",
             "label": "ISSN",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2"
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2"
         },
         {
             "value": "{{ item.catalog_record }}",
             "label": "Catalog Record",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "{{ item.catalog_record }}"
         },
         {
             "value": "{{ item.doi_url }}",
             "label": "Permalink",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "{{ item.doi_url }}"
         },
         {
             "value": "{{ item.ark_url }}",
             "label": "Permalink",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "{{ item.ark_url }}"
         }
     ]

@@ -4,9 +4,9 @@
 
 {# override the header block to include the home page header #}
 {% block header %}
-    {% include 'home_header.html.j2' %} 
+    {% include 'home_blocks/home_header.html.j2' %} 
 {% endblock %}
 {% block content %}
-    {% include 'browse_bar.html.j2' %}
-    {% include 'home_collections.html.j2' %}
+    {% include 'home_blocks/browse_bar.html.j2' %}
+    {% include 'home_blocks/home_collections.html.j2' %}
 {% endblock %}
