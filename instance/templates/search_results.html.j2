@@ -24,6 +24,7 @@ Search Results
 
         {% if search['response']['docs'] %}
             <p>Found {{ "{:,}".format(search['response']['numFound']) }} results</p>
+            {% include 'search_results_blocks/sort.html.j2' %}
             {% for item in search['response']['docs'] %}
                 <div class="search_results row border-dark border-bottom py-3">
                     {% include 'search_results_blocks/preview.html.j2' %}
