@@ -1,9 +1,0 @@
-<div class="sh-expand-block my-s-3">
-    {% if 'label' in display_conf %} 
-        <h2>{{ display_conf['label'] }}</h2>
-    {% endif %}
-    <div class="collapse sh-block-collapse" id="sh-block-collapse" aria-expanded="false" role="document">
-         {{ display_conf['value'] | render | safe}}
-    </div>
-    <a role="button" class="collapsed" data-toggle="collapse" href="#sh-block-collapse" aria-expanded="false" aria-controls="sh-block-collapse">Read</a>
-</div>

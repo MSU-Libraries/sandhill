@@ -1,6 +1,0 @@
-{
-    "route": "/tone",
-    "template": "tone.html.j2",
-    "data": [
-    ]
-}
