@@ -14,7 +14,6 @@
 {% set item_counts = counts['facet_counts']['facet_fields']['RELS_EXT_hasModel_uri_ms'] | makedict %}
 <div class="row no-gutters justify-content-center mx-lg-5 mx-xl-0">
     <div class="col-0 col-lg-auto col-xl-1"></div>
-    
     {{ gen_browse_icon("globe", "Browse All", counts['response']['numFound'], "/search") }}
     {{ gen_browse_icon("book", "Books", item_counts['info:fedora/islandora:bookCModel'], '/search?fq=RELS_EXT_hasModel_uri_ms:"info:fedora/islandora:bookCModel"') }}
     <!-- TODO : placeholder image for newspaper -->

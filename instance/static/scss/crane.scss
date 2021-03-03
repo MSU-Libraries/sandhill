@@ -22,18 +22,11 @@
 @include make-font-size-class('sh-font-size-sm');
 @include make-font-size-class('sh-font-size-xs');
 @include make-font-size-class('sh-font-size-md');
+@include make-font-size-class('sh-font-size-btn');
 @include make-min-w-class('sh-min-w-50');
 @include make-color-class('sh-color-green-light');
 @include make-color-class('sh-color-green-msu');
 @include make-color-class('sh-color-white');
 @include make-color-class('sh-color-gray-dark');
+@include make-background-hover-class('sh-background-hover-gray-hover');
 /* Utility classes - End */
-
-/* Faux bootstrap */
-// 9 Column layout = 1.33 (12 / 1.33 = 9)
-.sh-col-lg-1_33 {
-    @include wrap-media-min('lg') {
-        flex-basis: 11.1%
-    }
-}
-/* Faux bootstrap - End */

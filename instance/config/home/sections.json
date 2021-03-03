@@ -1,0 +1,183 @@
+[
+     {
+     "heading": "Featured Primary Sources",
+     "objects":
+         [
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_MICHILAC_UFW_ufw900001_JPG_HIGH.jpg",
+                 "caption": "Activism",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_VBI_Brooks.jpg",
+                 "caption": "Interviews",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Map_Michigan.jpg",
+                 "caption": "Maps",
+                 "link_out": "/"
+             },
+             {
+                 "img_link":"https://img.lib.msu.edu/repo/thumbnails/Thumb_GNN_Becassine2.jpg",
+                 "caption": "Cultural Studies",
+                 "link_out": "/"
+             }
+         ]
+     },
+    {
+     "heading": "Electronic Theses and Dissertations",
+     "heading_link": "/",
+     "objects":
+         [
+             {
+                 "img_link":"https://img.lib.msu.edu/repo/thumbnails/Thumb_05062016_MainLibrary_0029_Edit_1500.jpg",
+                 "caption": "Recently Added",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Field_20080714kbs_ks0762-1-(ZF-8953-82790-1-001).jpg",
+                 "caption": "Browse by Program",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Lab_20100723.KAS.9640-(ZF-8953-82790-1-002).jpg",
+                 "caption": "Browse by Degree Level",
+                 "link_out": "/"
+             },
+             {
+                 "img_link":"https://img.lib.msu.edu/repo/thumbnails/Thumb_Sparty_20100422.DLT_2748-(ZF-5246-37318-1-001).jpg",
+                 "caption": "ETDs About MSU",
+                 "link_out": "/search?q=RELS_EXT_isMemberOfCollection_uri_ms:\"info:fedora/etd:root\" AND subject_t:(\"Michigan State University\"* OR \"Michigan Agricultural College\"* OR \"Michigan State College\"*)&sort=date desc"
+             }
+         ]
+     },
+    {
+     "heading": "Publications",
+     "heading_link": "/",
+     "objects":
+         [
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Chocolate.jpg",
+                 "caption": "Cookbooks",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_RedCedarReview.jpg",
+                 "caption": "Red Cedar Review",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_AEJ_AfricaMediaReview.jpg",
+                 "caption": "African e-Journals Project",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_PotatoReports_Cover.jpg",
+                 "caption": "Michigan Potato Research Reports",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_ErgoReports.jpg",
+                 "caption": "Ergonomics Reports",
+                 "link_out": "/"
+             }
+         ]
+     },
+    {
+     "heading": "Vincent Voice Library",
+     "heading_link": "/",
+     "objects":
+         [
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_WritersSeries_AmyHassinger.jpg",
+                 "caption": "Michigan Writers Series",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_VVLAuto_BobilloMarta.jpg",
+                 "caption": "Lansing Auto Town Gallery",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_VBI_Brooks.jpg",
+                 "caption": "Voices of the Black Imaginary",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_WOSL.jpg",
+                 "caption": "Women's Overseas Service League",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_MISupremeCourtLogo.jpg",
+                 "caption": "Michigan Supreme Court Justices",
+                 "link_out": "/"
+             }
+         ]
+     },
+     {
+     "heading": "Turfgrass Information Center",
+     "heading_link": "/",
+     "objects":
+         [
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_TurfSlides_Grass_824_JPG_HIGH.jpg",
+                 "caption": "Browse All Turfgrass",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_ManPointingAtGrass_37_JPG_HIGH.jpg",
+                 "caption": "Slides",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_Periodicals.jpg",
+                 "caption": "Periodicals",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_Newsletter.jpg",
+                 "caption": "Newsletters",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_ConferenceProceedings_Pg.jpg",
+                 "caption": "Conference Proceedings",
+                 "link_out": "/"
+             },
+             {
+                 "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_ScottsMonographs.jpg",
+                 "caption": "Monographs",
+                 "link_out": "/"
+             }
+         ]
+     },
+     {
+     "heading": "Agriculture",
+     "heading_link": "/",
+     "objects":
+         [
+            {
+                "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Ag_ThesesDissertations_Pg69.jpg",
+                "caption": "Agricultural Theses & Dissertations",
+                "link_out": "/"
+            },
+            {
+                "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Ag_MIFarming.jpg",
+                "caption": "Historical Newspapers",
+                "link_out": "/"
+            },
+            {
+                "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_PotatoReports_Cover.jpg",
+                "caption": "Michigan Potato Research Reports",
+                "link_out": "/"
+            },
+            {
+                "img_link": "https://img.lib.msu.edu/repo/thumbnails/Thumb_Turf_GrassClump_1468_JPG_HIGH.jpg",
+                "caption": "Turfgrass",
+                "link_out": "/"
+            }
+        ]
+    }
+]

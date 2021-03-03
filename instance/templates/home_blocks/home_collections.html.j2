@@ -1,0 +1,20 @@
+{% macro gen_collection_browse(img_link, text, link) -%}
+    <div class="d-flex col-5 col-md-auto my-2 mr-3 p-0 align-items-stretch justify-content-center">
+        <a class="d-block p-3 border rounded sh-background-hover-gray-hover sh-collection-link sh-collection-image" href='{{ link }}'>
+            <img class="w-100" alt="" role="presentation" src='{{ img_link }}'/>
+            <span class="d-block mt-3 sh-font-size-btn">{{ text }}</span>
+        </a>
+    </div>
+{%- endmacro -%}
+
+<div class="mx-5">
+    {% for section in sections %}
+        <h2 class="mb-2 sh-color-green-msu">{{ section.heading }}</h2>
+        <div class="row pl-3 mb-4 justify-content-center justify-content-md-start flex-md-wrap align-content-md-start">
+        {% for object in section.objects %}
+            {{ gen_collection_browse(object.img_link, object.caption, object.link_out) }}
+        {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+

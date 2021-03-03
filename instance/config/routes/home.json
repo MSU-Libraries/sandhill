@@ -16,6 +16,11 @@
                 "rows":"0",
                 "wt": "json"
             }
+        },
+        {
+            "name": "sections",
+            "processor": "file.load_json",
+            "paths": ["config/home/sections.json"]
         }
 
     ]

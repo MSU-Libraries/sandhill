@@ -34,18 +34,18 @@ Field Definitions
         {
             "value": "{{ item.description }}",
             "label": "Abstract",
-            "metadata_template": "item_page_blocks/metadata_expand_block.html.j2"
+            "metadata_template": "item_blocks/metadata_expand_block.html.j2"
         },
         {
             "value": "{{ item.collection_t }}",
             "label": "In Collections",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/{{ view_args.namespace }}"
         },
         {
             "value": "{{ item.name_thesis_advisor }}",
             "label": "Thesis Advisors",
-            "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+            "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
             "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
         }
     ],
@@ -103,11 +103,11 @@ These configurations are used to render the metadata section on the page.
 
 * `value`: Value of the field, which can use the Solr field. 
 * `label`: The label to use for the field.
-* `metadata_template`: The template file within the `sandhill\templates\item_page_blocks` directory to display this field.
+* `metadata_template`: The template file within the `sandhill\templates\item_blocks` directory to display this field.
     
     Available metadata templates
-    * `item_page_blocks/metadata_expand_block.html.j2`: A template that creates a toggle for the visibility of content.
-    * `item_page_blocks/metadata_descriptive_list.html.j2`: A template that creates a descriptive list of fields and values.
+    * `item_blocks/metadata_expand_block.html.j2`: A template that creates a toggle for the visibility of content.
+    * `item_blocks/metadata_descriptive_list.html.j2`: A template that creates a descriptive list of fields and values.
 * (Optional) `link`: If provided, will turn the metadata value into a link. The string is rendered through Jinja.
 
 Example display field:
@@ -115,7 +115,7 @@ Example display field:
 {
     "value": "{{ item.name_thesis_advisor }}",
     "label": "Thesis Advisors",
-    "metadata_template": "item_page_blocks/metadata_descriptive_list.html.j2",
+    "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
     "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
 }
 ```
@@ -130,12 +130,12 @@ Example contents of `metadata_template` file:
     <dd class="col-sm-9" aria-labelledby="sandhill_metadata_field">
         {% if display_conf['value'] | is_list %}
             {% for  metadata_value in  display_conf['value'] %}
-                {% include 'item_page_blocks/display_field.html.j2' %}
+                {% include 'item_blocks/display_field.html.j2' %}
                 <br/>
             {% endfor %}
         {% else %}
             {% set metadata_value = display_conf['value'] %}
-            {% include 'item_page_blocks/display_field.html.j2' %}
+            {% include 'item_blocks/display_field.html.j2' %}
         {% endif %}
     </dd>
 </dl>

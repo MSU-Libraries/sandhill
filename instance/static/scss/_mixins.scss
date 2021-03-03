@@ -65,6 +65,20 @@
     }
 }
 
+// Generates the css for the utility class that sets the background hover
+//
+// @params {String} $utility-class: name of the utility class
+//         Example: "sh-background-hover-gray-light" where "sh-background-hover" is the prefix and "gray-light" is the key from $colors map in 'variables.css'
+// @return value: class with css color property
+@mixin make-background-hover-class($utility-class) {
+    $strln: str-length(sh-background-hover-);
+    $clr: str-slice($utility-class, $strln+1);
+    .#{$utility-class}:hover{
+        background: get-color($clr);
+    }
+}
+
+
 // Setting background colors to use the colors map from variables.css
 //
 // @params {String} $color: key from $colors map in 'variables.css'
