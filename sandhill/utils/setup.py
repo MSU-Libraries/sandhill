@@ -78,7 +78,7 @@ if app.debug and not "pytest" in sys.modules:
 configure_logging()
 
 # Load any included bootstrap modules (ex: scss)
-boostrap_path = os.path.join(app.instance_path, 'bootstrap')
+bootstrap_path = os.path.join(app.instance_path, 'bootstrap')
 if os.path.exists(bootstrap_path):
     for module in os.listdir(bootstrap_path):
         try:
