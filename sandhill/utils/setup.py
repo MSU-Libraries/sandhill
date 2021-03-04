@@ -83,10 +83,13 @@ if os.path.exists(bootstrap_path):
     for module in os.listdir(bootstrap_path):
         if not module.endswith(".py"):
             continue
-        try:
-            mod = import_module(os.path.basename(app.instance_path) + ".bootstrap." + module)
-            mod()
-        except Exception as exc:
-            app.logger.error(f"Exception attempting to run bootstrap module '{module}' "
-                               f"Error: {exc}")
-            raise exc
+        abs_module = os.path.basename(app.instance_path) + ".bootstrap." + os.path.splitext(module)[0]
+        # Do not load modules if that are already loaded/loading
+        if abs_module not in sys.modules.keys():
+            try:
+                mod = import_module(abs_module)
+                mod.bootstrap(app)
+            except Exception as exc:
+                app.logger.error(f"Exception attempting to run bootstrap module '{module}' "
+                                   f"Error: {exc}")
+                raise exc
