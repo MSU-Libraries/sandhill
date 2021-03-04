@@ -13,11 +13,11 @@
             "label": "Title (Z-A)"
         },
         {
-            "value": "date desc",
+            "value": "dateyear_dt desc",
             "label": "Date (Newest)"
         },
         {
-            "value": "date asc",
+            "value": "dateyear_dt asc",
             "label": "Date (Oldest)"
         },
         {
