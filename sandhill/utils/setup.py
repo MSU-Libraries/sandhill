@@ -79,7 +79,7 @@ configure_logging()
 
 # Load any included bootstrap modules (ex: scss)
 boostrap_path = os.path.join(app.instance_path, 'bootstrap')
-if os.path.exists(bootstrap_path)):
+if os.path.exists(bootstrap_path):
     for module in os.listdir(bootstrap_path):
         try:
             mod = import_module(os.path.join(bootstrap_path, module).replace("/","."))
