@@ -58,7 +58,7 @@ for rule in app.url_map.iter_rules('static'):
     app.url_map._rules.remove(rule)
 
 # Set default config file
-app.config.from_pyfile(os.path.join(app.instance_path, 'sandhill.default_settings.cfg'))
+app.config.from_pyfile(os.path.join(app.root_path, 'sandhill.default_settings.cfg'))
 
 # If a instance specific config exists, load it
 if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):

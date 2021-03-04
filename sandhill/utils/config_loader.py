@@ -49,6 +49,10 @@ def get_all_routes(routes_dir="config/routes/"):
     except FileNotFoundError as f_err:
         app.logger.error(f"Route dir not found at path {route_path}. Error: {f_err}")
 
+    # if no routes are found, add a default one for the home page
+    if not routes:
+        routes.append("/")
+
     # determine the number of variables in each route and add to dictionary
     for rule in routes:
         # re match to determine # of vars
@@ -84,6 +88,11 @@ def load_route_config(route_rule, routes_dir="config/routes/"):
                         break
     except FileNotFoundError as f_err:
         app.logger.error(f"Route dir not found at path {route_path}. Error: {f_err}")
+        # if the base path (/) is used, provide a route config for the default home template
+        data = OrderedDict({
+            "route": ["/"],
+            "template": "home.html.j2"
+        })
     return data
 
 def load_json_configs(path, recurse=False):

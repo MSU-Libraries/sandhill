@@ -1,7 +1,0 @@
-{
-    "route": [
-        "/",
-        "/home"
-    ],
-    "template": "home.html.j2"
-}
