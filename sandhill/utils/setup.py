@@ -78,10 +78,11 @@ if app.debug and not "pytest" in sys.modules:
 configure_logging()
 
 # Load any included bootstrap modules (ex: scss)
-if os.path.exists('instance/bootstrap'):
-    for module in os.listdir('instance/bootstrap'):
+boostrap_path = os.path.join(app.instance_path, 'bootstrap')
+if os.path.exists(bootstrap_path)):
+    for module in os.listdir(bootstrap_path):
         try:
-            mod = import_module(module)
+            mod = import_module(os.path.join(bootstrap_path, module).replace("/","."))
             mod()
         except Exception as exc:
             app.logger.error(f"Exception attempting to run bootstrap module '{module}' "
