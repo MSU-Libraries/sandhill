@@ -84,7 +84,7 @@ if os.path.exists(bootstrap_path):
         if not module.endswith(".py"):
             continue
         try:
-            mod = import_module(os.path.join(bootstrap_path, module).replace("/","."))
+            mod = import_module("bootstrap." + module)
             mod()
         except Exception as exc:
             app.logger.error(f"Exception attempting to run bootstrap module '{module}' "
