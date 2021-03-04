@@ -81,6 +81,8 @@ configure_logging()
 bootstrap_path = os.path.join(app.instance_path, 'bootstrap')
 if os.path.exists(bootstrap_path):
     for module in os.listdir(bootstrap_path):
+        if not module.endswith(".py"):
+            continue
         try:
             mod = import_module(os.path.join(bootstrap_path, module).replace("/","."))
             mod()
