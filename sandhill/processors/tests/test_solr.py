@@ -8,6 +8,9 @@ from sandhill.utils.test import _test_api_get, _test_api_get_fail, _test_api_get
 from sandhill import app
 
 def test_select():
+    if 'SOLR_URL' in os.environ:
+        del os.environ['SOLR_URL']
+
     data_dict = {
         'params' : {},
         'dummy': 'value'
