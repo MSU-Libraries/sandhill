@@ -1,6 +1,10 @@
+import sys
+import os
 from jinja2 import Environment
 from inspect import getmembers, isfunction
-from sandhill.utils import filters
+from importlib import import_module
+from sandhill import app
+from sandhill.utils import generic, filters
 
 def render_template(template_str, context):
     """
@@ -11,9 +15,15 @@ def render_template(template_str, context):
     raises:
         jinja2.TemplateError
     """
+    mod_prefix = generic.get_module_path(app.instance_path) + '.'
     env = Environment(autoescape=True)
     sandhill_filters = dict([f for f in getmembers(filters) if isfunction(f[1])])
-    # TODO also grab filters from instance/filters/
+    instance_filter_modules = [ absmod for absmod in sys.modules.keys() if absmod.startswith(mod_prefix) ]
+    for mod_path in instance_filter_modules:
+        mod = import_module(mod_path)
+        mod_filters = dict([f for f in getmembers(mod) if isfunction(f[1])])
+        sandhill_filters.update(mod_filters)
+
     env.filters = {**env.filters, **sandhill_filters}
     data_template = env.from_string(template_str)
     return data_template.render(**context)

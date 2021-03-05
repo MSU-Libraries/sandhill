@@ -8,7 +8,7 @@ from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
 from sandhill import app
-from sandhill.utils.generic import get_config
+from sandhill.utils.generic import get_config, get_module_path
 from jinja2 import ChoiceLoader, FileSystemLoader
 
 def configure_logging():
@@ -88,7 +88,7 @@ def load_modules(base_path, sub_path, files=True, dirs=True, exclude=['__pycache
               or module.is_file() and not module.name.endswith('.py') \
               or module.name in exclude:
                 continue
-            absolute_module = f"{os.path.basename(base_path)}.{sub_path.replace('/','.')}." + re.sub('\\.py$', '', module.name)
+            absolute_module = get_module_path(os.path.join(base_path, sub_path, module.name))
             # Do not load modules if that are already loaded/loading
             if absolute_module not in sys.modules.keys():
                 try:
