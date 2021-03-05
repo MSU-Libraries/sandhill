@@ -13,6 +13,7 @@ def render_template(template_str, context):
     """
     env = Environment(autoescape=True)
     sandhill_filters = dict([f for f in getmembers(filters) if isfunction(f[1])])
+    # TODO also grab filters from instance/filters/
     env.filters = {**env.filters, **sandhill_filters}
     data_template = env.from_string(template_str)
     return data_template.render(**context)

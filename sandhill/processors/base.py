@@ -29,10 +29,10 @@ def load_route_data(route_data):
         route_data[i] = {**loaded_data, **route_data[i]}
 
         # Dynamically load processor
-        name, processor, action = _identify_processor_components(route_data[i])
+        name, processor, action = identify_processor_components(route_data[i])
 
         # Identify action from within processor, if valid
-        action_function = _identify_processor_function(name, processor, action)
+        action_function = identify_processor_function(name, processor, action)
 
         # Call action from processor
         if action_function:
@@ -55,7 +55,7 @@ def load_route_data(route_data):
     return loaded_data
 
 
-def _identify_processor_components(route_data):
+def identify_processor_components(route_data):
     '''
     Will get the processor name, function name, and variable name components
     args:
@@ -73,7 +73,7 @@ def _identify_processor_components(route_data):
     return name, processor, action
 
 
-def _identify_processor_function(name, processor, action):
+def identify_processor_function(name, processor, action):
     '''
     Verify we can load the function specified in the configs
     args:
@@ -83,13 +83,22 @@ def _identify_processor_function(name, processor, action):
     returns:
         function: loaded processor function
     '''
-    action_function = None
-    try:
-        mod = import_module("sandhill.processors." + processor)
-        action_function = getattr(mod, action)
-        app.logger.debug(f"Successfully loaded processor '{processor}' and action '{action}'")
-    except (ImportError, AttributeError) as exc:
+    action_function, load_exc = processor_load_action(f"instance.processors.{processor}", action)
+    if not action_function:
+        action_function, load_exc = processor_load_action(f"sandhill.processors.{processor}", action)
+    if load_exc:
         app.logger.warning(f"Could not load action '{action}' from processor '{processor}'; "
                            f"skipping route data '{name}'."
-                           f"Error: {exc}")
+                           f"Error: {load_exc}")
     return action_function
+
+def processor_load_action(absolute_module, action):
+    action_function = None
+    load_exc = None
+    try:
+        mod = import_module(absolute_module)
+        action_function = getattr(mod, action)
+        app.logger.debug(f"Successfully loaded processor action '{absolute_module}'")
+    except (ImportError, AttributeError) as exc:
+        load_exc = exc
+    return action_function, load_exc

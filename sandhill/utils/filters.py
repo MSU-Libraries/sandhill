@@ -47,18 +47,6 @@ def get_extension(value):
     return extension.upper()[1:]
 
 @app.template_filter()
-def generate_datastream_url(value, obj_type='OBJ', action="view"):
-    """ Generates view and download url's
-        args:
-            value (str): pid of the object
-            obj_type (str): type of datastream object
-            action (str): view or download the datastream
-    """
-    pid = value.replace(":","/")
-
-    return '/{0}/{1}/{2}'.format(pid, obj_type, action)
-
-@app.template_filter()
 def head(value):
     """If value is a non-empty list, returns the head of the list, otherwise return the value as is"""
     if isinstance(value, list) and value:

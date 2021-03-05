@@ -1,6 +1,7 @@
 import os
 import logging
 import sys
+import re
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from importlib import import_module
@@ -77,19 +78,28 @@ if app.debug and not "pytest" in sys.modules:
 # Configure logging
 configure_logging()
 
-# Load any included bootstrap modules (ex: scss)
-bootstrap_path = os.path.join(app.instance_path, 'bootstrap')
-if os.path.exists(bootstrap_path):
-    for module in os.listdir(bootstrap_path):
-        if not module.endswith(".py"):
-            continue
-        abs_module = os.path.basename(app.instance_path) + ".bootstrap." + os.path.splitext(module)[0]
-        # Do not load modules if that are already loaded/loading
-        if abs_module not in sys.modules.keys():
-            try:
-                mod = import_module(abs_module)
-                mod.bootstrap(app)
-            except Exception as exc:
-                app.logger.error(f"Exception attempting to run bootstrap module '{module}' "
-                                   f"Error: {exc}")
-                raise exc
+def load_modules(base_path, sub_path, files=True, dirs=True, exclude=['__pycache__', '__init__.py', 'tests']):
+    sub_path = sub_path.strip('/')
+    mod_path = os.path.join(base_path, sub_path)
+    if os.path.exists(mod_path):
+        for module in os.scandir(mod_path):
+            if (not files and module.is_file()) \
+              or (not dirs and module.is_dir()) \
+              or module.is_file() and not module.name.endswith('.py') \
+              or module.name in exclude:
+                continue
+            absolute_module = f"{os.path.basename(base_path)}.{sub_path.replace('/','.')}." + re.sub('\\.py$', '', module.name)
+            # Do not load modules if that are already loaded/loading
+            if absolute_module not in sys.modules.keys():
+                try:
+                    mod = import_module(absolute_module)
+                except Exception as exc:
+                    app.logger.error(f"Exception attempting to load module '{absolute_module}' in {base_path} "
+                                       f"Error: {exc}")
+                    raise exc
+
+load_modules(app.instance_path, 'bootstrap')
+load_modules(app.root_path, 'commands')
+load_modules(app.instance_path, 'commands')
+load_modules(app.root_path, 'utils/filters')
+load_modules(app.instance_path, 'filters')
