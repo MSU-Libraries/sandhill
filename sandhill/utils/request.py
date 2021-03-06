@@ -24,7 +24,9 @@ def match_request_format(view_args_key, allowed_formats, default_format='text/ht
     # check for ext; e.g. search.json
     if request.view_args and view_args_key in request.view_args:
         mimetypes.init()
-        result_format = mimetypes.types_map["." + request.view_args[view_args_key]]
+        extension = "." + request.view_args[view_args_key]
+        if extension in mimetypes.types_map:
+            result_format = mimetypes.types_map[extension]
 
     if result_format not in allowed_formats:
         abort(501)
