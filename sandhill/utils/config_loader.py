@@ -47,7 +47,7 @@ def get_all_routes(routes_dir="config/routes/"):
                 else:
                     routes.append(data["route"])
     except FileNotFoundError as f_err:
-        app.logger.error(f"Route dir not found at path {route_path}. Error: {f_err}")
+        app.logger.warning(f"Route dir not found at path {route_path} - will use welcome home page route. Error: {f_err}")
 
     # if no routes are found, add a default one for the home page
     if not routes:
@@ -87,7 +87,7 @@ def load_route_config(route_rule, routes_dir="config/routes/"):
                     if data["route"] == route_rule:
                         break
     except FileNotFoundError as f_err:
-        app.logger.error(f"Route dir not found at path {route_path}. Error: {f_err}")
+        app.logger.error(f"Route dir not found at path {route_path} - creating welcome home page route. Error: {f_err}")
         # if the base path (/) is used, provide a route config for the default home template
         data = OrderedDict({
             "route": ["/"],
