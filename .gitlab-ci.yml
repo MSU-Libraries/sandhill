@@ -81,5 +81,5 @@ build_job:
   only:
     - master
   script:
-    - docker build --pull -t $CONTAINER_IMAGE:latest .
-    - docker push $CONTAINER_IMAGE:latest
+    - docker build --pull -t sandhill:latest .
+    - docker push sandhill:latest
