@@ -83,9 +83,13 @@ def identify_processor_function(name, processor, action):
     returns:
         function: loaded processor function
     '''
-    action_function, load_exc = processor_load_action(f"instance.processors.{processor}", action)
+    action_function, load_exc = processor_load_action(
+        f"instance.processors.{processor}",
+        action)
     if not action_function:
-        action_function, load_exc = processor_load_action(f"sandhill.processors.{processor}", action)
+        action_function, load_exc = processor_load_action(
+            f"sandhill.processors.{processor}",
+            action)
     if load_exc:
         app.logger.warning(f"Could not load action '{action}' from processor '{processor}'; "
                            f"skipping route data '{name}'."
@@ -93,6 +97,15 @@ def identify_processor_function(name, processor, action):
     return action_function
 
 def processor_load_action(absolute_module, action):
+    '''
+    Attempt to get the action function from the provided module
+    args:
+        absolute_module (str): Name of the module to load
+        action (str): Function name within the module to load
+    returns:
+        (func, Exception): The loaded callable function; any exception
+            that occured while loading the function
+    '''
     action_function = None
     load_exc = None
     try:
