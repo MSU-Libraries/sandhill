@@ -81,5 +81,5 @@ build_job:
   only:
     - master
   script:
-    - docker build --pull -t $CONTAINER_IMAGE .
-    - docker push $CONTAINER_IMAGE
+    - docker build --pull -t $CONTAINER_IMAGE:latest .
+    - docker push $CONTAINER_IMAGE:latest

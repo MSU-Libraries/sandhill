@@ -2,6 +2,7 @@ version: '2'
 
 services:
     sandhill:
+      image: sandhill:latest
       container_name: sandhill
       build: .
       restart: always
