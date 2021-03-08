@@ -3,7 +3,6 @@ version: '2'
 services:
     sandhill:
       container_name: sandhill
-      image: sandhill
       build: .
       restart: always
       expose:
