@@ -13,6 +13,7 @@ def test_render_template():
     assert template.render_template("{{ var1 }}", context) == "val1"
     assert template.render_template("{{ var3 }}", context) == ""
     assert template.render_template("{{ date | date_passed }}", context) == "False"
+    assert template.render_template("{{ var2 | myfilter }}", context) == "myval2"
 
     # Test raising a template error 
     with raises(TemplateError):

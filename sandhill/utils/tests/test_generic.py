@@ -1,3 +1,4 @@
+import os
 from pytest import raises
 from sandhill.utils import generic
 from sandhill import app
@@ -79,3 +80,13 @@ def test_get_config():
     response = generic.get_config("TEST_EMPTY")
     assert isinstance(response, str)
     assert not response
+
+def test_get_module_path():
+    install_path = os.path.dirname(app.root_path)
+    assert generic.get_module_path(install_path + '/sandhill/') == 'sandhill'
+    assert generic.get_module_path(install_path + '/instance/') == 'instance'
+    assert generic.get_module_path(install_path + '/sandhill/test_instance/') == 'sandhill.test_instance'
+    assert generic.get_module_path(install_path + '/sandhill/utils/filters') == 'sandhill.utils.filters'
+    assert generic.get_module_path(install_path + '/sandhill/utils/filters.py') == 'sandhill.utils.filters'
+    assert generic.get_module_path(install_path + '/invalid/subpath') == 'invalid.subpath'
+    assert generic.get_module_path('/completely/invalid/path') == 'completely.invalid.path'

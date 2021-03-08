@@ -2,6 +2,7 @@
 Generic function that can be used in any context
 """
 import os
+import re
 from sandhill import app
 
 def ifnone(*args):
@@ -81,3 +82,13 @@ def get_config(name, default=None):
     elif name in app.config:
         value = app.config[name]
     return value
+
+def get_module_path(path):
+    """
+    Get the Python module path for a directory or file in Sandhill
+    returns:
+        (str): module (e.g. 'instance' or 'sandhill.test_instance.filters')
+    """
+    install_path = os.path.dirname(app.root_path)
+    subpath = re.sub('^' + re.escape(install_path), '', path)
+    return re.sub('\\.py$', '', subpath).strip('/').replace('/', '.')

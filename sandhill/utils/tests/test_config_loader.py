@@ -36,12 +36,12 @@ def test_get_all_routes():
     # test valid path containing no route configs
     data = config_loader.get_all_routes("config/search/")
     assert isinstance(data, list)
-    assert not data
+    assert data == ['/']
 
     # test for an invalid route congfig path
     data = config_loader.get_all_routes("invalid_path")
     assert isinstance(data, list)
-    assert not data
+    assert data == ['/']
 
 def test_load_route_config():
     # test a simple route config
@@ -57,7 +57,7 @@ def test_load_route_config():
     # test for an invalid route congfig path
     data = config_loader.load_route_config("/invalid_path", "invalid_dir")
     assert isinstance(data, OrderedDict)
-    assert not  data
+    assert data == OrderedDict([('route', ['/']), ('template', 'home.html.j2')])
 
 def test_load_json_configs():
     # test providing a valid path

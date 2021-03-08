@@ -1,16 +1,15 @@
 import os
-import sass
 import logging
 import sys
+import re
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
+from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
 from sandhill import app
-from sandhill.commands.compile_scss import run_compile
-from sandhill.utils.generic import get_config
+from sandhill.utils.generic import get_config, get_module_path
 from jinja2 import ChoiceLoader, FileSystemLoader
-from sassutils.wsgi import SassMiddleware
 
 def configure_logging():
     '''
@@ -60,7 +59,7 @@ for rule in app.url_map.iter_rules('static'):
     app.url_map._rules.remove(rule)
 
 # Set default config file
-app.config.from_pyfile(os.path.join(app.instance_path, 'sandhill.default_settings.cfg'))
+app.config.from_pyfile(os.path.join(app.root_path, 'sandhill.default_settings.cfg'))
 
 # If a instance specific config exists, load it
 if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
@@ -79,27 +78,28 @@ if app.debug and not "pytest" in sys.modules:
 # Configure logging
 configure_logging()
 
-# Add Sass middleware. This should help us complie CSS from Sass
-if bool(get_config('COMPILE_SCSS_ON_REQUEST','False')):
-    app.wsgi_app = SassMiddleware(
-        app.wsgi_app,
-        {
-            'instance': {
-                'sass_path': 'static/scss',
-                'css_path': 'static/css/compiled',
-                'wsgi_path': 'static/css/compiled',
-                'strip_extension': True
-            }
-        },
-        {
-            'instance': app.instance_path
-        }
-    )
-else:
-    # If we're not in debug mode, we don't need the scss recompiled each page load,
-    # so we just load it when the application is started.
-    # If this starts taking too long, we can move it to docker build or CI/CD
-    try:
-        run_compile()
-    except Exception as exc:
-        app.logger.error(f"Error compiling scss: {exc}")
+def load_modules(base_path, sub_path, files=True, dirs=True, exclude=['__pycache__', '__init__.py', 'tests']):
+    sub_path = sub_path.strip('/')
+    mod_path = os.path.join(base_path, sub_path)
+    if os.path.exists(mod_path):
+        for module in os.scandir(mod_path):
+            if (not files and module.is_file()) \
+              or (not dirs and module.is_dir()) \
+              or module.is_file() and not module.name.endswith('.py') \
+              or module.name in exclude:
+                continue
+            absolute_module = get_module_path(os.path.join(base_path, sub_path, module.name))
+            # Do not load modules if that are already loaded/loading
+            if absolute_module not in sys.modules.keys():
+                try:
+                    mod = import_module(absolute_module)
+                except Exception as exc:
+                    app.logger.error(f"Exception attempting to load module '{absolute_module}' in {base_path} "
+                                       f"Error: {exc}")
+                    raise exc
+
+load_modules(app.instance_path, 'bootstrap')
+load_modules(app.root_path, 'commands')
+load_modules(app.instance_path, 'commands')
+load_modules(app.root_path, 'utils/filters')
+load_modules(app.instance_path, 'filters')

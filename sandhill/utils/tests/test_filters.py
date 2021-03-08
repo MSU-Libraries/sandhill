@@ -28,17 +28,6 @@ def test_islist():
     assert filters.is_list("string") == False
     assert filters.is_list(None) == False
 
-def test_generate_datastream_url():
-    assert filters.generate_datastream_url("etd:1000") == "/etd/1000/OBJ/view"
-    assert filters.generate_datastream_url("etd/1000") == "/etd/1000/OBJ/view"
-    assert filters.generate_datastream_url("etd/1000",obj_type="SOMETHING") == "/etd/1000/SOMETHING/view"
-    assert filters.generate_datastream_url("etd/1000", action="forward") == "/etd/1000/OBJ/forward"
-    assert filters.generate_datastream_url("else:999","OTHER","hello") == "/else/999/OTHER/hello"
-    with raises(AttributeError) as aerror:
-        filters.generate_datastream_url(1234)
-    with raises(AttributeError) as aerror:
-        filters.generate_datastream_url(None)
-
 def test_head():
     assert filters.head([4,5,6]) == 4
     assert filters.head("string") == "string"

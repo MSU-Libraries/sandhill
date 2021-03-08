@@ -8,9 +8,8 @@ TODO.md
 sandhill.sock
 .coverage
 report.xml
-instance/static/css/compiled/*
-!instance/static/css/compiled/.gitkeep
 sandhill/test_instance/static/css/compiled/*
 !sandhill/test_instance/static/css/compiled/.gitkeep
 sandhill/test_instance/static/css/compiled_invalid/*
 !sandhill/test_instance/static/css/compiled_invalid/.gitkeep
+instance

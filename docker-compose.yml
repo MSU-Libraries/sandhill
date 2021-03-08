@@ -2,33 +2,15 @@ version: '2'
 
 services:
     sandhill:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:_TAG_
       container_name: sandhill
+      build: .
       restart: always
       expose:
         - 8080
       networks:
         nonroutable_net:
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
-      environment:
-        - SOLR_URL=${SOLR_URL}
-        - FEDORA_URL=${FEDORA_URL}
-        - TEST_INSTANCE_DIR=/sandhill/instance
-        - EMAIL_FROM=${EMAIL_FROM}
       volumes:
         - app_logs:/var/log/sandhill
-
-    nginx:
-      image: registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill/nginx:_TAG_
-      container_name: nginx
-      restart: always
-      ports:
-        - "81:80"
-      networks:
-        nonroutable_net:
-      volumes:
-        - nginx_logs:/var/log/nginx
 
 networks:
     nonroutable_net:
@@ -37,5 +19,4 @@ networks:
         config:
           - subnet: 192.168.0.0/16
 volumes:
-  nginx_logs:
   app_logs:

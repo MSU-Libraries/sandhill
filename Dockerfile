@@ -11,5 +11,3 @@ RUN pip install -r requirements.txt
 
 # run the command to start uWSGI
 CMD ["uwsgi", "uwsgi.ini"] 
-
-

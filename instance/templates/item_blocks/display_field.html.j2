@@ -1,5 +1,0 @@
-{% if display_conf.link %}
-    <a href="{{ display_conf.link | render }}" aria-describedby="{{ aria_label_id }}">{{ metadata_value }}</a>
-{% else %}
-    <span aria-describedby="{{ aria_label_id }}">{{ metadata_value }}</span>
-{% endif %}
