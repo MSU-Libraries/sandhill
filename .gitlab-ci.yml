@@ -4,8 +4,8 @@ services:
 
 stages:
   - unittest_and_lint
-  - scan
   - build
+  - scan
 
 variables:
   CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
@@ -26,6 +26,15 @@ unittest_and_lint_job:
     when: always
     reports:
       junit: report.xml
+build_job:
+  stage: build
+  tags:
+    - msul
+  only:
+    - master
+  script:
+    - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
+    - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
 
 ## Use to populate Code Quality report
 #code_quality:
@@ -74,12 +83,3 @@ sast:
 include:
   - template: Code-Quality.gitlab-ci.yml
 
-build_job:
-  stage: build
-  tags:
-    - msul
-  only:
-    - master
-  script:
-    - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
-    - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
