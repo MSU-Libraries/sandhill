@@ -81,5 +81,5 @@ build_job:
   only:
     - master
   script:
-    - docker build --pull -t sandhill:latest .
-    - docker push sandhill:latest
+    - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
+    - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
