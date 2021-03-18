@@ -5,7 +5,7 @@ services:
 stages:
   - unittest_and_lint
   - build
-  - scan
+  #- scan
 
 variables:
   CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
