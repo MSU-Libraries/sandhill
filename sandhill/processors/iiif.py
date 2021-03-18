@@ -6,7 +6,7 @@ from flask import abort
 from requests.exceptions import RequestException
 from sandhill import app
 from sandhill.utils.api import api_get, establish_url
-from sandhill.utils.generic import ifnone
+from sandhill.utils.generic import get_config
 
 
 def load_image(data_dict, url=None, api_get_function=api_get):
@@ -20,7 +20,7 @@ def load_image(data_dict, url=None, api_get_function=api_get):
         image: Requested image from IIIF
     '''
     image = None
-    url = establish_url(url, ifnone(app.config, 'IIIF_BASE', None))
+    url = establish_url(url, get_config('IIIF_BASE', None))
     try:
         if 'iiif_path' in data_dict['view_args'] and 'identifier' in data_dict:
             image = api_get_function(
