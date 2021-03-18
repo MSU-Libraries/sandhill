@@ -79,7 +79,7 @@ def get_config(name, default=None):
     value = default
     if name in os.environ and os.environ[name]:
         value = os.environ[name]
-    elif name in app.config:
+    elif name in app.config and app.config[name] is not None:
         value = app.config[name]
     return value
 
