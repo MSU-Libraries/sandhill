@@ -70,6 +70,7 @@ if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
 # load the secret key
 secret_key = "".join(secrets.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(64))
 app.secret_key = get_config("SECRET_KEY", secret_key)
+app.config["SECRET_KEY"] = app.secret_key
 
 # Set debug mode
 app.debug = bool(get_config("DEBUG", False))
