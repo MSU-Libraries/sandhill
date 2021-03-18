@@ -2,6 +2,8 @@ import os
 import logging
 import sys
 import re
+import string
+import secrets
 from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from importlib import import_module
@@ -66,7 +68,8 @@ if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
     app.config.from_pyfile('sandhill.cfg')
 
 # load the secret key
-app.secret_key = get_config("SECRET_KEY")
+secret_key = "".join(secrets.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(64))
+app.secret_key = get_config("SECRET_KEY", secret_key)
 
 # Set debug mode
 app.debug = bool(get_config("DEBUG", False))
