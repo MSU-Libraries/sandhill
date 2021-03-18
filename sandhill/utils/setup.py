@@ -69,7 +69,7 @@ if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
 app.secret_key = get_config("SECRET_KEY")
 
 # Set debug mode
-app.debug = bool(get_config("DEBUG","False"))
+app.debug = bool(get_config("DEBUG", False))
 # Add debug toolbar if debug mode is on and not running code via pytest
 if app.debug and not "pytest" in sys.modules:
     toolbar = DebugToolbarExtension(app)
