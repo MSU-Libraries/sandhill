@@ -72,7 +72,7 @@ secret_key = "".join(secrets.SystemRandom().choice(string.ascii_letters + string
 app.config["SECRET_KEY"] = get_config("SECRET_KEY", secret_key)
 
 # Set debug mode
-app.debug = bool(get_config("DEBUG", False))
+app.debug = bool(int(get_config("DEBUG", "0")))
 # Add debug toolbar if debug mode is on and not running code via pytest
 if app.debug and not "pytest" in sys.modules:
     toolbar = DebugToolbarExtension(app)
