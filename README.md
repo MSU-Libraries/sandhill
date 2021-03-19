@@ -4,7 +4,7 @@ Sandhill
 * [What Sandhill can do for you](#what-sandhill-can-do-for-you)
 * [Local setup](#local-setup)
 * [Docker setup](#docker-setup)
-* [Instance setup](#instance-setup)
+* [Next steps](#next-steps)
 
 What Sandhill can do for you
 ----------------------------
@@ -53,29 +53,15 @@ Alternatively you can modify the enivornment variables either at the host level 
 The same variables in the [sandhill.default_settings.cfg](sandhill.default_settings.cfg) file
 can be set in the environment file.
 
-
-## Create the rsyslog config (optional)
-This step is required to have filtered logging for only this application go to
-a file other than syslog. This is only because `StandardOutput` and `StandardError`
-do not support file redirection in Ubuntu 16.04. TODO
-
+#### Run the application
+To get the application started up, simply run the uwsgi module:
 ```
-cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
-mkdir -p /var/log/sandhill
-chown -R syslog:adm /var/log/sandhill
-systemctl restart rsyslog
+env/bin/uwsgi --buffer-size=8192 --socket 127.0.0.1:8080 --protocol=http --py-autoreload 1 -w wsgi:application
 ```
 
-### Create the service (optional)
-If you are running on a Linux environment, you can have Sandhill automatically start on
-boo by having it defined as a service. Copy the sample systemd unit file and be sure to make
-any local changes to it required for your environment.
-```
-cp etc/systemd/system/sandhill.service /etc/systemd/system/
-systemctl daemon-reload
-systemctl enable sandhill
-systemctl start sandhill
-```
+Navigating to your browser at http://localhost:8080 you should see
+a default "It Works!" page indicating that the site is working.
+
 
 Docker Setup
 -------------
@@ -128,24 +114,15 @@ docker-compose up -d
 Note: If you need to manually take it down, run `docker-compose down`. 
 
 Navigating to your browser at http://localhost:8080 you should see
-a default "It's Working" page indicating that the site is working.
+a default "It Works!" page indicating that the site is working.
 
-To view logs of a given container just run:
-```
-docker container ls
-docker logs -f sandhill
-```
 
-### Create the service (optional)
-TODO -- should we include a sample docker service file?
-
-### Setup an instance
+## Next steps
 Now that the core Sandhill application is working, you are ready to setup your own
 instance which will have your own URL route structure and template pages.
-See the next section, [instance setup](#instance-setup) for further instructions on
-how to do that.
+See the next section, [instance setup documentation](INSTANCE_SETUP.md) for further
+instructions on how to do that.
 
-
-Instance setup
---------------
-TODO
+You can optionally have the application setup to run automatically on boot. See 
+the [service setup documentation](SERVICE_SETUP.md) for instructions on doing this
+in a Debian based system.
