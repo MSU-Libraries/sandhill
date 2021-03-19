@@ -1,28 +1,25 @@
 Sandhill
----------------
+========
 
-* [Developer Environment Setup](#developer-environment-setup)
-* [Deployable Docker Setup](#deployable-docker-setup)
-* [Docker](#docker)
-* [Developer Notes](#developer-notes)
+* [What Sandhill can do for you](#what-sandhill-can-do-for-you)
+* [Local setup](#local-setup)
+* [Docker setup](#docker-setup)
+* [Instance setup](#instance-setup)
 
-Developer Environment Setup
-===============
-Use this setup if you want to set up a development environment that allows
-code changes to be made and immediately updated on the page.
+What Sandhill can do for you
+----------------------------
+TODO
 
-### Config setup
-Within the cloned directory, make a copy of the default config and override any values you like.
-If not specified in a separate config file, the defaults will be used. This step is not required if you
-want to use the defaults for everything. Run this command as the developer user's.
+Local setup
+----------------------------
+Use this setup if you want to:
+* Have a development environment that allows code changes to be made and immediately reflected on the page
+* You don't want to use Docker for your application
 
-```
-cp sandhill/sandhill.default_settings.cfg instance/sandhill.cfg
-```
 
 ### Install the required packages
 ```
-sudo apt install virtualenv python3-pip
+apt install virtualenv python3-pip
 ```
 
 In the cloned directory, create the virtual environment. Run this command as the developer's user.
@@ -35,136 +32,120 @@ Install the required Pip packages as the developer's user.
 env/bin/pip install -r requirements.txt
 ```
 
-## Create a log directory
+### Configuration
+Configuration parameters can be passed either in a config file or via environment variables 
+on the host machine.
+
+To see what default values will be used if none are passed see the 
+[sandhill.default_settings.cfg](sandhill.default_settings.cfg) file.
+
+##### File based
+Make a copy of the default config and override any values you like.
+
 ```
-sudo mkdir -p /var/log/sandhill
+cp sandhill/sandhill.default_settings.cfg instance/sandhill.cfg
 ```
 
-## Setup logrotate on logs
-TODO
+#### Environment based
+Alternatively you can modify the enivornment variables either at the host level (in 
+`/etc/environment`) or at the application level (in `./.env`).
 
-## Update the environment file
-TODO -- move this to CI/CD later
-In order for the docker container to know the hostname of the server it is
-running on, we need to pass it as an environment variable. Modify the
-`/etc/environment` file to add any environment variables in the docker-compose file.
+The same variables in the [sandhill.default_settings.cfg](sandhill.default_settings.cfg) file
+can be set in the environment file.
 
-## Allow emails to be sent from the container
-In order for error emails to be sent from the sandhill container
-you will need to update postfix on the host and ufw
 
-Edit the postfix config (`/etc/postfix/main.cf`) and update this line:
-```
-mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.0.0 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
-```
-```
-ufw allow from 192.168.0.0/16 to any port 25
-ufw allow from 172.16.0.0/12 to any port 25
-systemctl restart postfix
-```
-
-## Create the rsyslog config
+## Create the rsyslog config (optional)
 This step is required to have filtered logging for only this application go to
 a file other than syslog. This is only because `StandardOutput` and `StandardError`
-do not support file redirection in Ubuntu 16.04.
+do not support file redirection in Ubuntu 16.04. TODO
 
 ```
-sudo cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
-sudo chown -R syslog:adm /var/log/sandhill
-sudo systemctl restart rsyslog
+cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
+mkdir -p /var/log/sandhill
+chown -R syslog:adm /var/log/sandhill
+systemctl restart rsyslog
 ```
 
-### Create the service
-Copy the systemd unit file to set it up as a service. Be sure to make any local changes to
-it for environment specific parameters
+### Create the service (optional)
+If you are running on a Linux environment, you can have Sandhill automatically start on
+boo by having it defined as a service. Copy the sample systemd unit file and be sure to make
+any local changes to it required for your environment.
 ```
-sudo cp etc/systemd/system/sandhill.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable sandhill
-sudo systemctl start sandhill
-```
-
-### Add users to docker group
-In order for the users to be able to update the docker image, make sure to add their user
-to the `docker` group.
-```
-sudo adduser [developer_user] docker
+cp etc/systemd/system/sandhill.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable sandhill
+systemctl start sandhill
 ```
 
-### Custom Docker build
-If you want to create an image to run and test outside of the CI/CD workflow,
-you can run these steps as the develop
+Docker Setup
+-------------
+Use this setup if you want:
+* Set up a server to host the site without needing to make frequent changes to the code
+* Have it running in a contained environment
 
-#### Build the Image
-If setting this server up through the CI/CD, skip this step.
+### Install Docker and Docker Compose
+Follow the steps on [Dockers official site](https://docs.docker.com/get-docker/) to install Docker
+and then install [Docker Compose](https://docs.docker.com/compose/install/) as well.
+
+### Build the image
 Build a new image based on the current code.
 ```
 docker-compose build
 ```
 
-#### Run the Image
-If setting this server up through the CI/CD, skip this step.
+### Configuration
+In order to pass custom configurations to the Docker container, you will need to pass it
+environment values. You can either pass them in directly to the docker command
+(`DEBUG=1 docker-compose up`) or provide it an environment file,
+`./.env`. See [Docker's documentation](https://docs.docker.com/compose/env-file/)
+about the environment file. The same variables from the
+[sandhill.default_settings.cfg](sandhill.default_settings.cfg) file can be
+used to override those defaults.
+
+### Configure email (optional)
+Sandhill has the ability to send emails based on a given error level,
+if you wish to do this and included the relavent email variables 
+in the environment step above you may need to configure your server to
+allow it to send emails from it.
+
+For example, in postfix, you would need to edit`/etc/postfix/main.cf` and update the
+`mynetworks` line to include the docker network's IP range:
+```
+mynetworks = [existing line contents] 192.168.0.0/16
+```
+
+and then restart postfix:
+```
+systemctl restart postfix
+```
+
+### Run the image
 Run the image in a detached mode.
 ```
 docker-compose up -d
 ```
 
-Note: If you need to manually take it down, run `docker-compose down`. TODO -- this will be moved to a service.
+Note: If you need to manually take it down, run `docker-compose down`. 
+
+Navigating to your browser at http://localhost:8080 you should see
+a default "It's Working" page indicating that the site is working.
 
 To view logs of a given container just run:
 ```
 docker container ls
-docker logs -f <CONTAINER NAME>
+docker logs -f sandhill
 ```
 
+### Create the service (optional)
+TODO -- should we include a sample docker service file?
 
-Deployable Docker Setup
-===============
-Use this setup if you just want to set up a server to host the site without needing to make
-frequent changes to the code.
+### Setup an instance
+Now that the core Sandhill application is working, you are ready to setup your own
+instance which will have your own URL route structure and template pages.
+See the next section, [instance setup](#instance-setup) for further instructions on
+how to do that.
 
-### Install Docker
-```
-sudo apt update
-sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common python3-pip apache2
-```
 
-Then add the key and source to apt:
-```
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-```
-
-Finally, update apt sources and install Docker and supporting packages:
-```
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io
-```
-
-### Install Docker Compose
-```
-sudo pip3 install docker-compose
-```
-
-### Add users to docker group
-In order for the deploy user to be able to update the docker image, make sure to add the deploy user
-to the `docker` group.
-```
-sudo adduser deploy docker
-```
-
-### Allow the CI/CD deploy user to execute the commands on the server. Run `sudo visudo` to add:
-```
-deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack, /bin/cp /home/deploy/sandhill/instance/etc/systemd/system/sandhill-stack.service /etc/systemd/system/, /bin/systemctl daemon-reload, /bin/systemctl enable sandhill-stack, /bin/systemctl status sandhill-stack
-```
-TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
-
-### Add a UFW rule for docker access
-Give the non-routable range that the docker containers use the access they need to request Fedora data.
-```
-ufw allow from 192.168.0.0/16 to any port 80,443,8080 proto tcp
-```
-
-How to setup an instance
-========================
+Instance setup
+--------------
 TODO
