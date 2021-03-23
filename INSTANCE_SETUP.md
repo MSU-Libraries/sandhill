@@ -3,18 +3,33 @@ Instance Setup
 
 What is an instance?
 --------------------
-TODO
+An instance is where you actually start developing your application. It contains all of the processing
+you might do as well as the design of your pages. All of these build upon the already included
+core Sandhill feature sets. Out of the box, sandhill provides a range of data processors and Jinja2
+template filters; but one has a simple "It Works!" template. It is up to you to develop everything
+in between to make your application have the feature set you desire! Think of it as Sandhill providing
+the core framework and your instance is your implementation of an application using that framework.
 
 Basic structure of the instance directory
 ------------------------------------------
 All of the files in the below directories are dynamically loaded without additional
-configuration needed.
+configuration needed. None of these directories require files to be present
+for the site to load, but are used to add functionality to it.
+
+instance/
+├── bootstrap
+├── commands
+├── config
+│   └── routes
+├── filters
+├── static
+└── templates
 
 ### `bootstrap`
 Each file within this directory should contain code to be run at start-up.  
 
 For example:
-`bootstrap/hi.py`:  
+`instance/bootstrap/hi.py`:  
 ```
 print("Bootstrap test")
 ```
@@ -26,12 +41,10 @@ This directory is used to include additional [click commands](https://flask.pall
 to your application. 
 
 For example:
-`commands/hi.py`:
+`instance/commands/hi.py`:
 ```
 import click
-from flask import Flask
-
-app = Flask(__name__)
+from sandhill import app
 
 @app.cli.command("hi")
 @click.argument("name")
@@ -60,6 +73,7 @@ The `routes` directory is nested under `config` so that you can use the `config`
 your application as well.
 
 An example route config file might look like this:  
+`instance/config/routes/mypage.json`:
 ```
 {
     "route": [
@@ -86,7 +100,8 @@ An example route config file might look like this:
 }
 ```
 
-An example route config that streams output might look like:  
+An example route config that streams output might look like:
+`instance/config/routes/mystream.json`:
 ```
 {
     "route": "/iiif/<string:pid>",
@@ -146,13 +161,88 @@ _Arguments for each `data` Object_
 
 
 ### `filters`
-TODO
+Files within this directory are loaded to add  to the [default set of filters](sandhill/utils/filters.py)
+already included in Sandhill.
+
+Each filter will be available to all templates used within the application.
+
+An example filter (which is one of the default set):
+`instance/filters/myfilter.py`:
+```
+from sandhill import app
+
+@app.template_filter()
+def is_list(value):
+    """ Check if a value is a list """
+    return isinstance(value, list)
+```
+
+Would provide the ability to do this in your template:
+`instance/templates/home.html.j2`:
+```
+...
+<p>Is myvar a list? {{ myvar | is_list }}</p>
+...
+```
 
 ### `processors`
-TODO
+Processors are what are called in the route configs to provide data or data processing before rendering a
+template or streaming output. For example if your home page requires you make a database call to get information for
+the page then you might have a `database` processor. An example of one of the [built-in processors](sandhill/processors)
+is the `file` processor; which has a function called `load_json`. This would allow us to reference it in the
+data section of a route config by saying `file.load_json`.
+
+All processors must take the argument of `data_dict`. This is a special variable that contains all of the data
+from previously loaded processors. So if your route config has 2 data processors called, the second one would have access
+to the output of the first one. Additionally, arguments from the original request are available (such as the url arguments).
+
+Example route config and corresponding `data_dict` values:
+`instance/config/routes/home.json`:
+```
+"route": [
+        "/home",
+        "/home/<string:name>"
+    ],
+    "template": "home.html.j2",
+    "data": [
+        {
+            "name": "myset",
+            "processor": "file.load_json",
+            "paths": ["config/home/set1.json"]
+        }
+    ]
+...
+```
+`config/home/set1.json`:
+```
+{
+    "var1": 1
+}
+```
+
+`data_dict` after the `myset` data has been loaded (which would in turn be available
+to subsequently listed `data` items):
+```
+{
+    "view_args": {
+        "name": "bob"
+    },
+    "paths": ["config/home/set1.json"],
+    "myset": {
+        "var1": 1
+    }
+}
+```
 
 ### `static`
-TODO
+This directory contains any static content used by your application, such as CSS or JS files.
 
 ### `templates`
-TODO
+The `templates` directory contains Jinja2 template files that can be referenced by your route
+configs. They have the ability to access the built-in or custom filters and all of the variables
+made available by your route configs (referenced by the `name` of the data item). See the example
+within the [processors](#processors) section of what the `data_dict` looks like to see all of the
+available variables.
+
+You can see the [default included template](sandhill/templates/home.html.j2) to start with, but see
+[Jinja2 documentation](https://jinja.palletsprojects.com/en/2.11.x/) for the full range of options.
