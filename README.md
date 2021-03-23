@@ -8,7 +8,10 @@ Sandhill
 
 What Sandhill can do for you
 ----------------------------
-TODO
+Sandhill is an open source framework developed by the Michigan State University Libraries. It's inception
+came from the desire to have a truly flexible digital repository platform. Given how flexible it has been designed,
+it could by used a delivery application. The goal of Sandhill is to provide you with a nicely organized
+toolbox to build your application with. So let's get building!
 
 Local setup
 ----------------------------
