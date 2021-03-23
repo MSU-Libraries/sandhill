@@ -16,6 +16,15 @@ All of the files in the below directories are dynamically loaded without additio
 configuration needed. None of these directories require files to be present
 for the site to load, but are used to add functionality to it.
 
+instance/
+├── bootstrap
+├── commands
+├── config
+│   └── routes
+├── filters
+├── static
+└── templates
+
 ### `bootstrap`
 Each file within this directory should contain code to be run at start-up.  
 
