@@ -20,6 +20,7 @@ In order to install, run, and make changes to Sandhill, you and your team need t
 * Sass/SCSS
 * HTML
 * Debian-based system/server administration
+
 In other words, this is not a framework well-suited to beginners, but rather to those with intermediate or advanced skill in these areas.
 
 ## Local setup
@@ -100,6 +101,12 @@ Test that it's working before moving on to configuration by running:
 ```
 SECRET_KEY='Testing' docker-compose up
 ```
+
+Once you're done, run 
+```
+docker-compose down
+```
+so that you can edit configs, etc. You'll re-do the build before you spin the application back up.
 
 ### Configuration:
 In order to pass custom configurations to the Docker container, you will need to pass it
