@@ -11,6 +11,16 @@ Sandhill is an open source framework developed by the Michigan State University 
 came from the desire to have a truly flexible digital repository platform. Given how flexible it has been designed to be,
 it could be used as a delivery application. The goal of Sandhill is to provide you with a nicely organized toolbox to build your application with. So let's get building!
 
+### What do you need in order to successfully work with Sandhill?
+In order to install, run, and make changes to Sandhill, you and your team need the a good working knowledge of the following:
+* Python
+* Flask
+* Jinja
+* Sass/SCSS
+* HTML
+* Debian-based system/server administration
+In other words, this is not a framework well-suited to beginners, but rather to those with intermediate or advanced skill in these areas.
+
 ## Local setup
 Use this setup if you want to:
 * Have a development environment that allows you to make code changes and see them immediately 
@@ -24,7 +34,7 @@ the Docker image - see instructions below.
 
 
 ### Installation:
-Install the required packages:
+Install the required packages (note: you may need to update `apt` first):
 ```
 apt install virtualenv python3-pip
 ```
@@ -47,7 +57,7 @@ To see what default values will be used if none are passed see the
 [sandhill.default_settings.cfg](sandhill.default_settings.cfg) file.
 
 ##### Using the config file:
-Make a copy of the default config and override any values you like.
+Copy `sandhill/sandhill/test_instance` into `sandhill/instance`. Then, copy the default config into `sandhill/instance`, and use that to override any values you like.
 
 ```
 cp sandhill/sandhill.default_settings.cfg instance/sandhill.cfg
@@ -57,8 +67,7 @@ cp sandhill/sandhill.default_settings.cfg instance/sandhill.cfg
 Alternatively you can modify the enivornment variables either at the host level (in 
 `/etc/environment`) or at the application level (in `./.env`).
 
-The same variables in the [sandhill.default_settings.cfg](sandhill.default_settings.cfg) file
-can be set in the environment file.
+There are some default environment variable settings in [sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable names in the environment file will allow you to override those.
 
 ### Running the application:
 To get the application started up, simply run the uwsgi module:
