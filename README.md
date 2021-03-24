@@ -9,7 +9,8 @@ Sandhill
 ## What Sandhill can do for you
 Sandhill is an open source framework developed by the Michigan State University Libraries. It's inception
 came from the desire to have a truly flexible digital repository platform. Given how flexible it has been designed to be,
-it could be used as a delivery application. The goal of Sandhill is to provide you with a nicely organized toolbox to build your application with. So let's get building!
+it could be used as any content delivery application. The goal of Sandhill is to provide you with a nicely organized
+toolbox to build your application with. So let's get building!
 
 ### What do you need in order to successfully work with Sandhill?
 In order to install, run, and make changes to Sandhill, you and your team need the a good working knowledge of the following:
@@ -39,7 +40,8 @@ Install the required packages (note: you may need to update `apt` first):
 apt install virtualenv python3-pip
 ```
 
-In the cloned directory, create the virtual environment. Run this command as the developer's user.
+Clone the sandhill repository and navigate into that directory to create the virtual environment.
+Run this command as the developer's user.
 ```
 virtualenv -p python3 env
 ```
@@ -89,7 +91,7 @@ Follow the steps on [Docker's official site](https://docs.docker.com/get-docker/
 and then install [Docker Compose](https://docs.docker.com/compose/install/) as well.
 
 ### Building the image:
-Clone the sandhill code, then navigate to the 'sandhill' directory (if you're not there already) to build a new image based on the latest stable Sandhill release:
+Clone the sandhill repository then navigate into the directory to build a new image based on the latest stable Sandhill release:
 ```
 docker-compose build
 ```
@@ -102,11 +104,13 @@ SECRET_KEY='Testing' docker-compose up
 ### Configuration:
 In order to pass custom configurations to the Docker container, you will need to pass it
 environment values. You can either pass them in directly to the docker command
-(`DEBUG=1 docker-compose up`) or provide it an environment file,
+(`DEBUG=1 docker-compose up`) or provide them in an environment file,
 `./.env`. See [Docker's documentation](https://docs.docker.com/compose/env-file/)
 about the environment file. 
 
-There are some default environment variable settings in [sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable names in the environment file will allow you to override those. 
+There are some default environment variable settings in
+[sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable
+names in the environment file will allow you to override those. 
 
 #### Configuring email (optional):
 Sandhill has the ability to send emails based on a given error level.
@@ -130,9 +134,9 @@ Run the image in a detached mode.
 docker-compose up -d
 ```
 
-See the [docker-compose "getting started" documentation](https://docs.docker.com/compose/gettingstarted/) for a quick overview of basic Docker functionality. To stop sandhill but leave the container there, run `docker-compose stop`.
-
-Note: If you need to manually take it down, run `docker-compose down`. 
+See the [docker-compose "getting started" documentation](https://docs.docker.com/compose/gettingstarted/)
+for a quick overview of basic Docker functionality. To stop sandhill but leave the container there, run `docker-compose stop`.
+If you need to manually take it down, run `docker-compose down`. 
 
 Navigate in your browser to http://localhost:8080 - you should see
 a default "It Works!" page indicating that the site is working.
