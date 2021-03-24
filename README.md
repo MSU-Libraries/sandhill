@@ -80,11 +80,14 @@ Follow the steps on [Docker's official site](https://docs.docker.com/get-docker/
 and then install [Docker Compose](https://docs.docker.com/compose/install/) as well.
 
 ### Building the image:
-Clone the sandhill code. Open a cmd or terminal window and navigate to the 'sandhill' directory.
-
-Build a new image based on the current code.
+Clone the sandhill code, then navigate to the 'sandhill' directory (if you're not there already) to build a new image based on the latest stable Sandhill release:
 ```
 docker-compose build
+```
+
+Test that it's working before moving on to configuration by running:
+```
+SECRET_KEY='Testing' docker-compose up
 ```
 
 ### Configuration:
@@ -94,11 +97,7 @@ environment values. You can either pass them in directly to the docker command
 `./.env`. See [Docker's documentation](https://docs.docker.com/compose/env-file/)
 about the environment file. 
 
-The same variables from the
-[sandhill.default_settings.cfg](sandhill.default_settings.cfg) file can be
-used to override those defaults. 
-
-MK suggestion: There are some default environment variable settings in [sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg). However, it is strongly suggested to set environment variables in [sandhill/instance/sandhill.cfg](sandhill/instance/sandhill.cfg) wherever possible so that the environment variables can be set individually for each instance.
+There are some default environment variable settings in [sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable names in the environment file will allow you to override those. 
 
 #### Configuring email (optional):
 Sandhill has the ability to send emails based on a given error level.
@@ -121,6 +120,8 @@ Run the image in a detached mode.
 ```
 docker-compose up -d
 ```
+
+See the [docker-compose "getting started" documentation](https://docs.docker.com/compose/gettingstarted/) for a quick overview of basic Docker functionality. To stop sandhill but leave the container there, run `docker-compose stop`.
 
 Note: If you need to manually take it down, run `docker-compose down`. 
 
