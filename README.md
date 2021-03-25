@@ -60,7 +60,7 @@ To see what default values will be used if none are passed see the
 [sandhill.default_settings.cfg](sandhill.default_settings.cfg) file.
 
 ##### Using the config file:
-Copy `sandhill/sandhill/test_instance` into `sandhill/instance`. Then, copy the default config into `sandhill/instance`, and use that to override any values you like.
+Create a new instance directory at `sandhill/instance`. Then, copy the default config into `sandhill/instance`, and use that to override any values you like.
 
 ```
 cp sandhill/sandhill.default_settings.cfg instance/sandhill.cfg
