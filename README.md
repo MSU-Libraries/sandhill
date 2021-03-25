@@ -13,14 +13,13 @@ Sandhill is an open source framework developed by a team at Michigan State Unive
 Sandhill was named for the sandhill crane, a migratory bird that spends part of its time in Michigan.
 
 ### What technologies are required to successfully work with Sandhill?
-Sandhill relies on the following technologies:
+Sandhill has been developed with the following technologies:
 
 * Python 3
 * Flask
-* Jinja
-* Sass/SCSS
-* HTML
-* Ubuntu or other Debian-based servers
+* Jinja2
+* HTML / JSON
+* Linux (Ubuntu/Debian based servers)
 
 ## Local setup
 Use this setup if you want to:
@@ -68,9 +67,9 @@ Alternatively, you can modify the environment variables either at the host level
 There are some default environment variable settings in [sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable names in the environment file will allow you to override those.
 
 ### Running the application:
-To start the application, run the uwsgi module:
+To start the application, run the uwsgi module from the application directory:
 ```
-env/bin/uwsgi --buffer-size=8192 --socket 127.0.0.1:8080 --protocol=http --py-autoreload 1 -w wsgi:application
+env/bin/uwsgi --ini uwsgi.ini
 ```
 Go to http://localhost:8080 in your browser. If the site is working, you will see a default "It Works!" page.
 
@@ -83,7 +82,7 @@ Use this setup if you want to:
 ### Installing Docker and Docker Compose:
 Follow the steps on [Docker's official site](https://docs.docker.com/get-docker/) to install Docker and [Docker Compose](https://docs.docker.com/compose/install/).
 
-### Building the image:
+### Building and running the image:
 Clone the sandhill repository, then navigate into the directory to build a new image based on the latest stable Sandhill release:
 ```
 docker-compose build
@@ -91,8 +90,10 @@ docker-compose build
 
 Test that it's working by running:
 ```
-SECRET_KEY='Testing' docker-compose up
+docker-compose up -d
 ```
+
+Go to http://localhost:8080 in your browser. If the site is working, you will see a default "It Works!" page.
 
 Once you're done, run 
 ```
@@ -126,19 +127,6 @@ and then restart postfix:
 ```
 systemctl restart postfix
 ```
-
-### Running the image:
-Run the image in a detached mode.
-```
-docker-compose up -d
-```
-
-See the [docker-compose "getting started" documentation](https://docs.docker.com/compose/gettingstarted/)
-for a quick overview of basic Docker functionality. To stop Sandhill but leave the container there, run `docker-compose stop`.
-If you need to manually take it down, run `docker-compose down`. 
-
-Go to http://localhost:8080 in your browser. If the site is working, you will see a default "It Works!" page.
-
 
 ## Next steps
 Now that the core Sandhill application is working, you are ready to set up your own
