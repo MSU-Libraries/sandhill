@@ -1,38 +1,34 @@
 Sandhill
 ========
 
-* [What Sandhill can do for you](#what-sandhill-can-do-for-you)
+* [About Sandhill](#about-sandhill)
 * [Local setup](#local-setup)
 * [Docker setup](#docker-setup)
 * [Next steps](#next-steps)
 
-## What Sandhill can do for you
-Sandhill is an open source framework developed by the Michigan State University Libraries. It's inception
-came from the desire to have a truly flexible digital repository platform. Given how flexible it has been designed to be,
-it could be used as any content delivery application. The goal of Sandhill is to provide you with a nicely organized
-toolbox to build your application with. So let's get building!
+## About Sandhill
+Sandhill is an open source framework developed by a team at Michigan State University Libraries. Our goal was to create a flexible front-end for [Fedora Commons 3.8](https://wiki.lyrasis.org/display/FEDORA38/Fedora+3.8+Documentation) that didn't rely on a web content management system. Sandhill isn't a pre-built front end; it's an organized toolbox you can use to build your own application. 
 
-### What do you need in order to successfully work with Sandhill?
-In order to install, run, and make changes to Sandhill, you and your team need the a good working knowledge of the following:
-* Python
+### What does the name Sandhill mean?
+Sandhill was named for the sandhill crane, a migratory bird that spends part of its time in Michigan.
+
+### What technologies are required to successfully work with Sandhill?
+Sandhill relies on the following technologies:
+
+* Python 3
 * Flask
 * Jinja
 * Sass/SCSS
 * HTML
-* Debian-based system/server administration
-
-In other words, this is not a framework well-suited to beginners, but rather to those with intermediate or advanced skill in these areas.
+* Ubuntu or other Debian-based servers
 
 ## Local setup
 Use this setup if you want to:
-* Have a development environment that allows you to make code changes and see them immediately 
-reflected on the page
+* Have a development environment that allows you to make code changes and see them immediately reflected on the page
 * _Not_ use Docker for your application
 
-Note: this assumes you have 'apt' installed; generally Homebrew or Macports are used instead. We 
-don't currently have Sandhill packages available for Homebrew or Macports, and there is no 
-anticipated timeline for developing those. If you're not able to install apt, we suggest using 
-the Docker image - see instructions below.
+Note: the local setup instructions assume that you have `apt` installed. Sandhill packages are not available for Homebrew or Macports, and there is no anticipated timeline for developing those. If you're not able to install `apt`, we suggest using 
+the [Docker image](#docker-setup).
 
 
 ### Installation:
@@ -42,62 +38,58 @@ apt install virtualenv python3-pip
 ```
 
 Clone the sandhill repository and navigate into that directory to create the virtual environment.
-Run this command as the developer's user.
+Run this command as your user (not root).
 ```
 virtualenv -p python3 env
 ```
 
-Install the required Pip packages as the developer's user.
+Install the required Pip packages as your user (not root).
 ```
 env/bin/pip install -r requirements.txt
 ```
 
 ### Configuration:
-Configuration parameters can be passed either in a config file or via environment variables 
-on the host machine.
+Configuration parameters can be passed either in a config file or via environment variables on the host machine.
 
-To see what default values will be used if none are passed see the 
+To see what default values will be used if none are passed, see the 
 [sandhill.default_settings.cfg](sandhill.default_settings.cfg) file.
 
 ##### Using the config file:
-Create a new instance directory at `sandhill/instance`. Then, copy the default config into `sandhill/instance`, and use that to override any values you like.
+Create a new instance directory at `sandhill/instance`. Then, copy the default config into `sandhill/instance` and edit the instance file to override values.
 
 ```
 cp sandhill/sandhill.default_settings.cfg instance/sandhill.cfg
 ```
 
 #### Using environment variables:
-Alternatively you can modify the enivornment variables either at the host level (in 
+Alternatively, you can modify the environment variables either at the host level (in 
 `/etc/environment`) or at the application level (in `./.env`).
 
 There are some default environment variable settings in [sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable names in the environment file will allow you to override those.
 
 ### Running the application:
-To get the application started up, simply run the uwsgi module:
+To start the application, run the uwsgi module:
 ```
 env/bin/uwsgi --buffer-size=8192 --socket 127.0.0.1:8080 --protocol=http --py-autoreload 1 -w wsgi:application
 ```
-
-Navigating to your browser at http://localhost:8080 you should see
-a default "It Works!" page indicating that the site is working.
+Go to http://localhost:8080 in your browser. If the site is working, you will see a default "It Works!" page.
 
 
 ## Docker Setup
 Use this setup if you want to:
 * Set up a server to host the site without needing to make frequent code changes
-* Have it running in a contained environment
+* Run Sandhill in a container
 
 ### Installing Docker and Docker Compose:
-Follow the steps on [Docker's official site](https://docs.docker.com/get-docker/) to install Docker
-and then install [Docker Compose](https://docs.docker.com/compose/install/) as well.
+Follow the steps on [Docker's official site](https://docs.docker.com/get-docker/) to install Docker and [Docker Compose](https://docs.docker.com/compose/install/).
 
 ### Building the image:
-Clone the sandhill repository then navigate into the directory to build a new image based on the latest stable Sandhill release:
+Clone the sandhill repository, then navigate into the directory to build a new image based on the latest stable Sandhill release:
 ```
 docker-compose build
 ```
 
-Test that it's working before moving on to configuration by running:
+Test that it's working by running:
 ```
 SECRET_KEY='Testing' docker-compose up
 ```
@@ -110,7 +102,7 @@ so that you can edit configs, etc. You'll re-do the build before you spin the ap
 
 ### Configuration:
 In order to pass custom configurations to the Docker container, you will need to pass it
-environment values. You can either pass them in directly to the docker command
+environment values. You can either pass them directly to the docker command
 (`DEBUG=1 docker-compose up`) or provide them in an environment file,
 `./.env`. See [Docker's documentation](https://docs.docker.com/compose/env-file/)
 about the environment file. 
@@ -122,7 +114,7 @@ names in the environment file will allow you to override those.
 #### Configuring email (optional):
 Sandhill has the ability to send emails based on a given error level.
 
-If you wish to do this, and have included the relavent email variables in the environment step above, you may still need to configure your server in order to send emails from it. This includes installing an email server such as postfix.
+If you wish to do this, and have included the relevant email variables in the environment step above, you may still need to configure your server in order to send emails from it. This includes installing an email server such as postfix.
 
 For example, if you're using postfix, you would need to edit`/etc/postfix/main.cf` and update the
 `mynetworks` line to include the docker network's IP range:
@@ -135,26 +127,22 @@ and then restart postfix:
 systemctl restart postfix
 ```
 
-### Runing the image:
+### Running the image:
 Run the image in a detached mode.
 ```
 docker-compose up -d
 ```
 
 See the [docker-compose "getting started" documentation](https://docs.docker.com/compose/gettingstarted/)
-for a quick overview of basic Docker functionality. To stop sandhill but leave the container there, run `docker-compose stop`.
+for a quick overview of basic Docker functionality. To stop Sandhill but leave the container there, run `docker-compose stop`.
 If you need to manually take it down, run `docker-compose down`. 
 
-Navigate in your browser to http://localhost:8080 - you should see
-a default "It Works!" page indicating that the site is working.
+Go to http://localhost:8080 in your browser. If the site is working, you will see a default "It Works!" page.
 
 
 ## Next steps
-Now that the core Sandhill application is working, you are ready to setup your own
-instance which will have your own URL route structure and template pages.
-See the next section, [instance setup documentation](INSTANCE_SETUP.md) for further
-instructions on how to do that.
+Now that the core Sandhill application is working, you are ready to set up your own
+instance with a custom URL route structure and template pages.
+See the [instance setup documentation](INSTANCE_SETUP.md) for instructions on setting up your own instance.
 
-You can optionally have the application setup to run automatically on boot. See 
-the [service setup documentation](SERVICE_SETUP.md) for instructions on doing this
-in a Debian based system.
+You can choose to have the application run automatically on boot. See the [service setup documentation](SERVICE_SETUP.md) for instructions on doing this in a Debian based system.
