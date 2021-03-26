@@ -1,14 +1,14 @@
 Sandhill
 ========
 
-Sandhill is an developer oriented web application platform designed to make creating complex content fast and easy, while maintaining no-hassle extensibility. Written in Python around the Flask mico-framework, Sandhill is designed to allow rapid deployment of new features while maintaining a simple, decoupled development codebase.  
+Sandhill is an developer oriented web application platform designed to make creating complex content fast and easy, while maintaining no-hassle extensibility. Written in Python around the Flask mico-framework, Sandhill is designed to allow rapid deployment of new features while still keeping a simple, decoupled development codebase.  
 
 * [About Sandhill](#about-sandhill)
 * [Installation](#installation)
 * [Next Steps](#next-steps)
 
 ## About Sandhill
-Sandhill was created by a development team at Michigan State University Libraries stemming from a goal to create a flexible front-end environment for their Digital Repository site. To accomodate for exptected repository backend changes, Sandhill was deveoped as a platform where it would be easy to adapt to major changes without requiring major software rewrites.  
+Sandhill was created by a development team at Michigan State University Libraries stemming from a goal to create a flexible front-end environment for their Digital Repository site. To accomodate for exptected repository backend changes, Sandhill was developed as a platform where it would be easy to adapt to major changes without requiring major software rewrites.  
 
 Sandhill isn't a pre-built solution for repositories, but a lightweight platform to allow for rapid development of your own application, whatever the purpose.  
 

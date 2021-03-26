@@ -8,7 +8,7 @@ you might do as well as the design of your pages. All of these build upon the al
 core Sandhill feature sets. Out of the box, sandhill provides a range of data processors and Jinja2
 template filters; but one has a simple "It Works!" template. It is up to you to develop everything
 in between to make your application have the feature set you desire! Think of it as Sandhill providing
-the core framework and your instance is your implementation of an application using that framework.  
+the core framework and your instance is your implementation of an application using that framework.
 
 Basic structure of the instance directory
 ------------------------------------------
@@ -47,7 +47,7 @@ you need to compile SCSS.
 
 ### `commands/`
 This directory is used to include additional [Click commands](https://flask.palletsprojects.com/en/1.1.x/cli/#custom-commands)
-to your application.  
+to your application.
 
 For example:  
 `instance/commands/hi.py`:
@@ -60,7 +60,7 @@ from sandhill import app
 def hi(name):
     print(f"Hi {name}!")
 ```
-Would allow you to run:  
+Would allow you to run:
 ```
 $ flask hi bob
 Hi bob!
@@ -68,15 +68,15 @@ Hi bob!
 
 ### `config/routes/`
 A _route_ defines a URL pattern that Sandhill will match. Any request to Sandhill that does
-not match a route will return a 404 page.  
+not match a route will return a 404 page.
 
 Most routes are configured to render a Jinja2 _template_ (typically resulting in an HTML page), but can
 also return a _stream_ of data (such as an image or downloadable file), or even use a _processor_
-built to return a response that doesn't conform to either of the above.  
+built to return a response that doesn't conform to either of the above.
 
 To create a new route, create a uniquely named `.json` file inside `instance/config/routes/`. JSON files
 in this directory will be automatically loaded _when Sandhlll is started_ (note, adding new routes requires
-restarting of Sandhill).  
+restarting of Sandhill).
 
 The `routes` directory is nested under `config` so that you can use the `config` directory for other items within
 your application as well.
