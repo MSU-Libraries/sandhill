@@ -112,7 +112,7 @@ Now that the core Sandhill application is working, you are ready to set up your 
 application instance. Have a look through the following documentation to help you
 on your way.  
 
-* [And Introductory Overview of Sandhill](docs/OVERVIEW.md)
+* [An Introductory Overview of Sandhill](docs/OVERVIEW.md)
 * [Configuring Sandhill](docs/INSTANCE_SETUP.md)
 * [Creating Content in Sandhill](docs/USER_GUIDE.md)
 * [Development within your Sandhill Application](docs/DEV_GUIDE.md)
