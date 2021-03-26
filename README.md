@@ -15,7 +15,7 @@ Sandhill isn't a pre-built solution for repositories, but a lightweight platform
 **What does the name Sandhill mean?**  
 Sandhill was named for the Sandhill Crane, a migratory bird that spends part of its time in Michigan. The origin of Sandhill came from the need to develop a frontend of MSU Libraries' Digital Repostory, which could be considered a swamp of information and the Sandhill Crane could easily live and navigate in such a vast wetlands of knowledge.  
 
-**What technologies is Sandhill build upon?**  
+**What technologies is Sandhill built upon?**  
 Sandhill has been developed primarily with the following:
 
 * [Python](https://www.python.org/about/)
@@ -64,6 +64,7 @@ Go to [http://localhost:8080/](http://localhost:8080/) in your browser. If every
 
 You're now ready to dive into Sandhill. Head over and read through the [Next Steps](#next-steps) you
 can take to start development of your Sandhill application.  
+  
 
 
 ### Running Sandhill in Docker
