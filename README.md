@@ -1,45 +1,43 @@
 Sandhill
 ========
 
-Sandhill is an developer oriented web application platform designed to make creating complex content fast and easy, while maintaining no-hassle extensibility. Written in Python around the Flask mico-framework, Sandhill is designed to allow rapid deployment of new features while still keeping a simple, decoupled development codebase.  
+Sandhill is an extensible platform designed to make developing data-driven web applications fast and easy. Written in Python using the Flask microframework, Sandhill is built with a decoupled codebase that allows for rapid deployment of new features. Sandhill excels at seamlessly combining multiple data sources into fulsome content. *Sandhill is still in active development and is considered in the alpha stage*. 
 
 * [About Sandhill](#about-sandhill)
 * [Installation](#installation)
 * [Next Steps](#next-steps)
 
 ## About Sandhill
-Sandhill was created by a development team at Michigan State University Libraries stemming from a goal to create a flexible front-end environment for their Digital Repository site. To accomodate for exptected repository backend changes, Sandhill was developed as a platform where it would be easy to adapt to major changes without requiring major software rewrites.  
+Sandhill was originally created by a development team at Michigan State University Libraries to provide a flexible front end for a digital repository, but is amenable to any number of eventual use cases. A key advantage of Sandhill is the ability to swap out back end data sources without requiring significant rewrites of the base application.
 
-Sandhill isn't a pre-built solution for repositories, but a lightweight platform to allow for rapid development of your own application, whatever the purpose.  
+Sandhill isn't a pre-built solution for repositories, but a lightweight platform that allows for rapid development of web applications covering a wide range of purposes.  
 
 **What does the name Sandhill mean?**  
-Sandhill was named for the Sandhill Crane, a migratory bird that spends part of its time in Michigan. The origin of Sandhill came from the need to develop a frontend of MSU Libraries' Digital Repostory, which could be considered a swamp of information and the Sandhill Crane could easily live and navigate in such a vast wetlands of knowledge.  
+Sandhill was named for the Sandhill Crane, a migratory bird that spends part of its time in Michigan.
 
-**What technologies is Sandhill built upon?**  
+### Technology Stack
 Sandhill has been developed primarily with the following:
 
 * [Python](https://www.python.org/about/)
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
 * [Jinja](https://jinja.palletsprojects.com/)
 * [JSON](https://en.wikipedia.org/wiki/JSON)
-* Ubuntu/Debian based Linux (but it should work on other Linux distos as well)
+* Ubuntu/Debian based Linux (but it should work on other Linux distros as well)
 
-Having a grasp on all of the above technologies isn't necessary to get started with Sandhill, but being
-familiar with at least JSON, the Linux command line, and how an HTML template library works (even if
-it isn't Jinja) will go a long way to helping you get out of the gate with Sandhill.  
+Having a grasp of all of the above technologies isn't necessary to get started with Sandhill, but being familiar with at least JSON, the Linux command line, and how an HTML template library works (even if it isn't Jinja) will help you get started with Sandhill.  
 
 ## Installation
-There are two ways to get Sandhill up and running fast.
- 1. [Running Sandhill Manually](#running-sandhill-manually)
- 2. [Running Sandhill in Docker](#running-sandhill-in-docker)
+There are two ways to install Sandhill.
+ 1. [Manual installation](#manual-installation)
+ 2. [Docker installation](#docker-installation)
 
-### Running Sandhill Manually
+### Manual installation
 This installation method will get Sandhill running on your Linux machine directly. This requires a few more steps, but if you aren't familiar with Docker, this could be the easier route.  
 
-Note, we're assuming a Ubuntu or Debian based Linux here and will be using the `apt` command. If you are familiar with another distro, the process should be very similar if you just substitute the appropriate package manager command of choice. If all else fails, you can always try [Running Sandhill in Docker](#running-sandhill-in-docker).
+Note, we're assuming a Ubuntu or Debian based Linux here and will be using the `apt` command. If you are familiar with another distro, the process should be very similar if you substitute the appropriate package manager command of choice. If all else fails, you can always try [running Sandhill in Docker](#docker-installation).
 
 **Required Packages**  
-Install the required packages to setup Sandhill (note the required `sudo` privileges for these commands only):
+Install the required packages to set up Sandhill (note the required `sudo` privileges for these commands only):
 ```
 sudo apt update
 sudo apt install virtualenv python3-pip
@@ -68,10 +66,8 @@ Go to [http://localhost:8080/](http://localhost:8080/) in your browser. If every
 
 You're now ready to dive into Sandhill. Head over and read through the [Next Steps](#next-steps) you
 can take to start development of your Sandhill application.  
-  
 
-
-### Running Sandhill in Docker
+### Docker installation
 With the Docker install of Sandhill, you'll be able to skip most of the setup to get things
 running quickly, but it may require a few extra steps before you can start building content
 with Sandhill.  
@@ -103,7 +99,7 @@ docker-compose up -d
 
 Go to [http://localhost:8080/](http://localhost:8080/) in your browser. If everything worked, you will see a default "It Works!" page. Congratulations - you've got Sandhill up and running!  
 
-To stop the Sandhill container, run the followin while in the `sandhill/` directory you cloned from git:  
+To stop the Sandhill container, run the following while in the `sandhill/` directory you cloned from git:  
 ```
 docker-compose down
 ```
@@ -118,7 +114,6 @@ on your way.
 
 * [An Introductory Overview of Sandhill](docs/OVERVIEW.md)
 * [Configuring Sandhill](docs/INSTANCE_SETUP.md)
-* [Creating Content in Sandhill](docs/USER_GUIDE.md)
 * [Development within your Sandhill Application](docs/DEV_GUIDE.md)
 * [Running Sandhill as a Service](docs/SERVICE_SETUP.md)
 * [Contributing to Sandhill](CONTRIBUTING.md)
