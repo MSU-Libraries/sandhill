@@ -10,7 +10,7 @@ Sandhill is an developer oriented web application platform designed to make crea
 ## About Sandhill
 Sandhill was created by a development team at Michigan State University Libraries stemming from a goal to create a flexible front-end environment for their Digital Repository site. To accomodate for exptected repository backend changes, Sandhill was deveoped as a platform where it would be easy to adapt to major changes without requiring major software rewrites.  
 
-Sandhill isn't a pre-built solution for repositories, but a lightweight platform to allow for rapid development your own application, whatever the purpose.   
+Sandhill isn't a pre-built solution for repositories, but a lightweight platform to allow for rapid development of your own application, whatever the purpose.  
 
 **What does the name Sandhill mean?**  
 Sandhill was named for the Sandhill Crane, a migratory bird that spends part of its time in Michigan. The origin of Sandhill came from the need to develop a frontend of MSU Libraries' Digital Repostory, which could be considered a swamp of information and the Sandhill Crane could easily live and navigate in such a vast wetlands of knowledge.  
@@ -23,6 +23,10 @@ Sandhill has been developed primarily with the following:
 * [Jinja](https://jinja.palletsprojects.com/)
 * [JSON](https://en.wikipedia.org/wiki/JSON)
 * Ubuntu/Debian based Linux (but it should work on other Linux distos as well)
+
+Having a grasp on all of the above technologies isn't necessary to get started with Sandhill, but being
+familiar with at least JSON, the Linux command line, and how an HTML template library works (even if
+it isn't Jinja) will go a long way to helping you get out of the gate with Sandhill.  
 
 ## Installation
 There are two ways to get Sandhill up and running fast.
