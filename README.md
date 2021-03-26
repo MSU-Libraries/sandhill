@@ -1,51 +1,69 @@
 Sandhill
 ========
 
+Sandhill is an developer oriented web application platform designed to make creating complex content fast and easy, while maintaining no-hassle extensibility. Written in Python around the Flask mico-framework, Sandhill is designed to allow rapid deployment of new features while maintaining a simple, decoupled development codebase.  
+
 * [About Sandhill](#about-sandhill)
-* [Local setup](#local-setup)
+* [Installation](#installation)
 * [Docker setup](#docker-setup)
 * [Next steps](#next-steps)
 
 ## About Sandhill
-Sandhill is an open source framework developed by a team at Michigan State University Libraries. Our goal was to create a flexible front-end for [Fedora Commons 3.8](https://wiki.lyrasis.org/display/FEDORA38/Fedora+3.8+Documentation) that didn't rely on a web content management system. Sandhill isn't a pre-built front end; it's an organized toolbox you can use to build your own application. 
+Sandhill was created by a development team at Michigan State University Libraries stemming from a goal to create a flexible front-end environment for their Digital Repository site. To accomodate for exptected repository backend changes, Sandhill was deveoped as a platform where it would be easy to adapt to major changes without requiring major software rewrites.  
 
-### What does the name Sandhill mean?
-Sandhill was named for the sandhill crane, a migratory bird that spends part of its time in Michigan.
+Sandhill isn't a pre-built solution for repositories, but a lightweight platform to allow for rapid development your own application, whatever the purpose.   
 
-### What technologies are required to successfully work with Sandhill?
-Sandhill has been developed with the following technologies:
+**What does the name Sandhill mean?**  
+Sandhill was named for the Sandhill Crane, a migratory bird that spends part of its time in Michigan. The origin of Sandhill came from the need to develop a frontend of MSU Libraries' Digital Repostory, which could be considered a swamp of information and the Sandhill Crane could easily live and navigate in such a vast wetlands of knowledge.  
 
-* Python 3
-* Flask
-* Jinja2
-* HTML / JSON
-* Linux (Ubuntu/Debian based servers)
+**What technologies is Sandhill build upon?**  
+Sandhill has been developed primarily with the following:
 
-## Local setup
-Use this setup if you want to:
-* Have a development environment that allows you to make code changes and see them immediately reflected on the page
-* _Not_ use Docker for your application
+* [Python](https://www.python.org/about/)
+* [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+* [Jinja](https://jinja.palletsprojects.com/)
+* [JSON](https://en.wikipedia.org/wiki/JSON)
+* Ubuntu/Debian based Linux (but it should work on other Linux distos as well)
 
-Note: the local setup instructions assume that you have `apt` installed. Sandhill packages are not available for Homebrew or Macports, and there is no anticipated timeline for developing those. If you're not able to install `apt`, we suggest using 
-the [Docker image](#docker-setup).
+## Installation
+There are two ways to get Sandhill up and running fast.
+ 1. [Running Sandhill Manually](#running-sandhill-manually)
+ 2. [Running Sandhill in Docker](#running-sandhill-in-docker)
 
+### Running Sandhill Manually
+This installation method will get Sandhill running on your Linux machine directly. This requires a few more steps, but if you aren't familiar with Docker, this could be the easier route.  
 
-### Installation:
-Install the required packages (note: you may need to update `apt` first):
+Note, we're assuming a Ubuntu or Debian based Linux here and will be using the `apt` command. If you are familiar with another distro, the process should be very similar if you just substitute the appropriate package manager command of choice. If all else fails, you can always try [Running Sandhill in Docker](#running-sandhill-in-docker).
+
+**Required Packages**  
+Install the required packages (note the required `sudo` privileges for these commands only):
 ```
-apt install virtualenv python3-pip
+sudo apt update
+sudo apt install virtualenv python3-pip
 ```
 
-Clone the sandhill repository and navigate into that directory to create the virtual environment.
-Run this command as your user (not root).
+Clone the Sandhill repository and navigate into that directory:
+```
+git clone https://github.com/MSU-Libraries/sandhill.git
+cd sandhill
+```
+
+Next create a virtual environment and install the required [pip](https://pip.pypa.io/en/stable/quickstart/) packages:
 ```
 virtualenv -p python3 env
-```
-
-Install the required Pip packages as your user (not root).
-```
 env/bin/pip install -r requirements.txt
 ```
+
+**Run Sandhill**  
+To start Sandhill, run the `uwsgi` within the application environment:
+```
+env/bin/uwsgi --ini uwsgi.ini
+```
+Go to [http://localhost:8080/](http://localhost:8080/) in your browser. If everything worked, you will see a default "It Works!" page. Congratulations - you've got Sandhill up and running!  
+
+If you'd like to start creating content at this point, head over to our [instance setup](docs/INSTANCE_SETUP.md) documentation.  
+
+If you'd like to setup Sandhill as a service for running on a server environment, take a peek at our [service setup](docs/SERVICE_SETUP.md) guide.  
 
 ### Configuration:
 Configuration parameters can be passed either in a config file or via environment variables on the host machine.
@@ -66,15 +84,8 @@ Alternatively, you can modify the environment variables either at the host level
 
 There are some default environment variable settings in [sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable names in the environment file will allow you to override those.
 
-### Running the application:
-To start the application, run the uwsgi module from the application directory:
-```
-env/bin/uwsgi --ini uwsgi.ini
-```
-Go to http://localhost:8080 in your browser. If the site is working, you will see a default "It Works!" page.
 
-
-## Docker Setup
+### Running Sandhill in Docker
 Use this setup if you want to:
 * Set up a server to host the site without needing to make frequent code changes
 * Run Sandhill in a container
