@@ -1,0 +1,18 @@
+[Unit]
+Description=Sandhill docker application stack
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/sandhill
+EnvironmentFile=/etc/environment
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
+ExecReload=/usr/local/bin/docker-compose up
+Restart=always
+RestartSec=180
+StartLimitInterval=550
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target
