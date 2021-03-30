@@ -120,15 +120,15 @@ return values.
     Retrieves rows pertaining to the given keys from the Table instance
     represented by table_handle.  String keys will be UTF-8 encoded.
 
-    Args:
+    args:
         table_handle (Table): An open smalltable.Table instance.
         keys (List of string): A sequence of strings representing the key of each table
           row to fetch.  String keys will be UTF-8 encoded.
         require_all_keys (bool): Optional; If require_all_keys is True only
           rows with values set for all keys will be returned.
 
-    Returns (dict):
-        A dict mapping keys to the corresponding table row data
+    returns:
+        (dict): A dict mapping keys to the corresponding table row data
         fetched. Each row is represented as a tuple of strings. For
         example:
 
@@ -140,7 +140,7 @@ return values.
         missing from the dictionary, then that row was not found in the
         table (and require_all_keys must have been False).
 
-    Raises:
+    raises:
         IOError: An error occurred accessing the smalltable.
     """
 ```
@@ -152,7 +152,7 @@ return values.
     Longer class information....
     Longer class information....
 
-    Attributes:
+    attributes:
         likes_spam (bool): A boolean indicating if we like SPAM or not.
         eggs (int): An integer count of the eggs we have laid.
     """
