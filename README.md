@@ -1,170 +1,122 @@
 Sandhill
----------------
+========
+*Sandhill is still in active development and is considered in the alpha stage*
 
-* [Developer Environment Setup](#developer-environment-setup)
-* [Deployable Docker Setup](#deployable-docker-setup)
-* [Docker](#docker)
-* [Developer Notes](#developer-notes)
+Sandhill is an extensible platform designed to make developing data-driven web applications fast and easy. Written in Python using the Flask microframework, Sandhill is built with a decoupled codebase that allows for rapid deployment of new features. Sandhill provides tool to combine multiple data sources into web content using custom data processors. 
 
-Developer Environment Setup
-===============
-Use this setup if you want to set up a development environment that allows
-code changes to be made and immediately updated on the page.
+* [About Sandhill](#about-sandhill)
+* [Installation](#installation)
+* [Setting up an instance of Sandhill](#setting-up-an-instance-of-sandhill)
 
-### Config setup
-Within the cloned directory, make a copy of the default config and override any values you like.
-If not specified in a separate config file, the defaults will be used. This step is not required if you
-want to use the defaults for everything. Run this command as the developer user's.
+## About Sandhill
+Sandhill was originally created by a development team at Michigan State University Libraries to provide a flexible front end for a digital repository. A key advantage of Sandhill is the ability to change back-end data sources without requiring significant rewrites of the base application.
 
+Sandhill isn't a pre-built solution for repositories, but a lightweight platform that allows for rapid development of web applications covering a wide range of purposes.  
+
+**What does the name Sandhill mean?**  
+Sandhill was named for the Sandhill Crane, a migratory bird that spends part of its time in Michigan.
+
+### Technology stack
+Sandhill has been developed primarily with the following:
+
+* [Python](https://www.python.org/about/)
+* [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+* [Jinja](https://jinja.palletsprojects.com/)
+* [JSON](https://en.wikipedia.org/wiki/JSON)
+* Ubuntu/Debian based Linux (but it should work on other Linux distros as well)
+
+Having a grasp of all of the above technologies isn't necessary to get started with Sandhill, but being familiar with at least JSON, the Linux command line, and how an HTML template library works (even if it isn't Jinja) will help you get started with Sandhill.  
+
+## Installation
+There are two ways to install Sandhill.
+ 1. [Manual installation](#manual-installation)
+ 2. [Docker installation](#docker-installation)
+
+### Manual installation
+This installation method will get Sandhill running on your Linux machine directly. This requires a few more steps, but if you aren't familiar with Docker, this could be the easier route.  
+
+These instructions assume you are using a Ubuntu or another Debian-based Linux and use the `apt` command. If you are familiar with another distro, the process should be very similar if you substitute another package manager. If all else fails, you can always try [running Sandhill in Docker](#docker-installation).
+
+**Required packages**  
+Install the required packages to set up Sandhill (note the required `sudo` privileges for these commands only):
 ```
-cp sandhill/sandhill.default_settings.cfg instance/sandhill.cfg
-```
-
-### Install the required packages
-```
+sudo apt update
 sudo apt install virtualenv python3-pip
 ```
 
-In the cloned directory, create the virtual environment. Run this command as the developer's user.
+**Getting Sandhill**  
+Clone the Sandhill repository and navigate into that directory:
 ```
-virtualenv -p python3 env
+git clone https://github.com/MSU-Libraries/sandhill.git
+cd sandhill
 ```
 
-Install the required Pip packages as the developer's user.
+**Dependencies**  
+Next create a virtual environment and install the required [pip](https://pip.pypa.io/en/stable/quickstart/) packages:
 ```
+virtualenv -p python3 env
 env/bin/pip install -r requirements.txt
 ```
 
-## Create a log directory
+**Running Sandhill**  
+To start Sandhill, run the `uwsgi` within the application environment:
 ```
-sudo mkdir -p /var/log/sandhill
+env/bin/uwsgi --ini uwsgi.ini
+```
+Go to [http://localhost:8080/](http://localhost:8080/) in your browser. If everything worked, you will see a default "It Works!" page. Congratulations - you've got Sandhill up and running! (Press Ctrl-C when you want to stop Sandhill)  
+
+You're now ready to dive into Sandhill. Head over and read through [setting up an instance of Sandhill](#setting-up-an-instance-of-sandhill)
+which will help you start development of your Sandhill application.  
+
+### Docker installation
+With the Docker install of Sandhill, you'll be able to skip most of the setup to get things
+running quickly, but it may require a few extra steps before you can start building content
+with Sandhill.  
+
+**Required packages**  
+You'll need both `docker` and `docker-compose` installed.
+You can install both of these by following the instructions at their respective sites:  
+* [Docker Install](https://docs.docker.com/get-docker/)
+* [docker-compose Install](https://docs.docker.com/compose/install/)
+
+**Getting Sandhill**  
+Clone the Sandhill repository and navigate into that directory:  
+```
+git clone https://github.com/MSU-Libraries/sandhill.git
+cd sandhill
 ```
 
-## Setup logrotate on logs
-TODO
-
-## Update the environment file
-TODO -- move this to CI/CD later
-In order for the docker container to know the hostname of the server it is
-running on, we need to pass it as an environment variable. Modify the
-`/etc/environment` file to add any environment variables in the docker-compose file.
-
-## Allow emails to be sent from the container
-In order for error emails to be sent from the sandhill container
-you will need to update postfix on the host and ufw
-
-Edit the postfix config (`/etc/postfix/main.cf`) and update this line:
-```
-mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.0.0 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
-```
-```
-ufw allow from 192.168.0.0/16 to any port 25
-ufw allow from 172.16.0.0/12 to any port 25
-systemctl restart postfix
-```
-
-## Create the rsyslog config
-This step is required to have filtered logging for only this application go to
-a file other than syslog. This is only because `StandardOutput` and `StandardError`
-do not support file redirection in Ubuntu 16.04.
-
-```
-sudo cp etc/rsyslog.d/sandhill.conf /etc/rsyslog.d/
-sudo chown -R syslog:adm /var/log/sandhill
-sudo systemctl restart rsyslog
-```
-
-### Create the service
-Copy the systemd unit file to set it up as a service. Be sure to make any local changes to
-it for environment specific parameters
-```
-sudo cp etc/systemd/system/sandhill.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable sandhill
-sudo systemctl start sandhill
-```
-
-### Add users to docker group
-In order for the users to be able to update the docker image, make sure to add their user
-to the `docker` group.
-```
-sudo adduser [developer_user] docker
-```
-
-### Custom Docker build
-If you want to create an image to run and test outside of the CI/CD workflow,
-you can run these steps as the develop
-
-#### Build the Image
-If setting this server up through the CI/CD, skip this step.
-Build a new image based on the current code.
+**Building the Docker image**  
+Build the Sandhill image by running:  
 ```
 docker-compose build
 ```
 
-#### Run the Image
-If setting this server up through the CI/CD, skip this step.
-Run the image in a detached mode.
+**Run Sandhill as a container**  
+Create the Sandhill container by running:  
 ```
 docker-compose up -d
 ```
 
-Note: If you need to manually take it down, run `docker-compose down`. TODO -- this will be moved to a service.
+Go to [http://localhost:8080/](http://localhost:8080/) in your browser. If everything worked, you will see a default "It Works!" page. Congratulations - you've got Sandhill up and running!  
 
-To view logs of a given container just run:
+To stop the Sandhill container, run the following while in the `sandhill/` directory you cloned from git:  
 ```
-docker container ls
-docker logs -f <CONTAINER NAME>
-```
-
-
-Deployable Docker Setup
-===============
-Use this setup if you just want to set up a server to host the site without needing to make
-frequent changes to the code.
-
-### Install Docker
-```
-sudo apt update
-sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common python3-pip apache2
+docker-compose down
 ```
 
-Then add the key and source to apt:
-```
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-```
+You're now ready to dive into Sandhill. Head over and read through [setting up an instance of Sandhill](#setting-up-an-instance-of-sandhill)
+which will help you start development of your Sandhill application.  
 
-Finally, update apt sources and install Docker and supporting packages:
-```
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io
-```
+## Setting up an instance of Sandhill
+After you install the core Sandhill application, you are ready to set up your own
+application instance. The following documentation provides further instructions for setting up your own instance.  
 
-### Install Docker Compose
-```
-sudo pip3 install docker-compose
-```
 
-### Add users to docker group
-In order for the deploy user to be able to update the docker image, make sure to add the deploy user
-to the `docker` group.
-```
-sudo adduser deploy docker
-```
+* [Configuring Sandhill](docs/INSTANCE_SETUP.md)
+* [Development within your Sandhill application](docs/DEV_GUIDE.md)
+* [Running Sandhill as a service](docs/SERVICE_SETUP.md)
+* [Contributing to Sandhill](CONTRIBUTING.md)
 
-### Allow the CI/CD deploy user to execute the commands on the server. Run `sudo visudo` to add:
-```
-deploy ALL=(root) NOPASSWD: /bin/systemctl restart sandhill-stack, /bin/cp /home/deploy/sandhill/instance/etc/systemd/system/sandhill-stack.service /etc/systemd/system/, /bin/systemctl daemon-reload, /bin/systemctl enable sandhill-stack, /bin/systemctl status sandhill-stack
-```
-TODO: long term we want to get rid of the `*` in this line, which we can do after we pull in solr to docker
-
-### Add a UFW rule for docker access
-Give the non-routable range that the docker containers use the access they need to request Fedora data.
-```
-ufw allow from 192.168.0.0/16 to any port 80,443,8080 proto tcp
-```
-
-How to setup an instance
-========================
-TODO
+If you have further questions or comment, please reach out to the development
+team at <a href="mailto:LIB.DL.repoteam@msu.edu">LIB.DL.repoteam@msu.edu</a>.  
