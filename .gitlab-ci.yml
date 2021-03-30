@@ -45,5 +45,7 @@ release:
   only:
     - master
   script:
-    - git config remote.github.url >&- || git remote add github https://gitlab-ci-token:PR3AWXdFJzHX3UxkszzG@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git
-    - git push github master
+    - rm -rf sandhill.git
+    - git clone --mirror git@gitlab.msu.edu:msu-libraries/repo-team/sandhill.git
+    - cd sandhill.git
+    - git push --force --mirror git@github.com:MSU-Libraries/sandhill.git
