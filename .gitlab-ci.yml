@@ -5,7 +5,7 @@ services:
 stages:
   - unittest_and_lint
   - build
-  #- scan
+  - release
 
 variables:
   CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
@@ -26,6 +26,7 @@ unittest_and_lint_job:
     when: always
     reports:
       junit: report.xml
+
 build_job:
   stage: build
   tags:
@@ -36,50 +37,13 @@ build_job:
     - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
     - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
 
-## Use to populate Code Quality report
-#code_quality:
-#  stage: scan
-#  tags:
-#    - msul
-#  artifacts:
-#    reports:
-#      codequality: gl-code-quality-report.json
-
-## Used to populate the Code Quality html report
-## Can't be used at the same time as the other
-## code_quality job (as the job name must be 
-## 'code_quality' for the template to recognize it
-## and we can't have duplicate job names.
-#code_quality:
-#  stage: scan
-#  tags:
-#    - msul
-#  variables:
-#    REPORT_FORMAT: html
-#  allow_failure: false
-#  artifacts:
-#    paths: [gl-code-quality-report.html]
-#
-#sast:
-#  stage: scan
-#  tags:
-#    - msul
-#  allow_failure: false
-#  image: registry.gitlab.com/gitlab-org/gl-sast:latest
-#  script:
-#    - docker run 
-#        --env SAST_CONFIDENCE_LEVEL="${SAST_CONFIDENCE_LEVEL:-3}" 
-#        --env SAST_DISABLE_REMOTE_CHECKS="${SAST_DISABLE_REMOTE_CHECKS:-false}" 
-#        --env SECURE_LOG_LEVEL="warn"
-#        --env SAST_BANDIT_EXCLUDED_PATHS="*/tests/*, */env/*"
-#        --volume "$PWD:/code" 
-#        --volume /var/run/docker.sock:/var/run/docker.sock 
-#        "registry.gitlab.com/gitlab-org/security-products/sast:11-2-stable" /app/bin/run /code
-#  artifacts:
-#    paths: [gl-sast-report.json]
-#    reports:
-#      sast: gl-sast-report.json
-#
-#include:
-#  - template: Code-Quality.gitlab-ci.yml
-
+release:
+  stage: release
+  tags:
+    - msul
+  when: manual
+  only:
+    - master
+  script:
+    - git remote add github git@github.com:MSU-Libraries/sandhill.git
+    - git push github master
