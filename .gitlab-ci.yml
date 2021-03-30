@@ -45,5 +45,5 @@ release:
   only:
     - master
   script:
-    - git remote add github git@github.com:MSU-Libraries/sandhill.git
+    - git config remote.github.url >&- || git remote add github https://gitlab-ci-token:PR3AWXdFJzHX3UxkszzG@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git
     - git push github master
