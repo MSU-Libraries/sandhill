@@ -68,9 +68,13 @@ def test_get_config():
     assert isinstance(response, str)
     assert response
 
-    # Test getting a value from the config when not in the environment
+    # Test getting a value from the config when it is not set in the environment
+    response = generic.get_config("SECRET_KEY")
+    assert response == app.config["SECRET_KEY"]
+
+    # Test getting a value from the config when it is set in the environment
     response = generic.get_config("DEBUG")
-    assert bool(int(response)) == app.config["DEBUG"]
+    assert response == os.environ["DEBUG"] if "DEBUG" in os.environ else "0"
 
     # Test getting a value for a config not set in the environment or config
     response = generic.get_config("NOT_SET")
