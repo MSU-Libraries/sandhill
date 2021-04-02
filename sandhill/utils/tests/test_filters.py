@@ -328,3 +328,21 @@ def test_makedict():
     example_list = ['xyz', 1, 2, 'abc', 3]
     res = filters.makedict(example_list)
     assert {'xyz': 1, 2:'abc'} == res
+
+def test_regex_sub():
+    value = "StillImage"
+    pattern = r"(?!^.)([A-Z])"
+    substitute = r" \1"
+    res = filters.regex_sub(value, pattern, substitute)
+    assert "Still Image" == res
+
+    # test by passing a list instead of a string
+    value = ["StillImage"]
+    res = filters.regex_sub(value, pattern, substitute)
+    assert value == res
+
+    # test by passing an invalid regex
+    value = "StillImage"
+    pattern = r"(??!^.)([A-Z])"
+    res = filters.regex_sub(value, pattern, substitute)
+    assert value == res

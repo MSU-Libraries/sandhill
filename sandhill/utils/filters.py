@@ -2,6 +2,7 @@
 import urllib
 import validators
 import os
+import re
 from ast import literal_eval
 import mimetypes
 from sandhill import app
@@ -364,3 +365,19 @@ def makedict(input_list: list):
     """
     return dict(maketuplelist(input_list, 2))
 
+@app.template_filter('regex_sub')
+def regex_sub(value, pattern, substitute):
+    """
+    Substitue pattern in the value
+    args:
+        value (str): value that need the substitution
+        pattern (str): regex patten that need to be checked
+        substitute (str): regex pattern that need to be substituted
+    """
+    try:
+        value = re.sub(pattern, substitute, value)
+    except TypeError as terr:
+        app.logger.warning(f"Expected string in regex_sub. { terr }" )
+    except re.error as rerr:
+        app.logger.warning(f"Invalid regex supplied to regex_sub. { rerr }" )
+    return value
