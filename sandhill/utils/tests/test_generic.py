@@ -70,7 +70,7 @@ def test_get_config():
 
     # Test getting a value from the config when not in the environment
     response = generic.get_config("DEBUG")
-    assert response == app.config["DEBUG"]
+    assert bool(int(response)) == app.config["DEBUG"]
 
     # Test getting a value for a config not set in the environment or config
     response = generic.get_config("NOT_SET")

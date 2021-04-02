@@ -34,10 +34,12 @@ def test_main():
     assert result.status_code == 500
 
     # test whether jsonify(data) is returned when app.debug is true
+    old_debug = app.debug
     app.debug = True
     result = client.get('/missing')
     assert result.status_code == 200
     assert result.headers["Content-Type"] == "application/json"
+    app.debug = old_debug   # restore debug setting
 
     # test passing in a route config that contains no data
     result = client.get('/no-data')
