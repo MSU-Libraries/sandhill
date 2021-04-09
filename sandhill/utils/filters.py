@@ -117,10 +117,6 @@ def set_child_key(parent_dict, parent_key, key, value):
         parent_dict[parent_key][key] = value
     return parent_dict
 
-@app.template_filter('url_encode')
-def url_encode(component):
-    return urllib.parse.quote(component)
-
 @app.template_filter('assemble_url')
 def assemble_url(url_components):
     """Take url_components (derived from Flask Request object) and returns a url.
@@ -390,10 +386,8 @@ def regex_match(value, pattern):
     match = None
     try:
         match = re.match(pattern, value)
-    except TypeError as terr:
-        app.logger.warning(f"Expected string in regex_match. { terr }" )
     except re.error as rerr:
-        app.logger.warning(f"Invalid regex supplied to regex_match. { rerr }" )
+        app.logger.warning(f"Regex error in regex_match. { rerr }" )
     return match
 
 @app.template_filter('regex_sub')
