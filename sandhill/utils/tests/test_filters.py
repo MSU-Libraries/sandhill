@@ -1,4 +1,5 @@
 import os
+import re
 from sandhill.utils import filters
 from sandhill import app
 from jinja2.runtime import new_context
@@ -43,6 +44,8 @@ def test_solr_escape():
     assert filters.solr_escape("a \\with+") == r"a\ \\with\+"
     assert filters.solr_escape("") == ""
     assert filters.solr_escape("hello") == "hello"
+    assert filters.solr_escape("hello*?") == "hello*?"
+    assert filters.solr_escape("hello* world?", escape_wildcards=True) == r'hello\*\ world\?'
 
     # test non-string
     assert filters.solr_escape(['test']) == ['test']
@@ -55,6 +58,8 @@ def test_solr_decode():
     assert filters.solr_decode(r"a\ \\with\+") == "a \\with+"
     assert filters.solr_decode("") == ""
     assert filters.solr_decode("hello") == "hello"
+    assert filters.solr_decode("hello*?") == "hello*?"
+    assert filters.solr_decode(r'hello\*\ world\?', escape_wildcards=True) == "hello* world?"
 
     # test non-string
     assert filters.solr_decode(['test']) == ['test']
@@ -328,6 +333,26 @@ def test_makedict():
     example_list = ['xyz', 1, 2, 'abc', 3]
     res = filters.makedict(example_list)
     assert {'xyz': 1, 2:'abc'} == res
+
+def test_regex_match():
+    # perform a positive match
+    value = "StillImage"
+    pattern = r"^Still"
+    res = filters.regex_match(value, pattern)
+    assert res is not None
+    assert res
+    assert res.group() == "Still"
+
+    # unable to match
+    value = "Movie"
+    res = filters.regex_match(value, pattern)
+    assert res is None
+
+    # passing an invalid regex patterns
+    value = "StillImage"
+    pattern = r"(??!^.)([A-Z])"
+    res = filters.regex_match(value, pattern)
+    assert res is None
 
 def test_regex_sub():
     value = "StillImage"
