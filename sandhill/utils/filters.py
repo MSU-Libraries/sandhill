@@ -55,10 +55,12 @@ def head(value):
     return value
 
 @app.template_filter('solr_escape')
-def solr_escape(value):
+def solr_escape(value, escape_wildcards=False):
     """Filter to escape a value being passed to Solr
     args:
         value (str): string to escape Solr characters
+        escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
+            should be escaped (Default: False)
     returns:
         (str): same string but with Solr characters escaped
     """
@@ -67,16 +69,21 @@ def solr_escape(value):
                     '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
                     '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
                     ';': r'\;' }
+        if not escape_wildcards:
+            del escapes['*']
+            del escapes['?']
         value = value.replace('\\', r'\\')  # must be first replacement
         for k, v in escapes.items():
             value = value.replace(k, v)
     return value
 
 @app.template_filter('solr_decode')
-def solr_decode(value):
+def solr_decode(value, escape_wildcards=False):
     """Filter to decode a value previously encoded for Solr
     args:
         value (str): string with Solr escapes to be decoded
+        escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
+            should be escaped (Default: False)
     returns:
         (str): same string after being decoded
     """
@@ -85,6 +92,9 @@ def solr_decode(value):
                     '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
                     '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
                     ';': r'\;' }
+        if not escape_wildcards:
+            del escapes['*']
+            del escapes['?']
         for k, v in escapes.items():
             value = value.replace(v, k)
         value = value.replace(r'\\', '\\')  # must be last replacement
@@ -364,6 +374,21 @@ def makedict(input_list: list):
         input_list (list): list with values that need to be converted into a dictionary
     """
     return dict(maketuplelist(input_list, 2))
+
+@app.template_filter('regex_match')
+def regex_match(value, pattern):
+    """
+    Match pattern in the value
+    args:
+        value (str): value that the pattern will compare against
+        pattern (str): regex patten that need to be checked
+    """
+    match = None
+    try:
+        match = re.match(pattern, value)
+    except re.error as rerr:
+        app.logger.warning(f"Regex error in regex_match. { rerr }" )
+    return match
 
 @app.template_filter('regex_sub')
 def regex_sub(value, pattern, substitute):
