@@ -2,6 +2,7 @@
 Runs functional tests
 '''
 import os
+import re
 import pytest
 from sandhill.utils.config_loader import load_json_config
 from sandhill import app
@@ -32,3 +33,8 @@ def test_page(page):
         if 'excludes' in pages:
             for needle in page['excludes']:
                 assert needle not in resp.data.decode("utf-8")
+
+        # Validate matches against a regex string in the response
+        if 'matches' in pages:
+            for needle in page['matches']:
+                assert re.match(needle, resp.data.decode("utf-8"))
