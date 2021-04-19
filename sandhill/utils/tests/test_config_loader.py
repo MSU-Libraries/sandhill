@@ -43,6 +43,14 @@ def test_get_all_routes():
     assert isinstance(data, list)
     assert data == ['/']
 
+    # test load sorting for routes
+    data = config_loader.get_all_routes()
+    assert data.index('/alpha/<string:value>') < data.index('/<string:value>/alpha')
+    assert data.index('/beta/<string:value>') < data.index('/<string:value>/beta')
+    assert data.index('/beta') < data.index('/<string:value>/beta')
+    assert data.index('/beta') < data.index('/<string:value>')
+    assert data.index('/alpha/<string:value>/beta') < data.index('/alpha/<string:value>')
+
 def test_load_route_config():
     # test a simple route config
     data = config_loader.load_route_config("/home")
