@@ -1,3 +1,6 @@
+'''
+Utilities for loading of loading /config files
+'''
 import os
 import re
 import collections
@@ -38,16 +41,22 @@ def get_all_routes(routes_dir="config/routes/"):
     routes = []
     var_counts = {}
     try:
-        for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
+        conf_files = [
+            os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")
+        ]
+        for conf_file in conf_files:
             data = load_json_config(conf_file)
             if "route" in data:
-                if isinstance(data["route"],list):
-                    for r in data["route"]:
-                        routes.append(r)
+                if isinstance(data["route"], list):
+                    for route in data["route"]:
+                        routes.append(route)
                 else:
                     routes.append(data["route"])
-    except FileNotFoundError as f_err:
-        app.logger.warning(f"Route dir not found at path {route_path} - will use welcome home page route. Error: {f_err}")
+    except FileNotFoundError as ex:
+        app.logger.warning(
+            f"Route dir not found at path {route_path} - "
+            f"will use welcome home page route. Error: {ex}"
+        )
 
     # if no routes are found, add a default one for the home page
     if not routes:
@@ -77,17 +86,21 @@ def load_route_config(route_rule, routes_dir="config/routes/"):
     route_path = os.path.join(app.instance_path, routes_dir)
     data = OrderedDict()
     try:
-        for conf_file in [os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")]:
+        conf_files = [
+            os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")
+        ]
+        for conf_file in conf_files:
             data = load_json_config(conf_file)
             if "route" in data:
-                if isinstance(data["route"],list):
+                if isinstance(data["route"], list):
                     if route_rule in data["route"]:
                         break
                 else:
                     if data["route"] == route_rule:
                         break
     except FileNotFoundError as f_err:
-        app.logger.error(f"Route dir not found at path {route_path} - creating welcome home page route. Error: {f_err}")
+        app.logger.error(f"Route dir not found at path {route_path} - "
+                         f"creating welcome home page route. Error: {f_err}")
         # if the base path (/) is used, provide a route config for the default home template
         data = OrderedDict({
             "route": ["/"],
@@ -107,7 +120,7 @@ def load_json_configs(path, recurse=False):
     config_files = {}
     if not os.path.isdir(path):
         app.logger.warning(f"Failed to load json configs; invalid directory: {path}")
-    for root, dirs, files in  os.walk(path):
+    for root, _, files in os.walk(path):
         for config_file in files:
             if config_file.endswith('.json'):
                 config_file_path = os.path.join(root, config_file)
