@@ -39,7 +39,6 @@ def get_all_routes(routes_dir="config/routes/"):
     '''
     route_path = os.path.join(app.instance_path, routes_dir)
     routes = []
-    var_counts = {}
     try:
         conf_files = [
             os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")
@@ -62,17 +61,14 @@ def get_all_routes(routes_dir="config/routes/"):
     if not routes:
         routes.append("/")
 
-    # determine the number of variables in each route and add to dictionary
+    # prefer most specifc path (hardcoded path over variable) in left to right manner
+    re_var = re.compile(r'<\w+:\w+>')
+    sort_routes = []
     for rule in routes:
-        # re match to determine # of vars
-        matches = re.findall(r'<\w+:\w+>', rule)
-        var_counts[rule] = len(matches)
+        sort_routes.append( (rule, re_var.sub(' ', rule)) )
+    sort_routes = sorted(sort_routes, key=operator.itemgetter(1), reverse=True)
 
-    # order the dictionary by lowest number of variables to greatest
-    var_counts = sorted(var_counts.items(), key=operator.itemgetter(1))
-
-    # return the list of the sorted routes
-    return [r[0] for r in var_counts]
+    return [r[0] for r in sort_routes]
 
 def load_route_config(route_rule, routes_dir="config/routes/"):
     '''
