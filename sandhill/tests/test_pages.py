@@ -4,12 +4,26 @@ Runs functional tests
 import os
 import re
 import pytest
+import json
+import collections
 from sandhill.utils.config_loader import load_json_config
 from sandhill import app
 
-# TODO added checks around these lines
+# Setup parameters for test_page
 pages_conf = os.path.join(app.instance_path, "tests/pages.json")
 pages = load_json_config(pages_conf)
+
+@pytest.mark.functional
+def test_pages_loadable():
+    """
+    Validate JSON can be parsed if present
+    """
+    if os.path.exists(pages_conf):
+        loaded = json.load(open(pages_conf, 'r'), object_pairs_hook=collections.OrderedDict)
+        assert isinstance(loaded, list)
+        if len(loaded):
+            assert isinstance(loaded[0], collections.OrderedDict)
+
 
 @pytest.mark.functional
 @pytest.mark.parametrize("page", pages)
