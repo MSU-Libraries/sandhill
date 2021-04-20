@@ -1,0 +1,9 @@
+{
+    "route": [
+        "/alpha/<string:value>",
+        "/beta/<string:value>"
+    ],
+    "template": "home.html.j2",
+    "data": [
+    ]
+}
