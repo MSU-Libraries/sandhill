@@ -1,6 +1,9 @@
+'''
+API utility functions using the requests module
+'''
+import json
 import validators
 import requests
-import json
 from flask import abort
 from sandhill import app
 
@@ -17,7 +20,9 @@ def api_get(**kwargs):
     app.logger.debug("API GET call: {0}".format(json.dumps(kwargs)))
     response = requests.get(**kwargs)
     if not response.ok:
-        app.logger.warning("API GET call returned {0}: {1}".format(response.status_code, response.text))
+        app.logger.warning(
+            "API GET call returned {0}: {1}".format(response.status_code, response.text)
+        )
     return response
 
 def establish_url(url, fallback):
@@ -34,4 +39,3 @@ def establish_url(url, fallback):
         app.logger.debug(f"Api url provided is not valid. Url: {url}")
         abort(400)
     return url
-

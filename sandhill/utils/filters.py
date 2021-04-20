@@ -1,16 +1,13 @@
 """Filters for jinja templating engine"""
 import urllib
-import validators
-import os
-import re
-from ast import literal_eval
-import mimetypes
-from sandhill import app
-from sandhill.utils.generic import ifnone
-from datetime import datetime
-from jinja2 import contextfilter, TemplateError
 from collections.abc import Hashable
+from datetime import datetime
+import mimetypes
+from ast import literal_eval
+import re
 import copy
+from jinja2 import contextfilter, TemplateError
+from sandhill import app
 
 @app.template_filter()
 def size_format(value):
@@ -21,8 +18,8 @@ def size_format(value):
     while nbytes >= 1024 and i < len(suffixes)-1:
         nbytes /= 1024
         i += 1
-    f = ('%.1f' % nbytes).rstrip('0').rstrip('.')
-    return '%s %s' % (f, suffixes[i])
+    fsize = ('%.1f' % nbytes).rstrip('0').rstrip('.')
+    return '%s %s' % (fsize, suffixes[i])
 
 @app.template_filter()
 def is_list(value):
@@ -49,7 +46,7 @@ def get_extension(value):
 
 @app.template_filter()
 def head(value):
-    """If value is a non-empty list, returns the head of the list, otherwise return the value as is"""
+    """Returns the head of the list if non-empty list, otherwise the orig value"""
     if isinstance(value, list) and value:
         value = value[0]
     return value
@@ -65,16 +62,16 @@ def solr_escape(value, escape_wildcards=False):
         (str): same string but with Solr characters escaped
     """
     if isinstance(value, str):
-        escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                    '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                    '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                    ';': r'\;' }
+        escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
+                   '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
+                   '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
+                   ';': r'\;'}
         if not escape_wildcards:
             del escapes['*']
             del escapes['?']
         value = value.replace('\\', r'\\')  # must be first replacement
-        for k, v in escapes.items():
-            value = value.replace(k, v)
+        for key, val in escapes.items():
+            value = value.replace(key, val)
     return value
 
 @app.template_filter('solr_decode')
@@ -88,15 +85,15 @@ def solr_decode(value, escape_wildcards=False):
         (str): same string after being decoded
     """
     if isinstance(value, str):
-        escapes = { ' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                    '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                    '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                    ';': r'\;' }
+        escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
+                   '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
+                   '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
+                   ';': r'\;'}
         if not escape_wildcards:
             del escapes['*']
             del escapes['?']
-        for k, v in escapes.items():
-            value = value.replace(v, k)
+        for key, val in escapes.items():
+            value = value.replace(val, key)
         value = value.replace(r'\\', '\\')  # must be last replacement
     return value
 
@@ -111,7 +108,9 @@ def set_child_key(parent_dict, parent_key, key, value):
     returns:
         parent_dict (dict): The updated parent dictionary
     """
-    if isinstance(parent_dict, dict) and isinstance(parent_key, Hashable) and isinstance(key, Hashable):
+    if isinstance(parent_dict, dict) \
+      and isinstance(parent_key, Hashable) \
+      and isinstance(key, Hashable):
         if parent_key not in parent_dict:
             parent_dict[parent_key] = {}
         parent_dict[parent_key][key] = value
@@ -128,7 +127,9 @@ def assemble_url(url_components):
     url = ""
     if isinstance(url_components, dict) and "path" in url_components:
         url = url_components["path"]
-        if "query_args" in url_components and isinstance(url_components['query_args'], dict) and url_components['query_args']:
+        if "query_args" in url_components \
+          and isinstance(url_components['query_args'], dict) \
+          and url_components['query_args']:
             url = url + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
     return url
 
@@ -141,8 +142,8 @@ def date_passed(value):
         (bool): If the given date is less than the current date or not
     """
     try:
-        value_date =  datetime.strptime(value, "%Y-%m-%d")
-        current_date  = datetime.now()
+        value_date = datetime.strptime(value, "%Y-%m-%d")
+        current_date = datetime.now()
         if value_date.date() < current_date.date():
             return True
     except (ValueError, TypeError) as err:
@@ -181,7 +182,7 @@ def render_literal(context, value, fallback_to_str=True):
         fallback_to_str (bool): If function should return string value on a failed
             attempt to literal_eval (default = True)
     returns:
-        (any|None) The literal_eval'ed result, or string if fallback_to_str, or None on render failure
+        (any|None) The literal_eval result, or string if fallback_to_str, or None on render failure
     raises:
         ValueError: If content is valid Python, but not a valid datatype
         SyntaxError: If content is not valid Python
@@ -200,7 +201,7 @@ def render_literal(context, value, fallback_to_str=True):
     return data_val
 
 @app.template_filter('format_date')
-def format_date(value: str, default: str ="Indefinite") -> str:
+def format_date(value: str, default: str = "Indefinite") -> str:
     '''
     Format the provided embargo end date as a human readable string
     If there is no end date, it will show as 'Indefinite' (or the other
@@ -214,13 +215,14 @@ def format_date(value: str, default: str ="Indefinite") -> str:
     result = default
 
     try:
-        value_date =  datetime.strptime(value, "%Y-%m-%d")
+        value_date = datetime.strptime(value, "%Y-%m-%d")
         if value_date.year != 9999:
-            suf = lambda n: "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
+            suf = lambda n: "%d%s"%(n, {1:"st", 2:"nd", 3:"rd"}.get(n if n < 20 else n%10, "th"))
             result = value_date.strftime("%B %d %Y") # it is a valid date, so set that as the result
             day = value_date.strftime('%d')
-            result = result.replace(f" {day} ", f" {suf(int(day))}, ") # Add in the suffix (st, th, rd, nd)
-    except (ValueError, TypeError) as err:
+            # Add in the suffix (st, th, rd, nd)
+            result = result.replace(f" {day} ", f" {suf(int(day))}, ")
+    except (ValueError, TypeError):
         pass
 
     return result
@@ -251,10 +253,12 @@ def getfilterqueries(query: dict):
     Extracts the filter queries from the solr query
     args:
         query (dict): solr query
-            (ex {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2", "dc.creator:example_creator1", "dc.creator:example_creator2"]})
+            (ex {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2",
+            "dc.creator:example_creator1", "dc.creator:example_creator2"]})
     return:
         (dict)
-        (ex. {"dc.title": ["example_title1", "example_title2"], "dc.creator": ["example_creator1", "example_creator2"]})
+        (ex. {"dc.title": ["example_title1", "example_title2"], "dc.creator":
+        ["example_creator1", "example_creator2"]})
     """
     def parse_fq_into_dict(fq_dict, fq_str):
         fq_pair = fq_str.split(":", 1)
@@ -265,8 +269,8 @@ def getfilterqueries(query: dict):
     fqueries = {}
     if 'fq' in query:
         if isinstance(query['fq'], list):
-            for fq in query['fq']:
-                parse_fq_into_dict(fqueries, fq)
+            for fquery in query['fq']:
+                parse_fq_into_dict(fqueries, fquery)
         else:
             parse_fq_into_dict(fqueries, query['fq'])
     return fqueries
@@ -387,7 +391,7 @@ def regex_match(value, pattern):
     try:
         match = re.match(pattern, value)
     except re.error as rerr:
-        app.logger.warning(f"Regex error in regex_match. { rerr }" )
+        app.logger.warning(f"Regex error in regex_match. { rerr }")
     return match
 
 @app.template_filter('regex_sub')
@@ -402,7 +406,7 @@ def regex_sub(value, pattern, substitute):
     try:
         value = re.sub(pattern, substitute, value)
     except TypeError as terr:
-        app.logger.warning(f"Expected string in regex_sub. { terr }" )
+        app.logger.warning(f"Expected string in regex_sub. { terr }")
     except re.error as rerr:
-        app.logger.warning(f"Invalid regex supplied to regex_sub. { rerr }" )
+        app.logger.warning(f"Invalid regex supplied to regex_sub. { rerr }")
     return value

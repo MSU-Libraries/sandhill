@@ -22,32 +22,34 @@ def ifnone(*args):
         TypeError
     '''
     var = args[0] if args else None
+    if len(args) not in [2, 3]:
+        raise TypeError(
+            f"ifnone() missing required positional argument (2 or 3) {len(args)} received."
+        )
     if len(args) == 3:
         key = args[1]
         default_val = args[2]
-        return var[key] if isinstance(var, dict) and key in var else default_val
-    elif len(args) == 2:
-        default_value = args[1]
-        return var if var is not None else default_value
-    else:
-        raise TypeError(f"ifnone() missing required positional argument (2 or 3) {len(args)} received.")
+        return var[key] if isinstance(var, dict) and key in var else default_val # pylint: disable=unsupported-membership-test,unsubscriptable-object
+    # len(args) == 2
+    default_value = args[1]
+    return var if var is not None else default_value
 
 def combine_to_list(*args):
     """
     Combine a and b, which may be a scalar variable or list, and returns them as a list
     """
     combined = []
-    for x in args:
-        if isinstance(x, list):
-            combined += x
+    for i in args:
+        if isinstance(i, list):
+            combined += i
         else:
-            combined.append(x)
+            combined.append(i)
     return combined
 
 def combine_to_unique_list(*args):
     """Remove duplicates from combined list."""
     unique_list = []
-    [unique_list.append(x) for x in combine_to_list(*args) if x not in unique_list]
+    _ = [unique_list.append(i) for i in combine_to_list(*args) if i not in unique_list]
     return unique_list
 
 def get_descendant_from_dict(dict_obj, list_keys):
