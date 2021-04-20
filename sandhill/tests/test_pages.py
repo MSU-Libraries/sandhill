@@ -38,6 +38,10 @@ def test_page(page):
         resp = client.get(page['page'])
         assert resp.status_code == page['code']
 
+        test_keys = page.keys()
+        for test in test_keys:
+            assert test in ['_comment', 'page', 'code', 'contains', 'excludes', 'matches']
+
         # Validate expected strings appear in response
         if 'contains' in page:
             for needle in page['contains']:
