@@ -65,7 +65,7 @@ def get_all_routes(routes_dir="config/routes/"):
     re_var = re.compile(r'<\w+:\w+>')
     sort_routes = []
     for rule in routes:
-        sort_routes.append( (rule, re_var.sub(' ', rule)) )
+        sort_routes.append((rule, re_var.sub(' ', rule)))
     sort_routes = sorted(sort_routes, key=operator.itemgetter(1), reverse=True)
 
     return [r[0] for r in sort_routes]
