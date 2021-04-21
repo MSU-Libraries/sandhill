@@ -7,7 +7,7 @@ User=www-data
 Group=www-data
 WorkingDirectory=/var/www/sandhill
 EnvironmentFile=.env
-ExecStart=/env/bin/uwsgi --buffer-size=8192 --socket 127.0.0.1:8080 --protocol=http --py-autoreload 1 -w wsgi:application
+ExecStart=/env/bin/uwsgi --buffer-size=8192 --socket 127.0.0.1:8080 --protocol=http --py-autoreload 1 -w wsgi:app
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=sandhill
