@@ -5,7 +5,9 @@ services:
 stages:
   - Testing and Linting
   - Build
+  - Prepare
   - Tag
+  - Create Release
   - Release
 
 variables:
@@ -38,6 +40,24 @@ Build Image:
     - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
     - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
 
+Prepare Release:
+  stage: Prepare
+  tags:
+   - msul
+  except:
+    - tags
+  script:
+    - major_ver=$(date +'%y.%-m')
+    - latest_patch=$(git tag -l $major_ver* --sort=-v:refname | head -n 1 | cut -d'.' -f 3)
+    - "[ -z $latest_patch ] && cur_patch=-1 || cur_patch=$latest_patch"
+    - patch_ver=$(($cur_patch+1))
+    - new_ver=$major_ver.$patch_ver
+    - echo "Tagging new release with $new_ver"
+    - echo "TAG=$new_ver" >> variables.env
+  artifacts:
+    reports:
+      dotenv: variables.env
+
 Tag Release:
   stage: Tag
   tags:
@@ -45,14 +65,36 @@ Tag Release:
   when: manual
   only:
     - master
+  except:
+      - tags
+  needs:
+    - job: Prepare Release
+      artifacts: true
   script:
-    - major_ver=$(date +'%y.%-m')
-    - patch_ver=$(($(git tag -l $major_ver* --sort=-v:refname | head -n 1 | cut -d'.' -f 3)+1))
-    - new_ver=$major_ver.$patch_ver
-    - echo "Tagging new release with $new_ver"
-    - git tag $new_ver
+    - echo "Tagging new release with $TAG"
+    - git tag $TAG
     - git remote add gitlab https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git
     - git push gitlab --tags
+
+GitLab Release:
+  stage: Create Release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  tags:
+    - msul-docker
+  when: manual
+  only:
+    - master
+  except:
+      - tags
+  needs:
+    - job: Prepare Release
+      artifacts: true
+  script:
+    - echo 'Creating GitLab release $TAG'
+  release:
+    tag_name: '$TAG'
+    description: 'Release $TAG'
+
 
 Release to GitHub:
   stage: Release
