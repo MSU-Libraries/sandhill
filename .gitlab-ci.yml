@@ -60,8 +60,9 @@ Prepare Release:
 
 Tag Release:
   stage: Tag
+  image: alpine/git:latest
   tags:
-    - msul
+    - msul-docker
   when: manual
   only:
     - master
@@ -71,7 +72,6 @@ Tag Release:
     - job: Prepare Release
       artifacts: true
   script:
-    - echo "Tagging new release with $TAG"
     - git tag $TAG
     - git remote add gitlab https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git
     - git push gitlab --tags
