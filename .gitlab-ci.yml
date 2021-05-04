@@ -82,6 +82,9 @@ GitLab Release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   tags:
     - msul-docker
+  when: manual
+  only:
+    - master
   except:
       - tags
   needs:
