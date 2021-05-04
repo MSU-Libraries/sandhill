@@ -44,13 +44,12 @@ Prepare Release:
   stage: Prepare
   tags:
    - msul
-  only: master
   except:
     - tags
   script:
     - major_ver=$(date +'%y.%-m')
     - latest_patch=$(git tag -l $major_ver* --sort=-v:refname | head -n 1 | cut -d'.' -f 3)
-    - [ -z $latest_patch ] && cur_patch=-1 || cur_patch=$latest_patch
+    - "[ -z $latest_patch ] && cur_patch=-1 || cur_patch=$latest_patch"
     - patch_ver=$(($cur_patch+1))
     - new_ver=$major_ver.$patch_ver
     - echo "Tagging new release with $new_ver"
@@ -69,7 +68,7 @@ Tag Release:
   except:
       - tags
   needs:
-    - job: prepare_job
+    - job: Prepare Release
       artifacts: true
   script:
     - echo "Tagging new release with $TAG"
@@ -88,7 +87,7 @@ GitLab Release:
   except:
       - tags
   needs:
-    - job: prepare_job
+    - job: Prepare Release
       artifacts: true
   script:
     - echo 'Creating GitLab release $TAG'
