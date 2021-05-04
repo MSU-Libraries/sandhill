@@ -3,10 +3,10 @@ services:
   - docker:dind
 
 stages:
-  - unittest_and_lint
-  - build
-  - tag
-  - release
+  - Testing and Linting
+  - Build
+  - Tag
+  - Release
 
 variables:
   CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
@@ -15,7 +15,7 @@ before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 Unit Testing and Linting:
-  stage: unittest_and_lint
+  stage: Testing and Linting
   tags:
     - msul
   script:
@@ -29,7 +29,7 @@ Unit Testing and Linting:
       junit: report.xml
 
 Build Image:
-  stage: build
+  stage: Build
   tags:
     - msul
   only:
@@ -39,7 +39,7 @@ Build Image:
     - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
 
 Tag Release:
-  stage: tag
+  stage: Tag
   tags:
     - msul
   when: manual
@@ -55,7 +55,7 @@ Tag Release:
     - git push gitlab --tags
 
 Release to GitHub:
-  stage: release
+  stage: Release
   tags:
     - msul
   when: manual
