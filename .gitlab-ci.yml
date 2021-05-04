@@ -1,7 +1,3 @@
-image: docker:stable
-services:
-  - docker:dind
-
 stages:
   - Testing and Linting
   - Build
@@ -44,6 +40,8 @@ Prepare Release:
   stage: Prepare
   tags:
    - msul
+  only: 
+    - master
   except:
     - tags
   script:
@@ -60,20 +58,19 @@ Prepare Release:
 
 Tag Release:
   stage: Tag
-  image: alpine/git:latest
   tags:
-    - msul-docker
+    - msul
   when: manual
-  only:
+  only: 
     - master
   except:
-      - tags
+    - tags
   needs:
     - job: Prepare Release
       artifacts: true
   script:
     - git tag $TAG
-    - git remote add gitlab https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git
+    - git remote add gitlab https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git || true
     - git push gitlab --tags
 
 GitLab Release:
@@ -82,10 +79,10 @@ GitLab Release:
   tags:
     - msul-docker
   when: manual
-  only:
+  only: 
     - master
   except:
-      - tags
+    - tags
   needs:
     - job: Prepare Release
       artifacts: true
