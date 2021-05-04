@@ -5,6 +5,7 @@ services:
 stages:
   - unittest_and_lint
   - build
+  - tag
   - release
 
 variables:
@@ -13,7 +14,7 @@ variables:
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-unittest_and_lint_job:
+Unit Testing and Linting:
   stage: unittest_and_lint
   tags:
     - msul
@@ -27,7 +28,7 @@ unittest_and_lint_job:
     reports:
       junit: report.xml
 
-build_job:
+Build Image:
   stage: build
   tags:
     - msul
@@ -37,7 +38,23 @@ build_job:
     - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
     - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
 
-release:
+Tag Release:
+  stage: tag
+  tags:
+    - msul
+  when: manual
+  only:
+    - master
+  script:
+    - major_ver=$(date +'%y.%-m')
+    - patch_ver=$(($(git tag -l $major_ver* --sort=-v:refname | head -n 1 | cut -d'.' -f 3)+1))
+    - new_ver=$major_ver.$patch_ver
+    - echo "Tagging new release with $new_ver"
+    - git tag $new_ver
+    - git remote add gitlab https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git
+    - git push gitlab --tags
+
+Release to GitHub:
   stage: release
   tags:
     - msul
