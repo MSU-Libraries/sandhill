@@ -68,10 +68,11 @@ Tag Release:
     - job: Prepare Release
       artifacts: true
   script:
-    - git fetch origin --prune-tags
+    - rm -rf clone/ || true
+    - git clone https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git clone/
+    - cd clone/ # doing this to avoid runner cache
     - git tag $TAG
-    - git remote add gitlab https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git || true
-    - git push gitlab --tags
+    - git push origin --tags
 
 GitLab Release:
   stage: Create Release
