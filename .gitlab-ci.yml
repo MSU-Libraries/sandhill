@@ -52,7 +52,6 @@ Tag Release:
     - "[ -z $latest_patch ] && cur_patch=-1 || cur_patch=$latest_patch"
     - patch_ver=$(($cur_patch+1))
     - TAG=$major_ver.$patch_ver
-    - echo "Tagging new release with $TAG"
     - echo "TAG=$TAG" > ../variables.env
     - echo "Tagging new release with $TAG"
     - git tag $TAG
