@@ -3,8 +3,7 @@ stages:
   - Build
   - Prepare
   - Tag
-  - GitLab Release
-  - GitHub Release
+  - Release
 
 variables:
   CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
@@ -83,7 +82,7 @@ Tag Release:
     - git push origin --tags
 
 Create GitLab Release:
-  stage: GitLab Release
+  stage: Release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   tags:
     - msul-docker
@@ -103,7 +102,7 @@ Create GitLab Release:
 
 
 Create GitHub Release:
-  stage: GitHub Release
+  stage: Release
   tags:
     - msul
   when: manual
