@@ -9,8 +9,6 @@ stages:
 variables:
   CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
-
-
 Unit Testing and Linting:
   stage: Testing and Linting
   tags:
@@ -70,6 +68,7 @@ Tag Release:
     - job: Prepare Release
       artifacts: true
   script:
+    - git fetch origin --prune-tags
     - git tag $TAG
     - git remote add gitlab https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git || true
     - git push gitlab --tags
