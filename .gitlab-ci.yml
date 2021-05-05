@@ -81,7 +81,7 @@ Tag Release:
     - git tag $TAG
     - git push origin --tags
 
-Create GitLab Release:
+GitLab Release:
   stage: Release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   tags:
@@ -101,7 +101,7 @@ Create GitLab Release:
     description: 'Release $TAG'
 
 
-Create GitHub Release:
+GitHub Release:
   stage: Release
   tags:
     - msul
