@@ -53,7 +53,8 @@ Prepare Release:
     - patch_ver=$(($cur_patch+1))
     - new_ver=$major_ver.$patch_ver
     - echo "Tagging new release with $new_ver"
-    - echo "TAG=$new_ver" > variables.env
+    - echo "TAG=$new_ver" > ../variables.env
+    - cat ../variables.env
   artifacts:
     reports:
       dotenv: variables.env
