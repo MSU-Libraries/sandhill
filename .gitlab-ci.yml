@@ -3,8 +3,8 @@ stages:
   - Build
   - Prepare
   - Tag
-  - Create Release
-  - Release
+  - GitLab Release
+  - GitHub Release
 
 variables:
   CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
@@ -39,7 +39,7 @@ Build Image:
     - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
     - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
 
-Prepare Release:
+Prepare Tag:
   stage: Prepare
   tags:
    - msul
@@ -72,23 +72,18 @@ Tag Release:
   except:
     - tags
   needs:
-    - job: Prepare Release
+    - job: Prepare Tag
       artifacts: true
   script:
     - rm -rf clone/ || true
     - git clone https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git clone/
     - cd clone/ # doing this to avoid runner cache
-    #- major_ver=$(date +'%y.%-m')
-    #- latest_patch=$(git tag -l $major_ver* --sort=-v:refname | head -n 1 | cut -d'.' -f 3)
-    #- "[ -z $latest_patch ] && cur_patch=-1 || cur_patch=$latest_patch"
-    #- patch_ver=$(($cur_patch+1))
-    #- TAG=$major_ver.$patch_ver
     - echo "Tagging new release with $TAG"
     - git tag $TAG
     - git push origin --tags
 
-GitLab Release:
-  stage: Create Release
+Create GitLab Release:
+  stage: GitLab Release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   tags:
     - msul-docker
@@ -98,7 +93,7 @@ GitLab Release:
   except:
     - tags
   needs:
-    - job: Prepare Release
+    - job: Prepare Tag
       artifacts: true
   script:
     - echo 'Creating GitLab release $TAG'
@@ -107,15 +102,19 @@ GitLab Release:
     description: 'Release $TAG'
 
 
-Release to GitHub:
-  stage: Release
+Create GitHub Release:
+  stage: GitHub Release
   tags:
     - msul
   when: manual
   only:
     - master
+  needs:
+    - job: Prepare Tag
+      artifacts: true
   script:
     - rm -rf sandhill.git
     - git clone --mirror git@gitlab.msu.edu:msu-libraries/repo-team/sandhill.git
     - cd sandhill.git
     - git push --force --mirror git@github.com:MSU-Libraries/sandhill.git
+    - "curl -X POST -H 'Accept: application/vnd.github.v3+json' -u $GITHUB_USER_TOKEN https://api.github.com/repos/MSU-Libraries/sandhill/releases -d '{\"tag_name\":\"$TAG\", \"target_commitish\":\"$CI_COMMIT_SHORT_SHA\"}'"
