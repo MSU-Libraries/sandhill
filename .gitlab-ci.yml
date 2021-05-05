@@ -13,6 +13,8 @@ Unit Testing and Linting:
   stage: Testing and Linting
   tags:
     - msul
+  except:
+    - tags
   script:
     - virtualenv -p python3 $CI_PROJECT_DIR/env
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
@@ -29,6 +31,8 @@ Build Image:
     - msul
   only:
     - master
+  except:
+    - tags
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
