@@ -10,7 +10,7 @@ from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
 from flask_debugtoolbar import DebugToolbarExtension
-from jinja2 import ChoiceLoader, FileSystemLoader
+from jinja2 import ChoiceLoader, FileSystemLoader, select_autoescape
 from sandhill import app
 from sandhill.utils.generic import get_config, get_module_path
 
@@ -50,6 +50,11 @@ def configure_logging():
             '[%(asctime)s] %(levelname)s: %(filename)s %(lineno)d\n%(message)s'
         ))
         app.logger.addHandler(mail_handler)
+
+# Set which files are autoescaped when rendering
+app.jinja_options = {
+    "autoescape": select_autoescape([".html", ".htm", ".xml", ".xhtml", ".html.j2"])
+}
 
 # Ability to load templates from instance/templates/ directory
 loader = ChoiceLoader([
