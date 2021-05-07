@@ -1,10 +1,10 @@
 """Filters for jinja templating engine"""
 import urllib
+import re
 from collections.abc import Hashable
 from datetime import datetime
 import mimetypes
 from ast import literal_eval
-import re
 import copy
 from jinja2 import contextfilter, TemplateError
 from sandhill import app
@@ -50,6 +50,95 @@ def head(value):
     if isinstance(value, list) and value:
         value = value[0]
     return value
+
+@app.template_filter('solr_encode_query')
+def solr_encode_query(value, escape_wildcards=False):
+    """
+    # WIP function to handle solr query encoding
+    """
+    # wildcards: * ?
+    # ranges: [ TO ]
+    # negatives: -
+    # syntax: filter()
+    # quotedvalues: "
+    # booleans: AND + && OR || NOT -
+    scanner = re.Scanner([
+        (r'"', \
+            lambda scanner, token: ("QUOTE", token)),
+        (r'[[\]]', \
+            lambda scanner, token: ("RANGE", token)),
+        (r'[()]', \
+            lambda scanner, token: ("PAREN", token)),
+        (r'(AND|OR|&&|\|\||NOT)', \
+            lambda scanner, token: ("LOGIC", token)),
+        (r'[*?]', \
+            lambda scanner, token: ("WILD", token)),
+        (r'[-+]', \
+            lambda scanner, token: ("PLMS", token)),
+        (r'[^-+[\]()"\s]+', \
+            lambda scanner, token: ("TERM", token)),
+        (r'\s+', \
+            lambda scanner, token: ("SPACE", token)),
+    ])
+    scanned, _ = scanner.scan(value)
+    print(scanned)
+
+    stack = []
+    encoded = ""
+    # Track previous token
+    ptid, ptok = None, None     # pylint: disable=unused-variable
+    for idx, tpair in enumerate(scanned):
+        tid, tok = tpair
+        # Peek at next token
+        ntid, ntok = None, None # pylint: disable=unused-variable
+        if idx + 1 < len(scanned):
+            ntid, ntok = scanned[idx + 1]
+
+        # Process current token
+        if tid == "TERM":
+            encoded += solr_escape(tok, escape_wildcards) \
+                if "QUOTE" not in stack and "RANGE" not in stack \
+                else tok
+        elif tid == "QUOTE" and "QUOTE" not in stack:
+            stack.append(tid)
+            encoded += tok
+        elif "QUOTE" in stack:
+            encoded += tok
+            if tid == "QUOTE":
+                stack.pop()
+        elif tid == "WILD":
+            encoded += solr_escape(tok, escape_wildcards)
+        elif tid == "SPACE":
+            encoded += solr_escape(tok) \
+                if ptid == "TERM" and ntid == "TERM" and "RANGE" not in stack \
+                else tok
+        elif tid in ["LOGIC", "PLMS"]:
+            encoded += tok
+        elif tid == "PAREN":
+            if tok == '(':
+                stack.append(tid)
+            elif tok == ')' and stack and stack[-1] == "PAREN":
+                stack.pop()
+            else:
+                raise ValueError("Cannot close {tid}; no matching pair.")
+            encoded += tok
+        elif tid == "RANGE":
+            if tok == '[':
+                stack.append(tid)
+            elif tok == ']' and stack and stack[-1] == "RANGE":
+                stack.pop()
+            else:
+                raise ValueError("Cannot close {tid}; no matching pair.")
+            encoded += tok
+
+        # Record for previous token
+        ptid, ptok = tid, tok
+        print(stack)
+
+    if stack:
+        raise ValueError(f"Unmatched {stack[-1]} pair detected in: {value}")
+
+    return encoded
 
 @app.template_filter('solr_escape')
 def solr_escape(value, escape_wildcards=False):
@@ -345,6 +434,8 @@ def removefilterquery(query: dict, field: str, value: str):
             (ex: example_title)
     """
     fquery = ':'.join([field, solr_escape(value)])
+    # TODO fix function as to not require checked for pre-escaped queries
+    fix_preescaped_query = ':'.join([field, value])
     if 'fq' in query:
         if not isinstance(query['fq'], list):
             if query['fq'] == fquery:
@@ -352,6 +443,8 @@ def removefilterquery(query: dict, field: str, value: str):
         else:
             if fquery in query['fq']:
                 query['fq'].remove(fquery)
+            elif fix_preescaped_query in query['fq']:
+                query['fq'].remove(fix_preescaped_query)
 
     # removing the start query param when new filters are applied
     if 'start' in query:

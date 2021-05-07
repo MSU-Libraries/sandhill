@@ -1,5 +1,6 @@
 import os
 import re
+import pytest
 from sandhill.utils import filters
 from sandhill import app
 from jinja2.runtime import new_context
@@ -36,6 +37,28 @@ def test_head():
     emptylist = filters.head([])
     assert isinstance(emptylist, list)
     assert not emptylist
+
+def test_solr_encode_query():
+    assert filters.solr_encode_query("a value") == r'a\ value'
+    assert filters.solr_encode_query("a wildcard value*") == r'a\ wildcard\ value*'
+    assert filters.solr_encode_query("a wildcard value*", escape_wildcards=True) == r'a\ wildcard\ value\*'
+    assert filters.solr_encode_query("\"quoted value\"") == r'"quoted value"'
+    assert filters.solr_encode_query("\"quoted wildcard*\"") == r'"quoted wildcard*"'
+    assert filters.solr_encode_query("\"quote then wildcard\"*") == r'"quote then wildcard"*'
+    assert filters.solr_encode_query("(boolean OR logic)") == r'(boolean OR logic)'
+    assert filters.solr_encode_query("(\"quoted boolean\" OR \"logic terms\")") == r'("quoted boolean" OR "logic terms")'
+    assert filters.solr_encode_query(r"(escaped boolean OR logic terms)") == r'(escaped\ boolean OR logic\ terms)'
+    assert filters.solr_encode_query(r"combo phrase AND (boolean OR logic terms)") == r'combo\ phrase AND (boolean OR logic\ terms)'
+    assert filters.solr_encode_query("\"combo phrase\" AND (other boolean OR \"logic terms\")") == r'"combo phrase" AND (other\ boolean OR "logic terms")'
+    assert filters.solr_encode_query(r"[NOW-6MONTH TO NOW]") == r'[NOW-6MONTH TO NOW]'
+    assert filters.solr_encode_query(r"[NOW - 6MONTH TO NOW]") == r'[NOW - 6MONTH TO NOW]'
+    assert filters.solr_encode_query(r'["long ago" - 2025-05-19]') == r'["long ago" - 2025-05-19]'
+    with pytest.raises(ValueError):
+        filters.solr_encode_query(r"((")
+    with pytest.raises(ValueError):
+        filters.solr_encode_query(r"())")
+    with pytest.raises(ValueError):
+        filters.solr_encode_query(r"]]")
 
 def test_solr_escape():
     # test escape
@@ -305,6 +328,14 @@ def test_removefilterquery():
     # test with a 'start' param to make sure it is removed
     query['start'] = 20
     res = filters.removefilterquery(query, 'test', 'coolthing')
+    assert res == {'q': "frogs", 'fq': []}
+
+    # TEMP test for fix_preescaped_query
+    query = {
+        'q': "frogs",
+        'fq': ["dessert:(cake OR \"ice cream\")"]
+    }
+    res = filters.removefilterquery(query, 'dessert', '(cake OR \"ice cream\")')
     assert res == {'q': "frogs", 'fq': []}
 
 def test_maketuplelist():
