@@ -39,7 +39,7 @@
             "field": "name_author",
             "label": "Authors",
             "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=name_author:{{ metadata_value | solr_escape | urlencode }}"
+            "link": "/search?fq=name_author:{{ metadata_value | solr_encode | urlencode }}"
         },
         {
             "field": "name_editor",
@@ -65,7 +65,7 @@
             "field": "name_thesis_advisor",
             "label": "Thesis Advisors",
             "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_escape | urlencode  }}"
+            "link": "/search?fq=name_thesis_advisor:{{ metadata_value | solr_encode | urlencode  }}"
         },
         {
             "field": "name_committee_member",
@@ -76,7 +76,7 @@
             "field": "name_degree_committee_member",
             "label": "Committee Members",
             "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=name_degree_committee_member:{{ metadata_value | solr_escape | urlencode }}"
+            "link": "/search?fq=name_degree_committee_member:{{ metadata_value | solr_encode | urlencode }}"
         },
         {
             "field": "date_key",
@@ -97,7 +97,7 @@
             "field": "subject_display",
             "label": "Subjects",
             "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=subject_display:{{ metadata_value | solr_escape | urlencode }}"
+            "link": "/search?fq=subject_display:{{ metadata_value | solr_encode | urlencode }}"
         },
         {
             "field": "subject_local_topic",
@@ -113,13 +113,13 @@
             "field": "ndltd.discipline",
             "label": "Program of Study",
             "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=ndltd.discipline:{{ metadata_value | solr_escape | urlencode }}"
+            "link": "/search?fq=ndltd.discipline:{{ metadata_value | solr_encode | urlencode }}"
         },
         {
             "field": "ndltd.level",
             "label": "Degree Level",
             "metadata_template": "item_blocks/metadata_descriptive_list.html.j2",
-            "link": "/search?fq=ndltd.level:{{ metadata_value | solr_escape | urlencode }}"
+            "link": "/search?fq=ndltd.level:{{ metadata_value | solr_encode | urlencode }}"
         },
         {
             "field": "note_noType",
