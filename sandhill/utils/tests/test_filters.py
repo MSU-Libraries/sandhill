@@ -39,17 +39,17 @@ def test_head():
     assert not emptylist
 
 def test_solr_encode_query():
-    assert filters.solr_encode_query("a value") == r'a\ value'
-    assert filters.solr_encode_query("a wildcard value*") == r'a\ wildcard\ value*'
-    assert filters.solr_encode_query("a wildcard value*", escape_wildcards=True) == r'a\ wildcard\ value\*'
+    assert filters.solr_encode_query("a value") == r'a value'
+    assert filters.solr_encode_query("a wild-card value*") == r'a wild\-card value*'
+    assert filters.solr_encode_query("a wild-card value*", escape_wildcards=True) == r'a wild\-card value\*'
     assert filters.solr_encode_query("\"quoted value\"") == r'"quoted value"'
     assert filters.solr_encode_query("\"quoted wildcard*\"") == r'"quoted wildcard*"'
     assert filters.solr_encode_query("\"quote then wildcard\"*") == r'"quote then wildcard"*'
     assert filters.solr_encode_query("(boolean OR logic)") == r'(boolean OR logic)'
     assert filters.solr_encode_query("(\"quoted boolean\" OR \"logic terms\")") == r'("quoted boolean" OR "logic terms")'
-    assert filters.solr_encode_query(r"(escaped boolean OR logic terms)") == r'(escaped\ boolean OR logic\ terms)'
-    assert filters.solr_encode_query(r"combo phrase AND (boolean OR logic terms)") == r'combo\ phrase AND (boolean OR logic\ terms)'
-    assert filters.solr_encode_query("\"combo phrase\" AND (other boolean OR \"logic terms\")") == r'"combo phrase" AND (other\ boolean OR "logic terms")'
+    assert filters.solr_encode_query(r"(escaped boolean OR logic terms)") == r'(escaped boolean OR logic terms)'
+    assert filters.solr_encode_query(r"combo phrase AND (boolean OR logic terms)") == r'combo phrase AND (boolean OR logic terms)'
+    assert filters.solr_encode_query("\"combo phrase\" AND (other boolean OR \"logic terms\")") == r'"combo phrase" AND (other boolean OR "logic terms")'
     assert filters.solr_encode_query(r"[NOW-6MONTH TO NOW]") == r'[NOW-6MONTH TO NOW]'
     assert filters.solr_encode_query(r"[NOW - 6MONTH TO NOW]") == r'[NOW - 6MONTH TO NOW]'
     assert filters.solr_encode_query(r'["long ago" - 2025-05-19]') == r'["long ago" - 2025-05-19]'
@@ -60,19 +60,19 @@ def test_solr_encode_query():
     with pytest.raises(ValueError):
         filters.solr_encode_query(r"]]")
 
-def test_solr_escape():
+def test_solr_encode():
     # test escape
-    assert filters.solr_escape("a test string") == r"a\ test\ string"
-    assert filters.solr_escape("a with+") == r"a\ with\+"
-    assert filters.solr_escape("a \\with+") == r"a\ \\with\+"
-    assert filters.solr_escape("") == ""
-    assert filters.solr_escape("hello") == "hello"
-    assert filters.solr_escape("hello*?") == "hello*?"
-    assert filters.solr_escape("hello* world?", escape_wildcards=True) == r'hello\*\ world\?'
+    assert filters.solr_encode("a test string") == r"a\ test\ string"
+    assert filters.solr_encode("a with+") == r"a\ with\+"
+    assert filters.solr_encode("a \\with+") == r"a\ \\with\+"
+    assert filters.solr_encode("") == ""
+    assert filters.solr_encode("hello") == "hello"
+    assert filters.solr_encode("hello*?") == "hello*?"
+    assert filters.solr_encode("hello* world?", escape_wildcards=True) == r'hello\*\ world\?'
 
     # test non-string
-    assert filters.solr_escape(['test']) == ['test']
-    assert filters.solr_escape(None) == None
+    assert filters.solr_encode(['test']) == ['test']
+    assert filters.solr_encode(None) == None
 
 def test_solr_decode():
     # test decode

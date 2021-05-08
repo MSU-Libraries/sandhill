@@ -8,6 +8,7 @@ from ast import literal_eval
 import copy
 from jinja2 import contextfilter, TemplateError
 from sandhill import app
+from sandhill.utils.solr import Solr
 
 @app.template_filter()
 def size_format(value):
@@ -52,115 +53,30 @@ def head(value):
     return value
 
 @app.template_filter('solr_encode_query')
-def solr_encode_query(value, escape_wildcards=False):
+def solr_encode_query(query, escape_wildcards=False):
     """
-    # WIP function to handle solr query encoding
+    Parses and encodes Solr queries (the part after the colon)
+    args:
+        query (str): Solr query to encode
+        escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
+            should be encoded (Default: False)
+    returns:
+        (str): The solr query with appropriate characters encoded
     """
-    # wildcards: * ?
-    # ranges: [ TO ]
-    # negatives: -
-    # syntax: filter()
-    # quotedvalues: "
-    # booleans: AND + && OR || NOT -
-    scanner = re.Scanner([
-        (r'"', \
-            lambda scanner, token: ("QUOTE", token)),
-        (r'[[\]]', \
-            lambda scanner, token: ("RANGE", token)),
-        (r'[()]', \
-            lambda scanner, token: ("PAREN", token)),
-        (r'(AND|OR|&&|\|\||NOT)', \
-            lambda scanner, token: ("LOGIC", token)),
-        (r'[*?]', \
-            lambda scanner, token: ("WILD", token)),
-        (r'[-+]', \
-            lambda scanner, token: ("PLMS", token)),
-        (r'[^-+[\]()"\s]+', \
-            lambda scanner, token: ("TERM", token)),
-        (r'\s+', \
-            lambda scanner, token: ("SPACE", token)),
-    ])
-    scanned, _ = scanner.scan(value)
-    print(scanned)
+    return Solr().encode_query(query, escape_wildcards=escape_wildcards)
 
-    stack = []
-    encoded = ""
-    # Track previous token
-    ptid, ptok = None, None     # pylint: disable=unused-variable
-    for idx, tpair in enumerate(scanned):
-        tid, tok = tpair
-        # Peek at next token
-        ntid, ntok = None, None # pylint: disable=unused-variable
-        if idx + 1 < len(scanned):
-            ntid, ntok = scanned[idx + 1]
-
-        # Process current token
-        if tid == "TERM":
-            encoded += solr_escape(tok, escape_wildcards) \
-                if "QUOTE" not in stack and "RANGE" not in stack \
-                else tok
-        elif tid == "QUOTE" and "QUOTE" not in stack:
-            stack.append(tid)
-            encoded += tok
-        elif "QUOTE" in stack:
-            encoded += tok
-            if tid == "QUOTE":
-                stack.pop()
-        elif tid == "WILD":
-            encoded += solr_escape(tok, escape_wildcards)
-        elif tid == "SPACE":
-            encoded += solr_escape(tok) \
-                if ptid == "TERM" and ntid == "TERM" and "RANGE" not in stack \
-                else tok
-        elif tid in ["LOGIC", "PLMS"]:
-            encoded += tok
-        elif tid == "PAREN":
-            if tok == '(':
-                stack.append(tid)
-            elif tok == ')' and stack and stack[-1] == "PAREN":
-                stack.pop()
-            else:
-                raise ValueError("Cannot close {tid}; no matching pair.")
-            encoded += tok
-        elif tid == "RANGE":
-            if tok == '[':
-                stack.append(tid)
-            elif tok == ']' and stack and stack[-1] == "RANGE":
-                stack.pop()
-            else:
-                raise ValueError("Cannot close {tid}; no matching pair.")
-            encoded += tok
-
-        # Record for previous token
-        ptid, ptok = tid, tok
-        print(stack)
-
-    if stack:
-        raise ValueError(f"Unmatched {stack[-1]} pair detected in: {value}")
-
-    return encoded
-
-@app.template_filter('solr_escape')
-def solr_escape(value, escape_wildcards=False):
-    """Filter to escape a value being passed to Solr
+@app.template_filter('solr_encode')
+def solr_encode(value, escape_wildcards=False):
+    """Filter to encode a value being passed to Solr
     args:
         value (str): string to escape Solr characters
         escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
-            should be escaped (Default: False)
+            should be encoded (Default: False)
     returns:
-        (str): same string but with Solr characters escaped
+        (str): same string but with Solr characters encoded
     """
     if isinstance(value, str):
-        escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                   '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                   '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                   ';': r'\;'}
-        if not escape_wildcards:
-            del escapes['*']
-            del escapes['?']
-        value = value.replace('\\', r'\\')  # must be first replacement
-        for key, val in escapes.items():
-            value = value.replace(key, val)
+        value = Solr().encode_value(value, escape_wildcards)
     return value
 
 @app.template_filter('solr_decode')
@@ -169,21 +85,12 @@ def solr_decode(value, escape_wildcards=False):
     args:
         value (str): string with Solr escapes to be decoded
         escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
-            should be escaped (Default: False)
+            should be encoded (Default: False)
     returns:
         (str): same string after being decoded
     """
     if isinstance(value, str):
-        escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                   '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                   '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                   ';': r'\;'}
-        if not escape_wildcards:
-            del escapes['*']
-            del escapes['?']
-        for key, val in escapes.items():
-            value = value.replace(val, key)
-        value = value.replace(r'\\', '\\')  # must be last replacement
+        value = Solr().decode_value(value, escape_wildcards)
     return value
 
 @app.template_filter('set_child_key')
@@ -376,7 +283,7 @@ def addfilterquery(query: dict, field: str, value: str):
             (ex: {"q": "frogs", "fq": "dc.title:example_title"})
         field (str): field that needs to be checked in the fliter query
             (ex: dc.creator)
-        value (str): value that needs to be checked in  the filter query
+        value (str): value that needs to be checked in the filter query
             (ex: example_creator)
     """
     if not 'fq' in query:
@@ -385,7 +292,8 @@ def addfilterquery(query: dict, field: str, value: str):
     if not isinstance(query['fq'], list):
         query['fq'] = [query['fq']]
 
-    fquery = ':'.join([field, solr_escape(value)])
+    # TODO this only works when adding a fq value, but fails on an actual solr query
+    fquery = ':'.join([field, solr_encode(value)])
     if fquery not in query['fq']:
         query['fq'].append(fquery)
 
@@ -404,18 +312,23 @@ def hasfilterquery(query: dict, field: str, value: str):
             (ex: {"q": "frogs", "fq": "dc.title:example_title"})
         field (str): field that needs to be checked in the fliter query
             (ex: dc.title)
-        value (str): value that needs to be checked in  the filter query
+        value (str): value that needs to be checked in the filter query
             (ex: example_title)
     """
-    fquery = ':'.join([field, solr_escape(value)])
+    fqueries = [
+        ':'.join([field, solr_encode(value)]),
+        ':'.join([field, value])
+    ]
+
     found = False
     if 'fq' in query:
         if not isinstance(query['fq'], list):
-            if query['fq'] == fquery:
+            if query['fq'] in fqueries:
                 found = True
         else:
-            if fquery in query['fq']:
-                found = True
+            for fquery in fqueries:
+                if fquery in query['fq']:
+                    found = True
     return found
 
 @app.template_filter('removefilterquery')
@@ -433,18 +346,19 @@ def removefilterquery(query: dict, field: str, value: str):
         value (str): value that needs to be removed from the filter query
             (ex: example_title)
     """
-    fquery = ':'.join([field, solr_escape(value)])
-    # TODO fix function as to not require checked for pre-escaped queries
-    fix_preescaped_query = ':'.join([field, value])
+    fqueries = [
+        ':'.join([field, solr_encode(value)]),
+        ':'.join([field, value])
+    ]
+
     if 'fq' in query:
         if not isinstance(query['fq'], list):
-            if query['fq'] == fquery:
+            if query['fq'] in fqueries:
                 query['fq'] = []
         else:
-            if fquery in query['fq']:
-                query['fq'].remove(fquery)
-            elif fix_preescaped_query in query['fq']:
-                query['fq'].remove(fix_preescaped_query)
+            for fquery in fqueries:
+                if fquery in query['fq']:
+                    query['fq'].remove(fquery)
 
     # removing the start query param when new filters are applied
     if 'start' in query:
