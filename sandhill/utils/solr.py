@@ -8,7 +8,7 @@ class Solr:
     Class for handling Solr related logic, like encoding/decoding
     """
     def __init__(self):
-        self._init_scanner()
+        self.scanner = None
         self.char_escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', \
             '!': r'\!', '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]', \
             '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"', ';': r'\;'}
@@ -46,6 +46,7 @@ class Solr:
         """
         Tokenize a query, resetting stack and stack position
         """
+        self._init_scanner()
         self._tokens, _ = self.scanner.scan(query)
         self._pos = 0
         self._stack = []
