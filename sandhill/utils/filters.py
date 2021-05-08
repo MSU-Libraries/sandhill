@@ -1,13 +1,14 @@
 """Filters for jinja templating engine"""
 import urllib
+import re
 from collections.abc import Hashable
 from datetime import datetime
 import mimetypes
 from ast import literal_eval
-import re
 import copy
 from jinja2 import contextfilter, TemplateError
 from sandhill import app
+from sandhill.utils.solr import Solr
 
 @app.template_filter()
 def size_format(value):
@@ -51,27 +52,31 @@ def head(value):
         value = value[0]
     return value
 
-@app.template_filter('solr_escape')
-def solr_escape(value, escape_wildcards=False):
-    """Filter to escape a value being passed to Solr
+@app.template_filter('solr_encode_query')
+def solr_encode_query(query, escape_wildcards=False):
+    """
+    Parses and encodes Solr queries (the part after the colon)
+    args:
+        query (str): Solr query to encode
+        escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
+            should be encoded (Default: False)
+    returns:
+        (str): The solr query with appropriate characters encoded
+    """
+    return Solr().encode_query(query, escape_wildcards=escape_wildcards)
+
+@app.template_filter('solr_encode')
+def solr_encode(value, escape_wildcards=False):
+    """Filter to encode a value being passed to Solr
     args:
         value (str): string to escape Solr characters
         escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
-            should be escaped (Default: False)
+            should be encoded (Default: False)
     returns:
-        (str): same string but with Solr characters escaped
+        (str): same string but with Solr characters encoded
     """
     if isinstance(value, str):
-        escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                   '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                   '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                   ';': r'\;'}
-        if not escape_wildcards:
-            del escapes['*']
-            del escapes['?']
-        value = value.replace('\\', r'\\')  # must be first replacement
-        for key, val in escapes.items():
-            value = value.replace(key, val)
+        value = Solr().encode_value(value, escape_wildcards)
     return value
 
 @app.template_filter('solr_decode')
@@ -80,21 +85,12 @@ def solr_decode(value, escape_wildcards=False):
     args:
         value (str): string with Solr escapes to be decoded
         escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
-            should be escaped (Default: False)
+            should be encoded (Default: False)
     returns:
         (str): same string after being decoded
     """
     if isinstance(value, str):
-        escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', '!': r'\!',
-                   '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]',
-                   '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"',
-                   ';': r'\;'}
-        if not escape_wildcards:
-            del escapes['*']
-            del escapes['?']
-        for key, val in escapes.items():
-            value = value.replace(val, key)
-        value = value.replace(r'\\', '\\')  # must be last replacement
+        value = Solr().decode_value(value, escape_wildcards)
     return value
 
 @app.template_filter('set_child_key')
@@ -287,7 +283,7 @@ def addfilterquery(query: dict, field: str, value: str):
             (ex: {"q": "frogs", "fq": "dc.title:example_title"})
         field (str): field that needs to be checked in the fliter query
             (ex: dc.creator)
-        value (str): value that needs to be checked in  the filter query
+        value (str): value that needs to be checked in the filter query
             (ex: example_creator)
     """
     if not 'fq' in query:
@@ -296,7 +292,8 @@ def addfilterquery(query: dict, field: str, value: str):
     if not isinstance(query['fq'], list):
         query['fq'] = [query['fq']]
 
-    fquery = ':'.join([field, solr_escape(value)])
+    # TODO this only works when adding a fq value, but fails on an actual solr query
+    fquery = ':'.join([field, solr_encode(value)])
     if fquery not in query['fq']:
         query['fq'].append(fquery)
 
@@ -315,18 +312,23 @@ def hasfilterquery(query: dict, field: str, value: str):
             (ex: {"q": "frogs", "fq": "dc.title:example_title"})
         field (str): field that needs to be checked in the fliter query
             (ex: dc.title)
-        value (str): value that needs to be checked in  the filter query
+        value (str): value that needs to be checked in the filter query
             (ex: example_title)
     """
-    fquery = ':'.join([field, solr_escape(value)])
+    fqueries = [
+        ':'.join([field, solr_encode(value)]),
+        ':'.join([field, value])
+    ]
+
     found = False
     if 'fq' in query:
         if not isinstance(query['fq'], list):
-            if query['fq'] == fquery:
+            if query['fq'] in fqueries:
                 found = True
         else:
-            if fquery in query['fq']:
-                found = True
+            for fquery in fqueries:
+                if fquery in query['fq']:
+                    found = True
     return found
 
 @app.template_filter('removefilterquery')
@@ -344,14 +346,19 @@ def removefilterquery(query: dict, field: str, value: str):
         value (str): value that needs to be removed from the filter query
             (ex: example_title)
     """
-    fquery = ':'.join([field, solr_escape(value)])
+    fqueries = [
+        ':'.join([field, solr_encode(value)]),
+        ':'.join([field, value])
+    ]
+
     if 'fq' in query:
         if not isinstance(query['fq'], list):
-            if query['fq'] == fquery:
+            if query['fq'] in fqueries:
                 query['fq'] = []
         else:
-            if fquery in query['fq']:
-                query['fq'].remove(fquery)
+            for fquery in fqueries:
+                if fquery in query['fq']:
+                    query['fq'].remove(fquery)
 
     # removing the start query param when new filters are applied
     if 'start' in query:
