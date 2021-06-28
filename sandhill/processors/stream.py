@@ -13,7 +13,7 @@ def stream(data_dict):
     returns:
         streams the response
     '''
-    allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length', "Range"]
+    allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length', 'Range']
     if 'stream' not in data_dict or data_dict['stream'] not in data_dict:
         app.logger.error((
             "stream variable: 'stream' not set in config, or references"

@@ -137,7 +137,7 @@ def urlquote(url_str):
     returns:
         (str): The fully escaped string
     """
-    return urllib.parse.quote(url_str).replace('/','%2F')
+    return urllib.parse.quote(url_str).replace('/', '%2F')
 
 @app.template_filter('date_passed')
 def date_passed(value):

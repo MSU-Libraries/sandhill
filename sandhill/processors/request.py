@@ -1,10 +1,10 @@
 '''
 Processor for requests
 '''
-from flask import request, jsonify, abort
 from json.decoder import JSONDecodeError
-from requests.exceptions import RequestException
 import requests
+from requests.exceptions import RequestException
+from flask import request, abort
 from sandhill import app
 
 def get_url_components(data_dict): # pylint: disable=unused-argument
@@ -30,17 +30,19 @@ def api_json(data_dict):
     '''
     Make a call to an API and return the response content as JSON
     '''
+    method = data_dict['method'] if 'method' in data_dict else 'GET'
     try:
         app.logger.debug(f"Connecting to {data_dict['url']}")
-        response = requests.request(method=data_dict["method"], url=data_dict["url"])
+        response = requests.request(method=method, url=data_dict["url"])
 
         if not response.ok:
-            app.logger.warning(f"Call to {data_dict['url']} returned a non-ok status code: {response.status_code}. {response.__dict__}")
-            abort(resp.status)
+            app.logger.warning(f"Call to {data_dict['url']} returned a non-ok status code: " \
+                               f"{response.status_code}. {response.__dict__}")
+            abort(response.status_code)
 
         response = response.json()
     except RequestException as exc:
-        app.logger.warning(f"Call to {data_dict['url']} returned {response.status_code}. {response.__dict__}")
+        app.logger.warning(f"Call to {data_dict['url']} returned {exc}.")
         abort(503)
     except JSONDecodeError:
         app.logger.error(f"Call returned from {data_dict['url']} that was not JSON.")
