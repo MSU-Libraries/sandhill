@@ -138,6 +138,10 @@ def test_assemble_url():
     # test non-dict url_components
     assert filters.assemble_url("hello") == ""
 
+def test_urlquote():
+    assert filters.urlquote("hello world") == 'hello%20world'
+    assert filters.urlquote("a/path/to/pid:num") == 'a%2Fpath%2Fto%2Fpid%3Anum'
+
 def test_date_passed():
     # Test positive scenarios
     assert filters.date_passed('2000-01-01') == True

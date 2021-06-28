@@ -129,6 +129,16 @@ def assemble_url(url_components):
             url = url + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
     return url
 
+@app.template_filter('urlquote')
+def urlquote(url_str):
+    """Fully escapes all characters (including slash) in the given string with URL percent escapes
+    args:
+        url_str (str): The string to escape
+    returns:
+        (str): The fully escaped string
+    """
+    return urllib.parse.quote(url_str).replace('/', '%2F')
+
 @app.template_filter('date_passed')
 def date_passed(value):
     """ Checks if the embargoded date is greater than the current date

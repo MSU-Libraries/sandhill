@@ -40,7 +40,7 @@ def configure_logging():
         email_log_level = logging.ERROR
         email_log_level = get_config('EMAIL_LOG_LEVEL', logging.ERROR)
         mail_handler = SMTPHandler(
-            mailhost=get_config('EMAIL_HOST', '127.0.01'),
+            mailhost=get_config('EMAIL_HOST', '127.0.0.1'),
             fromaddr=get_config('EMAIL_FROM'),
             toaddrs=[get_config('EMAIL')],
             subject=get_config('EMAIL_SUBJECT', 'Sandhill Error')

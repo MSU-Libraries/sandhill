@@ -13,7 +13,7 @@ def stream(data_dict):
     returns:
         streams the response
     '''
-    allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length']
+    allowed_headers = ['Content-Type', 'Content-Disposition', 'Content-Length', 'Range']
     if 'stream' not in data_dict or data_dict['stream'] not in data_dict:
         app.logger.error((
             "stream variable: 'stream' not set in config, or references"
@@ -25,9 +25,8 @@ def stream(data_dict):
         abort(resp.status_code)
     elif not resp:
         abort(503)
-
     stream_response = FlaskResponse(resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']))
-    for header in allowed_headers:
-        if header in resp.headers.keys():
+    for header in resp.headers.keys():
+        if header in allowed_headers:
             stream_response.headers.set(header, resp.headers.get(header))
     return stream_response
