@@ -2,6 +2,7 @@
 Entry point for the web application
 '''
 from flask import request, abort, jsonify, Response as FlaskResponse
+from werkzeug.wrappers.response import Response as WerkzeugReponse
 from sandhill.utils.decorators import add_routes
 from sandhill.utils.config_loader import load_route_config
 from sandhill.processors.base import load_route_data
@@ -49,10 +50,10 @@ def main(*args, **kwargs): # pylint: disable=unused-argument
                                    .format(idx, ','.join(route_config['route'])))
         data = load_route_data(route_data)
     # check if none of the route processors returned a FlaskResponse
-    if not isinstance(data, FlaskResponse):
+    if not isinstance(data, (FlaskResponse, WerkzeugReponse)):
         app.logger.error(
             f"None of the 'data' processors in {route_config['route']}"
-            f"returned a FlaskResponse"
+            f"returned a Response object"
             )
         if app.debug:
             data = jsonify(data)

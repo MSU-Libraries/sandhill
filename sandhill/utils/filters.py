@@ -186,7 +186,7 @@ def render_literal(context, value, fallback_to_str=True):
             evaluating the provided template string.
         value (str): Jinja2 template string to evaluate given the provided context
         fallback_to_str (bool): If function should return string value on a failed
-            attempt to literal_eval (default = True)
+            attempt to literal_eval
     returns:
         (any|None) The literal_eval result, or string if fallback_to_str, or None on render failure
     raises:
@@ -195,14 +195,13 @@ def render_literal(context, value, fallback_to_str=True):
     """
     context.environment.autoescape = False
     data_val = render(context, value)
-
-    try:
-        if data_val:
+    if data_val:
+        try:
             data_val = literal_eval(data_val)
-    except (ValueError, SyntaxError) as err:
-        app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
-        if not fallback_to_str:
-            raise err
+        except (ValueError, SyntaxError) as err:
+            app.logger.debug(f"Could not literal eval {data_val}. Error: {err}")
+            if not fallback_to_str:
+                raise err
     context.environment.autoescape = True
     return data_val
 

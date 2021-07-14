@@ -4,7 +4,7 @@ Processor for requests
 from json.decoder import JSONDecodeError
 import requests
 from requests.exceptions import RequestException
-from flask import request, abort
+from flask import request, abort, redirect as FlaskRedirect
 from sandhill import app
 
 def get_url_components(data_dict): # pylint: disable=unused-argument
@@ -48,3 +48,16 @@ def api_json(data_dict):
         app.logger.error(f"Call returned from {data_dict['url']} that was not JSON.")
         abort(503)
     return response
+
+def redirect(data_dict):
+    '''
+    Redirect request to another url
+    '''
+    code = data_dict['code'] if 'code' in data_dict else 302
+    resp = None
+    try:
+        resp = FlaskRedirect(data_dict['location'], code=code)
+    except KeyError:
+        app.logger.error(f"Processor request.redirect called without a 'location' given.")
+        abort(500)
+    return resp
