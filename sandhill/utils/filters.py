@@ -233,13 +233,13 @@ def format_date(value: str, default: str = "Indefinite") -> str:
     return result
 
 @app.template_filter('sandbug')
-def sandbug_filter(value: str):
+def sandbug_filter(value: str, comment: str = None):
     '''
     Writes debug statements to the sandhill log
     args:
         value (str): Message to write to the log
     '''
-    sandbug(value)
+    sandbug(value, comment) # pylint: disable=undefined-variable
     return ""
 
 

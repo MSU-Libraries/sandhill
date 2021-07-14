@@ -4,13 +4,12 @@ so that additional processors can simply be added to this directory without
 requiring code changes to load it.
 '''
 import json
-import inspect
 from importlib import import_module
 from ast import literal_eval
 from flask import request, abort, Response as FlaskResponse
 from werkzeug.wrappers.response import Response as WerkzeugReponse
 from sandhill import app
-from sandhill.utils.template import render_template
+from sandhill.utils.template import render_template_string
 
 def load_route_data(route_data):
     """Loop through route data, applying Jinja replacements
@@ -26,7 +25,7 @@ def load_route_data(route_data):
     for i, _ in enumerate(route_data):
         # Apply Jinja2 templating to data config
         data_json = json.dumps(route_data[i])
-        data_json = render_template(data_json, loaded_data)
+        data_json = render_template_string(data_json, loaded_data)
         route_data[i] = json.loads(data_json)
         # Merging loaded data into route data, but route data takes precedence on a key conflict
         route_data[i] = {**loaded_data, **route_data[i]}

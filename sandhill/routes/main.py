@@ -54,7 +54,7 @@ def main(*args, **kwargs): # pylint: disable=unused-argument
         app.logger.error(
             f"None of the 'data' processors in {route_config['route']}"
             f"returned a Response object"
-            )
+        )
         if app.debug:
             data = jsonify(data)
         else:

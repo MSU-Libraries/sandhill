@@ -92,11 +92,12 @@ if app.debug and "pytest" not in sys.modules:
 # Configure logging
 configure_logging()
 
-def sandbug(value):
+def sandbug(value, comment=None):
     """
     Shortcut to debug a variable and its type
     """
-    app.logger.debug(f"SANDBUG: {value} TYPE: {type(value)}")
+    comment = f" ({comment})" if comment else ""
+    app.logger.debug(f"SANDBUG{comment}: {value} TYPE: {type(value)}")
 builtins.sandbug = sandbug
 
 def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
