@@ -8,6 +8,7 @@ from flask import Flask
 from importlib import import_module
 cur_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, cur_path)
+load_dotenv('/etc/environment')
 load_dotenv()
 if "INSTANCE_DIR" not in os.environ or not os.environ["INSTANCE_DIR"]:
     os.environ["INSTANCE_DIR"] = os.path.join(cur_path, "sandhill/test_instance")
