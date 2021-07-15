@@ -2,9 +2,10 @@
 Processor for requests
 '''
 from json.decoder import JSONDecodeError
+from urllib.parse import urlsplit
 import requests
 from requests.exceptions import RequestException
-from flask import request, abort
+from flask import request, abort, redirect as FlaskRedirect
 from sandhill import app
 
 def get_url_components(data_dict): # pylint: disable=unused-argument
@@ -16,13 +17,15 @@ def get_url_components(data_dict): # pylint: disable=unused-argument
     returns:
         dict: portions of the current request
     '''
+    url_parts = urlsplit(request.url)
     url_components = {
         "path": request.path,
         "full_path": request.full_path,
         "base_url": request.base_url,
         "url": request.url,
         "url_root": request.url_root,
-        "query_args": request.args.to_dict(flat=False)
+        "query_args": request.args.to_dict(flat=False),
+        "hostname": url_parts.netloc.split(":")[0]
     }
     return url_components
 
@@ -48,3 +51,16 @@ def api_json(data_dict):
         app.logger.error(f"Call returned from {data_dict['url']} that was not JSON.")
         abort(503)
     return response
+
+def redirect(data_dict):
+    '''
+    Redirect request to another url
+    '''
+    code = data_dict['code'] if 'code' in data_dict else 302
+    resp = None
+    try:
+        resp = FlaskRedirect(data_dict['location'], code=code)
+    except KeyError:
+        app.logger.error("Processor request.redirect called without a 'location' given.")
+        abort(500)
+    return resp

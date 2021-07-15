@@ -43,3 +43,33 @@ def test_render():
         with raises(HTTPException) as http_exc:
             resp = template.render(data_dict)
         assert http_exc.type.code == 500 
+
+def test_render_string():
+    data_dict = {
+        'processor': 'template.render_string',
+        'name': 'datastream_label',
+        'test_var': 'test_val',
+        'value': '{{ test_var }}',
+        'on_fail': 500
+    }
+
+    # Test for positive scenario
+    evaluation = template.render_string(data_dict)
+    assert isinstance(evaluation, str)
+    assert evaluation == 'test_val'
+
+    # Test for invalid template passed
+    data_dict['value'] = "{{ forgot to close"
+    evaluation = template.render_string(data_dict)
+    assert evaluation is None
+
+    # Test for invalid variable in valid jinja
+    data_dict['value'] = "{{ invalid_var_name }}"
+    evaluation = template.render_string(data_dict)
+    assert isinstance(evaluation, str)
+    assert evaluation == ''
+
+    # Test not providing a 'value'
+    del data_dict['value']
+    evaluation = template.render_string(data_dict)
+    assert evaluation is None

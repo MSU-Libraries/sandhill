@@ -11,7 +11,7 @@ from sandhill.processors import stream
 
 def test_stream():
     '''
-    Tests the handle_stream function
+    Tests the stream function
     '''
     test_resp = RequestsResponse()
     test_resp.raw = io.StringIO("This is a test")
