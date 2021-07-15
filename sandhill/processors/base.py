@@ -5,9 +5,11 @@ requiring code changes to load it.
 '''
 import json
 from importlib import import_module
+from ast import literal_eval
 from flask import request, abort, Response as FlaskResponse
+from werkzeug.wrappers.response import Response as WerkzeugReponse
 from sandhill import app
-from sandhill.utils.template import render_template
+from sandhill.utils.template import render_template_string
 
 def load_route_data(route_data):
     """Loop through route data, applying Jinja replacements
@@ -23,7 +25,7 @@ def load_route_data(route_data):
     for i, _ in enumerate(route_data):
         # Apply Jinja2 templating to data config
         data_json = json.dumps(route_data[i])
-        data_json = render_template(data_json, loaded_data)
+        data_json = render_template_string(data_json, loaded_data)
         route_data[i] = json.loads(data_json)
         # Merging loaded data into route data, but route data takes precedence on a key conflict
         route_data[i] = {**loaded_data, **route_data[i]}
@@ -33,6 +35,10 @@ def load_route_data(route_data):
 
         # Identify action from within processor, if valid
         action_function = identify_processor_function(name, processor, action)
+
+        # Validate conditional 'when' to see if this data processor should be used
+        if not when_eval(route_data[i]):
+            continue
 
         # Call action from processor
         if action_function:
@@ -48,8 +54,8 @@ def load_route_data(route_data):
                 app.logger.error(f"Invalid on_fail set, must be int: {route_data[i]['on_fail']}")
                 abort(500)
 
-        # If the result from the processor is a FlaskResponse, stop processing
-        if name in loaded_data and isinstance(loaded_data[name], FlaskResponse):
+        # If the result from the processor is a Response, stop processing and return it
+        if name in loaded_data and isinstance(loaded_data[name], (FlaskResponse, WerkzeugReponse)):
             return loaded_data[name]
 
     return loaded_data
@@ -115,3 +121,23 @@ def processor_load_action(absolute_module, action):
     except (ImportError, AttributeError) as exc:
         load_exc = exc
     return action_function, load_exc
+
+def when_eval(route_data):
+    '''
+    Evaluate the 'when' key of a data processor to determine if that data processor
+    should be processed.
+    args:
+        route_data (dict): a data processor entry
+    returns:
+        (any): The evaluation of the 'when' key
+    '''
+    # Default to processing if no 'when' provided
+    when = True
+    if 'when' in route_data:
+        try:
+            when = literal_eval(route_data['when'])
+        except (ValueError, SyntaxError):
+            app.logger.warning(f"Could not literal_eval 'when' condition for " \
+                               f"\"{route_data['name']}\": {route_data['when']}")
+            abort(500)
+    return when

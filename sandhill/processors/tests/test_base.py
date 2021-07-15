@@ -19,6 +19,18 @@ def test_load_route_data():
             "processor": "request.get_url_components",
             "name": "url_components",
             "on_fail": 500
+        }),
+        OrderedDict({
+            "processor": "template.render_string",
+            "name": "string1",
+            "value": "A MISING STRING",
+            "when": "{{ 1 == 0 }}"
+        }),
+        OrderedDict({
+            "processor": "template.render_string",
+            "name": "string2",
+            "value": "A REAL STRING",
+            "when": "{{ 1 == 1 }}"
         })
     ]
 
@@ -27,6 +39,11 @@ def test_load_route_data():
         loaded = base.load_route_data(route_data)
         assert isinstance(loaded, dict)
         assert loaded
+
+        # Validate when conditions
+        assert 'string1' not in loaded
+        assert 'string2' in loaded
+        assert loaded['string2'] == "A REAL STRING"
 
     # Test of the on fail error code is valid
     route_data = [
@@ -93,3 +110,16 @@ def test_load_route_data():
         del loaded['view_args']
         assert not loaded
 
+    # Test invalid when condition
+    route_data = [
+         OrderedDict({
+            "processor": "template.render_string",
+            "name": "string",
+            "value": "dummy",
+            "when": "NOT A TYPE"
+        })
+    ]
+    with app.test_request_context('/etd/1000'):
+        with raises(HTTPException) as http_error:
+            loaded = base.load_route_data(route_data)
+        assert 500 == http_error.type.code

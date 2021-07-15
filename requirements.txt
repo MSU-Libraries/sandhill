@@ -47,6 +47,7 @@ pyparsing==2.4.6
 pytest==6.0.1
 pytest-cov==2.10.0
 pytest-mock==3.3.1
+python-dotenv==0.18.0
 pytoml==0.1.21
 PyYAML==5.4.1
 requests==2.23.0

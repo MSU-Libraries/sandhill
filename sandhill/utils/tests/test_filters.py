@@ -224,9 +224,9 @@ def test_format_date():
     res = filters.format_date("9999-12-31", "different")
     assert res == "different"
 
-def test_sandbug():
+def test_sandbug_filter():
     # calling the debug logger
-    filters.sandbug("test") 
+    filters.sandbug_filter("test")
 
 def test_deepcopy():
     child_obj = {'z': 'z'}

@@ -8,7 +8,7 @@ from jinja2 import Environment
 from sandhill import app
 from sandhill.utils import generic, filters
 
-def render_template(template_str, context):
+def render_template_string(template_str, context):
     """
     Renders jinja templates
     args:
@@ -50,7 +50,7 @@ def evaluate_conditions(conditions, context, match_all=True):
     for match in conditions:
         # Idea: use boosts if the matched value for 2 config files is the same,
         # e.g. matched += boost
-        check_value = render_template(match['evaluate'], context)
+        check_value = render_template_string(match['evaluate'], context)
         if not any(key in ['match_when', 'match_when_not'] for key in match.keys()) or \
             {'match_when', 'match_when_not'}.issubset(set(match.keys())):
             raise KeyError(
