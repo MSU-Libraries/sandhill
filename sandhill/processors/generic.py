@@ -12,6 +12,7 @@ def replace(data_dict):
     returns:
         dict: The updated data for the 'name' variable
     '''
+    # TODO able to handle regular string data (non-JSON)
     data_copy = data_dict[data_dict['name']]
     if isinstance(data_copy, RequestsResponse):
         data_copy = data_copy.json()
