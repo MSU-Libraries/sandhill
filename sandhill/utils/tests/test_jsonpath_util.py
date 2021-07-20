@@ -50,15 +50,15 @@ def test_set():
         ]
     }
     value = ["new", "value"]
-    updated = jsonpath.set(data, "$.id", value)
+    updated = jsonpath.put(data, "$.id", value)
     assert updated['id'] == value
-    jsonpath.set(data, "$.key1", "UPDATED")
+    jsonpath.put(data, "$.key1", "UPDATED")
     assert data['key1'] == "value1"
-    jsonpath.set(data, "$.key1", "UPDATED", deepcopy=False)
+    jsonpath.put(data, "$.key1", "UPDATED", deepcopy=False)
     assert data['key1'] == "UPDATED"
     with pytest.raises(ValueError):
-        jsonpath.set(data, "$.key3[*]", "UPDATED")
-    updated = jsonpath.set(data, "$.key3[1].subk1", "UPDATED")
+        jsonpath.put(data, "$.key3[*]", "UPDATED")
+    updated = jsonpath.put(data, "$.key3[1].subk1", "UPDATED")
     assert updated['key3'][1]['subk1'] == "UPDATED"
 
 def test_append():

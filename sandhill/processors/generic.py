@@ -12,9 +12,13 @@ def replace(data_dict):
     returns:
         dict: The updated data for the 'name' variable
     '''
-    # TODO able to handle regular string data (non-JSON)
     data_copy = data_dict[data_dict['name']]
-    if isinstance(data_copy, RequestsResponse):
+    # TODO able to handle regular string data (non-JSON)
+    if 'application/json' not in data_copy.headers.get('Content-Type'):
+        return None
+
+    if isinstance(data_copy, RequestsResponse) and \
+      'application/json' in data_copy.headers.get('Content-Type'):
         data_copy = data_copy.json()
     # TODO handle FlaskResponse as well
 

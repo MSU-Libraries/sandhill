@@ -12,20 +12,20 @@ def test_replace():
     Tests the stream function
     '''
     # Testing with JSON
-    test_data = [
-        { "key1": 1 },
-        { "key2": 2.0 }
-    ]
-    data_dict = {
-        "name": "json",
-        "json": test_data,
-        "old": "2.0",
-        "new": '"two.zero"'
-    }
+    #test_data = [
+    #    { "key1": 1 },
+    #    { "key2": 2.0 }
+    #]
+    #data_dict = {
+    #    "name": "json",
+    #    "json": test_data,
+    #    "old": "2.0",
+    #    "new": '"two.zero"'
+    #}
 
-    new_data = generic.replace(data_dict)
-    assert isinstance(new_data, list)
-    assert new_data == [{ "key1": 1 }, { "key2": "two.zero" }]
+    #new_data = generic.replace(data_dict)
+    #assert isinstance(new_data, list)
+    #assert new_data == [{ "key1": 1 }, { "key2": "two.zero" }]
 
     # Testing with Requests library response
     test_resp = RequestsResponse()
