@@ -27,6 +27,7 @@ ipaddr==2.2.0
 isort==4.3.21
 itsdangerous==1.1.0
 Jinja2==2.11.3
+jsonpath-ng==1.5.3
 lazy-object-proxy==1.4.3
 lockfile==0.12.2
 MarkupSafe==1.1.1
@@ -38,6 +39,7 @@ packaging==20.3
 pathlib2==2.3.5
 pep517==0.8.2
 pluggy==0.13.1
+ply==3.11
 pre-commit==2.12.1
 progress==1.5
 py==1.10.0
