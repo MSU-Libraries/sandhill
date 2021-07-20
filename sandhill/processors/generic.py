@@ -12,13 +12,18 @@ def replace(data_dict):
     returns:
         dict: The updated data for the 'name' variable
     '''
-    # TODO able to handle regular string data (non-JSON)
     data_copy = data_dict[data_dict['name']]
+    # TODO able to handle regular string data (non-JSON)
     if isinstance(data_copy, RequestsResponse):
-        data_copy = data_copy.json()
+        if 'application/json' in data_copy.headers.get('Content-Type'):
+            data_copy = data_copy.json()
+        else:
+            data_copy = data_copy.raw
     # TODO handle FlaskResponse as well
 
-    new_data = json.dumps(data_copy)
+    new_data = data_copy
+    if not isinstance(data_copy, str):
+        new_data = json.dumps(data_copy)
     new_data = new_data.replace(data_dict['old'], data_dict['new'])
 
     # pylint: disable=protected-access
