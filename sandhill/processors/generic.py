@@ -15,22 +15,18 @@ def replace(data_dict):
     data_copy = data_dict[data_dict['name']]
     # TODO able to handle regular string data (non-JSON)
     if isinstance(data_copy, RequestsResponse):
-        if 'application/json' in data_copy.headers.get('Content-Type'):
-            data_copy = data_copy.json()
-        else:
-            data_copy = data_copy.raw
+        data_copy = data_copy.text
     # TODO handle FlaskResponse as well
 
-    new_data = data_copy
     if not isinstance(data_copy, str):
-        new_data = json.dumps(data_copy)
-    new_data = new_data.replace(data_dict['old'], data_dict['new'])
+        data_copy = json.dumps(data_copy)
+    data_copy = data_copy.replace(data_dict['old'], data_dict['new'])
 
     # pylint: disable=protected-access
     if isinstance(data_dict[data_dict['name']], RequestsResponse):
-        data_dict[data_dict['name']]._content = new_data.encode()
+        data_dict[data_dict['name']]._content = data_copy.encode()
         data_dict[data_dict['name']].headers['Content-Length'] = \
             len(data_dict[data_dict['name']]._content)
     else:
-        data_dict[data_dict['name']] = json.loads(new_data)
+        data_dict[data_dict['name']] = json.loads(data_copy)
     return data_dict[data_dict['name']]

@@ -45,7 +45,7 @@ def test_replace():
 
     # Testing with failed Requests library response
     test_resp = RequestsResponse()
-    test_resp.raw = '404 Not Found'
+    test_resp.raw = io.BytesIO(b'404 Not Found')
     test_resp.status_code = 404
     test_resp.headers['Content-Type'] = 'text/plain'
     data_dict = {
