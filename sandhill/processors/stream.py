@@ -33,6 +33,7 @@ def stream(data_dict):
         status=resp.status_code
     )
     for header in resp.headers.keys():
-        if header in allowed_headers:
+        # Case insensitive header matching
+        if header.lower() in [allowed_key.lower() for allowed_key in allowed_headers]:
             stream_response.headers.set(header, resp.headers.get(header))
     return stream_response
