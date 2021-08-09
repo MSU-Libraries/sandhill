@@ -28,7 +28,7 @@ def load_route_data(route_data):
         data_json = render_template_string(data_json, loaded_data)
         try:
             route_data[i] = json.loads(data_json)
-        except json.JSONDecodeError as exc:
+        except json.JSONDecodeError:
             app.logger.warning("Unable to JSON decode route data. Possible bad request for: " \
                                f"{request.base_url}")
             abort(400)
