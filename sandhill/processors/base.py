@@ -26,7 +26,12 @@ def load_route_data(route_data):
         # Apply Jinja2 templating to data config
         data_json = json.dumps(route_data[i])
         data_json = render_template_string(data_json, loaded_data)
-        route_data[i] = json.loads(data_json)
+        try:
+            route_data[i] = json.loads(data_json)
+        except json.JSONDecodeError as exc:
+            app.logger.warning("Unable to JSON decode route data. Possible bad request for: " \
+                               f"{request.base_url}")
+            abort(400)
         # Merging loaded data into route data, but route data takes precedence on a key conflict
         route_data[i] = {**loaded_data, **route_data[i]}
 

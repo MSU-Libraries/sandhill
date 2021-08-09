@@ -1,5 +1,6 @@
 import os
 from collections import OrderedDict
+from flask import request
 from pytest import raises
 from werkzeug.exceptions import HTTPException
 from sandhill.processors import base
@@ -123,3 +124,17 @@ def test_load_route_data():
         with raises(HTTPException) as http_error:
             loaded = base.load_route_data(route_data)
         assert 500 == http_error.type.code
+
+    # Test invalid char in request, causing a JSON decode failure
+    route_data = [
+         OrderedDict({
+            "processor": "template.render_string",
+            "name": "string",
+            "value": "{{ view_args.namespace }}",
+        })
+    ]
+    with app.test_request_context('/dummy'):
+        request.view_args = { 'namespace': "a\\.aspx" }
+        with raises(HTTPException) as http_error:
+            loaded = base.load_route_data(route_data)
+        assert 400 == http_error.type.code
