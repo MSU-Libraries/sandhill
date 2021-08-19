@@ -38,6 +38,21 @@ def test_head():
     assert isinstance(emptylist, list)
     assert not emptylist
 
+def test_unescape():
+    assert filters.unescape("a b &amp; c &quot; d") == 'a b & c " d'
+    assert filters.unescape("&#42;") == '*'
+    assert filters.unescape("&INVALIDTHING; &stuff") == "&INVALIDTHING; &stuff"
+
+def test_filter_tags():
+    tag_str = "a <b>tag <i class='attr'>filled</i></b> <u>string</u>"
+    assert filters.filter_tags(tag_str) == "a tag filled string"
+    assert filters.filter_tags(tag_str, "b") == "a <b>tag filled</b> string"
+    assert filters.filter_tags(tag_str, "b", "u") == "a <b>tag filled</b> <u>string</u>"
+    assert filters.filter_tags(tag_str, "i") == "a tag <i class=\"attr\">filled</i> string"
+    # Test some bad imputs
+    assert filters.filter_tags("<a><b></a>c<d></e>") == "c"
+    assert filters.filter_tags("<a <b <c d> e>", "c") == " e>"  # What did you expect?
+
 def test_solr_encode_query():
     assert filters.solr_encode_query("a value") == r'a value'
     assert filters.solr_encode_query("a wild-card value*") == r'a wild\-card value*'
