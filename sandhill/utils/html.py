@@ -9,11 +9,12 @@ class HTMLTagFilter(HTMLParser):
     Filter through HTML and remove all tags except for those allowed.
     """
     def __init__(self, allow: list):
-        super().__init__()
+        super().__init__(convert_charrefs=False)
         self.tags = allow
         self.output = ""
 
     def handle_starttag(self, tag, attrs):
+        """Handle open tags"""
         if tag in self.tags:
             attrstr = " ".join([
                 "%s=\"%s\"" % (attr[0], html.escape(attr[1], quote=True))
@@ -23,8 +24,18 @@ class HTMLTagFilter(HTMLParser):
             self.output += f"<{tag}{attrstr}>"
 
     def handle_endtag(self, tag):
+        """Handle close tags"""
         if tag in self.tags:
             self.output += f"</{tag}>"
 
     def handle_data(self, data):
+        """Handle text data"""
         self.output += data
+
+    def handle_entityref(self, name):
+        """Handle escape entities"""
+        self.output += f"&{name};"
+
+    def handle_charref(self, name):
+        """Handle escape chars"""
+        self.output += f"&#{name};"

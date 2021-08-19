@@ -49,6 +49,7 @@ def test_filter_tags():
     assert filters.filter_tags(tag_str, "b") == "a <b>tag filled</b> string"
     assert filters.filter_tags(tag_str, "b", "u") == "a <b>tag filled</b> <u>string</u>"
     assert filters.filter_tags(tag_str, "i") == "a tag <i class=\"attr\">filled</i> string"
+    assert filters.filter_tags("a <b>tag</b> &amp; &quot;quote&#34;") == "a tag &amp; &quot;quote&#34;"
     # Test some bad imputs
     assert filters.filter_tags("<a><b></a>c<d></e>") == "c"
     assert filters.filter_tags("<a <b <c d> e>", "c") == " e>"  # What did you expect?
