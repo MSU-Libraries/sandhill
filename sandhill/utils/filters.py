@@ -1,18 +1,21 @@
 """Filters for jinja templating engine"""
 import urllib
 import re
+import html
 from collections.abc import Hashable
 from datetime import datetime
 import mimetypes
 from ast import literal_eval
 import copy
 from jinja2 import contextfilter, TemplateError
+from markupsafe import Markup
 from sandhill import app
 from sandhill.utils.solr import Solr
+from sandhill.utils.html import HTMLTagFilter
 
-@app.template_filter()
+@app.template_filter('size_format')
 def size_format(value):
-    """ Jinja filter to format the size """
+    """Jinja filter to format the binary size"""
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     i = 0
     nbytes = int(value) if f"{value}".isdigit() else 0
@@ -22,12 +25,12 @@ def size_format(value):
     fsize = ('%.1f' % nbytes).rstrip('0').rstrip('.')
     return '%s %s' % (fsize, suffixes[i])
 
-@app.template_filter()
+@app.template_filter('is_list')
 def is_list(value):
-    """ Check if a value is a list """
+    """Check if a value is a list"""
     return isinstance(value, list)
 
-@app.template_filter()
+@app.template_filter('get_extension')
 def get_extension(value):
     """Take in mimetype and return extension."""
     mimetypes.add_type("audio/wav", '.wav')
@@ -45,12 +48,25 @@ def get_extension(value):
         extension = ".???"
     return extension.upper()[1:]
 
-@app.template_filter()
+@app.template_filter('head')
 def head(value):
     """Returns the head of the list if non-empty list, otherwise the orig value"""
     if isinstance(value, list) and value:
         value = value[0]
     return value
+
+@app.template_filter('unescape')
+def unescape(value):
+    """Unescape special characters in a string of HTML"""
+    return html.unescape(value)
+
+@app.template_filter('filter_tags')
+def filter_tags(value, *args):
+    """Filter out all HTML tags except for the ones specified
+    and marks the output as safe to render."""
+    htf = HTMLTagFilter(allow=args)
+    htf.feed(value)
+    return Markup(htf.output)
 
 @app.template_filter('solr_encode_query')
 def solr_encode_query(query, escape_wildcards=False):
