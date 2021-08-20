@@ -4,6 +4,8 @@ HTML utilities and support classes
 import html
 from html.parser import HTMLParser
 
+# Disable abstract-method warning is due to Python bug that is fixed in version 3.10
+# pylint: disable=abstract-method
 class HTMLTagFilter(HTMLParser):
     """
     Filter through HTML and remove all tags except for those allowed.
@@ -17,7 +19,7 @@ class HTMLTagFilter(HTMLParser):
         """Handle open tags"""
         if tag in self.tags:
             attrstr = " ".join([
-                "%s=\"%s\"" % (attr[0], html.escape(attr[1], quote=True))
+                f"{attr[0]}=\"{html.escape(attr[1], quote=True)}\""
                 for attr in attrs
             ])
             attrstr = " " * bool(attrstr) + attrstr

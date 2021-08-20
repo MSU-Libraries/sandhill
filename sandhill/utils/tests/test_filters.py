@@ -41,7 +41,7 @@ def test_head():
 def test_unescape():
     assert filters.unescape("a b &amp; c &quot; d") == 'a b & c " d'
     assert filters.unescape("&#42;") == '*'
-    assert filters.unescape("&INVALIDTHING; &stuff") == "&INVALIDTHING; &stuff"
+    assert filters.unescape("&INVALIDTHING; &stuff &#invalid") == "&INVALIDTHING; &stuff &#invalid"
 
 def test_filter_tags():
     tag_str = "a <b>tag <i class='attr'>filled</i></b> <u>string</u>"
@@ -50,6 +50,7 @@ def test_filter_tags():
     assert filters.filter_tags(tag_str, "b", "u") == "a <b>tag filled</b> <u>string</u>"
     assert filters.filter_tags(tag_str, "i") == "a tag <i class=\"attr\">filled</i> string"
     assert filters.filter_tags("a <b>tag</b> &amp; &quot;quote&#34;") == "a tag &amp; &quot;quote&#34;"
+    assert filters.filter_tags("non escaped refs \" & > <") == "non escaped refs \" & > "
     # Test some bad imputs
     assert filters.filter_tags("<a><b></a>c<d></e>") == "c"
     assert filters.filter_tags("<a <b <c d> e>", "c") == " e>"  # What did you expect?
