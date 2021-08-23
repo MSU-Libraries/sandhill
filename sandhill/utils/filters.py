@@ -12,6 +12,7 @@ from markupsafe import Markup
 from sandhill import app
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
+from sandhill.utils.decorators import catch
 
 @app.template_filter('size_format')
 def size_format(value):
@@ -156,6 +157,8 @@ def urlquote(url_str):
     return urllib.parse.quote(url_str).replace('/', '%2F')
 
 @app.template_filter('date_passed')
+@catch((ValueError, TypeError),
+       'Unable to get a valid date in "{value}". Error {exc}', return_val=False)
 def date_passed(value):
     """ Checks if the embargoded date is greater than the current date
     args:
@@ -163,14 +166,9 @@ def date_passed(value):
     returns:
         (bool): If the given date is less than the current date or not
     """
-    try:
-        value_date = datetime.strptime(value, "%Y-%m-%d")
-        current_date = datetime.now()
-        if value_date.date() < current_date.date():
-            return True
-    except (ValueError, TypeError) as err:
-        app.logger.error(f"Unable to get a valid date in {value}. Error {err} ")
-    return False
+    value_date = datetime.strptime(value, "%Y-%m-%d")
+    current_date = datetime.now()
+    return value_date.date() < current_date.date()
 
 @app.template_filter('render')
 @contextfilter
