@@ -12,7 +12,7 @@ def test_get_url_components():
     with app.test_request_context('/etd/1000'):
         result = request.get_url_components(data_dict)
         assert isinstance(result, dict)
-        
+
         assert result['path'] == '/etd/1000'
         assert result['full_path'] == '/etd/1000?'
         assert result['base_url'] == flask.request.url_root + 'etd/1000'
@@ -20,12 +20,12 @@ def test_get_url_components():
         assert result['url_root'] == flask.request.url_root
         assert isinstance(result['query_args'], dict)
         assert not result['query_args']
-    
+
     # testing a path with a query to make sure the parts are structured correctly
     with app.test_request_context('/search?q=frogs&fq=absek&fq=chocolate'):
         result = request.get_url_components(data_dict)
         assert isinstance(result, dict)
-        
+
         assert result['path'] == '/search'
         assert result['full_path'] == '/search?q=frogs&fq=absek&fq=chocolate'
         assert result['base_url'] == flask.request.url_root + 'search'
@@ -34,10 +34,10 @@ def test_get_url_components():
         assert 'q' in result['query_args']
         assert result['query_args']['q'] == ['frogs']
         assert len(result['query_args']) == 2
-        
+
         assert 'fq' in result['query_args']
         assert result['query_args']['fq'] == ['absek','chocolate']
-    
+
     # testing that a missing request fails correctly
     with raises(RuntimeError) as run_error:
         result = request.get_url_components(data_dict)
@@ -57,7 +57,8 @@ def test_api_json():
     }
     with raises(HTTPException) as http_error:
         url = request.api_json(data)
-    assert http_error.type.code == 404
+    # jsonplaceholder formerly returned a 404, now a 503. Update assert statement to check for either.
+    assert http_error.type.code in [404, 503]
 
     # request exception
     data = {
