@@ -5,6 +5,7 @@ import os
 import re
 import pytest
 import json
+import hashlib
 import collections
 from sandhill.utils.config_loader import load_json_config
 from sandhill import app
@@ -40,7 +41,10 @@ def test_page(page):
 
         test_keys = page.keys()
         for test in test_keys:
-            assert test in ['_comment', 'page', 'code', 'contains', 'excludes', 'matches']
+            assert test in [
+                '_comment', 'page', 'code', 'contains', 'excludes',
+                'matches', 'md5'
+            ]
 
         # Validate expected strings appear in response
         if 'contains' in page:
@@ -48,11 +52,17 @@ def test_page(page):
                 assert needle in resp.data.decode("utf-8")
 
         # Validate expected strings do not appear in response
-        if 'excludes' in pages:
+        if 'excludes' in page:
             for needle in page['excludes']:
                 assert needle not in resp.data.decode("utf-8")
 
         # Validate matches against a regex string in the response
-        if 'matches' in pages:
+        if 'matches' in page:
             for needle in page['matches']:
-                assert re.match(needle, resp.data.decode("utf-8"))
+                assert re.search(needle, resp.data.decode("utf-8"))
+
+        # Validate response content matches given md5
+        if 'md5' in page:
+            hasher = hashlib.md5()
+            hasher.update(resp.data)
+            assert page['md5'] == hasher.hexdigest()
