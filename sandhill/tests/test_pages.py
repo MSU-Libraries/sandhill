@@ -15,55 +15,6 @@ from sandhill.utils import jsonpath
 from sandhill.utils.filters import deepcopy
 from sandhill.utils.template import render_template_json
 
-# Setup parameters for test_page
-pages_conf = os.path.join(app.instance_path, "tests/pages.json")
-pages = load_json_config(pages_conf)
-
-@pytest.mark.functional
-def test_pages_loadable():
-    """
-    Validate JSON can be parsed if present
-    """
-    if os.path.exists(pages_conf):
-        loaded = json.load(open(pages_conf, 'r'), object_pairs_hook=collections.OrderedDict)
-        assert isinstance(loaded, list)
-        if len(loaded):
-            assert isinstance(loaded[0], collections.OrderedDict)
-
-
-@pytest.mark.functional
-@pytest.mark.parametrize("page", pages)
-def test_pages(page):
-    """
-    Load the instance/tests/pages.json and perform
-    functional tests on each entry within the file
-    """
-    data = page['data'] if 'data' in page else {}
-    loop = data['loop'] if 'loop' in data else None
-
-    # For each entry in the loop, we'll perform a page test; or loop of None if no loop defined
-    loop_recs = jsonpath_from_rendered_url(data[loop], page) if loop else [None]
-    assert loop_recs    # Ensure our query found something
-    assert isinstance(loop_recs, list)
-    for rec in loop_recs:
-        # First we'll need to create a copy of the page
-        loop_page = deepcopy(page)
-        # Update our loop key to be the entry from the results of our loop query
-        if rec:
-            loop_page[loop] = rec
-
-        # For any remaining keys in 'data', render Jinja and grab the URL/JSONPath results
-        #TODO in order with OrderedDict?
-
-        # Perform on last Jinja render on the entire page before running the test
-        loop_page = render_template_json(loop_page, loop_page)
-
-        # Remove all intermediate data from page before starting test
-        for key in [key for key in list(data.keys()) + ['data'] if key in loop_page]:
-            del loop_page[key]
-
-        run_page_test(loop_page)
-
 def jsonpath_from_rendered_url(struct, context):
     """
     Render a dict structure using Jinja and then
@@ -85,9 +36,64 @@ def jsonpath_from_rendered_url(struct, context):
     json_resp = json.loads(resp.content)
     return jsonpath.find(json_resp, struct['path'])
 
-def run_page_test(page):
+def prepare_page_entry(page_entry):
     """
-    Run a single page test, potentiall from a looping test
+    Load the instance/tests/pages.json and queue up
+    functional tests on each entry within the file
+    """
+    pages = []
+    data = page_entry['data'] if 'data' in page_entry else {}
+    loop = data['loop'] if 'loop' in data else None
+
+    # For each entry in the loop, we'll perform a page_entry test; or loop of None if no loop defined
+    loop_recs = jsonpath_from_rendered_url(data[loop], page_entry) if loop else [None]
+    assert loop_recs    # Ensure our query found something
+    assert isinstance(loop_recs, list)
+    for rec in loop_recs:
+        # First we'll need to create a copy of the page_entry
+        loop_page = deepcopy(page_entry)
+        # Update our loop key to be the entry from the results of our loop query
+        if rec:
+            loop_page[loop] = rec
+
+        # For any remaining keys in 'data', render Jinja and grab the URL/JSONPath results
+        #TODO in order with OrderedDict?
+
+        # Perform on last Jinja render on the entire page_entry before running the test
+        loop_page = render_template_json(loop_page, loop_page)
+
+        # Remove all intermediate data from page_entry before starting test
+        for key in [key for key in list(data.keys()) + ['data'] if key in loop_page]:
+            del loop_page[key]
+
+        pages.append(loop_page)
+
+    return pages
+
+# Setup parameters for test_page
+pages_conf = os.path.join(app.instance_path, "tests/pages.json")
+page_entries = load_json_config(pages_conf)
+pages = []
+for entry in page_entries:
+    sandbug(entry)
+    pages.extend(prepare_page_entry(entry))
+
+@pytest.mark.functional
+def test_pages_loadable():
+    """
+    Validate JSON can be parsed if present
+    """
+    if os.path.exists(pages_conf):
+        loaded = json.load(open(pages_conf, 'r'), object_pairs_hook=collections.OrderedDict)
+        assert isinstance(loaded, list)
+        if len(loaded):
+            assert isinstance(loaded[0], collections.OrderedDict)
+
+@pytest.mark.functional
+@pytest.mark.parametrize("page", pages)
+def test_page_call(page):
+    """
+    Run a single page test
     args:
         page (dict):
     """
