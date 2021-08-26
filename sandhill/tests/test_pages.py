@@ -7,8 +7,13 @@ import pytest
 import json
 import hashlib
 import collections
-from sandhill.utils.config_loader import load_json_config
+from flask import request
 from sandhill import app
+from sandhill.utils.config_loader import load_json_config
+from sandhill.utils.api import api_get
+from sandhill.utils import jsonpath
+from sandhill.utils.filters import deepcopy
+from sandhill.utils.template import render_template_json
 
 # Setup parameters for test_page
 pages_conf = os.path.join(app.instance_path, "tests/pages.json")
@@ -28,22 +33,76 @@ def test_pages_loadable():
 
 @pytest.mark.functional
 @pytest.mark.parametrize("page", pages)
-def test_page(page):
+def test_pages(page):
     """
     Load the instance/tests/pages.json and perform
     functional tests on each entry within the file
     """
+    data = page['data'] if 'data' in page else {}
+    loop = data['loop'] if 'loop' in data else None
 
+    # For each entry in the loop, we'll perform a page test; or loop of None if no loop defined
+    loop_recs = jsonpath_from_rendered_url(data[loop], page) if loop else [None]
+    assert loop_recs    # Ensure our query found something
+    assert isinstance(loop_recs, list)
+    for rec in loop_recs:
+        # First we'll need to create a copy of the page
+        loop_page = deepcopy(page)
+        # Update our loop key to be the entry from the results of our loop query
+        if rec:
+            loop_page[loop] = rec
+
+        # For any remaining keys in 'data', render Jinja and grab the URL/JSONPath results
+        #TODO in order with OrderedDict?
+
+        # Perform on last Jinja render on the entire page before running the test
+        loop_page = render_template_json(loop_page, loop_page)
+
+        # Remove all intermediate data from page before starting test
+        for key in [key for key in list(data.keys()) + ['data'] if key in loop_page]:
+            del loop_page[key]
+
+        run_page_test(loop_page)
+
+def jsonpath_from_rendered_url(struct, context):
+    """
+    Render a dict structure using Jinja and then
+    perform an API call to 'url' key.
+    For the resulting JSON, select and return
+    the data found at the JSONPath 'path' key
+    args:
+        struct(dict): A data structure with keys
+                        url => Location to perform API call
+                        path => A JSON path
+        context(dict): The context used to render with Jinja
+    returns:
+        (dict|list): The results of the JSONPath
+    throws:
+        TODO
+    """
+    struct = render_template_json(struct, context)
+    resp = api_get(url=struct['url'])
+    json_resp = json.loads(resp.content)
+    return jsonpath.find(json_resp, struct['path'])
+
+def run_page_test(page):
+    """
+    Run a single page test, potentiall from a looping test
+    args:
+        page (dict):
+    """
     with app.test_client() as client:
         app.logger.info(f"Functional page test context: {dict(page)}")
         resp = client.get(page['page'])
         assert resp.status_code == page['code']
+        #data['view_args'] = request.view_args
 
+        # Check for mistakes or typo
         test_keys = page.keys()
         for test in test_keys:
             assert test in [
                 '_comment', 'page', 'code', 'contains', 'excludes',
-                'matches', 'md5'
+                'matches', 'md5', 'data'
             ]
 
         # Validate expected strings appear in response

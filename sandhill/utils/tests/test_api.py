@@ -14,6 +14,11 @@ def test_api_get():
     assert response.status_code == 200
     assert response.url == "https://www.google.com/search?q=test"
 
+    # test a valid url with query args in url argument
+    response = api.api_get(url="https://www.google.com/search?q=test")
+    assert response.status_code == 200
+    assert response.url == "https://www.google.com/search?q=test"
+
     # test an invalid url
     response = api.api_get(url="https://www.google.com/invalidpagepath")
     assert response.status_code == 404

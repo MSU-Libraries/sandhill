@@ -9,7 +9,7 @@ from ast import literal_eval
 from flask import request, abort, Response as FlaskResponse
 from werkzeug.wrappers.response import Response as WerkzeugReponse
 from sandhill import app
-from sandhill.utils.template import render_template_string
+from sandhill.utils.template import render_template_json
 
 def load_route_data(route_data):
     """Loop through route data, applying Jinja replacements
@@ -24,10 +24,8 @@ def load_route_data(route_data):
     loaded_data['view_args'] = request.view_args
     for i, _ in enumerate(route_data):
         # Apply Jinja2 templating to data config
-        data_json = json.dumps(route_data[i])
-        data_json = render_template_string(data_json, loaded_data)
         try:
-            route_data[i] = json.loads(data_json)
+            route_data[i] = render_template_json(route_data[i], loaded_data)
         except json.JSONDecodeError:
             app.logger.warning("Unable to JSON decode route data. Possible bad request for: " \
                                f"{request.base_url}")

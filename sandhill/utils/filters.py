@@ -440,3 +440,19 @@ def regex_sub(value, pattern, substitute):
     except re.error as rerr:
         app.logger.warning(f"Invalid regex supplied to regex_sub. { rerr }")
     return value
+
+@app.context_processor
+def context_processors():
+    """
+    Added context processor functions
+    """
+    def strftime(fmt: str = None, day: str = None) -> str:
+        """
+        """
+        fmt = "%Y-%m-%d" if not fmt else fmt
+        day = datetime.now() if not day else datetime.strptime(day, "%Y-%m-%d")
+        return day.strftime(fmt)
+
+    return {
+        'strftime': strftime
+    }
