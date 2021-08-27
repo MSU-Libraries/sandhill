@@ -81,7 +81,8 @@ def prepare_page_entry(page_entry):
             loop_page[key] = jsonpath_from_rendered_url(loop_page['data'][key], loop_page)
 
         # Perform one last Jinja render on the entire page_entry before running the test
-        loop_page = render_template_json(loop_page, loop_page)
+        loop_page_context = deepcopy(loop_page_context)
+        loop_page = render_template_json(loop_page, loop_page_context)
 
         # Set extra allowed keys generated from 'data'
         loop_page['_extra_keys'] = list(data.keys()) + ['data']

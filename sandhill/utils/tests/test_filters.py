@@ -1,8 +1,8 @@
 import os
 import re
 import pytest
-from sandhill.utils import filters
 from sandhill import app
+from sandhill.utils import filters, generic
 from jinja2.runtime import new_context
 from jinja2 import TemplateError
 from pytest import raises
@@ -423,3 +423,6 @@ def test_regex_sub():
     pattern = r"(??!^.)([A-Z])"
     res = filters.regex_sub(value, pattern, substitute)
     assert value == res
+
+def test_get_config():
+    assert filters.get_config_filter('LOG_LEVEL') == generic.get_config('LOG_LEVEL')

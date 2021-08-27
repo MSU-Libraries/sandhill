@@ -455,32 +455,3 @@ def get_config_filter(name: str, default = None):
         (str): Value of the config variable, default value otherwise
     """
     return get_config(name, default)
-
-@app.context_processor
-def context_processors():
-    """
-    Added context processor functions
-    """
-    def strftime(fmt: str = None, day: str = None) -> str:
-        """
-        Wrapper around datetime.strftime with default yyyy-mm-dd format
-        args:
-            fmt (str): The format for the date to return
-            day (str): A date in yyyy-mm-dd format to format, or today if not passed
-        returns:
-            (str): The formatted date
-        """
-        fmt = "%Y-%m-%d" if not fmt else fmt
-        day = datetime.now() if not day else datetime.strptime(day, "%Y-%m-%d")
-        return day.strftime(fmt)
-
-    def sandbug_context(value: str, comment: str = None):
-        """
-        Sandbug as a context processor
-        """
-        sandbug(value, comment)
-
-    return {
-        'strftime': strftime,
-        'sandbug': sandbug_context
-    }
