@@ -137,3 +137,5 @@ load_modules(app.root_path, 'commands', exclude=['__pycache__', '__init__.py', '
 load_modules(app.instance_path, 'commands', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.root_path, 'utils/filters', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.instance_path, 'filters', exclude=['__pycache__', '__init__.py', 'tests'])
+load_modules(app.root_path, 'utils/context', exclude=['__pycache__', '__init__.py', 'tests'])
+load_modules(app.instance_path, 'context', exclude=['__pycache__', '__init__.py', 'tests'])
