@@ -443,7 +443,7 @@ def regex_sub(value, pattern, substitute):
     return value
 
 @app.template_filter('get_config')
-def get_config_filter(name: str, default = None):
+def get_config_filter(name: str, default=None):
     """
     Get the value of the given config name. It will first
     check in the environment for the variable name, otherwise

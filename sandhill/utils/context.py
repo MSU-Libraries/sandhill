@@ -38,7 +38,7 @@ def context_processors():
         """
         Sandbug as a context processor, because we can.
         """
-        sandbug(value, comment)
+        sandbug(value, comment) # pylint: disable=undefined-variable
 
     return {
         'strftime': strftime,
