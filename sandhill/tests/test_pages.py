@@ -9,6 +9,7 @@ import hashlib
 import collections
 import jinja2
 import json
+import copy
 from ast import literal_eval
 from requests.exceptions import RequestException
 from flask import request
@@ -16,7 +17,6 @@ from sandhill import app
 from sandhill.utils.config_loader import load_json_config
 from sandhill.utils.api import api_get
 from sandhill.utils import jsonpath
-from sandhill.utils.filters import deepcopy
 from sandhill.utils.template import render_template_json, render_template_string
 
 def jsonpath_from_rendered_url(struct, context):
@@ -63,13 +63,13 @@ def prepare_page_entry(page_entry):
         del page_entry['evaluate']
 
     # For each entry in the loop we'll perform a page_entry test; or loop of None if no loop defined
-    loop_recs = jsonpath_from_rendered_url(data[loop], page_entry) if loop else [None]
+    loop_recs = jsonpath_from_rendered_url(data[loop], copy.deepcopy(page_entry)) if loop else [None]
     # Ensure our query found a list and it's not empty
     assert loop_recs
     assert isinstance(loop_recs, list)
     for rec in loop_recs:
         # First we'll need to create a copy of the page_entry
-        loop_page = deepcopy(page_entry)
+        loop_page = copy.deepcopy(page_entry)
         # Update our loop key to be the entry from the results of our loop query
         if rec:
             loop_page[loop] = rec
@@ -81,8 +81,7 @@ def prepare_page_entry(page_entry):
             loop_page[key] = jsonpath_from_rendered_url(loop_page['data'][key], loop_page)
 
         # Perform one last Jinja render on the entire page_entry before running the test
-        loop_page_context = deepcopy(loop_page_context)
-        loop_page = render_template_json(loop_page, loop_page_context)
+        loop_page = render_template_json(loop_page, copy.deepcopy(loop_page))
 
         # Set extra allowed keys generated from 'data'
         loop_page['_extra_keys'] = list(data.keys()) + ['data']
