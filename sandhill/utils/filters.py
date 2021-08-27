@@ -10,6 +10,7 @@ import copy
 from jinja2 import contextfilter, TemplateError
 from markupsafe import Markup
 from sandhill import app
+from sandhill.utils.generic import get_config
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
 from sandhill.utils.decorators import catch
@@ -441,6 +442,20 @@ def regex_sub(value, pattern, substitute):
         app.logger.warning(f"Invalid regex supplied to regex_sub. { rerr }")
     return value
 
+@app.template_filter('get_config')
+def get_config_filter(name: str, default = None):
+    """
+    Get the value of the given config name. It will first
+    check in the environment for the variable name, otherwise
+    look in the app.config, otherwise use the default param
+    args:
+        name (str): Name of the config variable to look for
+        default(str/None): The defaut value if not found elsewhere
+    returns:
+        (str): Value of the config variable, default value otherwise
+    """
+    return get_config(name, default)
+
 @app.context_processor
 def context_processors():
     """
@@ -448,11 +463,24 @@ def context_processors():
     """
     def strftime(fmt: str = None, day: str = None) -> str:
         """
+        Wrapper around datetime.strftime with default yyyy-mm-dd format
+        args:
+            fmt (str): The format for the date to return
+            day (str): A date in yyyy-mm-dd format to format, or today if not passed
+        returns:
+            (str): The formatted date
         """
         fmt = "%Y-%m-%d" if not fmt else fmt
         day = datetime.now() if not day else datetime.strptime(day, "%Y-%m-%d")
         return day.strftime(fmt)
 
+    def sandbug_context(value: str, comment: str = None):
+        """
+        Sandbug as a context processor
+        """
+        sandbug(value, comment)
+
     return {
-        'strftime': strftime
+        'strftime': strftime,
+        'sandbug': sandbug_context
     }

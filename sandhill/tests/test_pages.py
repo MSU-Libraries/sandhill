@@ -7,7 +7,10 @@ import pytest
 import json
 import hashlib
 import collections
+import jinja2
+import json
 from ast import literal_eval
+from requests.exceptions import RequestException
 from flask import request
 from sandhill import app
 from sandhill.utils.config_loader import load_json_config
@@ -32,10 +35,17 @@ def jsonpath_from_rendered_url(struct, context):
     throws:
         TODO
     """
-    # TODO failures/exceptions
-    struct = render_template_json(struct, context)
-    resp = api_get(url=struct['url'])
-    json_resp = json.loads(resp.content)
+    try:
+        struct = render_template_json(struct, context)
+    except (json.JSONDecodeError, jinja2.TemplateError) as exc:
+        app.logger.error(f"Unable to render and convert: {struct}")
+        raise exc
+    try:
+        resp = api_get(url=struct['url'])
+        json_resp = json.loads(resp.content)
+    except (RequestException, json.JSONDecodeError) as exc:
+        app.logger.error(f"Failure to retrieve JSON from URL: {struct['url']}")
+        raise exc
     return jsonpath.find(json_resp, struct['path'])
 
 def prepare_page_entry(page_entry):
@@ -87,7 +97,7 @@ def prepare_page_entry(page_entry):
     return pages
 
 # Setup parameters for test_page_call
-pages_conf = os.path.join(app.instance_path, "tests/pages.json")
+pages_conf = os.path.join(app.instance_path, "config/testing/pages.json")
 page_entries = load_json_config(pages_conf)
 pages = []
 for entry in page_entries:
