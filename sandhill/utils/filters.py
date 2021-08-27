@@ -10,6 +10,7 @@ import copy
 from jinja2 import contextfilter, TemplateError
 from markupsafe import Markup
 from sandhill import app
+from sandhill.utils.generic import get_config
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
 from sandhill.utils.decorators import catch
@@ -440,3 +441,17 @@ def regex_sub(value, pattern, substitute):
     except re.error as rerr:
         app.logger.warning(f"Invalid regex supplied to regex_sub. { rerr }")
     return value
+
+@app.template_filter('get_config')
+def get_config_filter(name: str, default=None):
+    """
+    Get the value of the given config name. It will first
+    check in the environment for the variable name, otherwise
+    look in the app.config, otherwise use the default param
+    args:
+        name (str): Name of the config variable to look for
+        default(str/None): The defaut value if not found elsewhere
+    returns:
+        (str): Value of the config variable, default value otherwise
+    """
+    return get_config(name, default)

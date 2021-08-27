@@ -2,11 +2,13 @@
 Template and Jinja2 utilities
 '''
 import sys
+import json
 from inspect import getmembers, isfunction
 from importlib import import_module
 from jinja2 import Environment
 from sandhill import app
 from sandhill.utils import generic, filters
+from sandhill.utils.context import list_custom_context_processors
 
 def render_template_string(template_str, context):
     """
@@ -17,9 +19,10 @@ def render_template_string(template_str, context):
     raises:
         jinja2.TemplateError
     """
-    mod_prefix = generic.get_module_path(app.instance_path) + '.'
     env = Environment(autoescape=True)
+    # Add custom Sandhill filter into the environment
     sandhill_filters = dict(getmembers(filters, isfunction))
+    mod_prefix = generic.get_module_path(app.instance_path) + '.'
     instance_filter_modules = [
         absmod for absmod in sys.modules if absmod.startswith(mod_prefix)
     ]
@@ -29,6 +32,16 @@ def render_template_string(template_str, context):
         sandhill_filters.update(mod_filters)
 
     env.filters = {**env.filters, **sandhill_filters}
+
+    # Add custom context processors into context
+    custom_ctxp = list_custom_context_processors()
+    for procs in app.template_context_processors[None]:
+        ctx_procs = procs()
+        for key, func in ctx_procs.items():
+            if key in custom_ctxp:
+                context.update({key: func})
+
+    # Render the string using the environment and return it
     data_template = env.from_string(template_str)
     return data_template.render(**context)
 
@@ -62,3 +75,18 @@ def evaluate_conditions(conditions, context, match_all=True):
             matched += 1
     # Only assigned matched value if ALL matches are successful
     return matched if matched == len(conditions) or not match_all else 0
+
+def render_template_json(json_obj, context):
+    """
+    Serialize a JSON, render it as a template, then convert back to JSON
+    args:
+        json_obj(dict|list): JSON represented in Python
+        context (dict): Context for the jinja template
+    returns:
+        (dict|list): The updated JSON structure
+    throws:
+        json.JSONDecodeError: If the resulting templace is unable to be
+        parsed as JSON
+    """
+    rendered = render_template_string(json.dumps(json_obj), context)
+    return json.loads(rendered)
