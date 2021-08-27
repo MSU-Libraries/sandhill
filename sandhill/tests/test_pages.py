@@ -7,13 +7,14 @@ import pytest
 import json
 import hashlib
 import collections
+from ast import literal_eval
 from flask import request
 from sandhill import app
 from sandhill.utils.config_loader import load_json_config
 from sandhill.utils.api import api_get
 from sandhill.utils import jsonpath
 from sandhill.utils.filters import deepcopy
-from sandhill.utils.template import render_template_json
+from sandhill.utils.template import render_template_json, render_template_string
 
 def jsonpath_from_rendered_url(struct, context):
     """
@@ -31,6 +32,7 @@ def jsonpath_from_rendered_url(struct, context):
     throws:
         TODO
     """
+    # TODO failures/exceptions
     struct = render_template_json(struct, context)
     resp = api_get(url=struct['url'])
     json_resp = json.loads(resp.content)
@@ -44,10 +46,16 @@ def prepare_page_entry(page_entry):
     pages = []
     data = page_entry['data'] if 'data' in page_entry else {}
     loop = data['loop'] if 'loop' in data else None
+    # Temporarily remove 'evaluate' while we prepare entry (to prevent early Jinja evaluation)
+    evaluates = None
+    if 'evaluate' in page_entry:
+        evaluates = page_entry['evaluate']
+        del page_entry['evaluate']
 
-    # For each entry in the loop, we'll perform a page_entry test; or loop of None if no loop defined
+    # For each entry in the loop we'll perform a page_entry test; or loop of None if no loop defined
     loop_recs = jsonpath_from_rendered_url(data[loop], page_entry) if loop else [None]
-    assert loop_recs    # Ensure our query found something
+    # Ensure our query found a list and it's not empty
+    assert loop_recs
     assert isinstance(loop_recs, list)
     for rec in loop_recs:
         # First we'll need to create a copy of the page_entry
@@ -57,25 +65,32 @@ def prepare_page_entry(page_entry):
             loop_page[loop] = rec
 
         # For any remaining keys in 'data', render Jinja and grab the URL/JSONPath results
-        #TODO in order with OrderedDict?
+        for key in (loop_page['data'] if 'data' in loop_page else {}):
+            if key in ['loop', loop]:
+                continue
+            loop_page[key] = jsonpath_from_rendered_url(loop_page['data'][key], loop_page)
 
-        # Perform on last Jinja render on the entire page_entry before running the test
+        # Perform one last Jinja render on the entire page_entry before running the test
         loop_page = render_template_json(loop_page, loop_page)
 
-        # Remove all intermediate data from page_entry before starting test
-        for key in [key for key in list(data.keys()) + ['data'] if key in loop_page]:
-            del loop_page[key]
+        # Set extra allowed keys generated from 'data'
+        loop_page['_extra_keys'] = list(data.keys()) + ['data']
+        if 'loop' in loop_page['_extra_keys']:
+            loop_page['_extra_keys'].remove('loop')
+
+        # Re-add 'evaluate' key if set
+        if evaluates:
+            loop_page['evaluate'] = evaluates
 
         pages.append(loop_page)
 
     return pages
 
-# Setup parameters for test_page
+# Setup parameters for test_page_call
 pages_conf = os.path.join(app.instance_path, "tests/pages.json")
 page_entries = load_json_config(pages_conf)
 pages = []
 for entry in page_entries:
-    sandbug(entry)
     pages.extend(prepare_page_entry(entry))
 
 @pytest.mark.functional
@@ -101,15 +116,14 @@ def test_page_call(page):
         app.logger.info(f"Functional page test context: {dict(page)}")
         resp = client.get(page['page'])
         assert resp.status_code == page['code']
-        #data['view_args'] = request.view_args
 
         # Check for mistakes or typo
         test_keys = page.keys()
         for test in test_keys:
             assert test in [
-                '_comment', 'page', 'code', 'contains', 'excludes',
-                'matches', 'md5', 'data'
-            ]
+                '_comment', '_extra_keys', 'page', 'code', 'contains',
+                'excludes', 'matches', 'evaluate', 'md5', 'data'
+            ] + (page['_extra_keys'] if '_extra_keys' in page else [])
 
         # Validate expected strings appear in response
         if 'contains' in page:
@@ -131,3 +145,12 @@ def test_page_call(page):
             hasher = hashlib.md5()
             hasher.update(resp.data)
             assert page['md5'] == hasher.hexdigest()
+
+        # Validate Jinja evaluations
+        if 'evaluate' in page:
+            for check in page['evaluate']:
+                check = check.strip()
+                # Auto-add Jinja brackets if none are present
+                if check == check.strip('{}'):
+                    check = f"{{{{ {check.strip('{}')} }}}}"
+                assert literal_eval(render_template_string(check, page))
