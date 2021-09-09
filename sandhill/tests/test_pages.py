@@ -33,7 +33,9 @@ def jsonpath_from_rendered_url(struct, context):
     returns:
         (dict|list): The results of the JSONPath
     throws:
-        TODO
+        json.JSONDecodeError
+        jinja2.TemplateError
+        requests.exceptions.RequestException
     """
     try:
         struct = render_template_json(struct, context)
