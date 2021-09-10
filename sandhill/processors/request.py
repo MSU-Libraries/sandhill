@@ -6,7 +6,7 @@ from urllib.parse import urlsplit
 import requests
 from requests.exceptions import RequestException
 from flask import request, abort, redirect as FlaskRedirect
-from sandhill import app
+from sandhill import app, catch
 
 def get_url_components(data_dict): # pylint: disable=unused-argument
     '''
@@ -29,38 +29,27 @@ def get_url_components(data_dict): # pylint: disable=unused-argument
     }
     return url_components
 
+@catch(RequestException, "Call to {data_dict[url]} returned {exc}.", abort=503)
+@catch(JSONDecodeError, "Call returned from {data_dict[url]} that was not JSON.", abort=503)
 def api_json(data_dict):
     '''
     Make a call to an API and return the response content as JSON
     '''
     method = data_dict['method'] if 'method' in data_dict else 'GET'
-    try:
-        app.logger.debug(f"Connecting to {data_dict['url']}")
-        response = requests.request(method=method, url=data_dict["url"])
+    app.logger.debug(f"Connecting to {data_dict['url']}")
+    response = requests.request(method=method, url=data_dict["url"])
 
-        if not response.ok:
-            app.logger.warning(f"Call to {data_dict['url']} returned a non-ok status code: " \
-                               f"{response.status_code}. {response.__dict__}")
-            abort(response.status_code)
+    if not response.ok:
+        app.logger.warning(f"Call to {data_dict['url']} returned a non-ok status code: " \
+                           f"{response.status_code}. {response.__dict__}")
+        abort(response.status_code)
 
-        response = response.json()
-    except RequestException as exc:
-        app.logger.warning(f"Call to {data_dict['url']} returned {exc}.")
-        abort(503)
-    except JSONDecodeError:
-        app.logger.error(f"Call returned from {data_dict['url']} that was not JSON.")
-        abort(503)
-    return response
+    return response.json()
 
+@catch(KeyError, "Processor request.redirect called without a 'location' given.", abort=500)
 def redirect(data_dict):
     '''
     Redirect request to another url
     '''
     code = data_dict['code'] if 'code' in data_dict else 302
-    resp = None
-    try:
-        resp = FlaskRedirect(data_dict['location'], code=code)
-    except KeyError:
-        app.logger.error("Processor request.redirect called without a 'location' given.")
-        abort(500)
-    return resp
+    return FlaskRedirect(data_dict['location'], code=code)
