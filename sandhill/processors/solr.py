@@ -6,11 +6,14 @@ from json.decoder import JSONDecodeError
 from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
-from sandhill import app
+from sandhill import app, catch
 from sandhill.utils.generic import get_descendant_from_dict, ifnone, get_config
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 
+@catch(RequestException, "Call to Solr failed: {exc}", abort=503)
+@catch(JSONDecodeError, "Call returned from Solr that was not JSON.", abort=503)
+@catch(KeyError, "Missing url component: {exc}", abort=400) # Missing 'params' key
 def select(data_dict, url=None, api_get_function=api_get):
     '''
     Performs a Solr select call
@@ -26,34 +29,21 @@ def select(data_dict, url=None, api_get_function=api_get):
     url = establish_url(url, get_config('SOLR_URL', None))
     url = url + "/select"
 
-    try:
-        # query solr with the parameters
-        app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
-        response = api_get_function(url=url, params=data_dict['params'])
+    # query solr with the parameters
+    app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
+    response = api_get_function(url=url, params=data_dict['params'])
 
-        if not response.ok:
-            app.logger.warning(f"Call to Solr returned {response.status_code}. {response}")
-            try:
-                if 'error' in response.json():
-                    app.logger.warning(
-                        "Error returned from Solr: {0}".format(str(response.json()['error'])))
-            except JSONDecodeError:
-                pass
-            abort(response.status_code)
+    if not response.ok:
+        app.logger.warning(f"Call to Solr returned {response.status_code}. {response}")
+        try:
+            if 'error' in response.json():
+                app.logger.warning(
+                    "Error returned from Solr: {0}".format(str(response.json()['error'])))
+        except JSONDecodeError:
+            pass
+        abort(response.status_code)
 
-        response = response.json()
-    except RequestException as exc:
-        app.logger.warning("Call to Solr failed: {0}".format(exc))
-        abort(503)
-    except JSONDecodeError:
-        app.logger.error("Call returned from Solr that was not JSON.")
-        abort(503)
-    # Catch for missing 'params' key
-    except KeyError as exc:
-        app.logger.error("Missing url component: {0}".format(exc))
-        abort(400)
-
-    return response
+    return response.json()
 
 def select_record(data_dict, url=None, api_get_function=api_get):
     '''

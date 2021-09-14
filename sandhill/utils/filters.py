@@ -9,11 +9,10 @@ from ast import literal_eval
 import copy
 from jinja2 import contextfilter, TemplateError
 from markupsafe import Markup
-from sandhill import app
+from sandhill import app, catch
 from sandhill.utils.generic import get_config
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
-from sandhill.utils.decorators import catch
 
 @app.template_filter('size_format')
 def size_format(value):
@@ -173,6 +172,7 @@ def date_passed(value):
 
 @app.template_filter('render')
 @contextfilter
+@catch(TemplateError, "Invalid template provided: {value}. Error: {exc}", return_val=None)
 def render(context, value):
     """Renders a given string or literal
     args:
@@ -182,15 +182,8 @@ def render(context, value):
     returns:
         (str|None): the rendered value or string
     """
-    data_val = None
-
-    try:
-        data_template = context.environment.from_string(value)
-        data_val = data_template.render(**context)
-    except TemplateError as terr:
-        app.logger.error(f"Invalid template provided: {value}. Error: {terr}")
-
-    return data_val
+    data_template = context.environment.from_string(value)
+    return data_template.render(**context)
 
 @app.template_filter('render_literal')
 @contextfilter
@@ -221,6 +214,7 @@ def render_literal(context, value, fallback_to_str=True):
     return data_val
 
 @app.template_filter('format_date')
+@catch((ValueError, TypeError), return_arg="default")
 def format_date(value: str, default: str = "Indefinite") -> str:
     '''
     Format the provided embargo end date as a human readable string
@@ -234,16 +228,13 @@ def format_date(value: str, default: str = "Indefinite") -> str:
     '''
     result = default
 
-    try:
-        value_date = datetime.strptime(value, "%Y-%m-%d")
-        if value_date.year != 9999:
-            suf = lambda n: "%d%s"%(n, {1:"st", 2:"nd", 3:"rd"}.get(n if n < 20 else n%10, "th"))
-            result = value_date.strftime("%B %d %Y") # it is a valid date, so set that as the result
-            day = value_date.strftime('%d')
-            # Add in the suffix (st, th, rd, nd)
-            result = result.replace(f" {day} ", f" {suf(int(day))}, ")
-    except (ValueError, TypeError):
-        pass
+    value_date = datetime.strptime(value, "%Y-%m-%d")
+    if value_date.year != 9999:
+        suf = lambda n: "%d%s"%(n, {1:"st", 2:"nd", 3:"rd"}.get(n if n < 20 else n%10, "th"))
+        result = value_date.strftime("%B %d %Y") # it is a valid date, so set that as the result
+        day = value_date.strftime('%d')
+        # Add in the suffix (st, th, rd, nd)
+        result = result.replace(f" {day} ", f" {suf(int(day))}, ")
 
     return result
 
@@ -411,6 +402,7 @@ def makedict(input_list: list):
     return dict(maketuplelist(input_list, 2))
 
 @app.template_filter('regex_match')
+@catch(re.error, "Regex error in regex_match. {exc}", return_val=None)
 def regex_match(value, pattern):
     """
     Match pattern in the value
@@ -418,14 +410,11 @@ def regex_match(value, pattern):
         value (str): value that the pattern will compare against
         pattern (str): regex patten that need to be checked
     """
-    match = None
-    try:
-        match = re.match(pattern, value)
-    except re.error as rerr:
-        app.logger.warning(f"Regex error in regex_match. { rerr }")
-    return match
+    return re.match(pattern, value)
 
 @app.template_filter('regex_sub')
+@catch(TypeError, "Expected string in regex_sub. {exc}", return_arg='value')
+@catch(re.error, "Invalid regex supplied to regex_sub. {exc}", return_arg='value')
 def regex_sub(value, pattern, substitute):
     """
     Substitue pattern in the value
@@ -434,13 +423,7 @@ def regex_sub(value, pattern, substitute):
         pattern (str): regex patten that need to be checked
         substitute (str): regex pattern that need to be substituted
     """
-    try:
-        value = re.sub(pattern, substitute, value)
-    except TypeError as terr:
-        app.logger.warning(f"Expected string in regex_sub. { terr }")
-    except re.error as rerr:
-        app.logger.warning(f"Invalid regex supplied to regex_sub. { rerr }")
-    return value
+    return re.sub(pattern, substitute, value)
 
 @app.template_filter('get_config')
 def get_config_filter(name: str, default=None):
