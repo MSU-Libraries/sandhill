@@ -8,7 +8,7 @@ from importlib import import_module
 from ast import literal_eval
 from flask import request, abort, Response as FlaskResponse
 from werkzeug.wrappers.response import Response as WerkzeugReponse
-from sandhill import app
+from sandhill import app, catch
 from sandhill.utils.template import render_template_json
 
 def load_route_data(route_data):
@@ -125,6 +125,8 @@ def processor_load_action(absolute_module, action):
         load_exc = exc
     return action_function, load_exc
 
+@catch((ValueError, SyntaxError), "Could not literal_eval 'when' condition for " \
+       "\"{route_data[name]}\": {route_data[when]}", abort=500)
 def when_eval(route_data):
     '''
     Evaluate the 'when' key of a data processor to determine if that data processor
@@ -137,10 +139,5 @@ def when_eval(route_data):
     # Default to processing if no 'when' provided
     when = True
     if 'when' in route_data:
-        try:
-            when = literal_eval(route_data['when'])
-        except (ValueError, SyntaxError):
-            app.logger.warning(f"Could not literal_eval 'when' condition for " \
-                               f"\"{route_data['name']}\": {route_data['when']}")
-            abort(500)
+        when = literal_eval(route_data['when'])
     return when
