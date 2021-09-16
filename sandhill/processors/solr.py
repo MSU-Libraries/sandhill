@@ -7,7 +7,7 @@ from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
 from sandhill import app, catch
-from sandhill.utils.generic import get_descendant_from_dict, ifnone, get_config
+from sandhill.utils.generic import get_descendant_from, ifnone, get_config
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 
@@ -43,7 +43,13 @@ def select(data_dict, url=None, api_get_function=api_get):
             pass
         abort(response.status_code)
 
-    return response.json()
+    response_json = response.json()
+
+    # Get the records that exist at the provided record_keys
+    if 'record_keys' in data_dict and data_dict['record_keys']:
+        response_json = get_descendant_from(response_json, data_dict['record_keys'].split('.'))
+
+    return response_json
 
 def select_record(data_dict, url=None, api_get_function=api_get):
     '''
@@ -55,11 +61,8 @@ def select_record(data_dict, url=None, api_get_function=api_get):
     returns:
         json: response from solr giving the first record in the response
     '''
-    json_data = select(data_dict, url, api_get_function)
-
-    # Get the records that exist at the provided record_keys
-    record_keys = ifnone(data_dict, 'record_keys', 'response.docs')
-    records = get_descendant_from_dict(json_data, record_keys.split('.') if record_keys else [])
+    data_dict['record_keys'] = ifnone(data_dict, 'record_keys', 'response.docs')
+    records = select(data_dict, url, api_get_function)
 
     if records:
         return records[0]

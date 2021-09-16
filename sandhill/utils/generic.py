@@ -3,7 +3,8 @@ Generic function that can be used in any context
 """
 import os
 import re
-from sandhill import app
+from collections import OrderedDict
+from sandhill import app, catch
 
 def ifnone(*args):
     '''
@@ -52,20 +53,34 @@ def combine_to_unique_list(*args):
     _ = [unique_list.append(i) for i in combine_to_list(*args) if i not in unique_list]
     return unique_list
 
-def get_descendant_from_dict(dict_obj, list_keys):
+@catch(ValueError, "Could not find '{list_keys}' in: {obj}", return_val=None)
+def get_descendant_from(obj, list_keys, extract=False):
     '''
-    Gets key values from the dictionary if they exist
-    which will check recursively through the dict_obj
+    Gets key values from the dictionary/list if they exist;
+    will check recursively through the obj
     args:
-        dict_obj (dict): Dictionary of the tree to check
-        list_keys (list): List of descendants to follow
+        obj (dict|list): Hierarchy of dict/lists to check
+        list_keys (list|str): List of descendants to follow (or . delimited string)
+        extract (bool): If set to true, will remove the last matching value
+    returns:
+        (any): The last matching value from list_keys, or None if no match
     '''
-    for key in list_keys:
-        if isinstance(dict_obj, dict) and key in dict_obj:
-            dict_obj = dict_obj[key]
+    if isinstance(list_keys, str):
+        list_keys = list_keys.split('.')
+    for idx, key in enumerate(list_keys):
+        pobj = obj  # parent obj - used for extract
+        if isinstance(obj, OrderedDict):
+            obj = dict(obj)
+        if isinstance(obj, dict) and key in obj:
+            obj = obj[key]
+        elif isinstance(obj, list) and int(key) < len(obj):
+            key = int(key)
+            obj = obj[key]
         else:
-            dict_obj = None
-    return dict_obj if list_keys else None
+            obj = None
+        if extract and obj and (idx+1) == len(list_keys):
+            del pobj[key]
+    return obj if list_keys else None
 
 def get_config(name, default=None):
     '''

@@ -43,24 +43,32 @@ def test_combine_to_unique_list():
     assert generic.combine_to_unique_list(["test_string"], {"key":"value"}, {"key":"value"}) == ["test_string", {"key":"value"}]
     assert generic.combine_to_unique_list() == []
 
-def test_get_descendant_from_dict():
+def test_get_descendant_from():
     # Test if the correct level in the dict is returned
     test_dict= {
             "level1": {
                 "level2": {
                     "level3":{
                         "level4": "val"
-                        }
                     }
-                },
-            "other_level": "other_val"
+                }
+            },
+            "other_level": "other_val",
+            "dict1": [
+                "list2",
+                {
+                    "dict3": [97,98,99]
+                }
+            ]
         }
-    assert generic.get_descendant_from_dict(test_dict, []) is None
-    assert generic.get_descendant_from_dict(test_dict, ['level1', 'level2']) == test_dict['level1']['level2']
-    assert generic.get_descendant_from_dict(test_dict, ['level1', 'level2', 'level3', 'level4']) == "val"
-    assert generic.get_descendant_from_dict(test_dict, ['other_level']) == test_dict['other_level']
-    assert generic.get_descendant_from_dict(test_dict, ['level1', 'invalid_level']) is None
-    assert generic.get_descendant_from_dict('invalid_dict', ['level1', 'invalid_level']) is None
+    assert generic.get_descendant_from(test_dict, []) is None
+    assert generic.get_descendant_from(test_dict, ['level1', 'level2']) == test_dict['level1']['level2']
+    assert generic.get_descendant_from(test_dict, ['level1', 'level2', 'level3', 'level4']) == "val"
+    assert generic.get_descendant_from(test_dict, ['other_level']) == test_dict['other_level']
+    assert generic.get_descendant_from(test_dict, ['level1', 'invalid_level']) is None
+    assert generic.get_descendant_from(test_dict, ['dict1', "0"]) == "list2"
+    assert generic.get_descendant_from(test_dict, ['dict1', 1, 'dict3', 2]) == 99
+    assert generic.get_descendant_from('invalid_dict', ['level1', 'invalid_level']) is None
 
 def test_get_config():
     # Test getting a value from the environment when also present in config

@@ -42,9 +42,16 @@ def api_json(data_dict):
     if not response.ok:
         app.logger.warning(f"Call to {data_dict['url']} returned a non-ok status code: " \
                            f"{response.status_code}. {response.__dict__}")
-        abort(response.status_code)
+        if 'on_fail' in data_dict:
+            abort(response.status_code if data_dict['on_fail'] == 0 else data_dict['on_fail'])
 
-    return response.json()
+    try:
+        return response.json()
+    except JSONDecodeError:
+        app.logger.error(f"Call returned from {data_dict['url']} that was not JSON.")
+        if 'on_fail' in data_dict:
+            abort(503 if data_dict['on_fail'] == 0 else data_dict['on_fail'])
+        return {}
 
 @catch(KeyError, "Processor request.redirect called without a 'location' given.", abort=500)
 def redirect(data_dict):
