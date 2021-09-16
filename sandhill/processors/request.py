@@ -30,7 +30,6 @@ def get_url_components(data_dict): # pylint: disable=unused-argument
     return url_components
 
 @catch(RequestException, "Call to {data_dict[url]} returned {exc}.", abort=503)
-@catch(JSONDecodeError, "Call returned from {data_dict[url]} that was not JSON.", abort=503)
 def api_json(data_dict):
     '''
     Make a call to an API and return the response content as JSON

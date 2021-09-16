@@ -7,7 +7,7 @@ from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
 from sandhill import app, catch
-from sandhill.utils.generic import get_descendant_from, ifnone, get_config
+from sandhill.utils.generic import get_descendant, ifnone, get_config
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 
@@ -47,7 +47,7 @@ def select(data_dict, url=None, api_get_function=api_get):
 
     # Get the records that exist at the provided record_keys
     if 'record_keys' in data_dict and data_dict['record_keys']:
-        response_json = get_descendant_from(response_json, data_dict['record_keys'].split('.'))
+        response_json = get_descendant(response_json, data_dict['record_keys'])
 
     return response_json
 

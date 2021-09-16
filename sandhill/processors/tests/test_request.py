@@ -53,12 +53,12 @@ def test_api_json():
 
     # non 200 status
     data = {
-        'url': 'https://jsonplaceholder.typicode.com/todos/invalid'
+        'url': 'https://jsonplaceholder.typicode.com/todos/invalid',
+        'on_fail': 0
     }
     with raises(HTTPException) as http_error:
         url = request.api_json(data)
-    # jsonplaceholder formerly returned a 404, now a 503. Update assert statement to check for either.
-    assert http_error.type.code in [404, 503]
+    assert http_error.type.code == 404
 
     # request exception
     data = {
@@ -70,11 +70,16 @@ def test_api_json():
 
     # bad json
     data = {
-        'url': 'https://google.com/'
+        'url': 'https://google.com/',
+        'on_fail': 0
     }
     with raises(HTTPException) as http_error:
         url = request.api_json(data)
     assert http_error.type.code == 503
+
+    del data['on_fail']
+    assert request.api_json(data) == {}
+
 
 def test_redirect():
     data_dict = {
