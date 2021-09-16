@@ -426,3 +426,11 @@ def test_regex_sub():
 
 def test_get_config():
     assert filters.get_config_filter('LOG_LEVEL') == generic.get_config('LOG_LEVEL')
+
+def test_commafy():
+    assert filters.commafy(1234) == "1,234"
+    assert filters.commafy(123) == "123"
+    assert filters.commafy(1234567) == "1,234,567"
+    assert filters.commafy("1234") == ""
+    assert filters.commafy("not-numbler") == ""
+    assert filters.commafy(['a']) == ""
