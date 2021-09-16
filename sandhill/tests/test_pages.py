@@ -80,7 +80,10 @@ def prepare_page_entry(page_entry):
         for key in (loop_page['data'] if 'data' in loop_page else {}):
             if key in ['loop', loop]:
                 continue
-            loop_page[key] = jsonpath_from_rendered_url(loop_page['data'][key], loop_page)
+            loop_page[key] = jsonpath_from_rendered_url(
+                loop_page['data'][key],
+                copy.deepcopy(loop_page)
+            )
 
         # Perform one last Jinja render on the entire page_entry before running the test
         loop_page = render_template_json(loop_page, copy.deepcopy(loop_page))
