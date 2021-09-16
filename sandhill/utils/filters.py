@@ -438,3 +438,19 @@ def get_config_filter(name: str, default=None):
         (str): Value of the config variable, default value otherwise
     """
     return get_config(name, default)
+
+@app.template_filter('commafy')
+def commafy(value):
+    '''
+    Take a number and format with commas
+    args:
+        value(int): Integer value to comma format
+    returns:
+        ret(str): Comma-fied representation
+    '''
+    ret = ""
+
+    if isinstance(value, int):
+        ret = "{:,}".format(value)
+
+    return ret
