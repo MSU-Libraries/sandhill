@@ -43,24 +43,48 @@ def test_combine_to_unique_list():
     assert generic.combine_to_unique_list(["test_string"], {"key":"value"}, {"key":"value"}) == ["test_string", {"key":"value"}]
     assert generic.combine_to_unique_list() == []
 
-def test_get_descendant_from_dict():
+def test_get_descendant():
     # Test if the correct level in the dict is returned
     test_dict= {
             "level1": {
                 "level2": {
                     "level3":{
                         "level4": "val"
-                        }
                     }
-                },
-            "other_level": "other_val"
+                }
+            },
+            "other_level": "other_val",
+            "dict1": [
+                "list2",
+                {
+                    "dict3": [97,98,99]
+                }
+            ]
         }
-    assert generic.get_descendant_from_dict(test_dict, []) is None
-    assert generic.get_descendant_from_dict(test_dict, ['level1', 'level2']) == test_dict['level1']['level2']
-    assert generic.get_descendant_from_dict(test_dict, ['level1', 'level2', 'level3', 'level4']) == "val"
-    assert generic.get_descendant_from_dict(test_dict, ['other_level']) == test_dict['other_level']
-    assert generic.get_descendant_from_dict(test_dict, ['level1', 'invalid_level']) is None
-    assert generic.get_descendant_from_dict('invalid_dict', ['level1', 'invalid_level']) is None
+    assert generic.get_descendant(test_dict, []) is None
+    assert generic.get_descendant(test_dict, ['level1', 'level2']) == test_dict['level1']['level2']
+    assert generic.get_descendant(test_dict, ['level1', 'level2', 'level3', 'level4']) == "val"
+    assert generic.get_descendant(test_dict, ['other_level']) == test_dict['other_level']
+    assert generic.get_descendant(test_dict, ['level1', 'invalid_level']) is None
+    assert generic.get_descendant(test_dict, ['dict1', "0"]) == "list2"
+    assert generic.get_descendant(test_dict, ['dict1', 1, 'dict3', 2]) == 99
+    assert generic.get_descendant('invalid_dict', ['level1', 'invalid_level']) is None
+
+    assert generic.get_descendant(test_dict, "dict1.1.dict3.0") == 97
+    pull = generic.get_descendant(test_dict, "dict1.1.dict3.0", extract=True)
+    assert pull == 97
+    assert generic.get_descendant(test_dict, "dict1.1.dict3") == [98,99]
+    generic.get_descendant(test_dict, "dict1.1.dict3", put=[1,2,3])
+    assert generic.get_descendant(test_dict, "dict1.1.dict3.2") == 3
+    generic.get_descendant(test_dict, "dict1.1.newkey", put="new!")
+    assert generic.get_descendant(test_dict, "dict1.1.newkey") == "new!"
+    generic.get_descendant(test_dict, "dict1.[]", put="33")
+    assert generic.get_descendant(test_dict, "dict1.2") == "33"
+    generic.get_descendant(test_dict, "dict1.2", put=42)
+    assert generic.get_descendant(test_dict, "dict1.2") == 42
+
+    with raises(IndexError):
+        generic.get_descendant(test_dict, "dict1.strkey", put="using str as index for list")
 
 def test_get_config():
     # Test getting a value from the environment when also present in config

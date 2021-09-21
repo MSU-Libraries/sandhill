@@ -3,7 +3,8 @@ Generic function that can be used in any context
 """
 import os
 import re
-from sandhill import app
+from collections.abc import Mapping
+from sandhill import app, catch
 
 def ifnone(*args):
     '''
@@ -52,20 +53,47 @@ def combine_to_unique_list(*args):
     _ = [unique_list.append(i) for i in combine_to_list(*args) if i not in unique_list]
     return unique_list
 
-def get_descendant_from_dict(dict_obj, list_keys):
+@catch(ValueError, "Could not find {list_keys} in: {obj}", return_val=None)
+def get_descendant(obj, list_keys, extract=False, put=None):
     '''
-    Gets key values from the dictionary if they exist
-    which will check recursively through the dict_obj
+    Gets key values from the dictionary/list if they exist;
+    will check recursively through the obj
     args:
-        dict_obj (dict): Dictionary of the tree to check
-        list_keys (list): List of descendants to follow
+        obj (dict|list): Hierarchy of dict/lists to check
+        list_keys (list|str): List of descendants to follow (or . delimited string)
+        extract (bool): If set to true, will remove the last matching value
+        put (any): Replace the found value with this new value in ther obj,
+                   or append if the found value is a list key is "[]"
+    returns:
+        (any): The last matching value from list_keys, or None if no match
+    raises:
+        IndexError: When attempting to put a list index that is invalid.
     '''
-    for key in list_keys:
-        if isinstance(dict_obj, dict) and key in dict_obj:
-            dict_obj = dict_obj[key]
+    list_keys = list_keys.split('.') if isinstance(list_keys, str) else list_keys
+    for idx, key in enumerate(list_keys):
+        pobj = obj
+        if isinstance(obj, Mapping) and key in obj:
+            obj = obj[key]
+        elif isinstance(obj, list) and str(key).isdigit() and int(key) < len(obj):
+            key = int(key)
+            obj = obj[key]
         else:
-            dict_obj = None
-    return dict_obj if list_keys else None
+            obj = None
+        #  This is the last key in the loop
+        if (idx + 1) == len(list_keys):
+            if extract and obj is not None:
+                del pobj[key]
+            if put is not None and pobj is not None:
+                if isinstance(pobj, Mapping):
+                    pobj[key] = put
+                if isinstance(pobj, list):
+                    if key == "[]":
+                        pobj.append(put)
+                    elif isinstance(key, int) and key < len(pobj):
+                        pobj[key] = put
+                    else:
+                        raise IndexError(f"Index of {key} is invalid for list: {pobj}")
+    return obj if list_keys else None
 
 def get_config(name, default=None):
     '''
