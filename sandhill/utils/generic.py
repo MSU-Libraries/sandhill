@@ -80,7 +80,7 @@ def get_descendant(obj, list_keys, extract=False, put=None):
         else:
             obj = None
         #  This is the last key in the loop
-        if (idx+1) == len(list_keys):
+        if (idx + 1) == len(list_keys):
             if extract and obj is not None:
                 del pobj[key]
             if put is not None and pobj is not None:
