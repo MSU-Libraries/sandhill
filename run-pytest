@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Find directory where this script resides
+CUR_DIR=$( dirname "$0" )
+CUR_DIR=$( readlink -f "$CUR_DIR" )
+
+# Script help text
+runhelp() {
+    echo ""
+    echo "Usage: Run Sandhill tests using PyTest"
+    echo ""
+    echo "Will run tests from: $CUR_DIR"
+    echo ""
+    echo "FLAGS:"
+    echo "  -u|--unit"
+    echo "      Run unit tests"
+    echo "  -f|--functional"
+    echo "      Run functional tests "
+    echo ""
+}
+
+if [[ -z "$1" || $1 == "-h" || $1 == "--help" || $1 == "help" ]]; then
+    runhelp
+    exit 0
+fi
+
+# Parse flag arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+    -f|--functional)
+        TEST_TYPE=functional
+        shift ;;
+    -u|--unit)
+        TEST_TYPE=unit
+        shift ;;
+    *)
+        echo "ERROR: Unknown flag: $1"
+        exit 1
+    esac
+done
+
+# Go to the script directory
+pushd $CUR_DIR
+
+# Activate the virtualenv
+source env/bin/activate
+if [[ $? -ne 0 ]]; then
+    echo "Could not activate virutalenv env/ dir"
+    exit 1
+fi
+
+# Read in local env vars
+[[ -r .env ]] && source .env
+
+# Run the tests
+if [[ $TEST_TYPE == "functional" ]]; then
+    # Set instance dir
+    INSTANCE_DIR=$CUR_DIR/instance
+    export INSTANCE_DIR
+    pytest -m functional --no-cov -n 4
+elif [[ $TEST_TYPE == "unit" ]]; then
+    pytest
+else
+    echo "ERROR: Unknown test type of '$TEST_TYPE'"
+    exit 1
+fi
+
+# Return
+popd
