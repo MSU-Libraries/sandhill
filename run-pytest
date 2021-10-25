@@ -43,11 +43,7 @@ done
 pushd $CUR_DIR
 
 # Activate the virtualenv
-source env/bin/activate
-if [[ $? -ne 0 ]]; then
-    echo "Could not activate virutalenv env/ dir"
-    exit 1
-fi
+[[ -r env/bin/activate ]] && source env/bin/activate
 
 # Read in local env vars
 [[ -r .env ]] && source .env
@@ -55,10 +51,10 @@ fi
 # Run the tests
 if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
-    INSTANCE_DIR=$CUR_DIR/instance
-    export INSTANCE_DIR
+    export INSTANCE_DIR=$CUR_DIR/instance
     pytest -m functional --no-cov -n 4
 elif [[ $TEST_TYPE == "unit" ]]; then
+    export INSTANCE_DIR=$CUR_DIR/sandhill/test_instance
     pytest
 else
     echo "ERROR: Unknown test type of '$TEST_TYPE'"

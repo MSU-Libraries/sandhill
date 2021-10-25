@@ -26,7 +26,7 @@ class Solr:
         self.scanner = re.Scanner([
             (r'"', \
                 lambda scanner, token: ("QUOTE", token)),
-            (r'[[\]]', \
+            (r'[\[\]]', \
                 lambda scanner, token: ("RANGE", token)),
             (r'[()]', \
                 lambda scanner, token: ("PAREN", token)),
@@ -36,7 +36,7 @@ class Solr:
                 lambda scanner, token: ("WILD", token)),
             (r'[-+]', \
                 lambda scanner, token: ("PLMS", token)),
-            (r'[^-+[\]?*()"\s]+', \
+            (r'[^-+\[\]?*()"\s]+', \
                 lambda scanner, token: ("TERM", token)),
             (r'\s+', \
                 lambda scanner, token: ("SPACE", token)),
