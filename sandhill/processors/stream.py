@@ -4,10 +4,11 @@ Processor for streaming data
 from flask import abort, Response as FlaskResponse
 from requests.models import Response as RequestsResponse
 from sandhill import app
+from sandhill.utils.error_handling import dp_abort
 
-def stream(data_dict):
+def response(data_dict):
     '''
-    Stream the response stored in data with the key of stream_var
+    Stream a Requests library response stored in data with the key of stream_var
     args:
         data_dict (dict): The route_config 'data' section
     returns:
@@ -17,17 +18,20 @@ def stream(data_dict):
         'Content-Type', 'Content-Disposition', 'Content-Length',
         'Range', 'accept-ranges', 'Content-Range'
     ]
-    if 'stream' not in data_dict or data_dict['stream'] not in data_dict:
-        app.logger.error((
-            "stream variable: 'stream' not set in config, or references"
-            "unavailable stream. Unable to stream response."
-        ))
+    if 'response' not in data_dict:
+        app.logger.error("stream.response requires a 'response' variable to be set.")
         abort(500)
-    resp = data_dict[data_dict["stream"]]
-    if isinstance(resp, RequestsResponse) and not resp:
-        abort(resp.status_code)
-    elif not resp:
-        abort(503)
+    resp = data_dict[data_dict["response"]] if data_dict["response"] in data_dict else None
+
+    # Not a valid response
+    if not isinstance(resp, RequestsResponse):
+        dp_abort(503)
+        return None
+    # Valid response, but not a success (bool check on resp fails if http code is 400 to 600)
+    if not resp:
+        dp_abort(resp.status_code)
+        return None
+
     stream_response = FlaskResponse(
         resp.iter_content(chunk_size=app.config['STREAM_CHUNK_SIZE']),
         status=resp.status_code

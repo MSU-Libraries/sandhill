@@ -12,9 +12,9 @@
             ]
         },
         {
-             "processor": "stream.stream",
+             "processor": "stream.response",
              "name": "stream_test",
-             "stream": "test"
+             "response": "test"
         }
     ]
 }

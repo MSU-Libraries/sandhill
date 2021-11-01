@@ -12,6 +12,7 @@ def test_load_image():
             'iiif_path': '/0,0,3777,5523/1889,/0/default.jpg'
             },
         'identifier': 'https%3A%2F%2example.edu%2Fpid'
+
     }
 
     # positive response: url is structured correctly, returns expected response
@@ -31,10 +32,10 @@ def test_load_image():
 
     # Test that fail fails correctly
     response = iiif.load_image(data_dict, url="https://example.edu/iiif", api_get_function=_test_api_get_fail)
-    assert isinstance(response, RequestsResponse)
-    assert response.status_code == 500
+    assert isinstance(response, type(None))
 
     # Test that the api service shows correctly as 'unavailable'
+    data_dict['on_fail'] = 0
     with raises(HTTPException) as http_error:
         response = iiif.load_image(data_dict, url="https://example.edu/iiif", api_get_function=_test_api_get_unavailable)
     assert http_error.type.code == 503

@@ -2,11 +2,11 @@
 Processor for IIIF
 '''
 import os
-from flask import abort
 from requests.exceptions import RequestException
 from sandhill import app, catch
 from sandhill.utils.api import api_get, establish_url
 from sandhill.utils.generic import get_config
+from sandhill.utils.error_handling import dp_abort
 
 @catch(RequestException, "Call to IIIF Server failed: {exc}", abort=503)
 def load_image(data_dict, url=None, api_get_function=api_get):
@@ -27,8 +27,10 @@ def load_image(data_dict, url=None, api_get_function=api_get):
             stream=True)
     else:
         app.logger.warning("Could not call IIIF Server; missing identifier or iiif_path")
-        abort(500)
+        dp_abort(500)
 
     if not image.ok:
         app.logger.debug("Call to IIIF Server returned {0}".format(image.status_code))
+        dp_abort(image.status_code)
+        image = None
     return image

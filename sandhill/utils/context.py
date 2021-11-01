@@ -41,6 +41,7 @@ def context_processors():
         sandbug(value, comment) # pylint: disable=undefined-variable
 
     return {
+        'debug': app.debug,
         'strftime': strftime,
         'sandbug': sandbug_context
     }
