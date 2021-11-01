@@ -76,7 +76,7 @@ app.config.from_pyfile(os.path.join(app.root_path, 'sandhill.default_settings.cf
 if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
     app.config.from_pyfile('sandhill.cfg')
 
-# load the secret key
+# Load the secret key
 SECRET_KEY = "".join(secrets.SystemRandom().choice(
     string.ascii_letters + string.digits) for _ in range(64))
 app.config["SECRET_KEY"] = get_config("SECRET_KEY", SECRET_KEY)
