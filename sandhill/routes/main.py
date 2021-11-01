@@ -53,7 +53,7 @@ def main(*args, **kwargs): # pylint: disable=unused-argument
     if not isinstance(data, (FlaskResponse, WerkzeugReponse)):
         app.logger.error(
             f"None of the 'data' processors in {route_config['route']}"
-            f"returned a Response object"
+            f" returned a Response object"
         )
         if app.debug:
             data = jsonify(data)

@@ -6,6 +6,23 @@ from functools import wraps
 from flask import abort
 import sandhill
 
+def dp_abort(http_code):
+    """
+    Data processor abort. Will abort with the given status code if
+    the data processor has an 'on_fail' key set and the value is 0.
+    If the value is non-0, the 'on_fail' code will be override
+    the passed code.
+    args:
+        http_code(int): A valid HTTP code
+    throws:
+        (HTTPException): Throws exception if data_dict['on_fail'] is
+            defined in parent context
+    """
+    parent_locals = inspect.currentframe().f_back.f_locals
+    data_dict = parent_locals['data_dict'] if 'data_dict' in parent_locals else {}
+    if 'on_fail' in data_dict:
+        abort(http_code if data_dict['on_fail'] == 0 else data_dict['on_fail'])
+
 def catch(exc_class, exc_msg=None, **kwargs):
     """
     Catch general exceptions and handle in a standarized manor
