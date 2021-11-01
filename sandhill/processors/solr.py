@@ -10,6 +10,7 @@ from sandhill import app, catch
 from sandhill.utils.generic import get_descendant, ifnone, get_config
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
+from sandhill.utils.error_handling import dp_abort
 
 @catch(RequestException, "Call to Solr failed: {exc}", abort=503)
 @catch(JSONDecodeError, "Call returned from Solr that was not JSON.", abort=503)
@@ -32,7 +33,7 @@ def select(data_dict, url=None, api_get_function=api_get):
     # query solr with the parameters
     app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
     response = api_get_function(url=url, params=data_dict['params'])
-
+    response_json = None
     if not response.ok:
         app.logger.warning(f"Call to Solr returned {response.status_code}. {response}")
         try:
@@ -41,13 +42,12 @@ def select(data_dict, url=None, api_get_function=api_get):
                     "Error returned from Solr: {0}".format(str(response.json()['error'])))
         except JSONDecodeError:
             pass
-        abort(response.status_code)
-
-    response_json = response.json()
-
-    # Get the records that exist at the provided record_keys
-    if 'record_keys' in data_dict and data_dict['record_keys']:
-        response_json = get_descendant(response_json, data_dict['record_keys'])
+        dp_abort(response.status_code)
+    else:
+        response_json = response.json()
+        # Get the records that exist at the provided record_keys
+        if 'record_keys' in data_dict and data_dict['record_keys']:
+            response_json = get_descendant(response_json, data_dict['record_keys'])
 
     return response_json
 
