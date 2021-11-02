@@ -48,7 +48,7 @@ def api_json(data_dict):
     try:
         return response.json()
     except JSONDecodeError:
-        app.logger.error(f"Call returned from {data_dict['url']} that was not JSON.")
+        app.logger.warning(f"Call returned from {data_dict['url']} that was not JSON.")
         dp_abort(503)
         return {}
 
