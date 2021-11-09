@@ -17,7 +17,7 @@ distro==1.4.0
 execnet==1.9.0
 filelock==3.0.12
 Flask==1.1.2
-Flask-DebugToolbar @ git+https://github.com/MSU-Libraries/flask-debugtoolbar.git@54a62949ea3e2662131f47203007364a16352cf6
+Flask-DebugToolbar @ git+https://github.com/MSU-Libraries/flask-debugtoolbar.git@34af57694d8a341beecdd4f96e312ffd6b3d1fcd
 html5lib==1.0.1
 identify==2.2.4
 idna==2.9

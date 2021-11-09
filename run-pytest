@@ -48,6 +48,15 @@ pushd $CUR_DIR
 # Read in local env vars
 [[ -r .env ]] && source .env
 
+# Set env vars
+export SERVER_NAME=${CUR_DIR##*/}.devel.lib.msu.edu # TODO not ideal
+export DISPLAY=:2
+export PATH=/usr/local/bin:/usr/bin:$PATH
+
+# Start headless browser # TODO not sure why this isn't working, need to do this manually for now
+#Xvfb :2 -ac &
+#PID=$!
+
 # Run the tests
 if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
@@ -60,6 +69,9 @@ else
     echo "ERROR: Unknown test type of '$TEST_TYPE'"
     exit 1
 fi
+
+# Stop headless server TODO not working
+#kill $PID
 
 # Return
 popd
