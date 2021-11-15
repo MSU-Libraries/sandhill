@@ -113,6 +113,7 @@ for entry in page_entries:
     pages.extend(prepare_page_entry(entry))
 
 @pytest.mark.functional
+@pytest.mark.a11y
 def test_pages_loadable():
     """
     Validate JSON can be parsed if present
@@ -174,9 +175,21 @@ def test_page_call(page):
                     check = f"{{{{ {check.strip('{}')} }}}}"
                 assert literal_eval(render_template_string(check, page))
 
+
+@pytest.mark.a11y
+@pytest.mark.parametrize("page", pages)
+def test_page_a11y(page):
+    """
+    Run a single page test
+    args:
+        page (dict):
+    """
+    with app.test_client() as client:
+        app.logger.info(f"Functional page test context: {dict(page)}")
         # Validate page passes accessibility checks
-        if 'a11y' in page and 'scan' in page['a11y'] and page['a11y']['scan'] == 'true':
+        if 'a11y' in page:
             driver = webdriver.Firefox()
+            sandbug(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
             driver.get(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
             axe = Axe(driver)
             axe.inject()
@@ -189,6 +202,5 @@ def test_page_call(page):
                 options += "} }"
             results = axe.run(options=options)
             driver.quit()
-            sandbug(page)
             sandbug(results["violations"])
             assert len(results["violations"]) == 0, axe.report(results["violations"])

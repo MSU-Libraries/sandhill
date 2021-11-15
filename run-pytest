@@ -15,7 +15,9 @@ runhelp() {
     echo "  -u|--unit"
     echo "      Run unit tests"
     echo "  -f|--functional"
-    echo "      Run functional tests "
+    echo "      Run functional tests"
+    echo "  -a|--a11y"
+    echo "      Run accessibility tests"
     echo ""
 }
 
@@ -33,6 +35,9 @@ while [[ $# -gt 0 ]]; do
     -u|--unit)
         TEST_TYPE=unit
         shift ;;
+    -a|--a11y)
+        TEST_TYPE=a11y
+        shift ;;
     *)
         echo "ERROR: Unknown flag: $1"
         exit 1
@@ -49,19 +54,29 @@ pushd $CUR_DIR
 [[ -r .env ]] && source .env
 
 # Set env vars
-export SERVER_NAME=${CUR_DIR##*/}.devel.lib.msu.edu # TODO not ideal
 export DISPLAY=:2
 export PATH=/usr/local/bin:/usr/bin:$PATH
 
-# Start headless browser # TODO not sure why this isn't working, need to do this manually for now
-#Xvfb :2 -ac &
-#PID=$!
 
 # Run the tests
 if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
     pytest -m functional --no-cov -n 4
+    #pytest -m functional --no-cov -x
+elif [[ $TEST_TYPE == "a11y" ]]; then
+    # Starting x virtual frame buffer, needed for headless browser
+    Xvfb :2 -ac &
+    PID=$!
+    echo "Running Xvfb with PID: $PID"
+
+    # Set instance dir
+    export INSTANCE_DIR=$CUR_DIR/instance
+    pytest -m a11y --no-cov -n 4
+    #pytest -m functional --no-cov -x
+
+    # Stop headless server TODO add a trap in case someone ctl-c stops the tests
+    kill $PID
 elif [[ $TEST_TYPE == "unit" ]]; then
     export INSTANCE_DIR=$CUR_DIR/sandhill/test_instance
     pytest
@@ -70,8 +85,6 @@ else
     exit 1
 fi
 
-# Stop headless server TODO not working
-#kill $PID
 
 # Return
 popd
