@@ -185,14 +185,14 @@ def test_page_a11y(page):
         page (dict):
     """
     with app.test_client() as client:
-        app.logger.info(f"Functional page test context: {dict(page)}")
+        app.logger.info(f"Accessibility page test context: {dict(page)}")
         # Validate page passes accessibility checks
         if 'a11y' in page:
             driver = webdriver.Firefox()
-            sandbug(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
             driver.get(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
             axe = Axe(driver)
             axe.inject()
+
             # https://github.com/dequelabs/axe-core/blob/master/doc/API.md#options-parameter
             options = ""
             if "disable" in page['a11y'] and isinstance(page['a11y']['disable'], list):
@@ -200,7 +200,10 @@ def test_page_a11y(page):
                 for rule in page['a11y']['disable']:
                     options += f"'{rule}':{{ 'enabled': false }},"
                 options += "} }"
+
             results = axe.run(options=options)
             driver.quit()
+
+            sandbug(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
             sandbug(results["violations"])
             assert len(results["violations"]) == 0, axe.report(results["violations"])

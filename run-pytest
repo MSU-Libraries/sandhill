@@ -63,7 +63,6 @@ if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
     pytest -m functional --no-cov -n 4
-    #pytest -m functional --no-cov -x
 elif [[ $TEST_TYPE == "a11y" ]]; then
     # Starting x virtual frame buffer, needed for headless browser
     Xvfb :2 -ac &
@@ -73,9 +72,8 @@ elif [[ $TEST_TYPE == "a11y" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
     pytest -m a11y --no-cov -n 4
-    #pytest -m functional --no-cov -x
 
-    # Stop headless server TODO add a trap in case someone ctl-c stops the tests
+    # Stop headless server
     kill $PID
 elif [[ $TEST_TYPE == "unit" ]]; then
     export INSTANCE_DIR=$CUR_DIR/sandhill/test_instance
