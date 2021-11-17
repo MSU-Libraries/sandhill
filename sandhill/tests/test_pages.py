@@ -10,6 +10,9 @@ import collections
 import jinja2
 import json
 import copy
+from urllib.parse import urljoin
+from selenium import webdriver
+from axe_selenium_python import Axe
 from ast import literal_eval
 from requests.exceptions import RequestException
 from flask import request
@@ -17,6 +20,7 @@ from sandhill import app
 from sandhill.utils.config_loader import load_json_config
 from sandhill.utils.api import api_get
 from sandhill.utils import jsonpath
+from sandhill.utils.generic import get_config
 from sandhill.utils.template import render_template_json, render_template_string
 
 def jsonpath_from_rendered_url(struct, context):
@@ -109,6 +113,7 @@ for entry in page_entries:
     pages.extend(prepare_page_entry(entry))
 
 @pytest.mark.functional
+@pytest.mark.a11y
 def test_pages_loadable():
     """
     Validate JSON can be parsed if present
@@ -137,7 +142,7 @@ def test_page_call(page):
         for test in test_keys:
             assert test in [
                 '_comment', '_extra_keys', 'page', 'code', 'contains',
-                'excludes', 'matches', 'evaluate', 'md5', 'data'
+                'excludes', 'matches', 'evaluate', 'md5', 'data', 'a11y'
             ] + (page['_extra_keys'] if '_extra_keys' in page else [])
 
         # Validate expected strings appear in response
@@ -169,3 +174,36 @@ def test_page_call(page):
                 if check == check.strip('{}'):
                     check = f"{{{{ {check.strip('{}')} }}}}"
                 assert literal_eval(render_template_string(check, page))
+
+
+@pytest.mark.a11y
+@pytest.mark.parametrize("page", pages)
+def test_page_a11y(page):
+    """
+    Run a single page test
+    args:
+        page (dict):
+    """
+    with app.test_client() as client:
+        app.logger.info(f"Accessibility page test context: {dict(page)}")
+        # Validate page passes accessibility checks
+        if 'a11y' in page:
+            driver = webdriver.Firefox()
+            driver.get(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
+            axe = Axe(driver)
+            axe.inject()
+
+            # https://github.com/dequelabs/axe-core/blob/master/doc/API.md#options-parameter
+            options = ""
+            if "disable" in page['a11y'] and isinstance(page['a11y']['disable'], list):
+                options = "{ rules: {"
+                for rule in page['a11y']['disable']:
+                    options += f"'{rule}':{{ 'enabled': false }},"
+                options += "} }"
+
+            results = axe.run(options=options)
+            driver.quit()
+
+            sandbug(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
+            sandbug(results["violations"])
+            assert len(results["violations"]) == 0, axe.report(results["violations"])

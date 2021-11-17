@@ -14,3 +14,4 @@ sandhill/test_instance/static/css/compiled_invalid/*
 !sandhill/test_instance/static/css/compiled_invalid/.gitkeep
 instance
 .env
+geckodriver.log

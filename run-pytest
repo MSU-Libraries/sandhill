@@ -15,7 +15,9 @@ runhelp() {
     echo "  -u|--unit"
     echo "      Run unit tests"
     echo "  -f|--functional"
-    echo "      Run functional tests "
+    echo "      Run functional tests"
+    echo "  -a|--a11y"
+    echo "      Run accessibility tests"
     echo ""
 }
 
@@ -33,6 +35,9 @@ while [[ $# -gt 0 ]]; do
     -u|--unit)
         TEST_TYPE=unit
         shift ;;
+    -a|--a11y)
+        TEST_TYPE=a11y
+        shift ;;
     *)
         echo "ERROR: Unknown flag: $1"
         exit 1
@@ -48,11 +53,28 @@ pushd $CUR_DIR
 # Read in local env vars
 [[ -r .env ]] && source .env
 
+# Set env vars
+export DISPLAY=:2
+export PATH=/usr/local/bin:/usr/bin:$PATH
+
+
 # Run the tests
 if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
     pytest -m functional --no-cov -n 4
+elif [[ $TEST_TYPE == "a11y" ]]; then
+    # Starting x virtual frame buffer, needed for headless browser
+    Xvfb :2 -ac &
+    PID=$!
+    echo "Running Xvfb with PID: $PID"
+
+    # Set instance dir
+    export INSTANCE_DIR=$CUR_DIR/instance
+    pytest -m a11y --no-cov -n 4
+
+    # Stop headless server
+    kill $PID
 elif [[ $TEST_TYPE == "unit" ]]; then
     export INSTANCE_DIR=$CUR_DIR/sandhill/test_instance
     pytest
@@ -60,6 +82,7 @@ else
     echo "ERROR: Unknown test type of '$TEST_TYPE'"
     exit 1
 fi
+
 
 # Return
 popd
