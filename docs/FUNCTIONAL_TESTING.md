@@ -284,7 +284,7 @@ Accessiblity Testing
 If you want to automcatically scan certain pages for accessibility violations, you
 can include those as part of your functional testing configuration.
 
-###Setup  
+### Setup  
 Get the [latest geckodriver](https://github.com/mozilla/geckodriver/releases) and install it in `/usr/local/bin`
 ```
 wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
@@ -312,7 +312,7 @@ firefox
 fg
 ```
 
-###Configuration  
+### Configuration  
 Below is a sample entry for functional testing as seen earlier in this document.
 Notice now the added key for `a11y`. Additionally, you can provide an optional `disable`
 key which will ignore the provided list of Axe rules from the scan on that page.
