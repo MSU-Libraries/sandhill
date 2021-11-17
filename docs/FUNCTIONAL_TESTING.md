@@ -278,3 +278,65 @@ previous steps. Processing order is:
 Advanced Examples
 ------
 TODO
+
+Accessiblity Testing
+------
+If you want to automcatically scan certain pages for accessibility violations, you
+can include those as part of your functional testing configuration.
+
+###Setup  
+Get the [latest geckodriver](https://github.com/mozilla/geckodriver/releases) and install it in `/usr/local/bin`
+```
+wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
+tar -xf geckodriver-v0.30.0-linux64.tar.gz
+sudo chown root:root geckodriver
+sudo mv geckodriver /usr/local/bin/
+```
+
+Install firefox and Xvfb (the X windows virtual framebuffer)
+```
+sudo apt install firefox xvfb
+```
+
+Test that firefox is working
+```
+# set the number of displays
+export DISPLAY=:2
+
+# run xvfb in the background
+Xvfb :2 -ac &
+# start firefox to make sure it starts without errors (kill it with Ctrl-C)
+firefox
+
+# Now stop xvfb by returning the process to the forground and killing it (Ctrl-C)
+fg
+```
+
+###Configuration  
+Below is a sample entry for functional testing as seen earlier in this document.
+Notice now the added key for `a11y`. Additionally, you can provide an optional `disable`
+key which will ignore the provided list of Axe rules from the scan on that page.
+
+For a complete list of available rules to exclude see the [official site](https://dequeuniversity.com/rules/axe/4.3).
+```
+    {
+        "_comment": "Ensure main page loads"
+        "page": "/",
+        "code": 200,
+        "contains": [
+            "Welcome to my site!"
+        ],
+        "axe": {}
+    },
+    {
+        "_comment": "Ensure second page loads"
+        "page": "/page 2",
+        "code": 200,
+        "contains": [
+            "Welcome to my page!"
+        ],
+        "axe": {
+            "disable": ["landmark-main-is-top-level", "landmark-one-main"]
+        }
+    }
+```
