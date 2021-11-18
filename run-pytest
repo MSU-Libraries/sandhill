@@ -71,6 +71,7 @@ elif [[ $TEST_TYPE == "a11y" ]]; then
 
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
+    echo "Running Accessibility tests against $SERVER_NAME"
     pytest -m a11y --no-cov -n 4
 
     # Stop headless server
