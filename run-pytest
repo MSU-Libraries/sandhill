@@ -63,6 +63,7 @@ if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
     pytest -m functional --no-cov -n 4
+    PYTEST_EXIT_CODE=$!
 elif [[ $TEST_TYPE == "a11y" ]]; then
     # Starting x virtual frame buffer, needed for headless browser
     Xvfb :2 -ac &
@@ -73,12 +74,14 @@ elif [[ $TEST_TYPE == "a11y" ]]; then
     export INSTANCE_DIR=$CUR_DIR/instance
     echo "Running Accessibility tests against $SERVER_NAME"
     pytest -m a11y --no-cov -n 4
+    PYTEST_EXIT_CODE=$!
 
     # Stop headless server
     kill $PID
 elif [[ $TEST_TYPE == "unit" ]]; then
     export INSTANCE_DIR=$CUR_DIR/sandhill/test_instance
     pytest
+    PYTEST_EXIT_CODE=$!
 else
     echo "ERROR: Unknown test type of '$TEST_TYPE'"
     exit 1
@@ -87,3 +90,5 @@ fi
 
 # Return
 popd
+
+exit $PYTEST_EXIT_CODE
