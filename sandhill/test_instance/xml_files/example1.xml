@@ -1,0 +1,13 @@
+<items>
+    <content id='test1'>
+        Plain text content
+    </content>
+    <content id='test2'>
+        <h1>Header in tag</h1>
+        And text content
+    </content>
+    <content id='test3'>
+        <h2>All content in tags</h2>
+        <p>Lorum <b>ipsem</b></p>
+    </content>
+</items>
