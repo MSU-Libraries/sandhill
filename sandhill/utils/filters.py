@@ -13,6 +13,7 @@ from sandhill import app, catch
 from sandhill.utils.generic import get_config
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
+from sandhill.utils import xml 
 
 @app.template_filter('size_format')
 def size_format(value):
@@ -454,3 +455,11 @@ def commafy(value):
         ret = "{:,}".format(value)
 
     return ret
+
+@app.template_filter('xpath')
+def filter_xpath(value, xpath):
+    return xml.xpath(value, xpath)
+
+@app.template_filter('xpath_by_id')
+def filter_xpath_by_id(value, xpath):
+    return xml.xpath_by_id(value, xpath)
