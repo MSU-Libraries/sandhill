@@ -56,6 +56,10 @@ def test_utils_xml_load():
     doc = xml.load(source_badreq)
     assert doc is None
 
+    # Not string or bytes
+    doc = xml.load(3.14)
+    assert doc is None
+
 def test_utils_xml_xpath():
     source_str = '<main><str>one</str><str>two</str></main>'
     source_elem = xml.load(source_str)
@@ -94,3 +98,6 @@ def test_utils_xml_xpath_by_id():
     idmap = xml.xpath_by_id(source_elem, xpath)
     assert isinstance(idmap, dict)
     assert list(idmap.keys()) == ['one', 'two']
+
+    idmap = xml.xpath_by_id(None, xpath)
+    assert idmap is None

@@ -11,12 +11,12 @@ def load(source) -> etree._Element:
     '''
     Load an XML document
     args:
-        source: XML source. Either path, url, or string
+        source: XML source. Either path, url, string, or loaded LXML Element
     returns:
-        Loaded XML object tree
+        Loaded XML object tree, or None on invalid source
     '''
-    if isinstance(source, etree._ElementTree):
-        return source
+    if not isinstance(source, (str, bytes)) or len(source) < 1:
+        return source if isinstance(source, etree._ElementTree) else None
 
     source = source.strip()
     if source[0] == ord('<'):           # Handle source as bytes
@@ -46,10 +46,10 @@ def xpath(source, query) -> list:
         query: XPath query to match against
         source: XML source. Either path, url, or string
     returns:
-        Matching results from XPath query
+        Matching results from XPath query, or None on failure
     '''
     doc = load(source)
-    return doc.xpath(query, namespaces=doc.getroot().nsmap)
+    return doc.xpath(query, namespaces=doc.getroot().nsmap) if doc else None
 
 def xpath_by_id(source, query) -> dict:
     '''
@@ -60,9 +60,12 @@ def xpath_by_id(source, query) -> dict:
         query: XPath query to match against
         source: XML source. Either path, url, or string
     returns:
-        Dict mapping with keys of id, and values of content within matching elements
+        Dict mapping with keys of id, and values of content within matching elements,
+        or None on failure
     '''
     matched = xpath(source, query)
+    if matched is None: # Explicit check to avoid empty results being matched
+        return None
 
     idmap = {}
     for match in matched:
