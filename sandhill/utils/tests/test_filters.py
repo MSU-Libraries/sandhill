@@ -434,3 +434,13 @@ def test_commafy():
     assert filters.commafy("1234") == ""
     assert filters.commafy("not-numbler") == ""
     assert filters.commafy(['a']) == ""
+
+def test_filter_xpath():
+    xmlstr = "<root><elem>Pre <mid>Mid</mid> Tail</elem><elem>Second</elem></root>"
+    matched = filters.filter_xpath(xmlstr, "/root/elem")
+    assert len(matched) == 2
+
+def test_filter_xpath_by_id():
+    xmlstr = "<root><elem id='one'>Pre <mid>Mid</mid> Tail</elem><elem>Second</elem></root>"
+    idmap = filters.filter_xpath_by_id(xmlstr, "/root/elem")
+    assert idmap == { 'one': "Pre <mid>Mid</mid> Tail" }
