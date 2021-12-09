@@ -1,13 +1,16 @@
+'''
+XML loading and handling
+'''
 import io
 from lxml import etree
 import requests
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError as RequestsConnectionError
 from validator_collection import checkers
 from sandhill import app, catch
 
 @catch(etree.XMLSyntaxError, "Invalid XML source: {source} Exc: {exc}", return_val=None)
-@catch(ConnectionError, "Invalid host in XML call: {source} Exc: {exc}", return_val=None)
-def load(source) -> etree._Element:
+@catch(RequestsConnectionError, "Invalid host in XML call: {source} Exc: {exc}", return_val=None)
+def load(source) -> etree._Element: # pylint: disable=protected-access
     '''
     Load an XML document
     args:
@@ -16,6 +19,7 @@ def load(source) -> etree._Element:
         Loaded XML object tree, or None on invalid source
     '''
     if not isinstance(source, (str, bytes)) or len(source) < 1:
+        # pylint: disable=protected-access
         return source if isinstance(source, etree._ElementTree) else None
 
     source = source.strip()

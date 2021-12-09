@@ -13,7 +13,7 @@ from sandhill import app, catch
 from sandhill.utils.generic import get_config
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
-from sandhill.utils import xml 
+from sandhill.utils import xml
 
 @app.template_filter('size_format')
 def size_format(value):
@@ -458,8 +458,26 @@ def commafy(value):
 
 @app.template_filter('xpath')
 def filter_xpath(value, xpath):
+    '''
+    Perform an XPath query against an XML source
+    args:
+        value(str): XML source
+        xpath(str): An XPath query
+    returns:
+        (lxml Elements): A list of matching elements
+    '''
     return xml.xpath(value, xpath)
 
 @app.template_filter('xpath_by_id')
 def filter_xpath_by_id(value, xpath):
+    '''
+    Perform an XPath query against an XML source and returns matched
+    elements as a dict, where the key is the 'id' attribute of the
+    element and the value is the XML content inside the element as a string.
+    args:
+        value(str): XML source
+        xpath(str): An XPath query
+    returns:
+        (dict): A mapping of element 'id' to a string of XML for its children
+    '''
     return xml.xpath_by_id(value, xpath)

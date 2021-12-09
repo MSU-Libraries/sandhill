@@ -1,8 +1,12 @@
+'''
+XML Data Processors
+'''
 from lxml import etree
 from sandhill import app
 from sandhill.utils import xml
 
-def load(data_dict: dict) -> etree._Element:
+
+def load(data_dict: dict) -> etree._Element: # pylint: disable=protected-access
     '''
     Load an XML document
     args:
