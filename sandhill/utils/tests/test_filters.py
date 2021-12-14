@@ -181,6 +181,9 @@ def test_render():
     assert filters.render(context, "{{ var }}") == "val"
     assert filters.render(context, "{{ data_name.data_var }}") == "data_val"
 
+    # Test adding something to the context
+    assert filters.render(context, "{{ var }}{{ var2 }}", var2="a") == "vala"
+
     # Testing TemplateError
     assert filters.render(context, "{{ invalid template") is None
 
