@@ -14,7 +14,6 @@ from sandhill.utils.generic import get_config
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
 from sandhill.utils import xml
-from sandhill.utils import template
 
 @app.template_filter('size_format')
 def size_format(value):
