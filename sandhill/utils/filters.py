@@ -174,7 +174,7 @@ def date_passed(value):
 @app.template_filter('render')
 @contextfilter
 @catch(TemplateError, "Invalid template provided: {value}. Error: {exc}", return_val=None)
-def render(context, value):
+def render(context, value, **kwargs):
     """Renders a given string or literal
     args:
         context (Jinja2 context): context information and variables to use when
@@ -183,8 +183,14 @@ def render(context, value):
     returns:
         (str|None): the rendered value or string
     """
+    if kwargs:
+        kwargs.update(context)
+        ctx = kwargs
+    else:
+        ctx = context
+
     data_template = context.environment.from_string(value)
-    return data_template.render(**context)
+    return data_template.render(**ctx)
 
 @app.template_filter('render_literal')
 @contextfilter
