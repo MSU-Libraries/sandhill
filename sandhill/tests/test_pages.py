@@ -177,7 +177,11 @@ def test_page_call(page):
 
 @pytest.fixture(scope="session", autouse=True)
 def axe_driver():
-    driver = webdriver.Firefox()
+    driver = None
+    try:
+        driver = webdriver.Firefox()
+    except:
+        pass # Ignore this since the a11y tests will check for the driver
     yield driver
     driver.quit()
 
@@ -193,6 +197,9 @@ def test_page_a11y(page, axe_driver):
         app.logger.info(f"Accessibility page test context: {dict(page)}")
         # Validate page passes accessibility checks
         if 'a11y' in page:
+            # Verify the driver was initialized
+            assert axe_driver is not None
+
             axe_driver.get(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
             axe = Axe(axe_driver)
             axe.inject()
