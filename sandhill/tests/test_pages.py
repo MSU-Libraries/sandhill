@@ -175,10 +175,15 @@ def test_page_call(page):
                     check = f"{{{{ {check.strip('{}')} }}}}"
                 assert literal_eval(render_template_string(check, page))
 
+@pytest.fixture(scope="session", autouse=True)
+def axe_driver():
+    driver = webdriver.Firefox()
+    yield driver
+    driver.quit()
 
 @pytest.mark.a11y
 @pytest.mark.parametrize("page", pages)
-def test_page_a11y(page):
+def test_page_a11y(page, axe_driver):
     """
     Run a single page test
     args:
@@ -188,9 +193,8 @@ def test_page_a11y(page):
         app.logger.info(f"Accessibility page test context: {dict(page)}")
         # Validate page passes accessibility checks
         if 'a11y' in page:
-            driver = webdriver.Firefox()
-            driver.get(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
-            axe = Axe(driver)
+            axe_driver.get(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
+            axe = Axe(axe_driver)
             axe.inject()
 
             # https://github.com/dequelabs/axe-core/blob/master/doc/API.md#options-parameter
@@ -202,7 +206,6 @@ def test_page_a11y(page):
                 options += "} }"
 
             results = axe.run(options=options)
-            driver.quit()
 
             sandbug(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
             sandbug(results["violations"])
