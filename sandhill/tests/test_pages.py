@@ -183,7 +183,8 @@ def axe_driver():
     except:
         pass # Ignore this since the a11y tests will check for the driver
     yield driver
-    driver.quit()
+    if driver:
+        driver.quit()
 
 @pytest.mark.a11y
 @pytest.mark.parametrize("page", pages)
