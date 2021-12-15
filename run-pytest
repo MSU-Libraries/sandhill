@@ -54,7 +54,7 @@ pushd $CUR_DIR
 [[ -r .env ]] && source .env
 
 # Set env vars
-export DISPLAY=:2
+export DISPLAY=:4
 export PATH=/usr/local/bin:/usr/bin:$PATH
 
 
@@ -66,7 +66,7 @@ if [[ $TEST_TYPE == "functional" ]]; then
     PYTEST_EXIT_CODE=$?
 elif [[ $TEST_TYPE == "a11y" ]]; then
     # Starting x virtual frame buffer, needed for headless browser
-    Xvfb :2 -ac &
+    Xvfb :4 -ac &
     PID=$!
     echo "Running Xvfb with PID: $PID"
 
