@@ -46,8 +46,8 @@ def main(*args, **kwargs): # pylint: disable=unused-argument
             if 'name' in entry and 'processor' in entry:
                 route_data.append(entry)
             else:
-                app.logger.warning("Unable to parse route data entry number {0} for: {1}"
-                                   .format(idx, ','.join(route_config['route'])))
+                app.logger.warning(f"Unable to parse route data entry number {idx} " \
+                                   f"for: {1} {','.join(route_config['route'])}")
         data = load_route_data(route_data)
     # check if none of the route processors returned a FlaskResponse
     if not isinstance(data, (FlaskResponse, WerkzeugReponse)):
