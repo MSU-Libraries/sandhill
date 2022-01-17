@@ -21,8 +21,8 @@ def load_json_config(file_path):
     returns:
         (dict): the contents of the loaded json file
     """
-    app.logger.info("Loading json file at {0}".format(file_path))
-    with open(file_path) as json_config_file:
+    app.logger.info("Loading json file at {file_path}")
+    with open(file_path, encoding='utf-8') as json_config_file:
         return json.load(json_config_file, object_pairs_hook=collections.OrderedDict)
 
 @catch(FileNotFoundError, "Route dir not found at path {routes_dir} Error: {exc}", return_val=[])

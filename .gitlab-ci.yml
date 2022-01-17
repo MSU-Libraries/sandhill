@@ -13,7 +13,7 @@ Unit Testing and Linting:
   script:
     - virtualenv -p python3 $CI_PROJECT_DIR/env
     - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
-    - $CI_PROJECT_DIR/env/bin/pylint-fail-under --fail_under 10.00 sandhill/
+    - $CI_PROJECT_DIR/env/bin/pylint --fail-under=10.00 sandhill/
     - $CI_PROJECT_DIR/env/bin/pytest --junitxml=report.xml
   artifacts:
     when: always

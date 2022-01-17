@@ -22,8 +22,8 @@ def conditions(data_dict):
         app.logger.warning("Processor 'evaluate' is missing or has invalid 'match_all': "
                            + ifnone(data_dict, 'match_all', "not defined"))
     elif not _conditions:
-        app.logger.warning("Invalid condition keys: {0}".format(
-            data_dict['conditions'] if 'conditions' in data_dict else "'conditions' undefined"))
+        ick = data_dict['conditions'] if 'conditions' in data_dict else "'conditions' undefined"
+        app.logger.warning(f"Invalid condition keys: {ick}")
     else:
         evaluation = evaluate_conditions(_conditions,
                                          data_dict, match_all=data_dict['match_all']) > 0

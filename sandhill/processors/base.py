@@ -76,7 +76,7 @@ def identify_processor_components(route_data):
     try:
         processor, action = route_data['processor'].rsplit('.', 1)
     except ValueError:
-        app.logger.error("No 'action' set for processor: {0}".format(route_data['processor']))
+        app.logger.error(f"No 'action' set for processor: {route_data['processor']}")
         processor = route_data['processor']
         action = "no action defined"
     return name, processor, action

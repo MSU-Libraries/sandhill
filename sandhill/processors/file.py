@@ -79,11 +79,11 @@ def load_matched_json(data_dict):
     matched_path = max(matched_dict.items(), key=itemgetter(1))[0] if matched_dict else None
 
     for path, score in matched_dict.items():
-        app.logger.debug("load_matched_json - score: {0}, path: {1}".format(score, path))
+        app.logger.debug(f"load_matched_json - score: {score}, path: {path}")
 
     # Ensure number of matches is greater than 0
     if matched_path in matched_dict and matched_dict[matched_path]:
-        app.logger.info("load_matched_json - matched: {0}".format(matched_path))
+        app.logger.info(f"load_matched_json - matched: {matched_path}")
         file_data = config_files[matched_path]
 
     return file_data

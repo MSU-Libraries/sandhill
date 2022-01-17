@@ -122,7 +122,7 @@ def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
                 continue
             absolute_module = get_module_path(os.path.join(base_path, sub_path, module.name))
             # Do not load modules if that are already loaded/loading
-            if absolute_module not in sys.modules.keys():
+            if absolute_module not in sys.modules:
                 try:
                     import_module(absolute_module)
                 except Exception as exc:

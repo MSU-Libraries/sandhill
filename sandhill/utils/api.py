@@ -17,11 +17,11 @@ def api_get(**kwargs):
     raises:
         RequestException (exception): Raised if the get function cannot return a response.
     """
-    app.logger.debug("API GET call: {0}".format(json.dumps(kwargs)))
+    app.logger.debug(f"API GET call: {json.dumps(kwargs)}")
     response = requests.get(**kwargs)
     if not response.ok:
         app.logger.warning(
-            "API GET call returned {0}: {1}".format(response.status_code, response.text)
+            f"API GET call returned {response.status_code}: {response.text}"
         )
     return response
 

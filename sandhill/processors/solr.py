@@ -31,7 +31,7 @@ def select(data_dict, url=None, api_get_function=api_get):
     url = url + "/select"
 
     # query solr with the parameters
-    app.logger.debug("Connecting to {0}?{1}".format(url, urlencode(data_dict['params'])))
+    app.logger.debug(f"Connecting to {url}?{urlencode(data_dict['params'])}")
     response = api_get_function(url=url, params=data_dict['params'])
     response_json = None
     if not response.ok:
@@ -39,7 +39,7 @@ def select(data_dict, url=None, api_get_function=api_get):
         try:
             if 'error' in response.json():
                 app.logger.warning(
-                    "Error returned from Solr: {0}".format(str(response.json()['error'])))
+                    f"Error returned from Solr: {str(response.json()['error'])}")
         except JSONDecodeError:
             pass
         dp_abort(response.status_code)
