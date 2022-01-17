@@ -51,7 +51,6 @@ pre-commit==2.12.1
 progress==1.6
 py==1.11.0
 pylint==2.12.2
-pylint-fail-under==0.3.0
 pyparsing==3.0.6
 pyrsistent==0.18.0
 pytest==6.2.5
