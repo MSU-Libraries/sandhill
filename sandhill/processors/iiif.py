@@ -30,7 +30,7 @@ def load_image(data_dict, url=None, api_get_function=api_get):
         dp_abort(500)
 
     if not image.ok:
-        app.logger.debug("Call to IIIF Server returned {0}".format(image.status_code))
+        app.logger.debug(f"Call to IIIF Server returned {image.status_code}")
         dp_abort(image.status_code)
         image = None
     return image

@@ -13,7 +13,7 @@ def add_routes():
     app.logger.info("Running add_routes")
     def decorator(func, **options):
         all_routes = get_all_routes()
-        app.logger.info("Loading routes: {0}".format(', '.join(all_routes)))
+        app.logger.info(f"Loading routes: {', '.join(all_routes)}")
         for rule in all_routes:
             endpoint = options.pop('endpoint', None)
             app.logger.info(

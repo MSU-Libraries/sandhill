@@ -24,8 +24,8 @@ def size_format(value):
     while nbytes >= 1024 and i < len(suffixes)-1:
         nbytes /= 1024
         i += 1
-    fsize = ('%.1f' % nbytes).rstrip('0').rstrip('.')
-    return '%s %s' % (fsize, suffixes[i])
+    fsize = f'{nbytes:.1f}'.rstrip('0').rstrip('.')
+    return f"{fsize} {suffixes[i]}"
 
 @app.template_filter('is_list')
 def is_list(value):
@@ -237,11 +237,10 @@ def format_date(value: str, default: str = "Indefinite") -> str:
 
     value_date = datetime.strptime(value, "%Y-%m-%d")
     if value_date.year != 9999:
-        suf = lambda n: "%d%s"%(n, {1:"st", 2:"nd", 3:"rd"}.get(n if n < 20 else n%10, "th"))
-        result = value_date.strftime("%B %d %Y") # it is a valid date, so set that as the result
-        day = value_date.strftime('%d')
+        suf = lambda n: {1:"st", 2:"nd", 3:"rd"}.get(n if n < 20 else n%10, "th")
+        result = value_date.strftime("%B DAY %Y") # it is a valid date, so set that as the result
         # Add in the suffix (st, th, rd, nd)
-        result = result.replace(f" {day} ", f" {suf(int(day))}, ")
+        result = result.replace("DAY", f"{value_date.day}{suf(value_date.day)},")
 
     return result
 
@@ -458,7 +457,7 @@ def commafy(value):
     ret = ""
 
     if isinstance(value, int):
-        ret = "{:,}".format(value)
+        ret = f"{value:,}"
 
     return ret
 
