@@ -126,6 +126,7 @@ def test_pages_loadable():
             assert isinstance(loaded[0], collections.OrderedDict)
 
 @pytest.mark.functional
+@pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 @pytest.mark.parametrize("page", pages)
 def test_page_call(page):
     """
