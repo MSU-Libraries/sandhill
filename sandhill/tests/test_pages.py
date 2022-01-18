@@ -119,7 +119,8 @@ def test_pages_loadable():
     Validate JSON can be parsed if present
     """
     if os.path.exists(pages_conf):
-        loaded = json.load(open(pages_conf, 'r'), object_pairs_hook=collections.OrderedDict)
+        with open(pages_conf, 'r') as pages_file:
+            loaded = json.load(pages_file, object_pairs_hook=collections.OrderedDict)
         assert isinstance(loaded, list)
         if len(loaded):
             assert isinstance(loaded[0], collections.OrderedDict)
