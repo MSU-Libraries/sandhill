@@ -3,7 +3,7 @@ Methods to help handle errors
 '''
 import inspect
 from functools import wraps
-from flask import abort
+from flask import abort, request
 import sandhill
 
 def dp_abort(http_code):
@@ -71,7 +71,8 @@ def catch(exc_class, exc_msg=None, **kwargs):
 
                 # Handling of the exception
                 if exc_msg:
-                    sandhill.app.logger.error(exc_msg.format(**args_dict))
+                    sandhill.app.logger.error(f"{request.url if request else ''} raised: " + \
+                        exc_msg.format(**args_dict))
 
                 # Get the return_arg value if required and present in the function's arguments
                 return_arg = None
