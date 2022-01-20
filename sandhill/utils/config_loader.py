@@ -21,7 +21,7 @@ def load_json_config(file_path):
     returns:
         (dict): the contents of the loaded json file
     """
-    app.logger.info("Loading json file at {file_path}")
+    app.logger.info(f"Loading json file at {file_path}")
     with open(file_path, encoding='utf-8') as json_config_file:
         return json.load(json_config_file, object_pairs_hook=collections.OrderedDict)
 
