@@ -25,8 +25,7 @@ def get_url_components(data_dict): # pylint: disable=unused-argument
         "base_url": request.base_url,
         "url": request.url,
         "url_root": request.url_root,
-        "query_args": request.args.to_dict(flat=False),
-        "hostname": url_parts.netloc.split(":")[0]
+        "query_args": request.query_args
     }
     return url_components
 

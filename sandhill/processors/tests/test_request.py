@@ -10,6 +10,7 @@ def test_get_url_components():
 
     # testing a basic path to make sure url components are collected, assembled, passed correctly
     with app.test_request_context('/etd/1000'):
+        app.preprocess_request()
         result = request.get_url_components(data_dict)
         assert isinstance(result, dict)
 
@@ -23,6 +24,7 @@ def test_get_url_components():
 
     # testing a path with a query to make sure the parts are structured correctly
     with app.test_request_context('/search?q=frogs&fq=absek&fq=chocolate'):
+        app.preprocess_request()
         result = request.get_url_components(data_dict)
         assert isinstance(result, dict)
 

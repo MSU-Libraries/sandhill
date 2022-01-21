@@ -9,6 +9,7 @@ import string
 import secrets
 from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
+from flask import request
 from flask.logging import create_logger
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import ChoiceLoader, FileSystemLoader, select_autoescape
@@ -132,6 +133,7 @@ def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
                     )
                     raise exc
 
+load_modules(app.root_path, 'bootstrap', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.instance_path, 'bootstrap', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.root_path, 'commands', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.instance_path, 'commands', exclude=['__pycache__', '__init__.py', 'tests'])
