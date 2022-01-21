@@ -3,6 +3,7 @@ Template and Jinja2 utilities
 '''
 import json
 import flask
+from sandhill.utils import filters, context     # pylint: disable=unused-import
 
 def render_template_string(template_str, context):
     """
