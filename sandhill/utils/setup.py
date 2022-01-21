@@ -132,6 +132,7 @@ def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
                     )
                     raise exc
 
+load_modules(app.root_path, 'bootstrap', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.instance_path, 'bootstrap', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.root_path, 'commands', exclude=['__pycache__', '__init__.py', 'tests'])
 load_modules(app.instance_path, 'commands', exclude=['__pycache__', '__init__.py', 'tests'])

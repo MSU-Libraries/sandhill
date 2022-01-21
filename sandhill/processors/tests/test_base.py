@@ -6,6 +6,7 @@ from werkzeug.exceptions import HTTPException
 from sandhill.processors import base
 from sandhill import app
 from sandhill.utils.context import list_custom_context_processors
+from sandhill.bootstrap import requests
 
 def test_load_route_data():
     route_data = [
@@ -16,11 +17,6 @@ def test_load_route_data():
             "paths": [
                 "config/search/main.json"
             ]
-        }),
-        OrderedDict({
-            "processor": "request.get_url_components",
-            "name": "url_components",
-            "on_fail": 500
         }),
         OrderedDict({
             "processor": "template.render_string",
@@ -38,6 +34,7 @@ def test_load_route_data():
 
     # Test positive route data load
     with app.test_request_context('/etd/1000'):
+        app.preprocess_request()
         loaded = base.load_route_data(route_data)
         assert isinstance(loaded, dict)
         assert loaded
@@ -51,7 +48,7 @@ def test_load_route_data():
     route_data = [
         OrderedDict({
             "processor": "request.invalid_action",
-            "name": "url_components",
+            "name": "urlcomponents",
             "on_fail": 7000
         })
     ]
@@ -84,8 +81,6 @@ def test_load_route_data():
         loaded = base.load_route_data(route_data)
         assert isinstance(loaded, dict)
         del loaded['view_args']
-        for ctxp in list_custom_context_processors():
-            del loaded[ctxp]
         assert not loaded
 
     # Test invalid function on valid processor with valid on_fail set
@@ -112,8 +107,6 @@ def test_load_route_data():
         loaded = base.load_route_data(route_data)
         assert isinstance(loaded, dict)
         del loaded['view_args']
-        for ctxp in list_custom_context_processors():
-            del loaded[ctxp]
         assert not loaded
 
     # Test invalid when condition

@@ -1,4 +1,5 @@
 from pytest import raises
+from sandhill import app
 from sandhill.utils import template
 from jinja2 import TemplateError
 
@@ -10,14 +11,15 @@ def test_render_template_string():
         "var2": "val2",
         "date": "3029-01-01"
     }
-    assert template.render_template_string("{{ var1 }}", context) == "val1"
-    assert template.render_template_string("{{ var3 }}", context) == ""
-    assert template.render_template_string("{{ date | date_passed }}", context) == "False"
-    assert template.render_template_string("{{ var2 | myfilter }}", context) == "myval2"
+    with app.app_context():
+        assert template.render_template_string("{{ var1 }}", context) == "val1"
+        assert template.render_template_string("{{ var3 }}", context) == ""
+        assert template.render_template_string("{{ date | date_passed }}", context) == "False"
+        assert template.render_template_string("{{ var2 | myfilter }}", context) == "myval2"
 
-    # Test raising a template error 
-    with raises(TemplateError):
-        template.render_template_string("{{ var1 }", context)
+        # Test raising a template error
+        with raises(TemplateError):
+            template.render_template_string("{{ var1 }", context)
 
 def test_evaluate_conditions():
     conditions = [
@@ -37,12 +39,13 @@ def test_evaluate_conditions():
             },
         "datastream_label": "OBJ"
     }
-    assert template.evaluate_conditions(conditions, context, match_all=True) == 2
-    
-    # change the datastream_label to an allowed datastream
-    context["datastream_label"] = "TN"
-    assert template.evaluate_conditions(conditions, context, match_all=True) == 0
-    assert template.evaluate_conditions(conditions, context, match_all=False) == 1
+    with app.app_context():
+        assert template.evaluate_conditions(conditions, context, match_all=True) == 2
+
+        # change the datastream_label to an allowed datastream
+        context["datastream_label"] = "TN"
+        assert template.evaluate_conditions(conditions, context, match_all=True) == 0
+        assert template.evaluate_conditions(conditions, context, match_all=False) == 1
 
     # invalid keys in conditions
     conditions = [
@@ -55,13 +58,14 @@ def test_evaluate_conditions():
             "allowed": ["embargoed"]
         }
     ]
-    with raises(KeyError):
-        template.evaluate_conditions(conditions, context, match_all=True)
-   
-    # when conditions are empty
-    conditions =[]
-    assert template.evaluate_conditions(conditions, context, match_all=True) == 0
-    
+    with app.app_context():
+        with raises(KeyError):
+            template.evaluate_conditions(conditions, context, match_all=True)
+
+        # when conditions are empty
+        conditions =[]
+        assert template.evaluate_conditions(conditions, context, match_all=True) == 0
+
     # when all the conditions dont match
     conditions = [
         {
@@ -73,7 +77,8 @@ def test_evaluate_conditions():
             "match_when": ["embargoed"]
         }
     ]
-    assert template.evaluate_conditions(conditions, context, match_all=True) == 0
+    with app.app_context():
+        assert template.evaluate_conditions(conditions, context, match_all=True) == 0
 
     # use of match_when_not
     conditions = [
@@ -82,9 +87,10 @@ def test_evaluate_conditions():
             "match_when_not": ["TN"]
         }
     ]
-    assert template.evaluate_conditions(conditions, context, match_all=True) == 0
-    conditions[0]['match_when_not'] = ['OBJ']
-    assert template.evaluate_conditions(conditions, context, match_all=True) == 1
+    with app.app_context():
+        assert template.evaluate_conditions(conditions, context, match_all=True) == 0
+        conditions[0]['match_when_not'] = ['OBJ']
+        assert template.evaluate_conditions(conditions, context, match_all=True) == 1
 
     # attempted use of both match_when and match_when_not
     conditions = [
@@ -94,6 +100,7 @@ def test_evaluate_conditions():
             "match_when": ["OBJ"]
         }
     ]
-    with raises(KeyError):
-        template.evaluate_conditions(conditions, context, match_all=True)
+    with app.app_context():
+        with raises(KeyError):
+            template.evaluate_conditions(conditions, context, match_all=True)
 
