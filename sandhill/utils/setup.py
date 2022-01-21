@@ -9,7 +9,6 @@ import string
 import secrets
 from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
-from flask import request
 from flask.logging import create_logger
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import ChoiceLoader, FileSystemLoader, select_autoescape

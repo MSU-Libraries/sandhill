@@ -1,8 +1,8 @@
 """Context related functionality"""
 from datetime import datetime
 from copy import deepcopy
-from sandhill import app
 from flask import request
+from sandhill import app
 
 def list_custom_context_processors():
     """
