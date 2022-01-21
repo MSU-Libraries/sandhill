@@ -7,7 +7,7 @@ from datetime import datetime
 import mimetypes
 from ast import literal_eval
 import copy
-from jinja2 import contextfilter, TemplateError
+from jinja2 import pass_context, TemplateError
 from markupsafe import Markup
 from sandhill import app, catch
 from sandhill.utils.generic import get_config
@@ -131,20 +131,20 @@ def set_child_key(parent_dict, parent_key, key, value):
     return parent_dict
 
 @app.template_filter('assemble_url')
-def assemble_url(url_components):
-    """Take url_components (derived from Flask Request object) and returns a url.
+def assemble_url(urlcomponents):
+    """Take urlcomponents (derived from Flask Request object) and returns a url.
     args:
-        url_components (dict): components of the URL to build
+        urlcomponents (dict): components of the URL to build
     returns:
         (str): fully combined URL with query arguments
     """
     url = ""
-    if isinstance(url_components, dict) and "path" in url_components:
-        url = url_components["path"]
-        if "query_args" in url_components \
-          and isinstance(url_components['query_args'], dict) \
-          and url_components['query_args']:
-            url = url + "?" + urllib.parse.urlencode(url_components["query_args"], doseq=True)
+    if isinstance(urlcomponents, dict) and "path" in urlcomponents:
+        url = urlcomponents["path"]
+        if "query_args" in urlcomponents \
+          and isinstance(urlcomponents['query_args'], dict) \
+          and urlcomponents['query_args']:
+            url = url + "?" + urllib.parse.urlencode(urlcomponents["query_args"], doseq=True)
     return url
 
 @app.template_filter('urlquote')
@@ -172,7 +172,7 @@ def date_passed(value):
     return value_date.date() < current_date.date()
 
 @app.template_filter('render')
-@contextfilter
+@pass_context
 @catch(TemplateError, "Invalid template provided: {value}. Error: {exc}", return_val=None)
 def render(context, value, **kwargs):
     """Renders a given string or literal
@@ -193,7 +193,7 @@ def render(context, value, **kwargs):
     return data_template.render(**ctx)
 
 @app.template_filter('render_literal')
-@contextfilter
+@pass_context
 def render_literal(context, value, fallback_to_str=True):
     """Renders a Jinja template and attempts to perform a literal_eval on the result
     args:

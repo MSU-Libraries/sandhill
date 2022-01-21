@@ -54,22 +54,23 @@ def test_render_string():
     }
 
     # Test for positive scenario
-    evaluation = template.render_string(data_dict)
-    assert isinstance(evaluation, str)
-    assert evaluation == 'test_val'
+    with app.app_context():
+        evaluation = template.render_string(data_dict)
+        assert isinstance(evaluation, str)
+        assert evaluation == 'test_val'
 
-    # Test for invalid template passed
-    data_dict['value'] = "{{ forgot to close"
-    evaluation = template.render_string(data_dict)
-    assert evaluation is None
+        # Test for invalid template passed
+        data_dict['value'] = "{{ forgot to close"
+        evaluation = template.render_string(data_dict)
+        assert evaluation is None
 
-    # Test for invalid variable in valid jinja
-    data_dict['value'] = "{{ invalid_var_name }}"
-    evaluation = template.render_string(data_dict)
-    assert isinstance(evaluation, str)
-    assert evaluation == ''
+        # Test for invalid variable in valid jinja
+        data_dict['value'] = "{{ invalid_var_name }}"
+        evaluation = template.render_string(data_dict)
+        assert isinstance(evaluation, str)
+        assert evaluation == ''
 
-    # Test not providing a 'value'
-    del data_dict['value']
-    evaluation = template.render_string(data_dict)
-    assert evaluation is None
+        # Test not providing a 'value'
+        del data_dict['value']
+        evaluation = template.render_string(data_dict)
+        assert evaluation is None

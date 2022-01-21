@@ -60,11 +60,12 @@ def test_load_matched_json():
             'model_type': 'info:fedora/islandora:sp_pdf'
         }
     }
-    file_data = file.load_matched_json(data_dict)
-    assert isinstance(file_data, dict)
-    assert file_data
-    assert 'test_filename' in file_data
-    assert file_data['test_filename'] == "etd.json"
+    with app.app_context():
+        file_data = file.load_matched_json(data_dict)
+        assert isinstance(file_data, dict)
+        assert file_data
+        assert 'test_filename' in file_data
+        assert file_data['test_filename'] == "etd.json"
 
     # Test loading directory with invalid match conditions
     data_dict = {
@@ -76,12 +77,14 @@ def test_load_matched_json():
             'model_type': 'info:fedora/islandora:sp_pdf'
         }
     }
-    file_data = file.load_matched_json(data_dict)
-    assert not isinstance(file_data, dict)
-    assert not file_data
+    with app.app_context():
+        file_data = file.load_matched_json(data_dict)
+        assert not isinstance(file_data, dict)
+        assert not file_data
 
     # Testing the on_fail functionality in load_matched_json when the config path is invalid
     data_dict['location'] = "metadata_config_invalid_path"
     data_dict['on_fail'] = 404
-    file_data = file.load_matched_json(data_dict)
-    assert file_data is None    # expect None return, as base processor will throw the abort
+    with app.app_context():
+        file_data = file.load_matched_json(data_dict)
+        assert file_data is None    # expect None return, as base processor will throw the abort

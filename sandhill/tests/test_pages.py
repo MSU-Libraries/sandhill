@@ -42,7 +42,8 @@ def jsonpath_from_rendered_url(struct, context):
         requests.exceptions.RequestException
     """
     try:
-        struct = render_template_json(struct, context)
+        with app.app_context():
+            struct = render_template_json(struct, context)
     except (json.JSONDecodeError, jinja2.TemplateError) as exc:
         app.logger.error(f"Unable to render and convert: {struct}")
         raise exc
@@ -90,7 +91,8 @@ def prepare_page_entry(page_entry):
             )
 
         # Perform one last Jinja render on the entire page_entry before running the test
-        loop_page = render_template_json(loop_page, copy.deepcopy(loop_page))
+        with app.app_context():
+            loop_page = render_template_json(loop_page, copy.deepcopy(loop_page))
 
         # Set extra allowed keys generated from 'data'
         loop_page['_extra_keys'] = list(data.keys()) + ['data']

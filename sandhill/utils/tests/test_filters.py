@@ -128,31 +128,31 @@ def test_set_child_key():
     assert filters.set_child_key(args2, 'query_args', 1, 2) == ['test']
 
 def test_assemble_url():
-    url_components = {
+    urlcomponents = {
         "path": "https://mytest.com",
     }
     # Test positive scenarios
-    assert filters.assemble_url(url_components) == "https://mytest.com"
+    assert filters.assemble_url(urlcomponents) == "https://mytest.com"
 
-    url_components["query_args"] = {}
-    assert filters.assemble_url(url_components) == "https://mytest.com"
+    urlcomponents["query_args"] = {}
+    assert filters.assemble_url(urlcomponents) == "https://mytest.com"
 
-    url_components["query_args"] = {"q":"'hi'"}
-    assert filters.assemble_url(url_components) == "https://mytest.com?q=%27hi%27"
+    urlcomponents["query_args"] = {"q":"'hi'"}
+    assert filters.assemble_url(urlcomponents) == "https://mytest.com?q=%27hi%27"
 
-    url_components["query_args"]["another"] = "value with space"
-    assert filters.assemble_url(url_components) == "https://mytest.com?q=%27hi%27&another=value+with+space"
+    urlcomponents["query_args"]["another"] = "value with space"
+    assert filters.assemble_url(urlcomponents) == "https://mytest.com?q=%27hi%27&another=value+with+space"
 
     # test missing path
-    del url_components["path"]
-    assert filters.assemble_url(url_components) == ""
+    del urlcomponents["path"]
+    assert filters.assemble_url(urlcomponents) == ""
 
     # test non-dict query_args
-    url_components["path"] = "mysite"
-    url_components["query_args"] = 1
-    assert filters.assemble_url(url_components) == "mysite"
+    urlcomponents["path"] = "mysite"
+    urlcomponents["query_args"] = 1
+    assert filters.assemble_url(urlcomponents) == "mysite"
 
-    # test non-dict url_components
+    # test non-dict urlcomponents
     assert filters.assemble_url("hello") == ""
 
 def test_urlquote():

@@ -18,11 +18,6 @@
             "paths": [
                 "config/search/main.json"
             ]
-        },
-        {
-            "processor": "request.get_url_components",
-            "name": "url_components",
-            "on_fail": 500
         }
     ]
 }
