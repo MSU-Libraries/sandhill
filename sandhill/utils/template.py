@@ -5,7 +5,7 @@ import sys
 import json
 from inspect import getmembers, isfunction
 from importlib import import_module
-from jinja2 import Environment
+import flask
 from sandhill import app
 from sandhill.utils import generic, filters
 from sandhill.utils.context import list_custom_context_processors
@@ -19,31 +19,7 @@ def render_template_string(template_str, context):
     raises:
         jinja2.TemplateError
     """
-    env = Environment(autoescape=True)
-    # Add custom Sandhill filter into the environment
-    sandhill_filters = dict(getmembers(filters, isfunction))
-    mod_prefix = generic.get_module_path(app.instance_path) + '.'
-    instance_filter_modules = [
-        absmod for absmod in sys.modules if absmod.startswith(mod_prefix)
-    ]
-    for mod_path in instance_filter_modules:
-        mod = import_module(mod_path)
-        mod_filters = dict(getmembers(mod, isfunction))
-        sandhill_filters.update(mod_filters)
-
-    env.filters = {**env.filters, **sandhill_filters}
-
-    # Add custom context processors into context
-    custom_ctxp = list_custom_context_processors()
-    for procs in app.template_context_processors[None]:
-        ctx_procs = procs()
-        for key, func in ctx_procs.items():
-            if key in custom_ctxp:
-                context.update({key: func})
-
-    # Render the string using the environment and return it
-    data_template = env.from_string(template_str)
-    return data_template.render(**context)
+    return flask.render_template_string(template_str, **context)
 
 def evaluate_conditions(conditions, context, match_all=True):
     """

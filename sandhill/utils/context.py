@@ -1,6 +1,8 @@
 """Context related functionality"""
 from datetime import datetime
+from copy import deepcopy
 from sandhill import app
+from flask import request
 
 def list_custom_context_processors():
     """
@@ -40,8 +42,23 @@ def context_processors():
         """
         sandbug(value, comment) # pylint: disable=undefined-variable
 
+    def urlcomponents():
+        """
+        Create a copy of the url components part of the request object
+        """
+        return {
+            "path": str(request.path),
+            "full_path": str(request.full_path),
+            "base_url": str(request.base_url),
+            "url": str(request.url),
+            "url_root": str(request.url_root),
+            "query_args": deepcopy(request.query_args),
+            "host": str(request.host)
+        }
+
     return {
         'debug': app.debug,
         'strftime': strftime,
-        'sandbug': sandbug_context
+        'sandbug': sandbug_context,
+        'urlcomponents': urlcomponents
     }

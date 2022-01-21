@@ -2,32 +2,11 @@
 Processor for requests
 '''
 from json.decoder import JSONDecodeError
-from urllib.parse import urlsplit
 import requests
 from requests.exceptions import RequestException
-from flask import request, abort, redirect as FlaskRedirect
+from flask import abort, redirect as FlaskRedirect
 from sandhill import app, catch
 from sandhill.utils.error_handling import dp_abort
-
-def get_url_components(data_dict): # pylint: disable=unused-argument
-    '''
-    Get current url and return dictionary of components.
-    Note: pylint disable for unused-argument is because all processors must accept this param
-    args:
-        data_dict(dict): (not used) the route_config data and context data
-    returns:
-        dict: portions of the current request
-    '''
-    url_parts = urlsplit(request.url)
-    url_components = {
-        "path": request.path,
-        "full_path": request.full_path,
-        "base_url": request.base_url,
-        "url": request.url,
-        "url_root": request.url_root,
-        "query_args": request.query_args
-    }
-    return url_components
 
 @catch(RequestException, "Call to {data_dict[url]} returned {exc}.", abort=503)
 def api_json(data_dict):
