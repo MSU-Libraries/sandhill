@@ -15,13 +15,13 @@ def dp_abort(http_code):
     args:
         http_code(int): A valid HTTP code
     throws:
-        (HTTPException): Throws exception if data_dict['on_fail'] is
+        (HTTPException): Throws exception if data['on_fail'] is
             defined in parent context
     """
     parent_locals = inspect.currentframe().f_back.f_locals
-    data_dict = parent_locals['data_dict'] if 'data_dict' in parent_locals else {}
-    if 'on_fail' in data_dict:
-        abort(http_code if data_dict['on_fail'] == 0 else data_dict['on_fail'])
+    data = parent_locals['data'] if 'data' in parent_locals else {}
+    if 'on_fail' in data:
+        abort(http_code if data['on_fail'] == 0 else data['on_fail'])
 
 def catch(exc_class, exc_msg=None, **kwargs):
     """
