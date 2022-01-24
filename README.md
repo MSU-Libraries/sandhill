@@ -74,10 +74,17 @@ running quickly, but it may require a few extra steps before you can start build
 with Sandhill.  
 
 **Required packages**  
-You'll need both `docker` and `docker-compose` installed.
-You can install both of these by following the instructions at their respective sites:  
+You'll need both `docker` installed.
+You can install Docker by following the instructions at their site:  
 * [Docker Install](https://docs.docker.com/get-docker/)
-* [docker-compose Install](https://docs.docker.com/compose/install/)
+
+**Initialize your Swarm**
+To use Docker Swarm you need to initialize the Swarm on the environment you are running on:  
+```
+# Where <IP> is the current server's IP
+docker swarm init --advertise-addr <IP> --listen-addr <IP>:2377
+
+```
 
 **Getting Sandhill**  
 Clone the Sandhill repository and navigate into that directory:  
@@ -89,13 +96,13 @@ cd sandhill
 **Building the Docker image**  
 Build the Sandhill image by running:  
 ```
-docker-compose build
+docker build . -t sandhill:latest
 ```
 
 **Run Sandhill as a container**  
-Create the Sandhill container by running:  
+Create the Sandhill container in Docker Swarm mode by running:  
 ```
-docker-compose up -d
+docker stack deploy -c docker-compose.yml sandhill
 ```
 
 Go to [http://localhost:8080/](http://localhost:8080/) in your browser. If everything worked, you will see a default "It Works!" page. Congratulations - you've got Sandhill up and running!  

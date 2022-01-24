@@ -9,8 +9,7 @@ any local changes to it required for your environment (such as the `EnvironmentF
 ```
 # For UWSGI setup
 cp etc/systemd/system/sandhill.service /etc/systemd/system/sandhill.service
-# For Docker setup
-cp etc/systemd/system/sandhill-docker.service /etc/systemd/system/sandhill.service
+# Not required for Docker Swarm
 
 # Enable and start the service
 systemctl daemon-reload
