@@ -6,11 +6,11 @@ from requests.models import Response as RequestsResponse
 from sandhill import app
 from sandhill.utils.error_handling import dp_abort
 
-def response(data_dict):
+def response(data):
     '''
     Stream a Requests library response stored in data with the key of stream_var
     args:
-        data_dict (dict): The route_config 'data' section
+        data (dict): The route_config 'data' section
     returns:
         streams the response
     '''
@@ -18,10 +18,10 @@ def response(data_dict):
         'Content-Type', 'Content-Disposition', 'Content-Length',
         'Range', 'accept-ranges', 'Content-Range'
     ]
-    if 'response' not in data_dict:
+    if 'response' not in data:
         app.logger.error("stream.response requires a 'response' variable to be set.")
         abort(500)
-    resp = data_dict[data_dict["response"]] if data_dict["response"] in data_dict else None
+    resp = data[data["response"]] if data["response"] in data else None
 
     # Not a valid response
     if not isinstance(resp, RequestsResponse):

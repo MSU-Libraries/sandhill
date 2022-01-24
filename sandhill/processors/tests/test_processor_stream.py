@@ -19,7 +19,7 @@ def test_stream():
     test_resp.headers['Content-Type'] = 'application/json'
     test_resp.headers['Range'] = '0-31'
     test_resp.headers['Invalid-Header'] = '10.0.0.10'
-    data_dict = {
+    data = {
         "test": test_resp,
         "response": 'test',
         "on_fail": 0
@@ -27,7 +27,7 @@ def test_stream():
 
     with app.test_request_context('/home'):
         # Test passing it the correct information
-        resp = stream.response(data_dict)
+        resp = stream.response(data)
         assert test_resp.status_code == resp.status_code
         assert isinstance(resp, FlaskResponse)
         assert test_resp.headers['Content-Type'] == resp.headers['Content-Type']
@@ -35,40 +35,40 @@ def test_stream():
 
         # Test valid RequestsResponse, but >= 400 http code
         test_resp.status_code = 401
-        del data_dict['on_fail']
-        assert stream.response(data_dict) == None
+        del data['on_fail']
+        assert stream.response(data) == None
 
         # Test not a valid RequestResponse
-        data_dict["test"] = "string is not allowed"
-        assert stream.response(data_dict) == None
+        data["test"] = "string is not allowed"
+        assert stream.response(data) == None
 
         # Test returning a non-OK status code
-        data_dict['test'] = test_resp
-        data_dict['on_fail'] = 0
+        data['test'] = test_resp
+        data['on_fail'] = 0
         test_resp.status_code = 400
         with raises(HTTPException) as http_exc:
-            resp = stream.response(data_dict)
+            resp = stream.response(data)
         assert http_exc.type.code == 400
 
         # Test not giving the correct key in data
-        data_dict['response'] = 'invalid'
+        data['response'] = 'invalid'
         with raises(HTTPException) as http_exc:
-            resp = stream.response(data_dict)
+            resp = stream.response(data)
         assert http_exc.type.code == 503
 
         # Test giving no data in the key
-        data_dict["test2"] = None
-        data_dict['response'] = 'test2'
+        data["test2"] = None
+        data['response'] = 'test2'
         with raises(HTTPException) as http_exc:
-            resp = stream.response(data_dict)
+            resp = stream.response(data)
         assert http_exc.type.code == 503
 
         # Test disallowed header
         assert 'Invalid-Header' not in resp.headers
 
-        # Test missing 'response' key in data_dict
-        del data_dict['response']
+        # Test missing 'response' key in data
+        del data['response']
         with raises(HTTPException) as http_exc:
-            resp = stream.response(data_dict)
+            resp = stream.response(data)
         assert http_exc.type.code == 500
 
