@@ -66,7 +66,7 @@ def unescape(value):
 def filter_tags(value, *args):
     """Filter out all HTML tags except for the ones specified
     and marks the output as safe to render."""
-    htf = HTMLTagFilter(allow=args)
+    htf = HTMLTagFilter(tags=args)
     htf.feed(value)
     return Markup(htf.output)
 

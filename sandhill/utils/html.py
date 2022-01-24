@@ -10,14 +10,14 @@ class HTMLTagFilter(HTMLParser):
     """
     Filter through HTML and remove all tags except for those allowed.
     """
-    def __init__(self, allow: list):
+    def __init__(self, tags: list):
         super().__init__(convert_charrefs=False)
-        self.tags = allow
+        self._tags = tags
         self.output = ""
 
     def handle_starttag(self, tag, attrs):
         """Handle open tags"""
-        if tag in self.tags:
+        if tag in self._tags:
             attrstr = " ".join([
                 f"{attr[0]}=\"{html.escape(attr[1], quote=True)}\""
                 for attr in attrs
@@ -27,7 +27,7 @@ class HTMLTagFilter(HTMLParser):
 
     def handle_endtag(self, tag):
         """Handle close tags"""
-        if tag in self.tags:
+        if tag in self._tags:
             self.output += f"</{tag}>"
 
     def handle_data(self, data):

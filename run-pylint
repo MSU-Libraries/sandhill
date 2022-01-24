@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Find directory where this script resides
+CUR_DIR=$( dirname "$0" )
+CUR_DIR=$( readlink -f "$CUR_DIR" )
+
+# Script help text
+runhelp() {
+    echo ""
+    echo "Usage: Run Sandhill PyLint checks"
+    echo ""
+    echo "Will run tests from: $CUR_DIR"
+    echo ""
+}
+
+if [[ $1 == "-h" || $1 == "--help" || $1 == "help" ]]; then
+    runhelp
+    exit 0
+fi
+
+# Go to the script directory
+echo "Linting from: $CUR_DIR"
+pushd $CUR_DIR > /dev/null
+
+# Activate the virtualenv
+[[ -r env/bin/activate ]] && source env/bin/activate
+
+# Read in local env vars
+[[ -r .env ]] && source .env
+
+# Run the linting
+pylint sandhill/ instance/
+PYLINT_EXIT_CODE=$?
+
+# Return
+popd > /dev/null
+
+exit $PYLINT_EXIT_CODE
