@@ -7,14 +7,14 @@ stages:
 Unit Testing and Linting:
   stage: Testing and Linting
   tags:
-    - msul
+    - msul-docker
+  image: python:3.8
   except:
     - tags
   script:
-    - virtualenv -p python3 $CI_PROJECT_DIR/env
-    - $CI_PROJECT_DIR/env/bin/pip install -r $CI_PROJECT_DIR/requirements.txt
-    - $CI_PROJECT_DIR/env/bin/pylint --fail-under=10.00 sandhill/
-    - $CI_PROJECT_DIR/env/bin/pytest --junitxml=report.xml
+    - pip install -r requirements.txt
+    - pylint --fail-under=10.00 sandhill/
+    - pytest --junitxml=report.xml
   artifacts:
     when: always
     reports:
