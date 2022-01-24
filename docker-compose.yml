@@ -1,23 +1,27 @@
-version: '2'
+version: "3.8"
 
 services:
-    sandhill:
-      image: sandhill:latest
-      container_name: sandhill
-      build: .
-      restart: always
-      ports:
-         - "8080:8080"
-      networks:
-        nonroutable_net:
-      volumes:
-        - app_logs:/var/log/sandhill
+  sandhill:
+    image: sandhill:latest
+    ports:
+       - "8080:8080"
+    networks:
+      nonroutable_net:
+    volumes:
+      - app_logs:/var/log/sandhill
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        max_attempts: 5
+        window: 10s
+
 
 networks:
-    nonroutable_net:
-      driver: bridge
-      ipam:
-        config:
-          - subnet: 192.168.0.0/16
+  nonroutable_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/16
 volumes:
   app_logs:
