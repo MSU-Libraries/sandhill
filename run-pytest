@@ -45,7 +45,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Go to the script directory
-pushd $CUR_DIR
+echo "Testing from: $CUR_DIR"
+pushd $CUR_DIR > /dev/null
 
 # Activate the virtualenv
 [[ -r env/bin/activate ]] && source env/bin/activate
@@ -89,6 +90,6 @@ fi
 
 
 # Return
-popd
+popd > /dev/null
 
 exit $PYTEST_EXIT_CODE

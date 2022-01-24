@@ -8,8 +8,8 @@ class Solr:
     Class for handling Solr related logic, like encoding/decoding
     """
     def __init__(self):
-        self.scanner = None
-        self.char_escapes = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', \
+        self._scanner = None
+        self._escape_chars = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', \
             '!': r'\!', '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]', \
             '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"', ';': r'\;'}
 
@@ -23,7 +23,7 @@ class Solr:
         Initialize the token scanner for parsing a query
         """
         # TODO filter()
-        self.scanner = re.Scanner([
+        self._scanner = re.Scanner([
             (r'"', \
                 lambda scanner, token: ("QUOTE", token)),
             (r'[\[\]]', \
@@ -47,7 +47,7 @@ class Solr:
         Tokenize a query, resetting stack and stack position
         """
         self._init_scanner()
-        self._tokens, _ = self.scanner.scan(query)
+        self._tokens, _ = self._scanner.scan(query)
         self._pos = 0
         self._stack = []
 
@@ -154,7 +154,7 @@ class Solr:
         returns:
             (str) the encoded value
         """
-        escapes = self.char_escapes.copy()
+        escapes = self._escape_chars.copy()
         if not escape_wildcards:
             del escapes['*']
             del escapes['?']
@@ -173,7 +173,7 @@ class Solr:
         returns:
             (str) the decoded value
         """
-        escapes = self.char_escapes.copy()
+        escapes = self._escape_chars.copy()
         if not escape_wildcards:
             del escapes['*']
             del escapes['?']
