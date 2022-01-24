@@ -45,19 +45,19 @@ def test_api_json():
 
 
 def test_redirect():
-    data_dict = {
+    data = {
         "location": "/go-elsewhere.html",
     }
 
     # a working redirect
-    result = request.redirect(data_dict)
+    result = request.redirect(data)
     assert isinstance(result, WerkzeugReponse)
     assert result.headers['Location'] == "/go-elsewhere.html"
     assert result.status_code == 302
 
     # a working redirect with alternate code
-    data_dict['code'] = 301
-    result = request.redirect(data_dict)
+    data['code'] = 301
+    result = request.redirect(data)
     assert isinstance(result, WerkzeugReponse)
     assert result.status_code == 301
 

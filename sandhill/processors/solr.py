@@ -15,11 +15,11 @@ from sandhill.utils.error_handling import dp_abort
 @catch(RequestException, "Call to Solr failed: {exc}", abort=503)
 @catch(JSONDecodeError, "Call returned from Solr that was not JSON.", abort=503)
 @catch(KeyError, "Missing url component: {exc}", abort=400) # Missing 'params' key
-def select(data_dict, url=None, api_get_function=api_get):
+def select(data, url=None, api_get_function=api_get):
     '''
     Performs a Solr select call
     args:
-        data_dict(dict): route_config data and other data loaded in context
+        data(dict): route_config data and other data loaded in context
         url(str): Override the default solr URL stored in SOLR_URL of the app config
         api_get_function(function): function to use to call Solr with
     returns:
@@ -31,8 +31,8 @@ def select(data_dict, url=None, api_get_function=api_get):
     url = url + "/select"
 
     # query solr with the parameters
-    app.logger.debug(f"Connecting to {url}?{urlencode(data_dict['params'])}")
-    response = api_get_function(url=url, params=data_dict['params'])
+    app.logger.debug(f"Connecting to {url}?{urlencode(data['params'])}")
+    response = api_get_function(url=url, params=data['params'])
     response_json = None
     if not response.ok:
         app.logger.warning(f"Call to Solr returned {response.status_code}. {response}")
@@ -46,56 +46,56 @@ def select(data_dict, url=None, api_get_function=api_get):
     else:
         response_json = response.json()
         # Get the records that exist at the provided record_keys
-        if 'record_keys' in data_dict and data_dict['record_keys']:
-            response_json = get_descendant(response_json, data_dict['record_keys'])
+        if 'record_keys' in data and data['record_keys']:
+            response_json = get_descendant(response_json, data['record_keys'])
 
     return response_json
 
-def select_record(data_dict, url=None, api_get_function=api_get):
+def select_record(data, url=None, api_get_function=api_get):
     '''
     Select a single record from solr, specifically the first one
     args:
-        data_dict(dict): route_config data and other data loaded in context
+        data(dict): route_config data and other data loaded in context
         url(str): Override the default solr URL stored in SOLR_URL of the app config
         api_get_function(function): function to use to call Solr with
     returns:
         json: response from solr giving the first record in the response
     '''
-    data_dict['record_keys'] = ifnone(data_dict, 'record_keys', 'response.docs')
-    records = select(data_dict, url, api_get_function)
+    data['record_keys'] = ifnone(data, 'record_keys', 'response.docs')
+    records = select(data, url, api_get_function)
 
     if records:
         return records[0]
     return None
 
-def search(data_dict, url=None, api_get_function=api_get):
+def search(data, url=None, api_get_function=api_get):
     """
     Searches solr and gets the results
     args:
-        data_dict (dict) :  route config settings for searching
+        data (dict) :  route config settings for searching
     returns:
         Response (from flask): If result_format is 'test/json'
         dict: All other cases
     """
-    if 'paths' not in data_dict or not data_dict['paths']:
+    if 'paths' not in data or not data['paths']:
         app.logger.error(
             f"Missing 'config' setting for processor "
-            f"'{data_dict['processor']}' with name '{data_dict['name']}'")
+            f"'{data['processor']}' with name '{data['name']}'")
         abort(500)
 
     # Load the search settings
-    search_config = load_json(data_dict)
+    search_config = load_json(data)
     if 'solr_params' not in search_config:
         app.logger.error(
-            f"Missing 'solr_params' inside search config file(s) '{ str(data_dict['paths']) }'")
+            f"Missing 'solr_params' inside search config file(s) '{ str(data['paths']) }'")
         abort(500)
     solr_config = search_config['solr_params']
 
     # override default parameters with request query parameters (if allowed by config)
-    data_dict['params'] = overlay_with_query_args(solr_config, \
-            request_args=data_dict.get('params', None))
+    data['params'] = overlay_with_query_args(solr_config, \
+            request_args=data.get('params', None))
 
-    solr_results = select(data_dict, url, api_get_function)
+    solr_results = select(data, url, api_get_function)
 
     # check if the json results were requested
     result_format = match_request_format('format', ['text/html', 'application/json'])

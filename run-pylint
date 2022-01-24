@@ -29,7 +29,7 @@ pushd $CUR_DIR > /dev/null
 [[ -r .env ]] && source .env
 
 # Run the linting
-pylint sandhill/ instance/
+pylint --fail-under=10.00 sandhill/ instance/
 PYLINT_EXIT_CODE=$?
 
 # Return
