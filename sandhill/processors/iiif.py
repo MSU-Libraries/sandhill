@@ -5,7 +5,7 @@ import os
 from requests.exceptions import RequestException
 from sandhill import app, catch
 from sandhill.utils.api import api_get, establish_url
-from sandhill.utils.generic import get_config
+from sandhill.utils.generic import getconfig
 from sandhill.utils.error_handling import dp_abort
 
 @catch(RequestException, "Call to IIIF Server failed: {exc}", abort=503)
@@ -20,7 +20,7 @@ def load_image(data, url=None, api_get_function=api_get):
         image: Requested image from IIIF
     '''
     image = None
-    url = establish_url(url, get_config('IIIF_BASE', None))
+    url = establish_url(url, getconfig('IIIF_BASE', None))
     if 'iiif_path' in data['view_args'] and 'identifier' in data:
         image = api_get_function(
             url=os.path.join(url, data['identifier'], data['view_args']['iiif_path']),

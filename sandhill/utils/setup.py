@@ -13,7 +13,7 @@ from flask.logging import create_logger
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import ChoiceLoader, FileSystemLoader, select_autoescape
 from sandhill import app
-from sandhill.utils.generic import get_config, get_module_path
+from sandhill.utils.generic import getconfig, getmodulepath
 
 def configure_logging():
     '''
@@ -23,28 +23,28 @@ def configure_logging():
 
     # Default logger
     app.logger = create_logger(app)
-    app.logger.setLevel(get_config('LOG_LEVEL', logging.WARNING))
+    app.logger.setLevel(getconfig('LOG_LEVEL', logging.WARNING))
 
     # File logger
-    if get_config('LOG_FILE'):
+    if getconfig('LOG_FILE'):
         file_handler = RotatingFileHandler(
-            get_config('LOG_FILE'), maxBytes=1024 * 1024 * 100, backupCount=5
+            getconfig('LOG_FILE'), maxBytes=1024 * 1024 * 100, backupCount=5
         )
-        file_handler.setLevel(get_config('LOG_LEVEL', logging.WARNING))
+        file_handler.setLevel(getconfig('LOG_LEVEL', logging.WARNING))
         file_handler.setFormatter(logging.Formatter(
             '[%(asctime)s] %(levelname)s [%(filename)s %(lineno)d]: %(message)s'
         ))
         app.logger.addHandler(file_handler)
 
     # Email logger
-    if get_config('EMAIL'):
+    if getconfig('EMAIL'):
         email_log_level = logging.ERROR
-        email_log_level = get_config('EMAIL_LOG_LEVEL', logging.ERROR)
+        email_log_level = getconfig('EMAIL_LOG_LEVEL', logging.ERROR)
         mail_handler = SMTPHandler(
-            mailhost=get_config('EMAIL_HOST', '127.0.0.1'),
-            fromaddr=get_config('EMAIL_FROM'),
-            toaddrs=[get_config('EMAIL')],
-            subject=get_config('EMAIL_SUBJECT', 'Sandhill Error')
+            mailhost=getconfig('EMAIL_HOST', '127.0.0.1'),
+            fromaddr=getconfig('EMAIL_FROM'),
+            toaddrs=[getconfig('EMAIL')],
+            subject=getconfig('EMAIL_SUBJECT', 'Sandhill Error')
         )
         mail_handler.setLevel(email_log_level)
         mail_handler.setFormatter(logging.Formatter(
@@ -79,10 +79,10 @@ if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
 # Load the secret key
 SECRET_KEY = "".join(secrets.SystemRandom().choice(
     string.ascii_letters + string.digits) for _ in range(64))
-app.config["SECRET_KEY"] = get_config("SECRET_KEY", SECRET_KEY)
+app.config["SECRET_KEY"] = getconfig("SECRET_KEY", SECRET_KEY)
 
 # Set debug mode
-app.debug = bool(int(get_config("DEBUG", "0")))
+app.debug = bool(int(getconfig("DEBUG", "0")))
 
 # Add debug toolbar if debug mode is on and not running code via pytest
 if app.debug and "pytest" not in sys.modules:
@@ -120,7 +120,7 @@ def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
             if module.is_file() and not module.name.endswith('.py') \
               or module.name in exclude:
                 continue
-            absolute_module = get_module_path(os.path.join(base_path, sub_path, module.name))
+            absolute_module = getmodulepath(os.path.join(base_path, sub_path, module.name))
             # Do not load modules if that are already loaded/loading
             if absolute_module not in sys.modules:
                 try:

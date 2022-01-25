@@ -7,30 +7,30 @@ from jinja2.runtime import new_context
 from jinja2 import TemplateError
 from pytest import raises
 
-def test_size_format():
-    assert filters.size_format(100) == "100 B"
-    assert filters.size_format(2048) == "2 KB"
-    assert filters.size_format(2411725) == "2.3 MB"
-    assert filters.size_format(1202590843) == "1.1 GB"
-    assert filters.size_format(2245202743919) == "2 TB"
-    assert filters.size_format("big file") == "0 B"
-    assert filters.size_format("5138022") == "4.9 MB"
+def test_filter_formatbinary():
+    assert filters.formatbinary(100) == "100 B"
+    assert filters.formatbinary(2048) == "2 KB"
+    assert filters.formatbinary(2411725) == "2.3 MB"
+    assert filters.formatbinary(1202590843) == "1.1 GB"
+    assert filters.formatbinary(2245202743919) == "2 TB"
+    assert filters.formatbinary("big file") == "0 B"
+    assert filters.formatbinary("5138022") == "4.9 MB"
 
-def test_get_extension():
-    assert filters.get_extension('application/pdf') == "PDF"
-    assert filters.get_extension('image/jpeg') == "JPG"
-    assert filters.get_extension('image/png') == "PNG"
-    assert filters.get_extension('text/plain') == "TXT"
-    assert filters.get_extension('undefined/undefined') == "???"
+def test_filter_getextension():
+    assert filters.getextension('application/pdf') == "PDF"
+    assert filters.getextension('image/jpeg') == "JPG"
+    assert filters.getextension('image/png') == "PNG"
+    assert filters.getextension('text/plain') == "TXT"
+    assert filters.getextension('undefined/undefined') == "???"
 
-def test_islist():
-    assert filters.is_list([]) == True
-    assert filters.is_list(['a',1]) == True
-    assert filters.is_list({'a':1}) == False
-    assert filters.is_list("string") == False
-    assert filters.is_list(None) == False
+def test_filter_islist():
+    assert filters.islist([]) == True
+    assert filters.islist(['a',1]) == True
+    assert filters.islist({'a':1}) == False
+    assert filters.islist("string") == False
+    assert filters.islist(None) == False
 
-def test_head():
+def test_filter_head():
     assert filters.head([4,5,6]) == 4
     assert filters.head("string") == "string"
     assert filters.head(None) is None
@@ -38,46 +38,46 @@ def test_head():
     assert isinstance(emptylist, list)
     assert not emptylist
 
-def test_unescape():
+def test_filter_unescape():
     assert filters.unescape("a b &amp; c &quot; d") == 'a b & c " d'
     assert filters.unescape("&#42;") == '*'
     assert filters.unescape("&INVALIDTHING; &stuff &#invalid") == "&INVALIDTHING; &stuff &#invalid"
 
-def test_filter_tags():
+def test_filter_filtertags():
     tag_str = "a <b>tag <i class='attr'>filled</i></b> <u>string</u>"
-    assert filters.filter_tags(tag_str) == "a tag filled string"
-    assert filters.filter_tags(tag_str, "b") == "a <b>tag filled</b> string"
-    assert filters.filter_tags(tag_str, "b", "u") == "a <b>tag filled</b> <u>string</u>"
-    assert filters.filter_tags(tag_str, "i") == "a tag <i class=\"attr\">filled</i> string"
-    assert filters.filter_tags("a <b>tag</b> &amp; &quot;quote&#34;") == "a tag &amp; &quot;quote&#34;"
-    assert filters.filter_tags("non escaped refs \" & > <") == "non escaped refs \" & > "
+    assert filters.filtertags(tag_str) == "a tag filled string"
+    assert filters.filtertags(tag_str, "b") == "a <b>tag filled</b> string"
+    assert filters.filtertags(tag_str, "b", "u") == "a <b>tag filled</b> <u>string</u>"
+    assert filters.filtertags(tag_str, "i") == "a tag <i class=\"attr\">filled</i> string"
+    assert filters.filtertags("a <b>tag</b> &amp; &quot;quote&#34;") == "a tag &amp; &quot;quote&#34;"
+    assert filters.filtertags("non escaped refs \" & > <") == "non escaped refs \" & > "
     # Test some bad imputs
-    assert filters.filter_tags("<a><b></a>c<d></e>") == "c"
-    assert filters.filter_tags("<a <b <c d> e>", "c") == " e>"  # What did you expect?
+    assert filters.filtertags("<a><b></a>c<d></e>") == "c"
+    assert filters.filtertags("<a <b <c d> e>", "c") == " e>"  # What did you expect?
 
-def test_solr_encode_query():
-    assert filters.solr_encode_query("a value") == r'a value'
-    assert filters.solr_encode_query("a wild-card value*") == r'a wild\-card value*'
-    assert filters.solr_encode_query("a wild-card value*", escape_wildcards=True) == r'a wild\-card value\*'
-    assert filters.solr_encode_query("\"quoted value\"") == r'"quoted value"'
-    assert filters.solr_encode_query("\"quoted wildcard*\"") == r'"quoted wildcard*"'
-    assert filters.solr_encode_query("\"quote then wildcard\"*") == r'"quote then wildcard"*'
-    assert filters.solr_encode_query("(boolean OR logic)") == r'(boolean OR logic)'
-    assert filters.solr_encode_query("(\"quoted boolean\" OR \"logic terms\")") == r'("quoted boolean" OR "logic terms")'
-    assert filters.solr_encode_query(r"(escaped boolean OR logic terms)") == r'(escaped boolean OR logic terms)'
-    assert filters.solr_encode_query(r"combo phrase AND (boolean OR logic terms)") == r'combo phrase AND (boolean OR logic terms)'
-    assert filters.solr_encode_query("\"combo phrase\" AND (other boolean OR \"logic terms\")") == r'"combo phrase" AND (other boolean OR "logic terms")'
-    assert filters.solr_encode_query(r"[NOW-6MONTH TO NOW]") == r'[NOW-6MONTH TO NOW]'
-    assert filters.solr_encode_query(r"[NOW - 6MONTH TO NOW]") == r'[NOW - 6MONTH TO NOW]'
-    assert filters.solr_encode_query(r'["long ago" - 2025-05-19]') == r'["long ago" - 2025-05-19]'
+def test_filter_solr_encodequery():
+    assert filters.solr_encodequery("a value") == r'a value'
+    assert filters.solr_encodequery("a wild-card value*") == r'a wild\-card value*'
+    assert filters.solr_encodequery("a wild-card value*", escape_wildcards=True) == r'a wild\-card value\*'
+    assert filters.solr_encodequery("\"quoted value\"") == r'"quoted value"'
+    assert filters.solr_encodequery("\"quoted wildcard*\"") == r'"quoted wildcard*"'
+    assert filters.solr_encodequery("\"quote then wildcard\"*") == r'"quote then wildcard"*'
+    assert filters.solr_encodequery("(boolean OR logic)") == r'(boolean OR logic)'
+    assert filters.solr_encodequery("(\"quoted boolean\" OR \"logic terms\")") == r'("quoted boolean" OR "logic terms")'
+    assert filters.solr_encodequery(r"(escaped boolean OR logic terms)") == r'(escaped boolean OR logic terms)'
+    assert filters.solr_encodequery(r"combo phrase AND (boolean OR logic terms)") == r'combo phrase AND (boolean OR logic terms)'
+    assert filters.solr_encodequery("\"combo phrase\" AND (other boolean OR \"logic terms\")") == r'"combo phrase" AND (other boolean OR "logic terms")'
+    assert filters.solr_encodequery(r"[NOW-6MONTH TO NOW]") == r'[NOW-6MONTH TO NOW]'
+    assert filters.solr_encodequery(r"[NOW - 6MONTH TO NOW]") == r'[NOW - 6MONTH TO NOW]'
+    assert filters.solr_encodequery(r'["long ago" - 2025-05-19]') == r'["long ago" - 2025-05-19]'
     with pytest.raises(ValueError):
-        filters.solr_encode_query(r"((")
+        filters.solr_encodequery(r"((")
     with pytest.raises(ValueError):
-        filters.solr_encode_query(r"())")
+        filters.solr_encodequery(r"())")
     with pytest.raises(ValueError):
-        filters.solr_encode_query(r"]]")
+        filters.solr_encodequery(r"]]")
 
-def test_solr_encode():
+def test_filter_solr_encode():
     # test escape
     assert filters.solr_encode("a test string") == r"a\ test\ string"
     assert filters.solr_encode("a with+") == r"a\ with\+"
@@ -91,7 +91,7 @@ def test_solr_encode():
     assert filters.solr_encode(['test']) == ['test']
     assert filters.solr_encode(None) == None
 
-def test_solr_decode():
+def test_filter_solr_decode():
     # test decode
     assert filters.solr_decode(r"a\ test\ string") == "a test string"
     assert filters.solr_decode(r"a\ with\+") == "a with+"
@@ -105,70 +105,70 @@ def test_solr_decode():
     assert filters.solr_decode(['test']) == ['test']
     assert filters.solr_decode(None) == None
 
-def test_set_child_key():
+def test_filter_setchildkey():
     args = {}
 
     # test adding when key isn't already there
-    assert filters.set_child_key(args, 'query_args', 'a', 'b') == {"query_args": {"a": "b"}}
+    assert filters.setchildkey(args, 'query_args', 'a', 'b') == {"query_args": {"a": "b"}}
 
     # test adding to an existing arg list
-    assert filters.set_child_key(args, 'query_args', 'c', 'd') == {"query_args": {"a": "b", "c": "d"}}
+    assert filters.setchildkey(args, 'query_args', 'c', 'd') == {"query_args": {"a": "b", "c": "d"}}
 
     # test overwriting a key
-    assert filters.set_child_key(args, 'query_args', 'a', 'b2') == {"query_args": {"a": "b2", "c": "d"}}
+    assert filters.setchildkey(args, 'query_args', 'a', 'b2') == {"query_args": {"a": "b2", "c": "d"}}
 
     # test providing a non-string key
-    assert filters.set_child_key(args, 'query_args', 1, 2) == {"query_args": {"a": "b2", "c": "d", 1: 2}}
+    assert filters.setchildkey(args, 'query_args', 1, 2) == {"query_args": {"a": "b2", "c": "d", 1: 2}}
 
     # test providing a list as a key
-    assert filters.set_child_key(args, 'query_args', [1], 2) == {"query_args":{"a": "b2", "c": "d", 1: 2}}
+    assert filters.setchildkey(args, 'query_args', [1], 2) == {"query_args":{"a": "b2", "c": "d", 1: 2}}
 
     # test providing a non-dict
     args2 = ['test']
-    assert filters.set_child_key(args2, 'query_args', 1, 2) == ['test']
+    assert filters.setchildkey(args2, 'query_args', 1, 2) == ['test']
 
-def test_assemble_url():
+def test_filter_assembleurl():
     urlcomponents = {
         "path": "https://mytest.com",
     }
     # Test positive scenarios
-    assert filters.assemble_url(urlcomponents) == "https://mytest.com"
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com"
 
     urlcomponents["query_args"] = {}
-    assert filters.assemble_url(urlcomponents) == "https://mytest.com"
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com"
 
     urlcomponents["query_args"] = {"q":"'hi'"}
-    assert filters.assemble_url(urlcomponents) == "https://mytest.com?q=%27hi%27"
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com?q=%27hi%27"
 
     urlcomponents["query_args"]["another"] = "value with space"
-    assert filters.assemble_url(urlcomponents) == "https://mytest.com?q=%27hi%27&another=value+with+space"
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com?q=%27hi%27&another=value+with+space"
 
     # test missing path
     del urlcomponents["path"]
-    assert filters.assemble_url(urlcomponents) == ""
+    assert filters.assembleurl(urlcomponents) == ""
 
     # test non-dict query_args
     urlcomponents["path"] = "mysite"
     urlcomponents["query_args"] = 1
-    assert filters.assemble_url(urlcomponents) == "mysite"
+    assert filters.assembleurl(urlcomponents) == "mysite"
 
     # test non-dict urlcomponents
-    assert filters.assemble_url("hello") == ""
+    assert filters.assembleurl("hello") == ""
 
-def test_urlquote():
+def test_filter_urlquote():
     assert filters.urlquote("hello world") == 'hello%20world'
     assert filters.urlquote("a/path/to/pid:num") == 'a%2Fpath%2Fto%2Fpid%3Anum'
 
-def test_date_passed():
+def test_filter_datepassed():
     # Test positive scenarios
-    assert filters.date_passed('2000-01-01') == True
-    assert filters.date_passed('2040-01-01') == False
+    assert filters.datepassed('2000-01-01') == True
+    assert filters.datepassed('2040-01-01') == False
 
     # Test bad input
-    assert filters.date_passed('not-a-date') == False
-    assert filters.date_passed(2000) == False
+    assert filters.datepassed('not-a-date') == False
+    assert filters.datepassed(2000) == False
 
-def test_render():
+def test_filter_render():
     data_dict = {
         "var": "val",
         "data_name": {
@@ -188,7 +188,7 @@ def test_render():
     assert filters.render(context, "{{ invalid template") is None
 
 
-def test_render_literal():
+def test_filter_renderliteral():
     data_dict = {
         "var": "val"
     }
@@ -196,59 +196,59 @@ def test_render_literal():
     template = app.jinja_env.from_string("{{ var }}")
     context = template.new_context(vars=data_dict)
     # Testing literal_eval
-    liter = filters.render_literal(context, "['1','2','3']")
+    liter = filters.renderliteral(context, "['1','2','3']")
     assert isinstance(liter, list)
     assert len(liter) == 3
     assert liter[0] == '1'
 
     # Testing ValueError
-    liter = filters.render_literal(context, "stringwithoutspaces")
+    liter = filters.renderliteral(context, "stringwithoutspaces")
     assert liter == "stringwithoutspaces"
     with raises(ValueError) as verror:
-        liter = filters.render_literal(context, "stringwithoutspaces", False)
+        liter = filters.renderliteral(context, "stringwithoutspaces", False)
 
     # Testing SyntaxError
-    liter = filters.render_literal(context, "string with spaces")
+    liter = filters.renderliteral(context, "string with spaces")
     assert liter == "string with spaces"
     with raises(SyntaxError) as serror:
-        liter = filters.render_literal(context, "string with spaces", False)
+        liter = filters.renderliteral(context, "string with spaces", False)
 
-def test_format_date():
+def test_filter_formatedate():
     # Test with valid end date
-    res = filters.format_date("2020-12-31")
+    res = filters.formatedate("2020-12-31")
     assert res == "December 31st, 2020"
-    res = filters.format_date("2022-01-03")
+    res = filters.formatedate("2022-01-03")
     assert res == "January 3rd, 2022"
-    res = filters.format_date("8000-01-03")
+    res = filters.formatedate("8000-01-03")
     assert res == "January 3rd, 8000"
 
     # Test with indenfinite end date
-    res = filters.format_date("9999-12-31")
+    res = filters.formatedate("9999-12-31")
     assert res == "Indefinite"
-    res = filters.format_date("")
+    res = filters.formatedate("")
     assert res == "Indefinite"
-    res = filters.format_date(None)
+    res = filters.formatedate(None)
     assert res == "Indefinite"
 
     # Test with wrong datatype passed
-    res = filters.format_date(123)
+    res = filters.formatedate(123)
     assert res == "Indefinite"
 
     # Test wrong format passed
-    res = filters.format_date("abc")
+    res = filters.formatedate("abc")
     assert res == "Indefinite"
-    res = filters.format_date("01-01-2020")
+    res = filters.formatedate("01-01-2020")
     assert res == "Indefinite"
 
     # Test overriding the default value
-    res = filters.format_date("9999-12-31", "different")
+    res = filters.formatedate("9999-12-31", "different")
     assert res == "different"
 
-def test_sandbug_filter():
+def test_filter_sandbug():
     # calling the debug logger
-    filters.sandbug_filter("test")
+    filters.filter_sandbug("test")
 
-def test_deepcopy():
+def test_filter_deepcopy():
     child_obj = {'z': 'z'}
     first_obj = {'a': 'b', 'c': child_obj}
     second_obj = filters.deepcopy(first_obj)
@@ -259,13 +259,13 @@ def test_deepcopy():
     # modifying the child object to verify the memeory location is not the same
     assert first_obj != second_obj
 
-def test_getfilterquery():
+def test_filter_solr_getfq():
     query = {
         'q': "frogs",
         'fq': ["dessert:cake", "dessert:pie", "location:East\\ Lansing", "location:St\\ John's", "colon:value:with:colons"]
     }
     # get the filter query as a dict with a list of values
-    res = filters.getfilterqueries(query)
+    res = filters.solr_getfq(query)
     assert res == {'dessert': ['cake', 'pie'], 'location': ["East Lansing", "St John's"], "colon": ["value:with:colons"]}
 
     query = {
@@ -273,18 +273,18 @@ def test_getfilterquery():
         'fq': "dessert:custard"
     }
     # get the filter query as a dict with a list of values
-    res = filters.getfilterqueries(query)
+    res = filters.solr_getfq(query)
     assert res == {'dessert': ['custard']}
 
-def test_addfilterquery():
+def test_filter_solr_addfq():
     query = {
         'q': "frogs"
     }
-    res = filters.addfilterquery(query, 'location', "East Lansing")
+    res = filters.solr_addfq(query, 'location', "East Lansing")
     assert res == {'q': "frogs", 'fq': ["location:East\\ Lansing"]}
 
     # adding multiple times only results in a single entry
-    res = filters.addfilterquery(res, 'location', "East Lansing")
+    res = filters.solr_addfq(res, 'location', "East Lansing")
     assert res == {'q': "frogs", 'fq': ["location:East\\ Lansing"]}
 
     query = {
@@ -293,20 +293,20 @@ def test_addfilterquery():
     }
 
     # adding field and value to the filter query
-    res = filters.addfilterquery(query, 'dessert', "pie")
+    res = filters.solr_addfq(query, 'dessert', "pie")
     assert res == {'q': "frogs", 'fq': ["dessert:cake", "dessert:pie"]}
 
     # test with a 'start' param to make sure it is removed
     query['start'] = 20
-    res = filters.addfilterquery(query, 'test', 'coolthing')
+    res = filters.solr_addfq(query, 'test', 'coolthing')
     assert res == {'q': "frogs", 'fq': ["dessert:cake", "dessert:pie", "test:coolthing"]}
 
-def test_hasfilterquery():
+def test_filter_solr_hasfq():
     query = {
         'q': "frogs",
         'fq': ["dessert:cake", "location:East\\ Lansing"]
     }
-    res = filters.hasfilterquery(query, 'location', "East Lansing")
+    res = filters.solr_hasfq(query, 'location', "East Lansing")
     assert res == True
 
     query = {
@@ -314,7 +314,7 @@ def test_hasfilterquery():
         'fq': ["dessert:cake", "location:East\\ Lansing"]
     }
     # Pass a non existing field and value to compare with the filter query
-    res = filters.hasfilterquery(query, 'dessert', "ice cream")
+    res = filters.solr_hasfq(query, 'dessert', "ice cream")
     assert res == False
 
     query = {
@@ -323,35 +323,35 @@ def test_hasfilterquery():
     }
 
     # Pass a non existing field and value to compare with the filter query
-    res = filters.hasfilterquery(query, 'dessert', "ice cream")
+    res = filters.solr_hasfq(query, 'dessert', "ice cream")
     assert res == False
 
     # Pass an existing field and value to compare with the filter query
-    res = filters.hasfilterquery(query, 'dessert', "cake")
+    res = filters.solr_hasfq(query, 'dessert', "cake")
     assert res == True
 
-def test_removefilterquery():
+def test_filter_solr_removefq():
     query = {
         'q': "frogs",
         'fq': ["dessert:cake", "location:East\\ Lansing"]
     }
-    res = filters.removefilterquery(query, 'location', "East Lansing")
+    res = filters.solr_removefq(query, 'location', "East Lansing")
     assert res == {'q': "frogs", 'fq': ["dessert:cake"]}
 
     # removing a filterquery that doesn't exist doesn't do anything
-    res = filters.removefilterquery(query, 'notafield', "Not a value")
+    res = filters.solr_removefq(query, 'notafield', "Not a value")
     assert res == {'q': "frogs", 'fq': ["dessert:cake"]}
 
     query = {
         'q': "frogs",
         'fq': "dessert:cake"
     }
-    res = filters.removefilterquery(query, 'dessert', "cake")
+    res = filters.solr_removefq(query, 'dessert', "cake")
     assert res == {'q': "frogs", 'fq': []}
 
     # test with a 'start' param to make sure it is removed
     query['start'] = 20
-    res = filters.removefilterquery(query, 'test', 'coolthing')
+    res = filters.solr_removefq(query, 'test', 'coolthing')
     assert res == {'q': "frogs", 'fq': []}
 
     # TEMP test for fix_preescaped_query
@@ -359,37 +359,37 @@ def test_removefilterquery():
         'q': "frogs",
         'fq': ["dessert:(cake OR \"ice cream\")"]
     }
-    res = filters.removefilterquery(query, 'dessert', '(cake OR \"ice cream\")')
+    res = filters.solr_removefq(query, 'dessert', '(cake OR \"ice cream\")')
     assert res == {'q': "frogs", 'fq': []}
 
-def test_maketuplelist():
+def test_filter_totuples():
     example_list = ['xyz', 1, 'abc', 3]
     # test with a list with evenly divisible tuple count
-    res = filters.maketuplelist(example_list, 2)
+    res = filters.totuples(example_list, 2)
     assert [('xyz', 1), ('abc', 3)] == res
 
     # test with a list with evenly divisible tuple count
     example_list = ['xyz', 1, 2, 'abc', 3, 4]
-    res = filters.maketuplelist(example_list, 3)
+    res = filters.totuples(example_list, 3)
     assert [('xyz', 1, 2), ('abc', 3, 4)] == res
 
     # test with a list with unevenly divisible tuple count
     example_list = ['xyz', 1, 2, 'abc', 3, 4]
-    res = filters.maketuplelist(example_list, 4)
+    res = filters.totuples(example_list, 4)
     assert [('xyz', 1, 2, 'abc')] == res
 
-def test_makedict():
+def test_filter_todict():
     example_list = ['xyz', 1, 'abc', 3]
     # test with a list with evenly divisible count
-    res = filters.makedict(example_list)
+    res = filters.todict(example_list)
     assert {'xyz':1, 'abc': 3} == res
 
     # test with a list with unevenly divisible count
     example_list = ['xyz', 1, 2, 'abc', 3]
-    res = filters.makedict(example_list)
+    res = filters.todict(example_list)
     assert {'xyz': 1, 2:'abc'} == res
 
-def test_regex_match():
+def test_filter_regex_match():
     # perform a positive match
     value = "StillImage"
     pattern = r"^Still"
@@ -409,7 +409,7 @@ def test_regex_match():
     res = filters.regex_match(value, pattern)
     assert res is None
 
-def test_regex_sub():
+def test_filter_regex_sub():
     value = "StillImage"
     pattern = r"(?!^.)([A-Z])"
     substitute = r" \1"
@@ -427,10 +427,10 @@ def test_regex_sub():
     res = filters.regex_sub(value, pattern, substitute)
     assert value == res
 
-def test_get_config():
-    assert filters.get_config_filter('LOG_LEVEL') == generic.get_config('LOG_LEVEL')
+def test_filter_getconfig():
+    assert filters.filter_getconfig('LOG_LEVEL') == generic.getconfig('LOG_LEVEL')
 
-def test_commafy():
+def test_filter_commafy():
     assert filters.commafy(1234) == "1,234"
     assert filters.commafy(123) == "123"
     assert filters.commafy(1234567) == "1,234,567"

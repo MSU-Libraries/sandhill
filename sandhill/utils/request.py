@@ -3,7 +3,7 @@ Requests related functions
 """
 import mimetypes
 from flask import request, abort
-from sandhill.utils.generic import combine_to_unique_list
+from sandhill.utils.generic import touniquelist
 
 def match_request_format(view_args_key, allowed_formats, default_format='text/html'):
     """
@@ -72,13 +72,13 @@ def overlay_with_query_args(query_config, request_args=None):
             query_params[field_name] = field_conf['base']
         # Load from request_args if field defined with a default
         if field_name in request_args and 'default' in field_conf:
-            query_params[field_name] = combine_to_unique_list(
+            query_params[field_name] = touniquelist(
                 query_params[field_name],
                 request_args[field_name]
             )
         # Load default from config if solr_param field not defined
         elif 'default' in field_conf:
-            query_params[field_name] = combine_to_unique_list(
+            query_params[field_name] = touniquelist(
                 query_params[field_name],
                 field_conf['default']
             )

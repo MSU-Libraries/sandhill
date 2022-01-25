@@ -7,7 +7,7 @@ from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
 from sandhill import app, catch
-from sandhill.utils.generic import get_descendant, ifnone, get_config
+from sandhill.utils.generic import getdescendant, ifnone, getconfig
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 from sandhill.utils.error_handling import dp_abort
@@ -27,7 +27,7 @@ def select(data, url=None, api_get_function=api_get):
     '''
 
     response = None
-    url = establish_url(url, get_config('SOLR_URL', None))
+    url = establish_url(url, getconfig('SOLR_URL', None))
     url = url + "/select"
 
     # query solr with the parameters
@@ -47,7 +47,7 @@ def select(data, url=None, api_get_function=api_get):
         response_json = response.json()
         # Get the records that exist at the provided record_keys
         if 'record_keys' in data and data['record_keys']:
-            response_json = get_descendant(response_json, data['record_keys'])
+            response_json = getdescendant(response_json, data['record_keys'])
 
     return response_json
 

@@ -36,7 +36,7 @@ def context_processors():
         day = datetime.now() if not day else datetime.strptime(day, "%Y-%m-%d")
         return day.strftime(fmt)
 
-    def sandbug_context(value: str, comment: str = None):
+    def context_sandbug(value: str, comment: str = None):
         """
         Sandbug as a context processor, because we can.
         """
@@ -59,6 +59,6 @@ def context_processors():
     return {
         'debug': app.debug,
         'strftime': strftime,
-        'sandbug': sandbug_context,
+        'sandbug': context_sandbug,
         'urlcomponents': urlcomponents
     }

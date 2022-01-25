@@ -175,11 +175,11 @@ An example `data` section could look like:
 "data": {
     "loop": "item",
     "item": {
-        "url": "{{ 'SOLR_URL' | get_config }}/select?q=status:active&fl=asset_id,title&rows=999999",
+        "url": "{{ 'SOLR_URL' | getconfig }}/select?q=status:active&fl=asset_id,title&rows=999999",
         "path": "$.response.docs[*]"
     },
     "child": {
-        "url": "{{ 'SOLR_URL' | get_config }}/select?q=asset_id:{{ item.asset_id }}&fl=asset_id,title&rows=1",
+        "url": "{{ 'SOLR_URL' | getconfig }}/select?q=asset_id:{{ item.asset_id }}&fl=asset_id,title&rows=1",
         "path": "$.response.docs[0]"
     }
 }
@@ -208,7 +208,7 @@ For example, this entry:
     "data": {
         "loop": "item"
         "item": {
-            "url": "{{ 'SOLR_URL' | get_config }}/select?q=status:disabled&fl=asset_id,title&rows=999999",
+            "url": "{{ 'SOLR_URL' | getconfig }}/select?q=status:disabled&fl=asset_id,title&rows=999999",
             "path": "$.response.docs[*]"
         }
     },

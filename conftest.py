@@ -16,10 +16,10 @@ if "INSTANCE_DIR" not in os.environ or not os.environ["INSTANCE_DIR"]:
 def pytest_configure(config):
     from sandhill import app
     mod = import_module('sandhill.utils.generic')
-    app.config['SERVER_NAME'] = mod.get_config('SERVER_NAME')
+    app.config['SERVER_NAME'] = mod.getconfig('SERVER_NAME')
 
 def pytest_unconfigure(config):
     mod = import_module('sandhill.utils.generic')
-    logpath = mod.get_config('LOG_FILE')
+    logpath = mod.getconfig('LOG_FILE')
     if os.path.exists(logpath):
         os.unlink(logpath)

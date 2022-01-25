@@ -14,7 +14,7 @@ def test_render_template_string():
     with app.app_context():
         assert template.render_template_string("{{ var1 }}", context) == "val1"
         assert template.render_template_string("{{ var3 }}", context) == ""
-        assert template.render_template_string("{{ date | date_passed }}", context) == "False"
+        assert template.render_template_string("{{ date | datepassed }}", context) == "False"
         assert template.render_template_string("{{ var2 | myfilter }}", context) == "myval2"
 
         # Test raising a template error
@@ -24,7 +24,7 @@ def test_render_template_string():
 def test_evaluate_conditions():
     conditions = [
         {
-            "evaluate": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
+            "evaluate": "{{ item.embargo_end_date_ss | head | datepassed if item.embargo_end_date_ss is defined else True }}",
             "match_when": ["False"]
         },
         {
@@ -69,7 +69,7 @@ def test_evaluate_conditions():
     # when all the conditions dont match
     conditions = [
         {
-            "evaluate": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
+            "evaluate": "{{ item.embargo_end_date_ss | head | datepassed if item.embargo_end_date_ss is defined else True }}",
             "match_when": ["True"]
         },
         {
