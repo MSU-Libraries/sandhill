@@ -3,7 +3,7 @@ Processor for evaluation functions
 '''
 from sandhill import app
 from sandhill.utils.template import evaluate_conditions
-from sandhill.utils.generic import ifnone, get_descendant
+from sandhill.utils.generic import ifnone, getdescendant
 
 def conditions(data):
     """
@@ -17,7 +17,7 @@ def conditions(data):
     """
     evaluation = None
     condition_keys = ifnone(data, 'conditions', '')
-    _conditions = get_descendant(data, condition_keys if condition_keys else [])
+    _conditions = getdescendant(data, condition_keys if condition_keys else [])
     if 'match_all' not in data or not isinstance(data['match_all'], bool):
         app.logger.warning("Processor 'evaluate' is missing or has invalid 'match_all': "
                            + ifnone(data, 'match_all', "not defined"))

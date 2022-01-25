@@ -40,7 +40,7 @@ def load_route_data(route_data):
         action_function = identify_processor_function(name, processor, action)
 
         # Validate conditional 'when' to see if this data processor should be used
-        if not when_eval(route_data[i]):
+        if not eval_when(route_data[i]):
             continue
 
         # Call action from processor
@@ -127,7 +127,7 @@ def processor_load_action(absolute_module, action):
 
 @catch((ValueError, SyntaxError), "Could not literal_eval 'when' condition for " \
        "\"{route_data[name]}\": {route_data[when]}", abort=500)
-def when_eval(route_data):
+def eval_when(route_data):
     '''
     Evaluate the 'when' key of a data processor to determine if that data processor
     should be processed.

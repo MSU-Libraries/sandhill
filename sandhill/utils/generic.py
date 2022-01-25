@@ -35,7 +35,7 @@ def ifnone(*args):
     default_value = args[1]
     return var if var is not None else default_value
 
-def combine_to_list(*args):
+def tolist(*args):
     """
     Combine a and b, which may be a scalar variable or list, and returns them as a list
     """
@@ -47,14 +47,14 @@ def combine_to_list(*args):
             combined.append(i)
     return combined
 
-def combine_to_unique_list(*args):
+def touniquelist(*args):
     """Remove duplicates from combined list."""
     unique_list = []
-    _ = [unique_list.append(i) for i in combine_to_list(*args) if i not in unique_list]
+    _ = [unique_list.append(i) for i in tolist(*args) if i not in unique_list]
     return unique_list
 
 @catch(ValueError, "Could not find {list_keys} in: {obj}", return_val=None)
-def get_descendant(obj, list_keys, extract=False, put=None):
+def getdescendant(obj, list_keys, extract=False, put=None):
     '''
     Gets key values from the dictionary/list if they exist;
     will check recursively through the obj
@@ -95,7 +95,7 @@ def get_descendant(obj, list_keys, extract=False, put=None):
                         raise IndexError(f"Index of {key} is invalid for list: {pobj}")
     return obj if list_keys else None
 
-def get_config(name, default=None):
+def getconfig(name, default=None):
     '''
     Get the value of the given config name. It will first
     check in the environment for the variable name, otherwise
@@ -113,7 +113,7 @@ def get_config(name, default=None):
         value = app.config[name]
     return value
 
-def get_module_path(path):
+def getmodulepath(path):
     """
     Get the Python module path for a directory or file in Sandhill
     returns:
