@@ -181,7 +181,7 @@ An example filter (which is one of the default set):
 from sandhill import app
 
 @app.template_filter()
-def is_list(value):
+def islist(value):
     """ Check if a value is a list """
     return isinstance(value, list)
 ```

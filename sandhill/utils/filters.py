@@ -10,13 +10,13 @@ import copy
 from jinja2 import pass_context, TemplateError
 from markupsafe import Markup
 from sandhill import app, catch
-from sandhill.utils.generic import get_config
+from sandhill.utils.generic import getconfig
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
 from sandhill.utils import xml
 
-@app.template_filter('size_format')
-def size_format(value):
+@app.template_filter('formatbinary')
+def formatbinary(value):
     """Jinja filter to format the binary size"""
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     i = 0
@@ -27,13 +27,13 @@ def size_format(value):
     fsize = f'{nbytes:.1f}'.rstrip('0').rstrip('.')
     return f"{fsize} {suffixes[i]}"
 
-@app.template_filter('is_list')
-def is_list(value):
+@app.template_filter('islist')
+def islist(value):
     """Check if a value is a list"""
     return isinstance(value, list)
 
-@app.template_filter('get_extension')
-def get_extension(value):
+@app.template_filter('getextension')
+def getextension(value):
     """Take in mimetype and return extension."""
     mimetypes.add_type("audio/wav", '.wav')
     extension = None
@@ -62,16 +62,16 @@ def unescape(value):
     """Unescape special characters in a string of HTML"""
     return html.unescape(value)
 
-@app.template_filter('filter_tags')
-def filter_tags(value, *args):
+@app.template_filter('filtertags')
+def filtertags(value, *args):
     """Filter out all HTML tags except for the ones specified
     and marks the output as safe to render."""
     htf = HTMLTagFilter(tags=args)
     htf.feed(value)
     return Markup(htf.output)
 
-@app.template_filter('solr_encode_query')
-def solr_encode_query(query, escape_wildcards=False):
+@app.template_filter('solr_encodequery')
+def solr_encodequery(query, escape_wildcards=False):
     """
     Parses and encodes Solr queries (the part after the colon)
     args:
@@ -111,8 +111,8 @@ def solr_decode(value, escape_wildcards=False):
         value = Solr().decode_value(value, escape_wildcards)
     return value
 
-@app.template_filter('set_child_key')
-def set_child_key(parent_dict, parent_key, key, value):
+@app.template_filter('setchildkey')
+def setchildkey(parent_dict, parent_key, key, value):
     """Take dictionary of url components, and update 'key' with 'value'.
     args:
         parent_dict (dict): dictionary to add parent_key to
@@ -130,8 +130,8 @@ def set_child_key(parent_dict, parent_key, key, value):
         parent_dict[parent_key][key] = value
     return parent_dict
 
-@app.template_filter('assemble_url')
-def assemble_url(urlcomponents):
+@app.template_filter('assembleurl')
+def assembleurl(urlcomponents):
     """Take urlcomponents (derived from Flask Request object) and returns a url.
     args:
         urlcomponents (dict): components of the URL to build
@@ -157,10 +157,10 @@ def urlquote(url_str):
     """
     return urllib.parse.quote(url_str).replace('/', '%2F')
 
-@app.template_filter('date_passed')
+@app.template_filter('datepassed')
 @catch((ValueError, TypeError),
        'Unable to get a valid date in "{value}". Error {exc}', return_val=False)
-def date_passed(value):
+def datepassed(value):
     """ Checks if the embargoded date is greater than the current date
     args:
         value (str): Date in the format yyy-mm-dd that needs to be checked
@@ -192,9 +192,9 @@ def render(context, value, **kwargs):
     data_template = context.environment.from_string(value)
     return data_template.render(**ctx)
 
-@app.template_filter('render_literal')
+@app.template_filter('renderliteral')
 @pass_context
-def render_literal(context, value, fallback_to_str=True):
+def renderliteral(context, value, fallback_to_str=True):
     """Renders a Jinja template and attempts to perform a literal_eval on the result
     args:
         context (Jinja2 context): context information and variables to use when
@@ -220,9 +220,9 @@ def render_literal(context, value, fallback_to_str=True):
     context.environment.autoescape = True
     return data_val
 
-@app.template_filter('format_date')
+@app.template_filter('formatedate')
 @catch((ValueError, TypeError), return_arg="default")
-def format_date(value: str, default: str = "Indefinite") -> str:
+def formatedate(value: str, default: str = "Indefinite") -> str:
     '''
     Format the provided embargo end date as a human readable string
     If there is no end date, it will show as 'Indefinite' (or the other
@@ -245,7 +245,7 @@ def format_date(value: str, default: str = "Indefinite") -> str:
     return result
 
 @app.template_filter('sandbug')
-def sandbug_filter(value: str, comment: str = None):
+def filter_sandbug(value: str, comment: str = None):
     '''
     Writes debug statements to the sandhill log
     args:
@@ -264,8 +264,8 @@ def deepcopy(obj):
     """
     return copy.deepcopy(obj)
 
-@app.template_filter('getfilterqueries')
-def getfilterqueries(query: dict):
+@app.template_filter('solr_getfq')
+def solr_getfq(query: dict):
     """
     Extracts the filter queries from the solr query
     args:
@@ -292,8 +292,8 @@ def getfilterqueries(query: dict):
             parse_fq_into_dict(fqueries, query['fq'])
     return fqueries
 
-@app.template_filter('addfilterquery')
-def addfilterquery(query: dict, field: str, value: str):
+@app.template_filter('solr_addfq')
+def solr_addfq(query: dict, field: str, value: str):
     """
     Adds the field and value to the filter query.
     Also removes the 'start' query param if it exists under the
@@ -324,8 +324,8 @@ def addfilterquery(query: dict, field: str, value: str):
 
     return query
 
-@app.template_filter('hasfilterquery')
-def hasfilterquery(query: dict, field: str, value: str):
+@app.template_filter('solr_hasfq')
+def solr_hasfq(query: dict, field: str, value: str):
     """
     Ensure the filter query has the field and value
     args:
@@ -352,8 +352,8 @@ def hasfilterquery(query: dict, field: str, value: str):
                     found = True
     return found
 
-@app.template_filter('removefilterquery')
-def removefilterquery(query: dict, field: str, value: str):
+@app.template_filter('solr_removefq')
+def solr_removefq(query: dict, field: str, value: str):
     """
     Removes the filter query and returns the revised query.
     Also removes the 'start' query param if it exists under the
@@ -387,25 +387,27 @@ def removefilterquery(query: dict, field: str, value: str):
 
     return query
 
-@app.template_filter('maketuplelist')
-def maketuplelist(input_list: list, tuple_length: int):
+@app.template_filter('totuples')
+def totuples(input_list: list, tuple_length: int):
     """
     Convert a list into tuples of lenth tuple_length
     args:
         input_list (list): list with values that need to be converted into tuples
         tuple_length (int): length of tuples in the list
+    returns:
+        (list): A list of tuples
     """
     # if not evenly divisible by tuple_length excess values are discarded
     return list(zip(*[iter(input_list)]*tuple_length))
 
-@app.template_filter('makedict')
-def makedict(input_list: list):
+@app.template_filter('todict')
+def todict(input_list: list):
     """
     Convert a list into a dictionary
     args:
         input_list (list): list with values that need to be converted into a dictionary
     """
-    return dict(maketuplelist(input_list, 2))
+    return dict(totuples(input_list, 2))
 
 @app.template_filter('regex_match')
 @catch(re.error, "Regex error in regex_match. {exc}", return_val=None)
@@ -431,8 +433,8 @@ def regex_sub(value, pattern, substitute):
     """
     return re.sub(pattern, substitute, value)
 
-@app.template_filter('get_config')
-def get_config_filter(name: str, default=None):
+@app.template_filter('getconfig')
+def filter_getconfig(name: str, default=None):
     """
     Get the value of the given config name. It will first
     check in the environment for the variable name, otherwise
@@ -443,7 +445,7 @@ def get_config_filter(name: str, default=None):
     returns:
         (str): Value of the config variable, default value otherwise
     """
-    return get_config(name, default)
+    return getconfig(name, default)
 
 @app.template_filter('commafy')
 def commafy(value):

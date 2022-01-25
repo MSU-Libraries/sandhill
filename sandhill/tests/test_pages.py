@@ -20,7 +20,7 @@ from sandhill import app
 from sandhill.utils.config_loader import load_json_config
 from sandhill.utils.api import api_get
 from sandhill.utils import jsonpath
-from sandhill.utils.generic import get_config
+from sandhill.utils.generic import getconfig
 from sandhill.utils.template import render_template_json, render_template_string
 
 def jsonpath_from_rendered_url(struct, context):
@@ -205,7 +205,7 @@ def test_page_a11y(page, axe_driver):
             # Verify the driver was initialized
             assert axe_driver is not None
 
-            axe_driver.get(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
+            axe_driver.get(urljoin("https://" + getconfig('SERVER_NAME'), page['page']))
             axe = Axe(axe_driver)
             axe.inject()
 
@@ -219,6 +219,6 @@ def test_page_a11y(page, axe_driver):
 
             results = axe.run(options=options)
 
-            sandbug(urljoin("https://" + get_config('SERVER_NAME'), page['page']))
+            sandbug(urljoin("https://" + getconfig('SERVER_NAME'), page['page']))
             sandbug(results["violations"])
             assert len(results["violations"]) == 0, axe.report(results["violations"])

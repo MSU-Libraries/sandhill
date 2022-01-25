@@ -14,7 +14,7 @@
     "media_template": "media_display/preview.html.j2",
     "restriction_conditions": [
         {
-            "evaluate": "{{ item.embargo_end_date_ss | head | date_passed if item.embargo_end_date_ss is defined else True }}",
+            "evaluate": "{{ item.embargo_end_date_ss | head | datepassed if item.embargo_end_date_ss is defined else True }}",
             "match_when": ["False"]
         }
     ],
