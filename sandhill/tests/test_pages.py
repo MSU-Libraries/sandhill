@@ -181,14 +181,11 @@ def test_page_call(page):
 
 @pytest.fixture(scope="session", autouse=True)
 def axe_driver():
-    driver = None
     try:
-        driver = webdriver.Firefox()
+        with webdriver.Firefox() as driver:
+            yield driver
     except:
-        pass # Ignore this since the a11y tests will check for the driver
-    yield driver
-    if driver:
-        driver.quit()
+        yield None
 
 @pytest.mark.a11y
 @pytest.mark.parametrize("page", pages)
