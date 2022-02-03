@@ -19,8 +19,8 @@ Sandhill was named for the Sandhill Crane, a migratory bird that spends part of 
 ### Technology stack
 Sandhill has been developed primarily with the following:
 
-* [Python](https://www.python.org/about/)
-* [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+* [Python](https://www.python.org/about/) (Tested with version 3.10)
+* [Flask](https://flask.palletsprojects.com/)
 * [Jinja](https://jinja.palletsprojects.com/)
 * [JSON](https://en.wikipedia.org/wiki/JSON)
 * Ubuntu/Debian based Linux (but it should work on other Linux distros as well)
@@ -54,6 +54,7 @@ cd sandhill
 **Dependencies**  
 Next create a virtual environment and install the required [pip](https://pip.pypa.io/en/stable/quickstart/) packages:
 ```
+# Sandhill has been tested with Python 3.10, though other versions may work as well.
 virtualenv -p python3 env
 env/bin/pip install -r requirements.txt
 ```
