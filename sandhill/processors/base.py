@@ -143,8 +143,8 @@ def eval_when(route_data, loaded_data):
         try:
             route_data['when'] = render_template_string(route_data['when'], loaded_data)
         except TemplateError:
-            app.logger.warning(f"Unable to render 'when' clause for '{route_data['name']}' (check syntax and values): " \
-                               f"{route_data['when']}")
+            app.logger.warning(f"Unable to render 'when' clause for '{route_data['name']}' " \
+                               f"(check syntax and values): {route_data['when']}")
             abort(500)
         when = literal_eval(route_data['when'])
     return when
