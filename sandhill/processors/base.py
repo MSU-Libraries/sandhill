@@ -7,9 +7,10 @@ import json
 from importlib import import_module
 from ast import literal_eval
 from flask import request, abort, Response as FlaskResponse
+from jinja2 import TemplateError
 from werkzeug.wrappers.response import Response as WerkzeugReponse
 from sandhill import app, catch
-from sandhill.utils.template import render_template_json
+from sandhill.utils.template import render_template_json, render_template_string
 
 def load_route_data(route_data):
     """Loop through route data, applying Jinja replacements
@@ -23,6 +24,10 @@ def load_route_data(route_data):
     # add view_args into loaded_data
     loaded_data['view_args'] = request.view_args
     for i, _ in enumerate(route_data):
+        # Check when clause (if set) prior to attempting to render route processor
+        if not eval_when(route_data[i], loaded_data):
+            continue
+
         # Apply Jinja2 templating to data config
         try:
             route_data[i] = render_template_json(route_data[i], loaded_data)
@@ -38,10 +43,6 @@ def load_route_data(route_data):
 
         # Identify action from within processor, if valid
         action_function = identify_processor_function(name, processor, action)
-
-        # Validate conditional 'when' to see if this data processor should be used
-        if not eval_when(route_data[i]):
-            continue
 
         # Call action from processor
         if action_function:
@@ -127,7 +128,7 @@ def processor_load_action(absolute_module, action):
 
 @catch((ValueError, SyntaxError), "Could not literal_eval 'when' condition for " \
        "\"{route_data[name]}\": {route_data[when]}", abort=500)
-def eval_when(route_data):
+def eval_when(route_data, loaded_data):
     '''
     Evaluate the 'when' key of a data processor to determine if that data processor
     should be processed.
@@ -139,5 +140,11 @@ def eval_when(route_data):
     # Default to processing if no 'when' provided
     when = True
     if 'when' in route_data:
+        try:
+            route_data['when'] = render_template_string(route_data['when'], loaded_data)
+        except TemplateError:
+            app.logger.warning(f"Unable to render 'when' clause for '{route_data['name']}' " \
+                               f"(check syntax and values): {route_data['when']}")
+            abort(500)
         when = literal_eval(route_data['when'])
     return when
