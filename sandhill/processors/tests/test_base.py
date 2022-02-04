@@ -136,3 +136,36 @@ def test_load_route_data():
         with raises(HTTPException) as http_error:
             loaded = base.load_route_data(route_data)
         assert 400 == http_error.type.code
+
+def test_eval_when():
+    route_data = OrderedDict({
+        "name": "test_eval_when",
+        "when": "True"
+    })
+    loaded_data = {};
+    with app.test_request_context('/dummy'):
+        assert base.eval_when(route_data, loaded_data) is True
+
+        route_data['when'] = "{{ 1 == 1 }}"
+        assert base.eval_when(route_data, loaded_data) is True
+
+        route_data['when'] = "{{ 1 == 0 }}"
+        assert base.eval_when(route_data, loaded_data) is False
+
+        route_data['when'] = "{{ 1 == 0 }}"
+        assert base.eval_when(route_data, loaded_data) is False
+
+        route_data['when'] = "{{ mylist[0] == 1 }}"
+        with raises(HTTPException) as http_error:
+            base.eval_when(route_data, loaded_data)
+        assert 500 == http_error.type.code
+
+        route_data['when'] = "{{ invalid.var }}"
+        with raises(HTTPException) as http_error:
+            base.eval_when(route_data, loaded_data)
+        assert 500 == http_error.type.code
+
+        route_data['when'] = "{{ test } bad curlies"
+        with raises(HTTPException) as http_error:
+            base.eval_when(route_data, loaded_data)
+        assert 500 == http_error.type.code
