@@ -116,6 +116,7 @@ for entry in page_entries:
 
 @pytest.mark.functional
 @pytest.mark.a11y
+@pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 def test_pages_loadable():
     """
     Validate JSON can be parsed if present
