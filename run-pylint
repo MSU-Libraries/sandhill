@@ -22,11 +22,11 @@ fi
 echo "Linting from: $CUR_DIR"
 pushd $CUR_DIR > /dev/null
 
-# Activate the virtualenv
-[[ -r env/bin/activate ]] && source env/bin/activate
-
 # Read in local env vars
 [[ -r .env ]] && source .env
+
+# Activate the virtualenv
+[[ -r env/bin/activate ]] && source env/bin/activate
 
 # Run the linting
 pylint --fail-under=10.00 sandhill/ instance/
