@@ -1,6 +1,6 @@
 stages:
-  - test
   - Testing and Linting
+  - test
   - Build
   - Tag
   - Release
@@ -35,6 +35,8 @@ Build Image:
     - msul
   only:
     - master
+  needs:
+    - Unit Testing and Linting
   except:
     - tags
   before_script:
