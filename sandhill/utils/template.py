@@ -3,6 +3,7 @@ Template and Jinja2 utilities
 '''
 import json
 import flask
+from sandhill import app
 from sandhill.utils import filters, context     # pylint: disable=unused-import
 
 def render_template_string(template_str, ctx):
@@ -14,7 +15,8 @@ def render_template_string(template_str, ctx):
     raises:
         jinja2.TemplateError
     """
-    return flask.render_template_string(template_str, **ctx)
+    with (app.app_context() if not flask.has_app_context() else context.DummyContext()):
+        return flask.render_template_string(template_str, **ctx)
 
 def evaluate_conditions(conditions, ctx, match_all=True):
     """

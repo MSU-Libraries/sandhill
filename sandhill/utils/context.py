@@ -4,6 +4,15 @@ from copy import deepcopy
 from flask import request
 from sandhill import app
 
+class DummyContext:
+    """
+    A Class which can be used as a dummy context
+    """
+    def __enter__(self):
+        return None
+    def __exit__(self, exc_type, exc_value, traceback):
+        return None
+
 def list_custom_context_processors():
     """
     Get a list of the current custom context processors
