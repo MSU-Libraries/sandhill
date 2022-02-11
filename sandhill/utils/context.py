@@ -1,17 +1,21 @@
 """Context related functionality"""
 from datetime import datetime
 from copy import deepcopy
-from flask import request
+from flask import request, has_app_context
 from sandhill import app
 
-class DummyContext:
+def app_context():
     """
-    A Class which can be used as a dummy context
+    Create a flask app context if not already present.
+    Use example:
+        with context.app_context():
+            ...
     """
-    def __enter__(self):
-        return None
-    def __exit__(self, exc_type, exc_value, traceback):
-        return None
+    class NullContext: # pylint: disable=all
+        def __enter__(self): return None
+        def __exit__(self, exc_type, exc_value, traceback): return None
+
+    return app.app_context() if not has_app_context() else NullContext()
 
 def list_custom_context_processors():
     """
