@@ -18,6 +18,8 @@ runhelp() {
     echo "      Run functional tests"
     echo "  -a|--a11y"
     echo "      Run accessibility tests"
+    echo "  -m|--metadata"
+    echo "      Run metadata tests"
     echo ""
 }
 
@@ -37,6 +39,9 @@ while [[ $# -gt 0 ]]; do
         shift ;;
     -a|--a11y)
         TEST_TYPE=a11y
+        shift ;;
+    -m|--metadata)
+        TEST_TYPE=metadata
         shift ;;
     *)
         echo "ERROR: Unknown flag: $1"
@@ -63,6 +68,11 @@ if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
     pytest -m functional --no-cov -n 4
+    PYTEST_EXIT_CODE=$?
+elif [[ $TEST_TYPE == "metadata" ]]; then
+    # Set instance dir
+    export INSTANCE_DIR=$CUR_DIR/instance
+    pytest -m metadata --no-cov -n 4
     PYTEST_EXIT_CODE=$?
 elif [[ $TEST_TYPE == "a11y" ]]; then
     # Starting x virtual frame buffer, needed for headless browser

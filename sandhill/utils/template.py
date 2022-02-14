@@ -14,7 +14,8 @@ def render_template_string(template_str, ctx):
     raises:
         jinja2.TemplateError
     """
-    return flask.render_template_string(template_str, **ctx)
+    with context.app_context():
+        return flask.render_template_string(template_str, **ctx)
 
 def evaluate_conditions(conditions, ctx, match_all=True):
     """
