@@ -90,8 +90,8 @@ tests to it. Keep reading if you'd like to learn about the more advanced capabil
 Advanced Usage
 ------
 
-The `instance/testing/pages.json` file is JSON where the root object must be a list. An empty file
-would appear like:
+JSON files located in `instance/testing/` will be loaded for testing. The root object must be a list,
+that is, an empty file would appear like:
 ```
 []
 ```
@@ -106,16 +106,17 @@ Examples:
 `"_comment": "Verify disclaimer appears on all form pages"`  
 `"_comment": "Checking asset links for {{ item.asset_id }}"`  
 
-**page** (Required, String, Jinja Processed)  
+**page** (String, Jinja Processed)  
 This is the relative link on which the page test will occur. An actual call to this page
-happen as part of the test.  
+happen as part of the test. If left blank, no page call will occur.  
 
 Examples:  
 `"page": "/node/aboutus"`
 `"page": "/asset/{{ item.asset_id }}/view"`
 
 **code** (Optional, Integer)  
-The expected HTTP status code to receive as part of the response for the page call.  
+The expected HTTP status code to receive as part of the response for the page call. Ignored
+if no `page` was set.  
 
 Examples:  
 `"code": 200`
@@ -123,7 +124,7 @@ Examples:
 
 **contains** (Optional, List, Jinja Processed)  
 A list of strings that must exist in the source code returned from the `page` called. All
-entries must exist or the test will fail.
+entries must exist or the test will fail. Ignored if no `page` was set.  
 
 Examples:  
 ```
@@ -138,7 +139,7 @@ Examples:
 
 **excludes** (Optional, List, Jinja Processed)  
 A list of strings that must NOT exist in the source code returned from the `page` called. None
-of the entries may exist or else the test will fail.
+of the entries may exist or else the test will fail. Ignored if no `page` was set.  
 
 Examples:  
 ```
@@ -154,6 +155,7 @@ Examples:
 **matches** (Optional, List, Jinja Processed)  
 A list of strings containing regular expressions that must match in the source code returned from
 the `page` called. All of the entry patterns much match or else the test will fail.
+ Ignored if no `page` was set.  
 
 Examples:  
 ```
@@ -250,14 +252,19 @@ for each item in the target `VAR`.
 A list of strings that will be rendered by Jinja and then evaluated for truthiness. If the strings in
 the list are not wrapped by Jinja delimiters, the `{{` and `}}` delimiters will automatically be wrapped
 around the value. All entries must evaluate to a truthy value after having be Jinja processed or
-the test will fail.  
+the test will fail. You must have set a `data` section in order to have data to evaluate on.  
+
+Values in an evaluate string are first parsed for JSONPath queries. Queries must begin with a
+root indictor `$`. If no context key is provided, it will query against the first data key available.
+To specify a JSONPath query to operate on a specific key, add the key name directly after
+the `$`, such as `$item.myquery`.  
 
 Examples:  
 ```
 "evaluate": [
     "item.namespace == child[0].namespace",
     "child[0].collection in item.collections"
-]
+    "$item.response.numFound == $item.facet_counts.facet_fields.collection[1]"
 ```
 ```
 "evaluate": ["{{ page | lower == page }}"]
