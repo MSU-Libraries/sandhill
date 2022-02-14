@@ -1,6 +1,7 @@
 [run]
 omit = */test_*
-        sandhill/utils/setup.py
+        sandhill/bootstrap/__init__.py
+        sandhill/bootstrap/debugtoolbar.py
 source = sandhill/*
 
 [report]

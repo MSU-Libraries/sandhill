@@ -1,5 +1,5 @@
 '''
-Processor for generic functions
+Processor for string functions
 '''
 import json
 from requests import Response as RequestsResponse

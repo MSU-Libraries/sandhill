@@ -10,7 +10,6 @@ import secrets
 from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
-from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import ChoiceLoader, FileSystemLoader, select_autoescape
 from sandhill import app
 from sandhill.utils.generic import getconfig, getmodulepath
@@ -83,11 +82,6 @@ app.config["SECRET_KEY"] = getconfig("SECRET_KEY", SECRET_KEY)
 
 # Set debug mode
 app.debug = bool(int(getconfig("DEBUG", "0")))
-
-# Add debug toolbar if debug mode is on and not running code via pytest
-if app.debug and "pytest" not in sys.modules:
-    toolbar = DebugToolbarExtension(app)
-    toolbar._success_codes.extend([400, 401, 403, 404, 500, 501]) # pylint: disable=protected-access
 
 # Configure logging
 configure_logging()
