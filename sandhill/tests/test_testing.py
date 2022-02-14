@@ -148,72 +148,80 @@ def test_configs_loadable():
         if len(loaded):
             assert isinstance(loaded[0], collections.OrderedDict)
 
+def pre_test_check(entry):
+    """
+    Code to run just before a test entry is begun
+    """
+    app.logger.info(f"Testing context: {dict(entry)}")
+    # Check for mistakes or typo
+    for test in entry.keys():
+        assert test in [
+            '_comment', '_extra_keys', 'page', 'code', 'contains',
+            'excludes', 'matches', 'evaluate', 'md5', 'data', 'a11y'
+        ] + (entry['_extra_keys'] if '_extra_keys' in entry else [])
+
 @pytest.mark.functional
-@pytest.mark.metadata
 @pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 @pytest.mark.parametrize("entry", test_entries)
-def test_entry_call(entry, pytestconfig):
+def test_entry_functional(entry):
     """
-    Run a single test entry
+    Run a single functional test entry
     args:
         entry (dict):
     """
-    mark = pytestconfig.getoption('-m')
-    mark_functional = (mark == "functional")
-    mark_metadata = (mark == "metadata")
-
     with app.test_client() as client:
-        app.logger.info(f"Testing context: {dict(entry)}")
-        # Check for mistakes or typo
-        test_keys = entry.keys()
-        for test in test_keys:
-            assert test in [
-                '_comment', '_extra_keys', 'page', 'code', 'contains',
-                'excludes', 'matches', 'evaluate', 'md5', 'data', 'a11y'
-            ] + (entry['_extra_keys'] if '_extra_keys' in entry else [])
+        pre_test_check(entry)
+        if 'page' not in entry:
+            pytest.skip("Not a valid functional test (no 'page')")
 
-        if mark_functional:
-            if 'page' not in entry:
-                pytest.skip("Not a valid functional test (no 'page')")
+        resp = client.get(entry['page'])
+        assert resp.status_code == entry['code']
 
-            resp = client.get(entry['page'])
-            assert resp.status_code == entry['code']
+        # Validate expected strings appear in response
+        if 'contains' in entry:
+            for needle in entry['contains']:
+                assert needle in resp.data.decode("utf-8")
 
-            # Validate expected strings appear in response
-            if 'contains' in entry:
-                for needle in entry['contains']:
-                    assert needle in resp.data.decode("utf-8")
+        # Validate expected strings do not appear in response
+        if 'excludes' in entry:
+            for needle in entry['excludes']:
+                assert needle not in resp.data.decode("utf-8")
 
-            # Validate expected strings do not appear in response
-            if 'excludes' in entry:
-                for needle in entry['excludes']:
-                    assert needle not in resp.data.decode("utf-8")
+        # Validate matches against a regex string in the response
+        if 'matches' in entry:
+            for needle in entry['matches']:
+                assert re.search(needle, resp.data.decode("utf-8"))
 
-            # Validate matches against a regex string in the response
-            if 'matches' in entry:
-                for needle in entry['matches']:
-                    assert re.search(needle, resp.data.decode("utf-8"))
+        # Validate response content matches given md5
+        if 'md5' in entry:
+            hasher = hashlib.md5()
+            hasher.update(resp.data)
+            assert entry['md5'] == hasher.hexdigest()
 
-            # Validate response content matches given md5
-            if 'md5' in entry:
-                hasher = hashlib.md5()
-                hasher.update(resp.data)
-                assert entry['md5'] == hasher.hexdigest()
+@pytest.mark.metadata
+@pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
+@pytest.mark.parametrize("entry", test_entries)
+def test_entry_metadata(entry):
+    """
+    Run a single metadata test entry
+    args:
+        entry (dict):
+    """
+    with app.test_client() as client:
+        pre_test_check(entry)
+        if 'evaluate' not in entry:
+            pytest.skip("Not a valid metadata test (no 'evaluate')")
 
-        if mark_metadata:
-            if 'evaluate' not in entry:
-                pytest.skip("Not a valid metadata test (no 'evaluate')")
-
-            # Validate Jinja evaluations
-            if 'evaluate' in entry:
-                for check in entry['evaluate']:
-                    check = check.strip()
-                    # Pre-parse JSONPath references
-                    check = jsonpath.eval_within(check, entry)
-                    # Auto-add Jinja brackets if none are present
-                    if check == check.strip('{}'):
-                        check = f"{{{{ {check.strip('{}')} }}}}"
-                    assert literal_eval(render_template_string(check, entry))
+        # Validate Jinja evaluations
+        if 'evaluate' in entry:
+            for check in entry['evaluate']:
+                check = check.strip()
+                # Pre-parse JSONPath references
+                check = jsonpath.eval_within(check, entry)
+                # Auto-add Jinja brackets if none are present
+                if check == check.strip('{}'):
+                    check = f"{{{{ {check.strip('{}')} }}}}"
+                assert literal_eval(render_template_string(check, entry))
 
 @pytest.fixture(scope="session", autouse=True)
 def axe_driver():
@@ -232,8 +240,7 @@ def test_entry_a11y(entry, axe_driver):
         entry (dict):
     """
     with app.test_client() as client:
-        app.logger.info(f"Accessibility page test context: {dict(entry)}")
-        # Validate page passes accessibility checks
+        pre_test_check(entry)
         if 'a11y' not in entry:
             pytest.skip("Not a valid accessibility test (no 'a11y')")
 
