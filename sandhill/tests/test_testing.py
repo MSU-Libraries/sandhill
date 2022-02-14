@@ -53,6 +53,7 @@ def jsonpath_from_rendered_url(struct, context):
     except (RequestException, json.JSONDecodeError) as exc:
         app.logger.error(f"Failure to retrieve JSON from URL: {struct['url']}")
         raise exc
+    struct['path'] = struct['path'] if 'path' in struct else None
     return jsonpath.find(json_resp, struct['path'])
 
 def prepare_test_entry(entry):
@@ -207,6 +208,8 @@ def test_entry_call(entry, pytestconfig):
             if 'evaluate' in entry:
                 for check in entry['evaluate']:
                     check = check.strip()
+                    # Pre-parse JSONPath references
+                    check = jsonpath.eval_within(check, entry)
                     # Auto-add Jinja brackets if none are present
                     if check == check.strip('{}'):
                         check = f"{{{{ {check.strip('{}')} }}}}"
