@@ -17,6 +17,8 @@ def test_find():
             },
         ]
     }
+    matches = jsonpath.find(data)
+    assert matches == data
     matches = jsonpath.find(data, "$.key2")
     assert matches == ["value2"]
     matches = jsonpath.find(data, "$.key3[*].subk2")
@@ -111,3 +113,38 @@ def test_delete():
     assert "key1" not in data
     with pytest.raises(ValueError):
         jsonpath.delete(data, "$.key2[*]")
+
+def test_eval_within():
+    ctx1 = {
+        'item': { 'key1': 'val1' },
+        'parent': { 'key2': 'val2' },
+        'thing1': { 'key3': { 'a b': 'val3' } },
+        'thing2': { 'key4': { 'key_5': 4 } },
+        'thing3': { 'key6': [1, "two", 3.0] },
+        'thing4': { 'key7': [2, 3, 4] }
+    }
+    string0 = "nothing_to == eval_here"
+    assert jsonpath.eval_within(string0, ctx1) == "nothing_to == eval_here"
+
+    string1 = "$.key1 == 'val1'"
+    assert jsonpath.eval_within(string1, ctx1) == '"val1" == \'val1\''
+
+    string2 = "$parent.key2 == \"val2\""
+    assert jsonpath.eval_within(string2, ctx1) == '"val2" == "val2"'
+
+    string3 = "$thing1.key3['a b'] == \"val3\""
+    assert jsonpath.eval_within(string3, ctx1) == '"val3" == "val3"'
+
+    string4 = "$thing2.key4.key_5 == 4"
+    assert jsonpath.eval_within(string4, ctx1) == '4 == 4'
+
+    string5 = "$thing3.key6 == [1, \"two\", 3.0]"
+    assert jsonpath.eval_within(string5, ctx1) == '[1, \'two\', 3.0] == [1, "two", 3.0]'
+
+    string6 = "$thing2.key4.key_5 == $thing4.key7[2]"
+    assert jsonpath.eval_within(string6, ctx1) == '4 == 4'
+    # No context given => nulop
+    assert jsonpath.eval_within(string6, {}) == "$thing2.key4.key_5 == $thing4.key7[2]"
+
+    string8 = "$thing1.wont.find.this == $missing.location[0]"
+    assert jsonpath.eval_within(string8, ctx1) == "[] == []"

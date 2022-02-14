@@ -2,10 +2,13 @@
 JSONPath wrapper functions
 """
 import copy
+import re
+import json
 from jsonpath_ng import parse
 from jsonpath_ng.jsonpath import Fields, Index
+from sandhill import app
 
-def find(data, path, deepcopy=True):
+def find(data, path=None, deepcopy=True):
     '''
     Get the values for a given JSONPath
     args:
@@ -16,6 +19,8 @@ def find(data, path, deepcopy=True):
     '''
     if deepcopy:
         data = copy.deepcopy(data)
+    if path is None:
+        return data
     pattern = parse(path)
     matches = pattern.find(data)
     return [match.value for match in matches]
@@ -99,3 +104,50 @@ def delete(data, path, deepcopy=True):
         parse(str(match.full_path)).update(data, new_value)
 
     return data
+
+def eval_within(string: str, context: dict):
+    """
+    Given a string containing JSONPath queries, replace the queries with
+    the values they found.
+    JSONPath queries will query within the context. Example:
+        No given context: "$.elem1.elem2" would query the first item in the context dictionary
+        Specified conext: "$parent.elem3" would query the the "parent" key in the context dictionary
+    args:
+        string: The string to search within for JSONPath queries
+        context: A dictionary of contexts upon which a JSONPath could query.  Example:
+            {  'item': {
+                    'elem1': { 'elem2': 'value1' } }
+                'parent': {
+                    'elem3': 'value2' }
+            }
+    """
+    if not isinstance(context, dict) or len(context) == 0:
+        app.logger.debug("jsonpath.eval_within given invalid/empty context. Skipping.")
+        return string
+
+    space_esc = '&&&SPACE&&&'
+    # find matching square brackets and replace spaces with placeholder
+    brackets = re.findall(r'(\[.+?\])', string)
+    for before, after in zip(brackets, [bkt.replace(' ', space_esc) for bkt in brackets]):
+        string = string.replace(before, after, 1)
+
+    parts = re.split(r'\s', string)
+
+    # for vals starting with  $, JSONPath find and replace value with str() of result
+    jsonpath_pat = re.compile(r'^\$([a-zA-Z0-9_]+)?\.([^ ]+)$')
+    context_keys = list(context.keys())
+    for idx, part in enumerate(parts):
+        if (match := jsonpath_pat.match(part)):
+            ctx_key = match.group(1)
+            if not ctx_key:
+                ctx_key = context_keys[0]
+            path = f"$.{match.group(2)}".replace(space_esc, " ")
+            result = find(context[ctx_key], path) if ctx_key in context else []
+            # If only one results, then remove it from list
+            result = result[0] if len(result) == 1 else result
+            result = json.dumps(result) if isinstance(result, str) else result
+            parts[idx] = result
+        else:
+            parts[idx] = part.replace(space_esc, " ")
+
+    return " ".join([str(part) for part in parts])
