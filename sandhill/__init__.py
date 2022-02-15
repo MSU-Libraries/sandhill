@@ -12,5 +12,5 @@ app = Flask(__name__,
 app.install_dir = install_dir
 # Local imports requiring the Flask app
 from sandhill.utils.error_handling import catch # pylint: disable=wrong-import-position
-from sandhill.utils import setup # pylint: disable=wrong-import-position
+import sandhill.bootstrap # pylint: disable=wrong-import-position
 from sandhill.routes import main, static, error # pylint: disable=wrong-import-position

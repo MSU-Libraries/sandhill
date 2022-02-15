@@ -11,7 +11,7 @@ sys.path.insert(0, cur_path)
 load_dotenv('/etc/environment')
 load_dotenv()
 if "INSTANCE_DIR" not in os.environ or not os.environ["INSTANCE_DIR"]:
-    os.environ["INSTANCE_DIR"] = os.path.join(cur_path, "sandhill/test_instance")
+    os.environ["INSTANCE_DIR"] = os.path.join(cur_path, "tests/instance")
 
 def pytest_configure(config):
     from sandhill import app

@@ -1,13 +1,29 @@
 '''
 Entry point for the web application
 '''
-from flask import request, abort, jsonify, Response as FlaskResponse
+from flask import request, abort, json, jsonify, Response as FlaskResponse
 from werkzeug.wrappers.response import Response as WerkzeugReponse
-from sandhill.utils.decorators import add_routes
-from sandhill.utils.config_loader import load_route_config
+from sandhill.utils.config_loader import load_route_config, get_all_routes
 from sandhill.processors.base import load_route_data
 from sandhill import app
 
+def add_routes():
+    """
+    Decorator function for adding routes based on all
+    json route configs in instance folder
+    """
+    app.logger.info("Running add_routes")
+    def decorator(func, **options):
+        all_routes = get_all_routes()
+        app.logger.info(f"Loading routes: {', '.join(all_routes)}")
+        for rule in all_routes:
+            endpoint = options.pop('endpoint', None)
+            app.logger.info(
+                f"Adding URL rule: {rule}, {endpoint}, {func} {json.dumps(options)}"
+            )
+            app.add_url_rule(rule, endpoint, func, **options)
+        return func
+    return decorator
 
 @add_routes()
 def main(*args, **kwargs): # pylint: disable=unused-argument
