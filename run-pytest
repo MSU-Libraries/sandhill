@@ -89,7 +89,7 @@ elif [[ $TEST_TYPE == "a11y" ]]; then
     # Stop headless server
     kill $PID
 elif [[ $TEST_TYPE == "unit" ]]; then
-    export INSTANCE_DIR=$CUR_DIR/sandhill/test_instance
+    export INSTANCE_DIR=$CUR_DIR/tests/instance
     pytest
     PYTEST_EXIT_CODE=$?
 else

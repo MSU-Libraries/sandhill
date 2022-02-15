@@ -117,7 +117,7 @@ def getmodulepath(path):
     """
     Get the Python module path for a directory or file in Sandhill
     returns:
-        (str): module (e.g. 'instance' or 'sandhill.test_instance.filters')
+        (str): module (e.g. 'instance' or 'sandhill.filters.filters')
     """
     install_path = os.path.dirname(app.root_path)
     subpath = re.sub('^' + re.escape(install_path), '', path)

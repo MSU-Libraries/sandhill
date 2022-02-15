@@ -6,7 +6,7 @@ from werkzeug.exceptions import HTTPException
 from sandhill.processors import base
 from sandhill import app
 from sandhill.utils.context import list_custom_context_processors
-from sandhill.bootstrap import requests
+from sandhill.bootstrap import request as bootstrap_request
 
 def test_load_route_data():
     route_data = [

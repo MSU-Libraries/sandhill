@@ -113,7 +113,7 @@ def test_getmodulepath():
     install_path = os.path.dirname(app.root_path)
     assert generic.getmodulepath(install_path + '/sandhill/') == 'sandhill'
     assert generic.getmodulepath(install_path + '/instance/') == 'instance'
-    assert generic.getmodulepath(install_path + '/sandhill/test_instance/') == 'sandhill.test_instance'
+    assert generic.getmodulepath(install_path + '/tests/instance/') == 'tests.instance'
     assert generic.getmodulepath(install_path + '/sandhill/utils/filters') == 'sandhill.utils.filters'
     assert generic.getmodulepath(install_path + '/sandhill/utils/filters.py') == 'sandhill.utils.filters'
     assert generic.getmodulepath(install_path + '/invalid/subpath') == 'invalid.subpath'

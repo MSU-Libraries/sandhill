@@ -2,7 +2,8 @@ import os
 import re
 import pytest
 from sandhill import app
-from sandhill.utils import filters, generic
+from sandhill import filters
+from sandhill.utils import generic
 from jinja2.runtime import new_context
 from jinja2 import TemplateError
 from pytest import raises

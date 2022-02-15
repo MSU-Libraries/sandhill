@@ -1,11 +1,11 @@
 '''
-Test the generic processor
+Test the string processor
 '''
 import io
 from flask import Response as FlaskResponse
 from requests.models import Response as RequestsResponse
 from pytest import raises
-from sandhill.processors import generic
+from sandhill.processors import string
 
 def test_replace():
     '''
@@ -23,7 +23,7 @@ def test_replace():
         "new": '"two.zero"'
     }
 
-    new_data = generic.replace(data_dict)
+    new_data = string.replace(data_dict)
     assert isinstance(new_data, list)
     assert new_data == [{ "key1": 1 }, { "key2": "two.zero" }]
 
@@ -39,7 +39,7 @@ def test_replace():
         "new": '"test3": "three"'
     }
 
-    new_resp = generic.replace(data_dict)
+    new_resp = string.replace(data_dict)
     assert isinstance(new_resp, RequestsResponse)
     assert new_resp.content == b'{"test1": "value_one", "test3": "three"}'
 
@@ -55,6 +55,6 @@ def test_replace():
         "new": '"test3": "three"'
     }
 
-    new_resp = generic.replace(data_dict)
+    new_resp = string.replace(data_dict)
     assert isinstance(new_resp, RequestsResponse)
     assert new_resp.content == b'404 Not Found'
