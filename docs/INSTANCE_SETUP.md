@@ -148,6 +148,11 @@ _processors_ will be passed to this template. The result of this template will b
 to the user. Jinja is a very powerful templating engine; for more info see the official
 [Jinja2 documentation](https://jinja.palletsprojects.com/en/2.11.x/).   
 
+`variables` (optional)  
+_Type_: dict  
+_Desc_: User defined variables that are not validated in the JSON schema. May be used for custom
+instance functionality.
+
 `response` (optional)  
 _Type_: string  
 _Desc_: Specify the name of one data _processor_ to return directly, if the _processor_ allows it.
@@ -255,3 +260,4 @@ available variables.
 
 You can see the [default included template](sandhill/templates/home.html.j2) to start with, but see
 [Jinja2 documentation](https://jinja.palletsprojects.com/en/2.11.x/) for the full range of options.
+
