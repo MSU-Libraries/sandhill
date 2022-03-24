@@ -1,7 +1,6 @@
 '''
 API utility functions using the requests module
 '''
-import json
 import validators
 import requests
 from flask import abort
@@ -17,8 +16,9 @@ def api_get(**kwargs):
     raises:
         RequestException (exception): Raised if the get function cannot return a response.
     """
-    app.logger.debug(f"API GET call: {json.dumps(kwargs)}")
+    app.logger.debug(f"API GET arguments: {kwargs}")
     response = requests.get(**kwargs)
+    app.logger.debug(f"API GET called: {response.url}")
     if not response.ok:
         app.logger.warning(
             f"API GET call returned {response.status_code}: {response.text}"
