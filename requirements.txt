@@ -22,6 +22,8 @@ execnet==1.9.0
 filelock==3.4.2
 Flask==2.0.2
 Flask-DebugToolbar @ git+https://github.com/MSU-Libraries/flask-debugtoolbar.git@f51c964c93a1f426c5f4678f186f40094b59036e
+ghp-import==2.0.2
+griffe==0.14.0
 h11==0.13.0
 html5lib==1.1
 identify==2.4.7
@@ -39,8 +41,17 @@ jsonschema==4.4.0
 lazy-object-proxy==1.7.1
 lockfile==0.12.2
 lxml==4.7.1
+Markdown==3.3.6
 MarkupSafe==2.0.1
 mccabe==0.6.1
+mergedeep==1.3.4
+mkdocs==1.3.0
+mkdocs-autorefs==0.4.1
+mkdocs-material==8.2.8
+mkdocs-material-extensions==1.0.3
+mkdocstrings==0.18.1
+mkdocstrings-python==0.6.6
+mkdocstrings-python-legacy==0.2.2
 more-itertools==8.12.0
 msgpack==1.0.3
 nodeenv==1.6.0
@@ -55,7 +66,9 @@ pre-commit==2.17.0
 progress==1.6
 py==1.11.0
 pycparser==2.21
+Pygments==2.11.2
 pylint==2.12.2
+pymdown-extensions==9.3
 pyOpenSSL==22.0.0
 pyparsing==3.0.7
 pyrsistent==0.18.1
@@ -63,10 +76,13 @@ pytest==6.2.5
 pytest-cov==3.0.0
 pytest-forked==1.4.0
 pytest-mock==3.7.0
-pytest-xdist==2.5.0
+pytest-xdist==2.3.0
+python-dateutil==2.8.2
 python-dotenv==0.19.2
+pytkdocs==0.16.1
 pytoml==0.1.21
 PyYAML==6.0
+pyyaml_env_tag==0.1
 requests==2.27.1
 retrying==1.3.3
 selenium==4.1.0
@@ -84,6 +100,7 @@ uWSGI==2.0.20
 validator-collection==1.5.0
 validators==0.18.2
 virtualenv==20.13.0
+watchdog==2.1.7
 webencodings==0.5.1
 Werkzeug==2.0.2
 wrapt==1.13.3
