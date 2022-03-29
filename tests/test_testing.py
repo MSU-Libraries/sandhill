@@ -56,6 +56,32 @@ def jsonpath_from_rendered_url(struct, context):
     struct['path'] = struct['path'] if 'path' in struct else None
     return jsonpath.find(json_resp, struct['path'])
 
+def parse_loop_key(data):
+    """
+    Given a test data dict, find the loop key if set, and whether
+    the loop is allowed to be empty.
+    Examples:
+        # Simple key with default allow_empty = False
+        "loop": "parent"
+        # Complex format, allowing additional params
+        "loop": {
+            "over": "parent",
+            "allow_empty": True
+        }
+    Returns:
+        A tuple of (key, allowed_empty); default of (None, False)
+    """
+    loop_key = None
+    allow_empty = False
+    if "loop" in data:
+        loop = data["loop"]
+        if isinstance(loop, str):
+            loop_key = data["loop"]
+        if isinstance(loop, dict):
+            loop_key = loop["over"]
+            allow_empty = loop["allow_empty"] if "allow_empty" in loop else False
+    return loop_key, allow_empty
+
 def prepare_test_entry(entry):
     """
     Load and entry for testing and queue up the resulting
@@ -63,7 +89,7 @@ def prepare_test_entry(entry):
     """
     tests = []
     data = entry['data'] if 'data' in entry else {}
-    loop = data['loop'] if 'loop' in data else None
+    loop_key, allow_empty = parse_loop_key(data)
     # Temporarily remove 'evaluate' while we prepare entry (to prevent early Jinja evaluation)
     evaluates = None
     if 'evaluate' in entry:
@@ -71,20 +97,21 @@ def prepare_test_entry(entry):
         del entry['evaluate']
 
     # For each entry in the loop we'll perform a entry test; or loop of None if no loop defined
-    loop_recs = jsonpath_from_rendered_url(data[loop], copy.deepcopy(entry)) if loop else [None]
+    loop_recs = jsonpath_from_rendered_url(data[loop_key], copy.deepcopy(entry)) if loop_key else [None]
     # Ensure our query found a list and it's not empty
-    assert loop_recs
     assert isinstance(loop_recs, list)
+    if not allow_empty:
+        assert loop_recs
     for rec in loop_recs:
         # First we'll need to create a copy of the entry
         loop_entry = copy.deepcopy(entry)
         # Update our loop key to be the entry from the results of our loop query
         if rec:
-            loop_entry[loop] = rec
+            loop_entry[loop_key] = rec
 
         # For any remaining keys in 'data', render Jinja and grab the URL/JSONPath results
         for key in (loop_entry['data'] if 'data' in loop_entry else {}):
-            if key in ['loop', loop]:
+            if key in ['loop', loop_key]:
                 continue
             loop_entry[key] = jsonpath_from_rendered_url(
                 loop_entry['data'][key],
