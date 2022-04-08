@@ -15,9 +15,24 @@ def test_load_json():
     assert isinstance(file_data, OrderedDict)
     assert file_data
 
+    data_dict = {
+        'path': 'config/routes/search.json'
+    }
+    file_data = file.load_json(data_dict)
+    assert isinstance(file_data, OrderedDict)
+    assert file_data
+
     # Test loading file where the first file isn't there
     data_dict = {
         'paths': [ 'invalid/test.json', 'config/routes/search.json' ]
+    }
+    file_data = file.load_json(data_dict)
+    assert isinstance(file_data, OrderedDict)
+    assert file_data
+
+    data_dict = {
+        'path': 'invalid/test.json',
+        'paths': [ 'config/routes/search.json' ]
     }
     file_data = file.load_json(data_dict)
     assert isinstance(file_data, OrderedDict)
@@ -28,8 +43,7 @@ def test_load_json():
         'paths': [ 'invalid/test.json' ]
     }
     file_data = file.load_json(data_dict)
-    assert isinstance(file_data, OrderedDict)
-    assert not file_data
+    assert file_data is None
 
 def test_create_json_response():
     # Test loading a json
