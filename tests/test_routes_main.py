@@ -7,14 +7,25 @@ def test_main():
     '''
     Tests the main function
     '''
+    app.debug = True
     with app.test_client() as client:
         # test loading a page that has no data to load
         result = client.get('/')
         assert result.status_code == 200
 
+        # with debug mode enabled, caching should also be set to disabled
+        assert result.headers.get('Expires') == "0"
+        assert result.headers.get('Pragma') == "no-cache"
+
+    app.debug = False
+    with app.test_client() as client:
         # test loading a page that does have data to load
         result = client.get('/about')
         assert result.status_code == 200
+
+        # with debug mode disabled, cache preventing headers should not be set
+        assert not result.headers.get('Expires')
+        assert not result.headers.get('Pragma')
 
         # test streaming a page
         result = client.get('/stream')

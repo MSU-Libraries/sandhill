@@ -21,9 +21,7 @@ distro==1.6.0
 execnet==1.9.0
 filelock==3.4.2
 Flask==2.0.2
-Flask-DebugToolbar @ git+https://github.com/MSU-Libraries/flask-debugtoolbar.git@f51c964c93a1f426c5f4678f186f40094b59036e
-ghp-import==2.0.2
-griffe==0.14.0
+Flask-DebugToolbar @ git+https://github.com/MSU-Libraries/flask-debugtoolbar.git@msul_master
 h11==0.13.0
 html5lib==1.1
 identify==2.4.7
