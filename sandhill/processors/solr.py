@@ -1,6 +1,7 @@
-'''
-Processor for Solr requests
-'''
+"""
+Wrappers for making API calls to a Solr node.
+"""
+from collections.abc import Sequence
 from urllib.parse import urlencode
 from json.decoder import JSONDecodeError
 from requests.exceptions import RequestException
@@ -16,15 +17,26 @@ from sandhill.utils.error_handling import dp_abort
 @catch(JSONDecodeError, "Call returned from Solr that was not JSON.", abort=503)
 @catch(KeyError, "Missing url component: {exc}", abort=400) # Missing 'params' key
 def select(data, url=None, api_get_function=api_get):
-    '''
-    Performs a Solr select call
-    args:
-        data(dict): route_config data and other data loaded in context
-        url(str): Override the default solr URL stored in SOLR_URL of the app config
-        api_get_function(function): function to use to call Solr with
-    returns:
-        json: response from solr
-    '''
+    """
+    Perform a Solr select call and return the loaded JSON response.
+    ```
+    "name": "mysearch",
+    "processor": "solr.search",
+    "params": { "q": "*", "rows":"20" }
+    ```
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+          * `params` _dict_: Query arguments to pass to Solr.\n
+          * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
+            the response JSON.\n
+        url (str): Overrides the default SOLR_URL normally retrieved from \
+          the [Sandhill config](#TODO) file.\n
+        api_get_function (function): Function used to call Solr with. Used in unit tests.\n
+    Returns:
+        The loaded JSON data or None if nothing matched.
+    Raises:
+        wergzeug.exceptions.HTTPException: If `on_fail` is set.
+    """
 
     response = None
     url = establish_url(url, getconfig('SOLR_URL', None))
@@ -51,32 +63,50 @@ def select(data, url=None, api_get_function=api_get):
 
     return response_json
 
+
 def select_record(data, url=None, api_get_function=api_get):
-    '''
-    Select a single record from solr, specifically the first one
-    args:
-        data(dict): route_config data and other data loaded in context
-        url(str): Override the default solr URL stored in SOLR_URL of the app config
-        api_get_function(function): function to use to call Solr with
-    returns:
-        json: response from solr giving the first record in the response
-    '''
+    """
+    Perform a Solr select call and return the first result from the response.
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+          * `params` _dict_: Query arguments to pass to Solr.\n
+          * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
+            the response JSON. Default: `response.docs`\n
+        url (str): Overrides the default SOLR_URL normally retrieved from the \
+          [Sandhill config](#TODO) file.\n
+        api_get_function (function): Function used to call Solr with. Used in unit tests.\n
+    Returns:
+        The first item matched by `record_keys` in the JSON response, otherwise None.
+    Raises:
+        wergzeug.exceptions.HTTPException: If `on_fail` is set.
+    """
     data['record_keys'] = ifnone(data, 'record_keys', 'response.docs')
     records = select(data, url, api_get_function)
 
-    if records:
+    if records and isinstance(records, Sequence):
         return records[0]
     return None
 
+
 def search(data, url=None, api_get_function=api_get):
     """
-    Searches solr and gets the results
-    args:
-        data (dict) :  route config settings for searching
-    returns:
-        Response (from flask): If result_format is 'test/json'
-        dict: All other cases
+    Perform a [configured Solr search](#TODO) and return the result.
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+          * `path` _string_, `paths` _list_: The path to a search config file. Loaded \
+            per [file.load_json](#TODO).\n
+          * `params` _dict_: Query arguments to pass to Solr.\n
+          * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
+            the response JSON. Default: `response.docs`\n
+        url (str): Overrides the default SOLR_URL normally retrieved from \
+          the [Sandhill config](#TODO) file.\n
+        api_get_function (function): Function used to call Solr with. Used in unit tests.\n
+    Returns:
+        A dict of the loaded JSON response, or a `flask.Response` instance \
+        if `view_args.format` is `text/json`.
     """
+    # TODO module should return None and call dp_abort instead of abort
+    # TODO allow "path"
     if 'paths' not in data or not data['paths']:
         app.logger.error(
             f"Missing 'config' setting for processor "

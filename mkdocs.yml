@@ -1,0 +1,15 @@
+site_name: Sandhill
+
+theme:
+  name: "material"
+
+plugins:
+- search:
+- mkdocstrings:
+    handlers:
+      python:
+        selection:
+          docstring_style: google
+        rendering:
+          line_length: 100
+          show_signature_annotations: true
