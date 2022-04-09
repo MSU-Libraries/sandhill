@@ -3,6 +3,9 @@ site_name: Sandhill
 theme:
   name: "material"
 
+markdown_extensions:
+- admonition
+
 plugins:
 - search:
 - mkdocstrings:
@@ -11,5 +14,7 @@ plugins:
         selection:
           docstring_style: google
         rendering:
+          show_root_heading: true
+          heading_level: 3
           line_length: 100
           show_signature_annotations: true

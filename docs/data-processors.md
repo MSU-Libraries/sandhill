@@ -47,12 +47,8 @@ If the value is not truthy, then the given data processor will be skipped.
 
 
 ::: sandhill.processors.file
-    rendering:
-      show_root_heading: true
 
 ::: sandhill.processors.solr
-    rendering:
-      show_root_heading: true
 
 ## Developing a Data Processor
 TODO

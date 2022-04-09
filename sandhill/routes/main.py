@@ -1,5 +1,5 @@
 '''
-Entry point for the web application
+The main route provides the entry point for Sandhill, loading and adding routes.
 '''
 from flask import request, abort, json, jsonify, Response as FlaskResponse
 from werkzeug.wrappers.response import Response as WerkzeugReponse
@@ -9,8 +9,8 @@ from sandhill import app
 
 def add_routes():
     """
-    Decorator function for adding routes based on all
-    json route configs in instance folder
+    Decorator function that adds all routes to the Flask app based
+    on JSON route configs loaded from `instance/configs/routes/`.
     """
     app.logger.info("Running add_routes")
     def decorator(func, **options):
@@ -27,18 +27,18 @@ def add_routes():
 
 @add_routes()
 def main(*args, **kwargs): # pylint: disable=unused-argument
-    '''
-    Entry point for the whole application, handling all routes and determining
-    if it should render a template or stream a result.
+    """
+    Entry point for the whole Sandhill application, handling all routes and
+    determining if a route has output to respond with after all processing
+    is completed.
     Based on the route_config that the path matches to, it will load all the
     required data processors before rendering the result.
-
-    args/kwargs: all of the variables defined in the route configs
-        ex: "/<string:namespace>/<int:id>" would have namespace and id passed in kwargs
-
-    returns:
-        Nothing, template is rendered or result is streamed
-    '''
+    Args:
+        *args: Unused
+        **kwargs: Unused
+    Returns:
+        A valid response for Flask to render out, or raises HTTP 500
+    """
     route_used = request.url_rule.rule
     ## loop over all the configs in the instance dir looking at the "route"
     ## field to determine which configs to use
