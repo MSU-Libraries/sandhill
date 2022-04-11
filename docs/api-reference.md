@@ -14,3 +14,12 @@ the curious.
 ::: sandhill.routes.error
 
 ::: sandhill.routes.main
+
+## Data Processors
+Sandhill routes are composed of a list of **data processors**. These are single
+actions that Sandhill may take while processing a request. See the
+[data processor](/data-processors) documentation for more details.
+
+::: sandhill.processors.file
+
+::: sandhill.processors.solr

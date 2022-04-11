@@ -14,13 +14,13 @@ to render the appropriate page based on the defined route.
 
 ## Defining a Route
 Routes are defined as JSON files inside your instance directory (see the [guide on
-setting up your Sandhill instance](#TODO)). Specifically, route files should
+setting up your Sandhill instance](/instance-setup)). Specifically, route files should
 be placed in `instance/config/routes/`. Sandhill will automatically load all `.json`
 files placed here when it starts.
 
 ### A Simple Example
 A simple example route file might look like this:
-```json
+```json title="instance/config/routes/simple.json"
 {
     "route": [
         "/collections/",
@@ -69,7 +69,7 @@ already loaded data to prepare it for output to the user.
 
 Sandhill comes with a number of [builtin data processors](data-processors.md)
 that can be used immediately, though with some knowledge of Python programming
-[you can also define your own data processors](#TODO).
+[you can also define your own data processors](/data-processors/#developing-a-data-processor).
 
 
 ### Example with a Data Processor
@@ -119,7 +119,7 @@ from an environment variable, both named `SOLR_URL`. More details on the
 `solr` data processor is available in the
 [data processor documentation](/data-processors/#sandhill.processors.solr)
 and details on how to configure Sandhill is available in the
-[setup documentation](#TODO).
+[instance setup documentation](/instance-setup).
 
 ## Jinja Templating
 Regarding the HTML template, Sandhill makes full use of the [Jinja2 templating
@@ -167,48 +167,90 @@ Each data processor is able to make use of data created by the processors define
     If your route is failing to load, be sure to check the Sandhill logs.
 
 ## Advanced Examples
-- Provide at least 2 more advanced route examples with explainations
-- Use of `when`
-- Example showing that `template` is just a shortcut for adding an ending `template` data processor
+
+### Example with Conditional and Implied Template
+
+Here is a more advanced route example that shows how you can use the 
+`variables` and `when` attributes. 
+
+```json hl_lines="5-7 13"
+{
+    "route": [
+        "/item/<int:id>"
+    ],
+    "variables": {
+        "extra": "{{ view_args.id + 1 }}/edit"
+    },
+    "data": [
+        {
+            "name": "render-id1",
+            "processor": "template.render",
+            "file": "item1.html.j2",
+            "when": "{{ view_args.id == 1 }}"
+        },
+        {
+            "name": "render",
+            "processor": "template.render",
+            "file": "item.html.j2"
+        }
+    ]
+}
+```
+In this example, notice that there is no `template` attribute provided.
+That is because if and data processor returns a
+[FlaskResponse](https://flask.palletsprojects.com/en/latest/api/#flask.Response)
+or
+[WerkzeugReponse](https://werkzeug.palletsprojects.com/en/latest/wrappers/#werkzeug.wrappers.Response), Sandhill will stop processing and return that response. 
+
+The `when` condition in the example is showing how you can conditionally have
+a data processor excluded from running when a page is loaded, in this case, based
+on one of the route url variables (`view_args.id`).
+
+The use of the `variables` dictionary is to indicate how you could send additional
+data to your template. In this example, the variable `extra` could be used on the
+template and would have a value of `2/edit` if the loaded route was `item/1` (i.e.
+if `view_args.id` was `1`). 
+
+
+### Example with Error Handling
+
+This example shows how you can set the `on_fail` for any of the
+data processors so that if any of them fail it will abort with
+a particular status code. 
+
+```json hl_lines="11"
+{
+    "route": [
+        "/item/<int:id>"
+    ],
+    "template": "record.html.j2",
+    "data": [
+        {
+            "name": "record",
+            "processor": "solr.select_record",
+            "params": { "q": "ID:{{ view_args.id }}" },
+            "on_fail": 404
+        }
+    ]
+}
+```
+
+With the above configuration, if the call to Solr fails for any reason,
+a 404 error will be returned and the abort template will be displayed instead.
+When the `on_fail` is not set and a failure occurs in a data processor, those
+errors are simply recorded in the logs and the next processor is loaded.
+Setting this attribute allows more fine-grained control over what processors
+are critical to a page loading and what error is appropriate for those errors.
+
 
 ## Route Config Attributes
 This section contains a summary of the available attributes for route definitions for
 quick reference. But more details on any of these attributes are found above.
 
-* `route` (string, or list of strings): The URL pattern to match in order for
-this route to be selected. May be a single route or
-a list of multiple routes. If any of the routes at matched, this route config will be used to
-handle the request. Variables may be defined in the route using the `<type:varname>` syntax.
-See [Flask documentation on routes](https://flask.palletsprojects.com/en/1.1.x/quickstart/#routing)
-for more information. Variables defined in the route will be available for use by data _processors_
-and templates inside the variable name `view_args`, e.g. `view_args.varname`.  
-
-* `template` (string, optional: The name of the Jinja2 template file to attempt
-to render. The results of all defined data _processors_ will be passed to 
-this template. The result of this template will be rendered out
-to the user. Jinja is a very powerful templating engine; for more info see the official
-[Jinja2 documentation](https://jinja.palletsprojects.com/en/3.1.x/).   
-
-* `variables` (dict, optional): User defined variables that are not validated in the
-JSON schema. May be used for custom instance functionality.
-
-* `response` (string, optional): Specify the name of one data _processor_ to return
-directly, if the _processor_ allows it. This is for more advanced usage, for example 
-returning a JSON response directly.  
-
-* `data` ([list of JSON objects](#data-processor-config-attributes), optional): An ordered list
-of data _processors_, with each one being run in order. Each entry inside
-`data` may make reference to all previous entries, so one results is able to use the results of the
-last as part of its parameters. Processors may have custom parameters accepted, depending on the
-_processor_ called; see the documentation for each _processor_ for further details. Required
-arguments inside each entry are: `name` and `processor`.  
-
-## Data Processor Config Attributes  
-This section lists the available attributes that can be set for each `data` section
-defined in a route config.
-
-* `name` (string): The name of the variable in which to store the results of this data _processor_. This name will appear as a variable inside temapltes.  
-* `processor` (string): The filename and function to call as the data processor, e.g. `solr.select_record` would load the `solr.py` processor and call the `select_record` function.  
-* `on_fail` (int, optional): The HTTP status code number to abort the page render with, should the data _processor_ fail in any way.  
-* `stream` (string, optional): Used to identify what variable to stream (instead of rendering a template). The value in `steam` should match the `name` of another `data` element that comes before it.  
-* `?` (all other arguments): Dependent on the _processor_; refer to that specific _processor_ documentation for details.  
+| Name  | Type                       | Description |
+|-------|----------------------------|-------------|
+| `route` | string, or list of strings | The URL pattern to match in order for this route to be selected |
+| `template` | string, optional | The name of the Jinja2 template file to attempt to render |
+| `variables`| dict, optional | User defined variables that are not validated in the JSON schema. |
+| `response` | string, optional | Specify the name of one data processor to return directly, if the _processor_ allows it. |
+| `data` | list of JSON objects, optional | An ordered list of data processors, with each one being run in order |

@@ -37,8 +37,8 @@ environment values. You can either pass them directly to the docker command
 about the environment file. 
 
 There are some default environment variable settings in
-[sandhill/sandhill.default_settings.cfg](sandhill/sandhill.default_settings.cfg); using the same variable
-names in the environment file will allow you to override those. 
+[sandhill/sandhill.default_settings.cfg](https://github.com/MSU-Libraries/sandhill/blob/master/sandhill/sandhill.default_settings.cfg);
+using the same variable names in the environment file will allow you to override those. 
 
 #### Configuring email for Docker (optional):
 Sandhill has the ability to send emails based on a given error level.
