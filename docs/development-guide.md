@@ -1,15 +1,16 @@
 Development Guide
 ==================
 
-See the following important documents to get started:  
-* [Code Standards](docs/CODE_STANDARDS.md)
-* [Instance Setup](docs/INSTANCE_SETUP.md)
+See the following important documents to get started:
+
+* [Code Standards](/code-standards)
+* [Instance Setup](/instance-setup)
 
 Creating your first page
 ------------------------
 
 To get started building your own site using Sandhill, you will need to first
-[create you instance](docs/INSTANCE_SETUP.md). That `instance` directory will
+[create you instance](/instance-setup). That `instance` directory will
 be where you start your development.
 
 Once you have your base instance directory structure setup you are ready to start
@@ -79,5 +80,6 @@ env/bin/pytest -m functional
 Contributing
 -------------
 If you feel any of the utilities you've written in your `instance` would be useful
-for other users in the community, you have the option of [contributing back](CONTRIBUTING.md)
+for other users in the community, you have the option of
+[contributing back](https://github.com/MSU-Libraries/sandhill/blob/master/CONTRIBUTING.md)
 to Sandhill.

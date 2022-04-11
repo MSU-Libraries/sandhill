@@ -39,17 +39,17 @@ https://example.edu/browse/
 Would serve up the `collections.html` file from your instance templates directory.
 Per the standard setup, all HTML templates should be placed in `instance/templates/`.
 
-Routes definitions follow the [Flask routing](https://flask.palletsprojects.com/en/2.1.x/quickstart/#routing)
-mechanics. Flask is the framework which Sandhill underpins Sandhill.
+Route definitions follow the [Flask routing](https://flask.palletsprojects.com/en/2.1.x/quickstart/#routing)
+mechanics. Flask is the framework which underpins Sandhill.
 
 ### Variables in Route Path
-This support putting variables into the path such as
+This supports putting variables into the path such as
 `/collections/<int:collection_id>/` which can be referenced
-while the page is processing. In Sandhill, these path arguments are available
+while the page is processing. In Sandhill, these path arguments are made available
 by the `view_args` variable; in such that `view_args.collection_id` would be
 the value `42` if the path was `/collections/42/`.
 
-Flask provides thew following variable types:
+Flask provides the following variable types:
 
 | type | example path | description |
 |----|----|-----------|
@@ -115,8 +115,9 @@ A request to `https://example.edu/hello/33` might produce and response like:
 
 In this case, the `solr.select_record` data processor automatically pulls the
 appropriate Solr API base URL from either the `instance/sandhill.cfg` file or
-from an environment variable, both named `SOLR_URL`. More details on
-`solr` data processors is available in the [data processor documentation](#TODO)
+from an environment variable, both named `SOLR_URL`. More details on the
+`solr` data processor is available in the
+[data processor documentation](/data-processors/#sandhill.processors.solr)
 and details on how to configure Sandhill is available in the
 [setup documentation](#TODO).
 
@@ -169,3 +170,45 @@ Each data processor is able to make use of data created by the processors define
 - Provide at least 2 more advanced route examples with explainations
 - Use of `when`
 - Example showing that `template` is just a shortcut for adding an ending `template` data processor
+
+## Route Config Attributes
+This section contains a summary of the available attributes for route definitions for
+quick reference. But more details on any of these attributes are found above.
+
+* `route` (string, or list of strings): The URL pattern to match in order for
+this route to be selected. May be a single route or
+a list of multiple routes. If any of the routes at matched, this route config will be used to
+handle the request. Variables may be defined in the route using the `<type:varname>` syntax.
+See [Flask documentation on routes](https://flask.palletsprojects.com/en/1.1.x/quickstart/#routing)
+for more information. Variables defined in the route will be available for use by data _processors_
+and templates inside the variable name `view_args`, e.g. `view_args.varname`.  
+
+* `template` (string, optional: The name of the Jinja2 template file to attempt
+to render. The results of all defined data _processors_ will be passed to 
+this template. The result of this template will be rendered out
+to the user. Jinja is a very powerful templating engine; for more info see the official
+[Jinja2 documentation](https://jinja.palletsprojects.com/en/3.1.x/).   
+
+* `variables` (dict, optional): User defined variables that are not validated in the
+JSON schema. May be used for custom instance functionality.
+
+* `response` (string, optional): Specify the name of one data _processor_ to return
+directly, if the _processor_ allows it. This is for more advanced usage, for example 
+returning a JSON response directly.  
+
+* `data` ([list of JSON objects](#data-processor-config-attributes), optional): An ordered list
+of data _processors_, with each one being run in order. Each entry inside
+`data` may make reference to all previous entries, so one results is able to use the results of the
+last as part of its parameters. Processors may have custom parameters accepted, depending on the
+_processor_ called; see the documentation for each _processor_ for further details. Required
+arguments inside each entry are: `name` and `processor`.  
+
+## Data Processor Config Attributes  
+This section lists the available attributes that can be set for each `data` section
+defined in a route config.
+
+* `name` (string): The name of the variable in which to store the results of this data _processor_. This name will appear as a variable inside temapltes.  
+* `processor` (string): The filename and function to call as the data processor, e.g. `solr.select_record` would load the `solr.py` processor and call the `select_record` function.  
+* `on_fail` (int, optional): The HTTP status code number to abort the page render with, should the data _processor_ fail in any way.  
+* `stream` (string, optional): Used to identify what variable to stream (instead of rendering a template). The value in `steam` should match the `name` of another `data` element that comes before it.  
+* `?` (all other arguments): Dependent on the _processor_; refer to that specific _processor_ documentation for details.  
