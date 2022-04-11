@@ -168,7 +168,7 @@ Each data processor is able to make use of data created by the processors define
 
 ## Advanced Examples
 
-### Example with Conditional and Implied Template
+### Conditional Data Processors and Implied Template
 
 Here is a more advanced route example that shows how you can use the 
 `variables` and `when` attributes. 
@@ -197,27 +197,34 @@ Here is a more advanced route example that shows how you can use the
 }
 ```
 In this example, notice that there is no `template` attribute provided.
-That is because if and data processor returns a
+When a data processor returns a
 [FlaskResponse](https://flask.palletsprojects.com/en/latest/api/#flask.Response)
 or
-[WerkzeugReponse](https://werkzeug.palletsprojects.com/en/latest/wrappers/#werkzeug.wrappers.Response), Sandhill will stop processing and return that response. 
+[WerkzeugReponse](https://werkzeug.palletsprojects.com/en/latest/wrappers/#werkzeug.wrappers.Response),
+Sandhill will stop processing any further data processors and return that response immediately.
+In fact, specifying the `template` attribute is really just a shorthand method of appending the
+`template.render` processor as seen above.
 
 The `when` condition in the example is showing how you can conditionally have
-a data processor excluded from running when a page is loaded, in this case, based
-on one of the route url variables (`view_args.id`).
+a data processor excluded from running when a page is loaded if the `when` condition is `True`.
+In this case the condition is based on one of the route url variables (`view_args.id`),
+but all loaded data is available. A `when` is considered `True` if the value would be considered
+true [when evaluated in Python](https://docs.python.org/3.10/library/stdtypes.html#truth-value-testing).
 
-The use of the `variables` dictionary is to indicate how you could send additional
+By using the `variables` key in config, it is possible to send additional
 data to your template. In this example, the variable `extra` could be used on the
 template and would have a value of `2/edit` if the loaded route was `item/1` (i.e.
 if `view_args.id` was `1`). 
 
 
-### Example with Error Handling
+### Error Handling
 
-This example shows how you can set the `on_fail` for any of the
-data processors so that if any of them fail it will abort with
-a particular status code. 
+By default, Sandhill will not stop processing a request if a data processor fails or
+returns no data. When this is not desired, the `on_fail` may be set for any given
+data processor.
 
+Setting the `on_fail` to a [HTTP status code integer](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+will cause Sandhill to abort with that code should that data processor fail to return any data.
 ```json hl_lines="11"
 {
     "route": [
@@ -242,15 +249,22 @@ errors are simply recorded in the logs and the next processor is loaded.
 Setting this attribute allows more fine-grained control over what processors
 are critical to a page loading and what error is appropriate for those errors.
 
+Some data processors have the ability to return
+the HTTP code of its choice. For example, if the data processor is making an
+external API call and you'd prefer it to pass back the HTTP code from the API call
+on failure. If the data processor supports this, setting `on_fail` to `0` will
+accomplish this. The `0` value indicates that Sandhill should abort page processing
+on a failure, but leave the selection of HTTP code up to the data processor.
+
 
 ## Route Config Attributes
 This section contains a summary of the available attributes for route definitions for
 quick reference. But more details on any of these attributes are found above.
+For full details on the `data` section, see the [data processors documentation](data-processors.md).
 
 | Name  | Type                       | Description |
 |-------|----------------------------|-------------|
 | `route` | string, or list of strings | The URL pattern to match in order for this route to be selected |
 | `template` | string, optional | The name of the Jinja2 template file to attempt to render |
 | `variables`| dict, optional | User defined variables that are not validated in the JSON schema. |
-| `response` | string, optional | Specify the name of one data processor to return directly, if the _processor_ allows it. |
-| `data` | list of JSON objects, optional | An ordered list of data processors, with each one being run in order |
+| `data` | list of JSON entries, optional | An ordered list of data processors, with each one being run in order |
