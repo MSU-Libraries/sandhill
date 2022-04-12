@@ -121,9 +121,10 @@ def search(data, url=None, api_get_function=api_get):
         abort(500)
     solr_config = search_config['solr_params']
 
-    # override default parameters with request query parameters (if allowed by config)
+    # override default parameters with request query parameters
     data['params'] = overlay_with_query_args(solr_config, \
-            request_args=data.get('params', None))
+            request_args=data.get('params', None),
+            allow_undefined=True)
 
     solr_results = select(data, url, api_get_function)
 
