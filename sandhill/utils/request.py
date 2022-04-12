@@ -59,7 +59,7 @@ def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=
             the same time. In this case, only the "default" value will be able to be
             overridded by requests.args; the "base" will remain unchanged.
         request_args (dict):
-        allow_undefined (bool): If set to True, fields not defined in the query_config will be permitted
+        allow_undefined (bool): If True, fields not defined in the query_config will be permitted
     return: A dict of the combined query arguments
     """
     # grab the query string params and convert to a flat dict if request args not passed in
