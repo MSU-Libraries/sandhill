@@ -55,17 +55,26 @@ def test_overlay_with_query_args():
             "default": ["name:Pat"]
         }
     }
-    # Testing passing in params to combine with default configs.
+    # Passing in params to combine with default configs
     params = {
         "fq": "title:Hello",
-        "q": "*"
+        "q": "*",
+        "json.facet": {
+            "type": "terms",
+            "field": "subject"
+        }
     }
     query_params = request.overlay_with_query_args(query_config, request_args=params)
     assert ["title:Hello"] == query_params["fq"]
     assert len(query_params["fq"]) == 1
     assert query_params["q"] == ["elephant"]
+    assert "json.facet" not in query_params
 
-    # Testing that base values will override user-input params; max is implemented; default is overwritten; lists are combined as expected
+    # Allowing unknown fields
+    query_params = request.overlay_with_query_args(query_config, request_args=params, allow_undefined=True)
+    assert "json.facet" in query_params
+
+    # Base values will override user-input params; max is implemented; default is overwritten; lists are combined as expected
     with app.test_request_context('/search?q=antelope&rows=120&rows_min=abc&start=5&fl=author&fl=date'):
         query_params = request.overlay_with_query_args(query_config)
         assert query_params["q"] == ['elephant']
@@ -77,7 +86,7 @@ def test_overlay_with_query_args():
         assert "title" not in query_params["fl"]
         assert query_params["rows_min"] == ["5"]
 
-    # Testing that min is applied correctly; that defaults are used if not overwritten by user; that only unique values are returned;
+    # Min is applied correctly; that defaults are used if not overwritten by user; that only unique values are returned;
     # that empty strings don't get included from configs; that user params not in configs are ignored.
     with app.test_request_context('/search?rows=1&rows_min=1&hello=world'):
         query_params = request.overlay_with_query_args(query_config)
