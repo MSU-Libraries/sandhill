@@ -1,23 +1,22 @@
 '''
-Handle static files being served
+Sandhill overrides/additions to the  default Flask `/static` route.
 '''
-
 import os
 from flask import send_from_directory
 from sandhill import app
 
-
 @app.route('/static/<path:static_file>')
 def handle_static(static_file):
     '''
-    Retrieve the requested static file first looking for /static in the instance
-    directory and falling back to the sandhill/static directory if /static not found
-    within the instance.
-
-    args:
-        static_file (str): requested file within /static
-    returns:
-        file stream of the object
+    Replacement for the default Flask `/static` path handler.
+    Retrieves the requested static file by first looking for it inside
+    the `instance/static/` directory. If the file is not found, this
+    method will then look for the file in the core `sandhill/templates/`
+    directory.
+    Args:
+        static_file (str): The requested file path within `/static`
+    Returns:
+        File stream of the file object or an HTTPException
     '''
     # Return from instance/static/ if available
     static_path = os.path.join(app.instance_path, "static")
@@ -32,8 +31,8 @@ def handle_static(static_file):
 @app.route('/favicon.ico')
 def favicon():
     '''
-    Wrapper for calling handle_static for specifically the favicon file
-    returns:
-        file stream of the favicon.ico file
+    Wrapper to calling handle_static for the ever popular favicon file.
+    Returns:
+        File stream of the favicon.ico file inside `/static` or an HTTPException
     '''
     return handle_static('favicon.ico')

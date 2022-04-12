@@ -19,7 +19,7 @@ from sandhill.utils.error_handling import dp_abort
 def select(data, url=None, api_get_function=api_get):
     """
     Perform a Solr select call and return the loaded JSON response.
-    ```
+    ```json
     "name": "mysearch",
     "processor": "solr.search",
     "params": { "q": "*", "rows":"20" }

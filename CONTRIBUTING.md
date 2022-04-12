@@ -50,7 +50,7 @@ Create a new branch for your changes off of the master branch:
 ```
 git checkout -b your-branch-name origin/master
 ```
-As you are writing your code, make sure you are following the [coding standards](docs/CODE_STANDARDS.md)
+As you are writing your code, make sure you are following the [coding standards](docs/code-standards.md)
 that Sandhill has defined.
 
 Commit changes as you go to your forked branch:
@@ -60,7 +60,7 @@ git push -set-upstream fork your-branch-name
 
 **Test your code**  
 Before you submit a pull request you must make sure that all of your code has appropriate
-tests written for them and have complete coverage. See the [testing steps](docs/DEV_GUIDE.md#testing)
+tests written for them and have complete coverage. See the [testing steps](docs/development-guide.md#testing)
 documentation for how to write and run unit tests.
 
 ```

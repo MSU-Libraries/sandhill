@@ -6,7 +6,15 @@ decoupled codebase that allows for rapid deployment of new features. Sandhill pr
 to combine multiple data sources into web content using custom data processors.
 
 ## Getting Started
-TODO
+* [Instance Setup](/instance-setup)
+* [Service Setup](/service-setup)
+* [Functional Testing](/functional-testing)
 
-## Where to Go Next
-TODO
+## User Guide:
+* [Routes in Sandhill](/routes)
+* [Data Processors in Sandhill](/data-processors)
+* [Restriction Conditions](/restrictions)
+* [Development Guide](/development-guide)
+* [Code Standards](/code-standards)
+
+## [API Reference](/api-reference)
