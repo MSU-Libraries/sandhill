@@ -2,6 +2,7 @@
 Requests related functions
 """
 import mimetypes
+from copy import deepcopy
 from flask import request, abort
 from sandhill.utils.generic import touniquelist
 
@@ -37,7 +38,7 @@ def match_request_format(view_args_key, allowed_formats, default_format='text/ht
     return result_format
 
 
-def overlay_with_query_args(query_config, request_args=None):
+def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=False):
     """Given a query config, overlay request.args on the defaults to generate a combined
     list of query arguments
     args:
@@ -57,12 +58,17 @@ def overlay_with_query_args(query_config, request_args=None):
             matching "arg_name" will be filtered out. Both "base" and "default" may be set at
             the same time. In this case, only the "default" value will be able to be
             overridded by requests.args; the "base" will remain unchanged.
+        request_args (dict):
+        allow_undefined (bool): If set to True, fields not defined in the query_config will be permitted
     return: A dict of the combined query arguments
     """
     # grab the query string params and convert to a flat dict if request args not passed in
     # i.e. duplicative keys will be converted to a list of strings
     if request_args is None:
         request_args = request.args.to_dict(flat=False)
+    else:
+        # avoid modifying incoming args dict
+        request_args = deepcopy(request_args)
 
     query_params = {}
     for field_name, field_conf in query_config.items():
@@ -70,12 +76,16 @@ def overlay_with_query_args(query_config, request_args=None):
         # Load base from config
         if 'base' in field_conf:
             query_params[field_name] = field_conf['base']
-        # Load from request_args if field defined with a default
-        if field_name in request_args and 'default' in field_conf:
-            query_params[field_name] = touniquelist(
-                query_params[field_name],
-                request_args[field_name]
-            )
+        # Load from request_args
+        if field_name in request_args:
+            # Allow override if field defined with a default
+            if 'default' in field_conf:
+                query_params[field_name] = touniquelist(
+                    query_params[field_name],
+                    request_args[field_name]
+                )
+            # Remove field from request_args having already processed it
+            del request_args[field_name]
         # Load default from config if solr_param field not defined
         elif 'default' in field_conf:
             query_params[field_name] = touniquelist(
@@ -102,5 +112,8 @@ def overlay_with_query_args(query_config, request_args=None):
                 val if str(val).isdigit() and int(val) > int(field_conf['min'])
                 else str(field_conf['min']) for val in query_params[field_name]
             ]
+
+    if allow_undefined:
+        query_params.update(request_args)
 
     return query_params
