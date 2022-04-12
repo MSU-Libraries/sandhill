@@ -207,7 +207,7 @@ In fact, specifying the `template` attribute is really just a shorthand method o
 
 The `when` condition in the example is showing how you can conditionally have
 a data processor excluded from running when a page is loaded if the `when` condition is `True`.
-In this case the condition is based on one of the route url variables (`view_args.id`),
+In this case the condition is based on one of the route URL variables (`view_args.id`),
 but all loaded data is available. A `when` is considered `True` if the value would be considered
 true [when evaluated in Python](https://docs.python.org/3.10/library/stdtypes.html#truth-value-testing).
 

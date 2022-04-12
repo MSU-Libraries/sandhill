@@ -5,7 +5,7 @@ What is an instance?
 --------------------
 An instance is where you actually start developing your application. It contains all of the processing
 you might do as well as the design of your pages. All of these build upon the already included
-core Sandhill feature sets. Out of the box, sandhill provides a range of data processors and Jinja2
+core Sandhill feature sets. Out of the box, Sandhill provides a range of data processors and Jinja2
 template filters; but one has a simple "It Works!" template. It is up to you to develop everything
 in between to make your application have the feature set you desire! Think of it as Sandhill providing
 the core framework and your instance is your implementation of an application using that framework.
