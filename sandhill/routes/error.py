@@ -1,6 +1,5 @@
 """
-This is to override the default abort code pages and apply a
-different template to them
+Sandhill HTTP error handling
 """
 from werkzeug.exceptions import HTTPException
 from flask import render_template, jsonify
@@ -9,8 +8,13 @@ from sandhill.utils.request import match_request_format
 
 @app.errorhandler(HTTPException)
 def handle_http_abort(exc):
-    """Override the default template for abort codes"""
-
+    """
+    Overrides the default Flask template for abort codes.
+    Args:
+        exc (werkzeug.exceptions.HTTPException): A HTTPException from a 4xx or 5xx HTTP code
+    Returns:
+        A Flask response
+    """
     # Check if the request accepts json format, if so prefer that for rendering
     request_format = match_request_format(None, ["application/json", "text/html"])
     if request_format == "application/json":

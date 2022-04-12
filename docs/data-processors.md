@@ -26,7 +26,7 @@ stored under this key in the data passed to subsequent processors.
 
 #### `processor` _Required_  
 Specifies the processor and method to call within the processor, period delimited.
-```
+```json
 {
     "name": "searchresults",
     "processor": "solr.search"
@@ -47,12 +47,8 @@ If the value is not truthy, then the given data processor will be skipped.
 
 
 ::: sandhill.processors.file
-    rendering:
-      show_root_heading: true
 
 ::: sandhill.processors.solr
-    rendering:
-      show_root_heading: true
 
 ## Developing a Data Processor
 TODO
