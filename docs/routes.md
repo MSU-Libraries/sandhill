@@ -171,16 +171,13 @@ Each data processor is able to make use of data created by the processors define
 ### Conditional Data Processors and Implied Template
 
 Here is a more advanced route example that shows how you can use the 
-`variables` and `when` attributes. 
+`when` attribute. 
 
-```json hl_lines="5-7 13"
+```json hl_lines="10"
 {
     "route": [
         "/item/<int:id>"
     ],
-    "variables": {
-        "extra": "{{ view_args.id + 1 }}/edit"
-    },
     "data": [
         {
             "name": "render-id1",
@@ -210,12 +207,6 @@ a data processor excluded from running when a page is loaded if the `when` condi
 In this case the condition is based on one of the route URL variables (`view_args.id`),
 but all loaded data is available. A `when` is considered `True` if the value would be considered
 true [when evaluated in Python](https://docs.python.org/3.10/library/stdtypes.html#truth-value-testing).
-
-By using the `variables` key in config, it is possible to send additional
-data to your template. In this example, the variable `extra` could be used on the
-template and would have a value of `2/edit` if the loaded route was `item/1` (i.e.
-if `view_args.id` was `1`). 
-
 
 ### Error Handling
 
@@ -256,7 +247,6 @@ on failure. If the data processor supports this, setting `on_fail` to `0` will
 accomplish this. The `0` value indicates that Sandhill should abort page processing
 on a failure, but leave the selection of HTTP code up to the data processor.
 
-
 ## Route Config Attributes
 This section contains a summary of the available attributes for route definitions for
 quick reference. But more details on any of these attributes are found above.
@@ -266,5 +256,4 @@ For full details on the `data` section, see the [data processors documentation](
 |-------|----------------------------|-------------|
 | `route` | string, or list of strings | The URL pattern to match in order for this route to be selected |
 | `template` | string, optional | The name of the Jinja2 template file to attempt to render |
-| `variables`| dict, optional | User defined variables that are not validated in the JSON schema. |
 | `data` | list of JSON entries, optional | An ordered list of data processors, with each one being run in order |
