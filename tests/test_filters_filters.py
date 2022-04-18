@@ -87,6 +87,7 @@ def test_filter_solr_encode():
     assert filters.solr_encode("hello") == "hello"
     assert filters.solr_encode("hello*?") == "hello*?"
     assert filters.solr_encode("hello* world?", escape_wildcards=True) == r'hello\*\ world\?'
+    assert filters.solr_encode("hello\\world", double_slash=True) == r'hello\\\\world'
 
     # test non-string
     assert filters.solr_encode(['test']) == ['test']
