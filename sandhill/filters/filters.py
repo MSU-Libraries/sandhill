@@ -84,27 +84,31 @@ def solr_encodequery(query, escape_wildcards=False):
     return Solr().encode_query(query, escape_wildcards=escape_wildcards)
 
 @app.template_filter('solr_encode')
-def solr_encode(value, escape_wildcards=False):
+def solr_encode(value, escape_wildcards=False, double_slash=False):
     """Filter to encode a value being passed to Solr
-    args:
+    Args:
         value (str): string to escape Solr characters
-        escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
+        escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
             should be encoded (Default: False)
-    returns:
+        double_slash (bool): If set, it will replace single slashes with
+            double slashes
+    Returns:
         (str): same string but with Solr characters encoded
     """
     if isinstance(value, str):
         value = Solr().encode_value(value, escape_wildcards)
+    if double_slash:
+        value = value.replace('\\','\\\\')
     return value
 
 @app.template_filter('solr_decode')
 def solr_decode(value, escape_wildcards=False):
     """Filter to decode a value previously encoded for Solr
-    args:
+    Args:
         value (str): string with Solr escapes to be decoded
-        escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
+        escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
             should be encoded (Default: False)
-    returns:
+    Returns:
         (str): same string after being decoded
     """
     if isinstance(value, str):
