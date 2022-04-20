@@ -10,7 +10,7 @@ to combine multiple data sources into web content using custom data processors.
 * [Service Setup](/service-setup)
 * [Functional Testing](/functional-testing)
 
-## User Guide:
+## User Guide
 * [Routes in Sandhill](/routes)
 * [Data Processors in Sandhill](/data-processors)
 * [Restriction Conditions](/restrictions)
