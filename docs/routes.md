@@ -243,7 +243,7 @@ are critical to a page loading and what error is appropriate for those errors.
 Some data processors have the ability to return
 the HTTP code of its choice. For example, if the data processor is making an
 external API call and you'd prefer it to pass back the HTTP code from the API call
-on failure. If the data processor supports this, setting `on_fail` to `0` will
+on failure. If the data processor supports it, setting `on_fail` to `0` will
 accomplish this. The `0` value indicates that Sandhill should abort page processing
 on a failure, but leave the selection of HTTP code up to the data processor.
 
