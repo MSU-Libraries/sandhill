@@ -34,6 +34,24 @@ Build Image:
     - docker build --pull -t registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest .
     - docker push registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
 
+Publish Docs to GitLab:
+  stage: Build
+  tags:
+    - msul-docker
+  image: python:latest
+  only:
+    - master
+  except:
+    - tags
+  needs:
+    - job: Build Image
+  script:
+    - pip install mkdocs-material mkdocs-autorefs mkdocs-material-extensions mkdocstrings mkdocstrings-python
+    - mkdocs build --site-dir public
+  artifacts:
+    paths:
+      - public
+
 Tag Release:
   stage: Tag
   tags:
@@ -78,7 +96,6 @@ GitLab Release:
   release:
     tag_name: '$TAG'
     description: 'Release $TAG'
-
 
 GitHub Release:
   stage: Release
