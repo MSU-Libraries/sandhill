@@ -16,6 +16,7 @@ contextlib2==21.6.0
 coverage==6.3.1
 cryptography==36.0.1
 decorator==5.1.1
+deepdiff==5.8.0
 distlib==0.3.4
 distro==1.6.0
 execnet==1.9.0
