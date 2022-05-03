@@ -23,7 +23,7 @@ from sandhill.utils import jsonpath
 from sandhill.utils.generic import getconfig
 from sandhill.utils.template import render_template_json, render_template_string
 
-def jsonpath_from_rendered_url(struct, context):
+def jsonpath_from_rendered_entry(struct, context):
     """
     Render a dict structure using Jinja and then
     perform an API call to 'url' key.
@@ -32,29 +32,30 @@ def jsonpath_from_rendered_url(struct, context):
     args:
         struct(dict): A data structure with keys
                         url => Location to perform API call
+                        filepath => Path to a file to open and read
                         path => A JSON path
         context(dict): The context used to render with Jinja
     returns:
         (dict|list): The results of the JSONPath
     throws:
         json.JSONDecodeError
-        jinja2.TemplateError
         requests.exceptions.RequestException
+        OSError
     """
-    try:
-        with app.app_context():
-            struct = render_template_json(struct, context)
-    except (json.JSONDecodeError, jinja2.TemplateError) as exc:
-        app.logger.error(f"Unable to render and convert: {struct}")
-        raise exc
-    try:
-        resp = api_get(url=struct['url'])
-        json_resp = json.loads(resp.content)
-    except (RequestException, json.JSONDecodeError) as exc:
-        app.logger.error(f"Failure to retrieve JSON from URL: {struct['url']}")
-        raise exc
+    json_data = {}
+    struct = render_context(struct, context)
+    if 'url' in struct:
+        try:
+            resp = api_get(url=struct['url'])
+            json_data = json.loads(resp.content)
+        except (RequestException, json.JSONDecodeError) as exc:
+            app.logger.error(f"Failure to retrieve JSON from URL: {struct['url']}")
+            raise exc
+    elif 'filepath' in struct:
+        json_data = load_json_config(struct['filepath'])
+
     struct['path'] = struct['path'] if 'path' in struct else None
-    return jsonpath.find(json_resp, struct['path'])
+    return jsonpath.find(json_data, struct['path'])
 
 def parse_loop_key(data):
     """
@@ -82,9 +83,30 @@ def parse_loop_key(data):
             allow_empty = loop["allow_empty"] if "allow_empty" in loop else False
     return loop_key, allow_empty
 
+def render_context(struct, context):
+    """
+    Render a dict structure using jinja.
+    args:
+        struct(dict): A data structure with keys
+                        url OR filepath => Location to load file or perform API call
+                        path => A JSON path
+        context(dict): The context used to render with Jinja
+    returns:
+        (dict): The results of the rendered dict object.
+    throws:
+        json.JSONDecodeError
+        jinja2.TemplateError
+    """
+    try:
+        with app.app_context():
+            return render_template_json(struct, context)
+    except (json.JSONDecodeError, jinja2.TemplateError) as exc:
+        app.logger.error(f"Unable to render and convert: {struct}")
+        raise exc
+
 def prepare_test_entry(entry):
     """
-    Load and entry for testing and queue up the resulting
+    Load an entry for testing and queue up the resulting
     tests generated from the entry.
     """
     tests = []
@@ -97,7 +119,7 @@ def prepare_test_entry(entry):
         del entry['evaluate']
 
     # For each entry in the loop we'll perform a entry test; or loop of None if no loop defined
-    loop_recs = jsonpath_from_rendered_url(data[loop_key], copy.deepcopy(entry)) if loop_key else [None]
+    loop_recs = jsonpath_from_rendered_entry(data[loop_key], copy.deepcopy(entry)) if loop_key else [None]
     # Ensure our query found a list and it's not empty
     assert isinstance(loop_recs, list)
     if not allow_empty:
@@ -113,11 +135,11 @@ def prepare_test_entry(entry):
         for key in (loop_entry['data'] if 'data' in loop_entry else {}):
             if key in ['loop', loop_key]:
                 continue
-            loop_entry[key] = jsonpath_from_rendered_url(
-                loop_entry['data'][key],
-                copy.deepcopy(loop_entry)
-            )
-
+            if 'url' in loop_entry['data'][key] or 'filepath' in loop_entry['data'][key]:
+                loop_entry[key] = jsonpath_from_rendered_entry(
+                    loop_entry['data'][key],
+                    copy.deepcopy(loop_entry)
+                )
         # Perform one last Jinja render on the entire entry_entry before running the test
         with app.app_context():
             loop_entry = render_template_json(loop_entry, copy.deepcopy(loop_entry))
@@ -130,7 +152,6 @@ def prepare_test_entry(entry):
         # Re-add 'evaluate' key if set
         if evaluates:
             loop_entry['evaluate'] = evaluates
-
         tests.append(loop_entry)
     return tests
 
@@ -184,7 +205,7 @@ def pre_test_check(entry):
     for test in entry.keys():
         assert test in [
             '_comment', '_extra_keys', 'page', 'code', 'contains',
-            'excludes', 'matches', 'evaluate', 'md5', 'data', 'a11y'
+            'excludes', 'matches', 'evaluate', 'md5', 'data', 'a11y', 'on_fail'
         ] + (entry['_extra_keys'] if '_extra_keys' in entry else [])
 
 @pytest.mark.functional
@@ -234,21 +255,28 @@ def test_entry_metadata(entry):
     args:
         entry (dict):
     """
+    def prepare_render(string, entry):
+        """
+        Prepare statement for evaluation.
+        """
+        string = string.strip()
+        # Pre-parse JSONPath references
+        string = jsonpath.eval_within(string, entry)
+        # Auto-add Jinja brackets if none are present
+        if string == string.strip('{}'):
+            string = f"{{{{ {string.strip('{}')} }}}}"
+        return render_template_string(string, entry)
+
     with app.test_client() as client:
         pre_test_check(entry)
         if 'evaluate' not in entry:
-            pytest.skip("Not a valid metadata test (no 'evaluate')")
+            pytest.skip(f"Not a valid metadata test (no 'evaluate')")
 
         # Validate Jinja evaluations
         if 'evaluate' in entry:
             for check in entry['evaluate']:
-                check = check.strip()
-                # Pre-parse JSONPath references
-                check = jsonpath.eval_within(check, entry)
-                # Auto-add Jinja brackets if none are present
-                if check == check.strip('{}'):
-                    check = f"{{{{ {check.strip('{}')} }}}}"
-                assert literal_eval(render_template_string(check, entry))
+                assert literal_eval(prepare_render(check, entry)),\
+                       [prepare_render(f, entry) for f in entry['on_fail'] if 'on_fail' in entry]
 
 @pytest.fixture(scope="session", autouse=True)
 def axe_driver():

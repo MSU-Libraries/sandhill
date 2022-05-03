@@ -1,8 +1,10 @@
 """Context related functionality"""
 from datetime import datetime
 from copy import deepcopy
+from deepdiff import DeepDiff
 from flask import request, has_app_context
 from sandhill import app
+import json
 
 def app_context():
     """
@@ -68,10 +70,16 @@ def context_processors():
             "query_args": deepcopy(request.query_args),
             "host": str(request.host)
         }
+    def find_mismatches(dict1: dict, dict2: dict):
+        """
+        Return detailed info about how and where the two supplied dicts don't match.
+        """
+        return dict(DeepDiff(dict1, dict2, ignore_order=True))
 
     return {
         'debug': app.debug,
         'strftime': strftime,
         'sandbug': context_sandbug,
-        'urlcomponents': urlcomponents
+        'urlcomponents': urlcomponents,
+        'find_mismatches': find_mismatches
     }

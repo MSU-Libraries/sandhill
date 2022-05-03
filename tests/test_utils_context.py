@@ -8,7 +8,8 @@ def test_list_custom_context_processors():
         'debug',
         'strftime',
         'sandbug',
-        'urlcomponents'
+        'urlcomponents',
+        'find_mismatches'
     ]
 
 def test_context_processors():
@@ -17,6 +18,20 @@ def test_context_processors():
     assert isinstance(ctx['debug'], bool)
     assert ctx['strftime']('%Y-%m', '2021-08-31') == '2021-08'
     assert ctx['sandbug']('Test for sandbug context processor.') == None
+
+def test_find_mismatches_context_processor():
+    ctx = context.context_processors()
+    dict1 = {'a': 1}
+    dict2 = {'a': 1}
+    # Check that identical dictionaries return no results.
+    assert ctx['find_mismatches'](dict1, dict2) == {}
+    # Check that different values produce expected output.
+    dict2 = {'a': 2}
+    assert ctx['find_mismatches'](dict1, dict2) == {'values_changed': {"root['a']": {'new_value': 2, 'old_value': 1}}}
+    # Check that different keys produce expected output.
+    dict3 = {'b': 1}
+    assert 'dictionary_item_added' in ctx['find_mismatches'](dict1, dict3)
+    assert 'dictionary_item_removed' in ctx['find_mismatches'](dict1, dict3)
 
 def test_urlcomponents_context_processor():
     ctx = context.context_processors()
