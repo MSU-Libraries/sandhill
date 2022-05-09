@@ -17,7 +17,14 @@ from sandhill.utils import xml
 
 @app.template_filter('formatbinary')
 def formatbinary(value):
-    """Jinja filter to format the binary size"""
+    """
+    Format bytes size to JEDEC standard binary file size.\n
+    Use: `4096 | formatbinary` = `"4 KB"`
+    Args:
+        value (str|int): Number of bytes.
+    Returns:
+        (str): The formatted bytesize or `0 B` on invalid input value.
+    """
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     i = 0
     nbytes = int(value) if f"{value}".isdigit() else 0
@@ -29,12 +36,24 @@ def formatbinary(value):
 
 @app.template_filter('islist')
 def islist(value):
-    """Check if a value is a list"""
+    """
+    Check if given value is a list.
+    Args:
+        value (Any): The value to type check against.
+    Returns:
+        (bool): True if value is a list."""
     return isinstance(value, list)
 
 @app.template_filter('getextension')
 def getextension(value):
-    """Take in mimetype and return extension."""
+    """
+    For a given mimetype, return the appropriate file extension.\n
+    Use: `"image/jpeg" | getextension` = `"jpg"`
+    Args:
+        value (str): A mimetype string
+    Returns:
+        (str): The matching filetype extension (without leading `.`) or `???` not found.
+    """
     mimetypes.add_type("audio/wav", '.wav')
     extension = None
     preferred = [".txt", ".jpg", ".mp3"]
@@ -52,20 +71,42 @@ def getextension(value):
 
 @app.template_filter('head')
 def head(value):
-    """Returns the head of the list if non-empty list, otherwise the orig value"""
+    """
+    Returns the head of the list if value is a non-empty list, otherwise returns the orig value.
+    Args:
+        value (Any): Possible list from which to remove the first item from.
+    Returns:
+        (Any): The first item from the list, or the original value if it was not a list.
+    """
     if isinstance(value, list) and value:
         value = value[0]
     return value
 
 @app.template_filter('unescape')
 def unescape(value):
-    """Unescape special characters in a string of HTML"""
+    """
+    Unescape special characters in a string of HTML.\n
+    Use: `"Moon &amp; &#42;&#42;&#42;" | unescape` = `"Moon & ***"`
+    Args:
+        value (str): The string to unescape.
+    Returns:
+        (str): The unescaped string.
+    """
     return html.unescape(value)
 
 @app.template_filter('filtertags')
 def filtertags(value, *args):
-    """Filter out all HTML tags except for the ones specified
-    and marks the output as safe to render."""
+    """
+    Filter out all HTML tags except for the ones specified
+    and marks the output as safe to render.\n
+    Use: `<i><b>Hello</b></i> | filtertags('b')` = `<b>Hello</b>`
+    Args:
+        value (str): A string potentially containing HTML tags.
+        *args (str): Tag names which are safe and will not be removed.
+    Returns:
+        (str): A string with tags removed (exluding those passed as *args).
+        This string is marked `safe` and will not be further escaped by Jinja.
+    """
     htf = HTMLTagFilter(tags=args)
     htf.feed(value)
     return Markup(htf.output)
@@ -73,13 +114,13 @@ def filtertags(value, *args):
 @app.template_filter('solr_encodequery')
 def solr_encodequery(query, escape_wildcards=False):
     """
-    Parses and encodes Solr queries (the part after the colon)
+    Parses and encodea a Solr query arguments (the part after the colon).
     args:
-        query (str): Solr query to encode
-        escape_wildcards(bool): If Solr's wildcard indicators (* and ?)
+        query (str): Solr query argument to encode.
+        escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
             should be encoded (Default: False)
     returns:
-        (str): The solr query with appropriate characters encoded
+        (str): The solr query with appropriate characters encoded.
     """
     return Solr().encode_query(query, escape_wildcards=escape_wildcards)
 
@@ -90,7 +131,7 @@ def solr_encode(value, escape_wildcards=False, double_slash=False):
         value (str): string to escape Solr characters
         escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
             should be encoded (Default: False)
-        double_slash (bool): If set, it will replace single slashes with
+        double_slash (bool): If set to True, will replace single slashes with
             double slashes
     Returns:
         (str): same string but with Solr characters encoded
@@ -103,7 +144,7 @@ def solr_encode(value, escape_wildcards=False, double_slash=False):
 
 @app.template_filter('solr_decode')
 def solr_decode(value, escape_wildcards=False):
-    """Filter to decode a value previously encoded for Solr
+    """Filter to decode a value previously encoded for Solr.
     Args:
         value (str): string with Solr escapes to be decoded
         escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
@@ -117,13 +158,14 @@ def solr_decode(value, escape_wildcards=False):
 
 @app.template_filter('setchildkey')
 def setchildkey(parent_dict, parent_key, key, value):
-    """Take dictionary of url components, and update 'key' with 'value'.
-    args:
+    """Take dictionary of url components, and update 'key' with 'value'.\n
+    Use: `{'a': {'x': '1'}} | setchildkey('a', 'y', '2')` = `{'a': {'x': '1', 'y': '2'}}`
+    Args:
         parent_dict (dict): dictionary to add parent_key to
         parent_key (str|int|other hashable type): parent key to add to the parent_dict
         key (str|int|other hashable type): key to put under parent_key
         value (any): value to give that key
-    returns:
+    Returns:
         parent_dict (dict): The updated parent dictionary
     """
     if isinstance(parent_dict, dict) \
@@ -137,9 +179,9 @@ def setchildkey(parent_dict, parent_key, key, value):
 @app.template_filter('assembleurl')
 def assembleurl(urlcomponents):
     """Take urlcomponents (derived from Flask Request object) and returns a url.
-    args:
+    Args:
         urlcomponents (dict): components of the URL to build
-    returns:
+    Returns:
         (str): fully combined URL with query arguments
     """
     url = ""
@@ -154,9 +196,9 @@ def assembleurl(urlcomponents):
 @app.template_filter('urlquote')
 def urlquote(url_str):
     """Fully escapes all characters (including slash) in the given string with URL percent escapes
-    args:
+    Args:
         url_str (str): The string to escape
-    returns:
+    Returns:
         (str): The fully escaped string
     """
     return urllib.parse.quote(url_str).replace('/', '%2F')
@@ -166,9 +208,9 @@ def urlquote(url_str):
        'Unable to get a valid date in "{value}". Error {exc}', return_val=False)
 def datepassed(value):
     """ Checks if the embargoded date is greater than the current date
-    args:
+    Args:
         value (str): Date in the format yyy-mm-dd that needs to be checked
-    returns:
+    Returns:
         (bool): If the given date is less than the current date or not
     """
     value_date = datetime.strptime(value, "%Y-%m-%d")
@@ -179,13 +221,14 @@ def datepassed(value):
 @pass_context
 @catch(TemplateError, "Invalid template provided: {value}. Error: {exc}", return_val=None)
 def render(context, value, **kwargs):
-    """Renders a given string or literal
-    args:
+    """Renders a given string using Jinja.
+    Args:
         context (Jinja2 context): context information and variables to use when
-            evaluating the provided template string.
-        value (str): Jinja2 template string to evaluate given the provided context
-    returns:
-        (str|None): the rendered value or string
+            evaluating the provided template string. Passed automatically.
+        value (str): Jinja2 template string to evaluate given the provided context.
+        **kwargs: Additional key-value pairs to add to the render context.
+    Returns:
+        (str): the rendered string
     """
     if kwargs:
         kwargs.update(context)
@@ -199,16 +242,16 @@ def render(context, value, **kwargs):
 @app.template_filter('renderliteral')
 @pass_context
 def renderliteral(context, value, fallback_to_str=True):
-    """Renders a Jinja template and attempts to perform a literal_eval on the result
-    args:
+    """Renders string via Jinja and attempts to perform a literal_eval on the result.
+    Args:
         context (Jinja2 context): context information and variables to use when
             evaluating the provided template string.
         value (str): Jinja2 template string to evaluate given the provided context
         fallback_to_str (bool): If function should return string value on a failed
             attempt to literal_eval
-    returns:
-        (any|None) The literal_eval result, or string if fallback_to_str, or None on render failure
-    raises:
+    Returns:
+        (Any|None): The literal_eval result, or string if fallback_to_str, or None on render failure
+    Raises:
         ValueError: If content is valid Python, but not a valid datatype
         SyntaxError: If content is not valid Python
     """
@@ -226,34 +269,34 @@ def renderliteral(context, value, fallback_to_str=True):
 
 @app.template_filter('formatedate')
 @catch((ValueError, TypeError), return_arg="default")
-def formatedate(value: str, default: str = "Indefinite") -> str:
+def formatedate(value, default="Indefinite"):
     '''
-    Format the provided embargo end date as a human readable string
-    If there is no end date, it will show as 'Indefinite' (or the other
-    default value prodived). It will only mark a valid date value as invalid
-    if it is the year 9999.
-    args:
-        value (str): Embargo end date
-    returns:
+    Format the provided embargo end date as a human readable string.
+    If the date year is 9999, it will show the default value.
+    Args:
+        value (str): A date string in the format YYYY-MM-DD
+        default (str): The default string (Default: "Indefinite")
+    Returns:
         (str): Formatted end date
     '''
     result = default
-
     value_date = datetime.strptime(value, "%Y-%m-%d")
     if value_date.year != 9999:
         suf = lambda n: {1:"st", 2:"nd", 3:"rd"}.get(n if n < 20 else n%10, "th")
         result = value_date.strftime("%B DAY %Y") # it is a valid date, so set that as the result
         # Add in the suffix (st, th, rd, nd)
         result = result.replace("DAY", f"{value_date.day}{suf(value_date.day)},")
-
     return result
 
 @app.template_filter('sandbug')
 def filter_sandbug(value: str, comment: str = None):
     '''
-    Writes debug statements to the sandhill log
-    args:
-        value (str): Message to write to the log
+    Writes a variable to the Sandhill debug logs.
+    Args:
+        value (str): Variable to write to the log.
+        comment (str|None): Optional comment to add to the log.
+    Returns:
+        (str): Always returns an empty string.
     '''
     sandbug(value, comment) # pylint: disable=undefined-variable
     return ""
@@ -262,24 +305,32 @@ def filter_sandbug(value: str, comment: str = None):
 @app.template_filter('deepcopy')
 def deepcopy(obj):
     """
-    Returns the deepcopy of the input object
-    args:
-        obj (dict, list, tuple): Any value which is not a scalar type.
+    Returns the deepcopy of the input object.
+    Args:
+        obj (dict|list|tuple): The value to deepcopy.
+    Returns:
+        (dict|list|tuple): The new copy of the variable.
     """
     return copy.deepcopy(obj)
 
 @app.template_filter('solr_getfq')
 def solr_getfq(query: dict):
     """
-    Extracts the filter queries from the solr query
-    args:
-        query (dict): solr query
-            (ex {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2",
-            "dc.creator:example_creator1", "dc.creator:example_creator2"]})
-    return:
-        (dict)
-        (ex. {"dc.title": ["example_title1", "example_title2"], "dc.creator":
-        ["example_creator1", "example_creator2"]})
+    Extract and returns the filter queries from a solr query.\n
+    Example input:
+    ```
+    {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2",
+    "dc.creator:example_creator1", "dc.creator:example_creator2"]}
+    ```
+    Example output:
+    ```
+    {"dc.title": ["example_title1", "example_title2"], "dc.creator":
+    ["example_creator1", "example_creator2"]}
+    ```
+    Args:
+        query (dict): A solr query.
+    Returns:
+        (dict): The extracted filter queries.
     """
     def parse_fq_into_dict(fq_dict, fq_str):
         fq_pair = fq_str.split(":", 1)
@@ -299,17 +350,16 @@ def solr_getfq(query: dict):
 @app.template_filter('solr_addfq')
 def solr_addfq(query: dict, field: str, value: str):
     """
-    Adds the field and value to the filter query.
-    Also removes the 'start' query param if it exists under the
+    Adds the field and value to the filter query.\n
+    Also removes the `start` query param if it exists under the
     assumption that a user removing facets would want to return
     to the first page.
-    args:
-        query (dict): solr query
-            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
-        field (str): field that needs to be checked in the fliter query
-            (ex: dc.creator)
-        value (str): value that needs to be checked in the filter query
-            (ex: example_creator)
+    Args:
+        query (dict): solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
+        field (str): field that needs to be checked in the fliter query (e.g. `dc.creator`)
+        value (str): value that needs to be checked in the filter query (e.g. `example_creator`)
+    Returns:
+        (dict): The updated query dict
     """
     if not 'fq' in query:
         query['fq'] = []
@@ -331,14 +381,13 @@ def solr_addfq(query: dict, field: str, value: str):
 @app.template_filter('solr_hasfq')
 def solr_hasfq(query: dict, field: str, value: str):
     """
-    Ensure the filter query has the field and value
-    args:
-        query (dict): solr query
-            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
-        field (str): field that needs to be checked in the fliter query
-            (ex: dc.title)
-        value (str): value that needs to be checked in the filter query
-            (ex: example_title)
+    Check if filter query has the given field and value.
+    Args:
+        query (dict): solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
+        field (str): field that needs to be checked in the fliter query (e.g. `dc.title`)
+        value (str): value that needs to be checked in the filter query (e.g. `example_title`)
+    Returns:
+        (bool): True if the filter query was found.
     """
     fqueries = [
         ':'.join([field, solr_encode(value)]),
@@ -363,13 +412,12 @@ def solr_removefq(query: dict, field: str, value: str):
     Also removes the 'start' query param if it exists under the
     assumption that a user removing facets would want to return
     to the first page.
-    args:
-        query (dict): solr query
-            (ex: {"q": "frogs", "fq": "dc.title:example_title"})
-        field (str): field that needs to be removed from the fliter query
-            (ex: dc.title)
-        value (str): value that needs to be removed from the filter query
-            (ex: example_title)
+    Args:
+        query (dict): solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
+        field (str): field that needs to be removed from the fliter query (e.g. `dc.title`)
+        value (str): value that needs to be removed from the filter query (e.g. `example_title`)
+    Returns:
+        (dict): The updated query dict
     """
     fqueries = [
         ':'.join([field, solr_encode(value)]),
@@ -395,10 +443,10 @@ def solr_removefq(query: dict, field: str, value: str):
 def totuples(input_list: list, tuple_length: int):
     """
     Convert a list into tuples of lenth tuple_length
-    args:
-        input_list (list): list with values that need to be converted into tuples
+    Args:
+        input_list (list): list with values to be converted into tuples
         tuple_length (int): length of tuples in the list
-    returns:
+    Returns:
         (list): A list of tuples
     """
     # if not evenly divisible by tuple_length excess values are discarded
@@ -407,9 +455,11 @@ def totuples(input_list: list, tuple_length: int):
 @app.template_filter('todict')
 def todict(input_list: list):
     """
-    Convert a list into a dictionary
-    args:
-        input_list (list): list with values that need to be converted into a dictionary
+    Convert a list into a dictionary, alternating key and value to create pairs.
+    Args:
+        input_list (list): list with values to be converted into a dictionary
+    Returns:
+        (dict): The new dictionary
     """
     return dict(totuples(input_list, 2))
 
@@ -417,10 +467,12 @@ def todict(input_list: list):
 @catch(re.error, "Regex error in regex_match. {exc}", return_val=None)
 def regex_match(value, pattern):
     """
-    Match pattern in the value
-    args:
+    Match the pattern in the value.
+    Args:
         value (str): value that the pattern will compare against
         pattern (str): regex patten that need to be checked
+    Returns:
+        The regular expression match, as returned by `re.match()`
     """
     return re.match(pattern, value)
 
@@ -429,11 +481,13 @@ def regex_match(value, pattern):
 @catch(re.error, "Invalid regex supplied to regex_sub. {exc}", return_arg='value')
 def regex_sub(value, pattern, substitute):
     """
-    Substitue pattern in the value
-    args:
+    Substitue a pattern in the value.
+    Args:
         value (str): value that need the substitution
         pattern (str): regex patten that need to be checked
         substitute (str): regex pattern that need to be substituted
+    Returns:
+        (str): The value with patterns substituted
     """
     return re.sub(pattern, substitute, value)
 
@@ -443,10 +497,10 @@ def filter_getconfig(name: str, default=None):
     Get the value of the given config name. It will first
     check in the environment for the variable name, otherwise
     look in the app.config, otherwise use the default param
-    args:
+    Args:
         name (str): Name of the config variable to look for
         default(str/None): The defaut value if not found elsewhere
-    returns:
+    Returns:
         (str): Value of the config variable, default value otherwise
     """
     return getconfig(name, default)
@@ -454,27 +508,26 @@ def filter_getconfig(name: str, default=None):
 @app.template_filter('commafy')
 def commafy(value):
     '''
-    Take a number and format with commas
-    args:
-        value(int): Integer value to comma format
-    returns:
-        ret(str): Comma-fied representation
+    Take a number and format with commas.\n
+    Use: `1234567 | commafy` = `"1,234,567"`
+    Args:
+        value (int): Integer value to comma format
+    Returns:
+        (str): Comma-fied representation
     '''
     ret = ""
-
     if isinstance(value, int):
         ret = f"{value:,}"
-
     return ret
 
 @app.template_filter('xpath')
 def filter_xpath(value, xpath):
     '''
     Perform an XPath query against an XML source
-    args:
+    Args:
         value(str): XML source
         xpath(str): An XPath query
-    returns:
+    Returns:
         (lxml Elements): A list of matching elements
     '''
     return xml.xpath(value, xpath)
@@ -485,10 +538,10 @@ def filter_xpath_by_id(value, xpath):
     Perform an XPath query against an XML source and returns matched
     elements as a dict, where the key is the 'id' attribute of the
     element and the value is the XML content inside the element as a string.
-    args:
+    Args:
         value(str): XML source
         xpath(str): An XPath query
-    returns:
+    Returns:
         (dict): A mapping of element 'id' to a string of XML for its children
     '''
     return xml.xpath_by_id(value, xpath)

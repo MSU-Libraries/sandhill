@@ -37,8 +37,9 @@ nav:
     - Service Setup: service-setup.md
     - Functional Testing: functional-testing.md
 - User Guide:
-    - Routes in Sandhill: routes.md
-    - Data Processors in Sandhill: data-processors.md
+    - Routes: routes.md
+    - Data Processors: data-processors.md
+    - Template Filters: filters.md
     - Restriction Conditions: restrictions.md
     - Development Guide: development-guide.md
     - Code Standards: code-standards.md
