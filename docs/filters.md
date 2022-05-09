@@ -2,15 +2,43 @@
 Sandhill makes extensive use of the [Jinja2 templating engine](https://jinja.palletsprojects.com/en/3.0.x/templates/)
 as included with Flask. Jinja expression are allowed in template files and many Sandhill config files.
 
-The complete [list of built-in filters](#https://jinja.palletsprojects.com/en/3.0.x/templates/#builtin-filters) 
-available with Flask are also available in Sandhill. In addition, Sandhill provides a number of additional filters
-for use, which are [listed below](#general-purpose-filters).
+In addition to filters available from Flask, and the ability to define your own filters, Sandhill provides
+a number of additional filters ready for use, all of which are listed below.
 
-## Creating a Filter
-Sandhill has an easy way to integrate your own instance specific filters.
+* [Flask Built-in Filters](https://jinja.palletsprojects.com/en/3.0.x/templates/#builtin-filters)
+* [Creating a Custom Filter](#creating-a-custom-filter)
+* **Sandhill Provided Filters**
+    - [General Purpose Filters](#general-purpose-filters)
+    - [Encoding/Formatting Filters](#encodingformatting-filters)
+    - [Solr Filters](#solr-filters)
+    - [Specialty Filters](#specialty-filters)
+
+## Creating a Custom Filter
+Sandhill has an easy way to integrate your own instance specific filters. Define your custom filters
+and save them in `instance/filters/`. Sandhill will automatically load all files placed there and
+any filtered defined will be available to your instance next time it's restarted.
+
+To created a custom filter is no different than any other filter in Sandhill. Lets create an
+example filter to ensure an exlaimation point is at the end of a string.
+
+First we'll create a file to put it in: `instance/filters/myfilters.py`.
+
+Then we can proceed to write our filter:
+```python
+from sandhill import app
+
+@app.template_filter('exclaim')
+def exclaim(value):
+    """Returns the given value as a string, appending an exclamation mark if it
+    doesn't already end with one."""
+    value = str(value)
+    if not value.endswith("!"):
+        return f"{value}!"
+    return value
 ```
-TODO
-```
+
+That is all there is to it! The new filter is ready to use in Sandhll. Take a peek at the code
+for other Sandhill filters if you'd like to see more examples.
 
 ## General Purpose Filters
 ::: sandhill.filters.filters.datepassed

@@ -19,7 +19,7 @@ from sandhill.utils import xml
 def formatbinary(value):
     """
     Format bytes size to JEDEC standard binary file size.\n
-    Example: `4096 | formatbinary` = `"4 KB"`
+    Use: `4096 | formatbinary` = `"4 KB"`
     Args:
         value (str|int): Number of bytes.
     Returns:
@@ -48,7 +48,7 @@ def islist(value):
 def getextension(value):
     """
     For a given mimetype, return the appropriate file extension.\n
-    Example: `"image/jpeg" | getextension` = `"jpg"`
+    Use: `"image/jpeg" | getextension` = `"jpg"`
     Args:
         value (str): A mimetype string
     Returns:
@@ -86,7 +86,7 @@ def head(value):
 def unescape(value):
     """
     Unescape special characters in a string of HTML.\n
-    Example: `"Moon &amp; &#42;&#42;&#42;" | unescape` = `"Moon & ***"`
+    Use: `"Moon &amp; &#42;&#42;&#42;" | unescape` = `"Moon & ***"`
     Args:
         value (str): The string to unescape.
     Returns:
@@ -99,7 +99,7 @@ def filtertags(value, *args):
     """
     Filter out all HTML tags except for the ones specified
     and marks the output as safe to render.\n
-    E.g. `<i><b>Hello</b></i> | filtertags('b')` = `<b>Hello</b>`
+    Use: `<i><b>Hello</b></i> | filtertags('b')` = `<b>Hello</b>`
     Args:
         value (str): A string potentially containing HTML tags.
         *args (str): Tag names which are safe and will not be removed.
@@ -159,7 +159,7 @@ def solr_decode(value, escape_wildcards=False):
 @app.template_filter('setchildkey')
 def setchildkey(parent_dict, parent_key, key, value):
     """Take dictionary of url components, and update 'key' with 'value'.\n
-    Example: `{'a': {'x': '1'}} | setchildkey('a', 'y', '2')` = `{'a': {'x': '1', 'y': '2'}}` 
+    Use: `{'a': {'x': '1'}} | setchildkey('a', 'y', '2')` = `{'a': {'x': '1', 'y': '2'}}`
     Args:
         parent_dict (dict): dictionary to add parent_key to
         parent_key (str|int|other hashable type): parent key to add to the parent_dict
@@ -509,7 +509,7 @@ def filter_getconfig(name: str, default=None):
 def commafy(value):
     '''
     Take a number and format with commas.\n
-    E.g. `1234567 | commafy` = `"1,234,567"`
+    Use: `1234567 | commafy` = `"1,234,567"`
     Args:
         value (int): Integer value to comma format
     Returns:
