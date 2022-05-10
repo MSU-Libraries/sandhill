@@ -104,7 +104,7 @@ def filtertags(value, *args):
         value (str): A string potentially containing HTML tags.
         *args (str): Tag names which are safe and will not be removed.
     Returns:
-        (str): A string with tags removed (exluding those passed as *args).
+        (str): A string with tags removed (excluding those passed as *args).
         This string is marked `safe` and will not be further escaped by Jinja.
     """
     htf = HTMLTagFilter(tags=args)
@@ -114,13 +114,13 @@ def filtertags(value, *args):
 @app.template_filter('solr_encodequery')
 def solr_encodequery(query, escape_wildcards=False):
     """
-    Parses and encodea a Solr query arguments (the part after the colon).
+    Parses and encode a Solr query arguments (the part after the colon).
     args:
         query (str): Solr query argument to encode.
         escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
             should be encoded (Default: False)
     returns:
-        (str): The solr query with appropriate characters encoded.
+        (str): The Solr query with appropriate characters encoded.
     """
     return Solr().encode_query(query, escape_wildcards=escape_wildcards)
 
@@ -207,7 +207,7 @@ def urlquote(url_str):
 @catch((ValueError, TypeError),
        'Unable to get a valid date in "{value}". Error {exc}', return_val=False)
 def datepassed(value):
-    """ Checks if the embargoded date is greater than the current date
+    """ Checks if the embargoed date is greater than the current date
     Args:
         value (str): Date in the format yyy-mm-dd that needs to be checked
     Returns:
@@ -316,7 +316,7 @@ def deepcopy(obj):
 @app.template_filter('solr_getfq')
 def solr_getfq(query: dict):
     """
-    Extract and returns the filter queries from a solr query.\n
+    Extract and returns the filter queries from a Solr query.\n
     Example input:
     ```
     {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2",
@@ -328,7 +328,7 @@ def solr_getfq(query: dict):
     ["example_creator1", "example_creator2"]}
     ```
     Args:
-        query (dict): A solr query.
+        query (dict): A Solr query.
     Returns:
         (dict): The extracted filter queries.
     """
@@ -355,8 +355,8 @@ def solr_addfq(query: dict, field: str, value: str):
     assumption that a user removing facets would want to return
     to the first page.
     Args:
-        query (dict): solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
-        field (str): field that needs to be checked in the fliter query (e.g. `dc.creator`)
+        query (dict): Solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
+        field (str): field that needs to be checked in the filter query (e.g. `dc.creator`)
         value (str): value that needs to be checked in the filter query (e.g. `example_creator`)
     Returns:
         (dict): The updated query dict
@@ -383,8 +383,8 @@ def solr_hasfq(query: dict, field: str, value: str):
     """
     Check if filter query has the given field and value.
     Args:
-        query (dict): solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
-        field (str): field that needs to be checked in the fliter query (e.g. `dc.title`)
+        query (dict): Solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
+        field (str): field that needs to be checked in the filter query (e.g. `dc.title`)
         value (str): value that needs to be checked in the filter query (e.g. `example_title`)
     Returns:
         (bool): True if the filter query was found.
@@ -413,8 +413,8 @@ def solr_removefq(query: dict, field: str, value: str):
     assumption that a user removing facets would want to return
     to the first page.
     Args:
-        query (dict): solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
-        field (str): field that needs to be removed from the fliter query (e.g. `dc.title`)
+        query (dict): Solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
+        field (str): field that needs to be removed from the filter query (e.g. `dc.title`)
         value (str): value that needs to be removed from the filter query (e.g. `example_title`)
     Returns:
         (dict): The updated query dict
@@ -442,7 +442,7 @@ def solr_removefq(query: dict, field: str, value: str):
 @app.template_filter('totuples')
 def totuples(input_list: list, tuple_length: int):
     """
-    Convert a list into tuples of lenth tuple_length
+    Convert a list into tuples of length tuple_length
     Args:
         input_list (list): list with values to be converted into tuples
         tuple_length (int): length of tuples in the list
@@ -470,7 +470,7 @@ def regex_match(value, pattern):
     Match the pattern in the value.
     Args:
         value (str): value that the pattern will compare against
-        pattern (str): regex patten that need to be checked
+        pattern (str): regex pattern that need to be checked
     Returns:
         The regular expression match, as returned by `re.match()`
     """
@@ -481,10 +481,10 @@ def regex_match(value, pattern):
 @catch(re.error, "Invalid regex supplied to regex_sub. {exc}", return_arg='value')
 def regex_sub(value, pattern, substitute):
     """
-    Substitue a pattern in the value.
+    Substitute a pattern in the value.
     Args:
         value (str): value that need the substitution
-        pattern (str): regex patten that need to be checked
+        pattern (str): regex pattern that need to be checked
         substitute (str): regex pattern that need to be substituted
     Returns:
         (str): The value with patterns substituted

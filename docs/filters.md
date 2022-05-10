@@ -18,8 +18,8 @@ Sandhill has an easy way to integrate your own instance specific filters. Define
 and save them in `instance/filters/`. Sandhill will automatically load all files placed there and
 any filtered defined will be available to your instance next time it's restarted.
 
-To created a custom filter is no different than any other filter in Sandhill. Lets create an
-example filter to ensure an exlaimation point is at the end of a string.
+To create a custom filter is no different than any other filter in Sandhill. Lets create an
+example filter to ensure an exclamation point is at the end of a string.
 
 First we'll create a file to put it in: `instance/filters/myfilters.py`.
 
@@ -27,8 +27,8 @@ Then we can proceed to write our filter:
 ```python
 from sandhill import app
 
-@app.template_filter('exclaim')
-def exclaim(value):
+@app.template_filter('exclam')
+def exclam(value):
     """Returns the given value as a string, appending an exclamation mark if it
     doesn't already end with one."""
     value = str(value)
@@ -37,8 +37,9 @@ def exclaim(value):
     return value
 ```
 
-That is all there is to it! The new filter is ready to use in Sandhll. Take a peek at the code
-for other Sandhill filters if you'd like to see more examples.
+That is all there is to it! The new filter is ready to use in Sandhll, for example you can use:
+`{{ myval | exclam }}` within your template.
+Take a peek at the code for other Sandhill filters if you'd like to see more examples.
 
 ## General Purpose Filters
 ::: sandhill.filters.filters.datepassed
