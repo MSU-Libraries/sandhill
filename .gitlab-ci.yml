@@ -116,3 +116,6 @@ GitHub Release:
     - git push --force --mirror git@github.com:MSU-Libraries/sandhill.git
     - echo "{\"tag_name\":\"${TAG}\", \"target_commitish\":\"${CI_COMMIT_SHA}\"}" > data.json
     - "curl -X POST -H 'Accept: application/vnd.github.v3+json' -u $GITHUB_USER_TOKEN https://api.github.com/repos/MSU-Libraries/sandhill/releases -d '@data.json'"
+    # Update the GitHub Pages branch used
+    - echo "{\"source\":{\"path\":\"/\", \"branch\":\"gh-pages\"}" > data.json
+    - "curl -X PUT -H 'Accept: application/vnd.github.v3+json' -u $GITHUB_USER_TOKEN https://api.github.com/repos/MSU-Libraries/sandhill/pages -d '@data.json'"
