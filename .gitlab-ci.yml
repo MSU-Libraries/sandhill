@@ -139,4 +139,6 @@ DockerHub Release:
   script:
     - docker pull registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
     - docker tag registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest msulibraries/sandhill:$TAG
+    - docker tag registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest msulibraries/sandhill:latest
     - docker push msulibraries/sandhill:$TAG
+    - docker push msulibraries/sandhill:latest
