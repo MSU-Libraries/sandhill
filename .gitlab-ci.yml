@@ -120,3 +120,23 @@ GitHub Release:
     - sleep 30 # Needs time to propagate the changes first or this next step will fail
     - echo "{\"source\":{\"path\":\"/\", \"branch\":\"gh-pages\"}" > data.json
     - "curl -X POST -H 'Accept: application/vnd.github.v3+json' -u $GITHUB_USER_TOKEN https://api.github.com/repos/MSU-Libraries/sandhill/pages -d '@data.json'"
+
+DockerHub Release:
+  stage: Release
+  tags:
+    - msul
+  when: manual
+  only:
+    - master
+  except:
+    - tags
+  needs:
+    - job: Tag Release
+      artifacts: true
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u msulibraries -p $DOCKERHUB_TOKEN
+  script:
+    - docker pull registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest
+    - docker tag registry.gitlab.msu.edu/msu-libraries/repo-team/sandhill:latest msulibraries/sandhill:$TAG
+    - docker push msulibraries/sandhill:$TAG
