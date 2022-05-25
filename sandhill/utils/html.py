@@ -8,7 +8,8 @@ from html.parser import HTMLParser
 # pylint: disable=abstract-method
 class HTMLTagFilter(HTMLParser):
     """
-    Filter through HTML and remove all tags except for those allowed.
+    Class used to filter through HTML and remove all tags except for those set as allowed.
+    Used by the `filtertags()` template filter.
     """
     def __init__(self, tags: list):
         super().__init__(convert_charrefs=False)

@@ -1,5 +1,5 @@
 '''
-XML loading and handling
+XML loading and handling functionality.
 '''
 import io
 from lxml import etree
@@ -12,10 +12,10 @@ from sandhill import app, catch
 @catch(RequestsConnectionError, "Invalid host in XML call: {source} Exc: {exc}", return_val=None)
 def load(source) -> etree._Element: # pylint: disable=protected-access
     '''
-    Load an XML document
-    args:
+    Load an XML document.
+    Args:
         source: XML source. Either path, url, string, or loaded LXML Element
-    returns:
+    Returns:
         Loaded XML object tree, or None on invalid source
     '''
     if not isinstance(source, (str, bytes)) or len(source) < 1:
@@ -46,10 +46,10 @@ def load(source) -> etree._Element: # pylint: disable=protected-access
 def xpath(source, query) -> list:
     '''
     Retrieve the matching xpath content from an XML source
-    args:
-        query: XPath query to match against
+    Args:
+        query (str): XPath query to match against
         source: XML source. Either path, url, or string
-    returns:
+    Returns:
         Matching results from XPath query, or None on failure
     '''
     doc = load(source)
@@ -60,12 +60,12 @@ def xpath_by_id(source, query) -> dict:
     For the matching xpath content, organize into dict with key
     being the id param of the matched tags. Elements without an id attribute
     will not be returned.
-    args:
-        query: XPath query to match against
+    Args:
+        query (str): XPath query to match against
         source: XML source. Either path, url, or string
-    returns:
-        Dict mapping with keys of id, and values of content within matching elements,
-        or None on failure
+    Returns:
+        (dict|None): Dict mapping with keys of id, and values of content within
+                     matching elements, or None on failure
     '''
     matched = xpath(source, query)
     if matched is None: # Explicit check to avoid empty results being matched

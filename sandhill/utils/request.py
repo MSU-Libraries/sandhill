@@ -1,6 +1,7 @@
 """
-Requests related functions
+Client request related functions
 """
+from typing import Any  # pylint: disable=unused-import
 import mimetypes
 from copy import deepcopy
 from flask import request, abort
@@ -9,13 +10,11 @@ from sandhill.utils.generic import touniquelist
 def match_request_format(view_args_key, allowed_formats, default_format='text/html'):
     """
     Match a request mimetype to the given view_args_key or the allowed mimetypes provided by client.
-
-    args:
+    Args:
         view_args_key (str|None): the key in the url request to check within for matching format.
         allowed_formats (list): list of acceptable mimetypes.
-    kwargs:
         default_format (str): the mimetype to use by default if view_args_key value is not allowed.
-    returns:
+    Returns:
         result_format (str): the mimetype for the format to return.
     """
     result_format = default_format
@@ -39,20 +38,23 @@ def match_request_format(view_args_key, allowed_formats, default_format='text/ht
 
 
 def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=False):
-    """Given a query config, overlay request.args on the defaults to generate a combined
+    """
+    Given a query config, overlay request.args on the defaults to generate a combined
     list of query arguments
-    args:
-        query_config(dict): A dictionary containing rules for query args to parse, each key being a
-                            query arg name (e.g. "arg_name").
+    Args:
+        query_config (dict): A dictionary containing rules for query args to parse, each key
+                             being a query arg name (e.g. "arg_name").\n
             Format for each key as below:
-                "arg_name": {
-                    "base": ["value"]
-                      -- Optional (str | list): value that cannot be changed by request.args; will
-                         always be returned
-                    "default": ["overridable"]
-                      -- Optional (str | list): value which will be replaced by matching
-                         requst.args, if passed
-                }
+            ```
+            "arg_name": {
+                "base": ["value"]
+                  -- Optional (str | list): value that cannot be changed by request.args; will
+                     always be returned
+                "default": ["overridable"]
+                  -- Optional (str | list): value which will be replaced by matching
+                     requst.args, if passed
+            }
+            ```
             Either "base" or "default" is required. If appropriate "arg_name" is not passed,
             that "arg_name" will be filtered out. If "default" is not set, the request,arg
             matching "arg_name" will be filtered out. Both "base" and "default" may be set at
@@ -60,7 +62,8 @@ def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=
             overridded by requests.args; the "base" will remain unchanged.
         request_args (dict):
         allow_undefined (bool): If True, fields not defined in the query_config will be permitted
-    return: A dict of the combined query arguments
+    Returns:
+        (dict): A dict of the combined query arguments
     """
     # grab the query string params and convert to a flat dict if request args not passed in
     # i.e. duplicative keys will be converted to a list of strings

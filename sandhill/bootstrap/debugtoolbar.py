@@ -1,5 +1,5 @@
 '''
-Enable FlaskDebugToolbar
+Bootstrap hook to add FlaskDebugToolbar to the Flaks application when debug mode is enabled.
 '''
 import sys
 from flask_debugtoolbar import DebugToolbarExtension

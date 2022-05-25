@@ -2,6 +2,7 @@
 Methods to help handle errors
 '''
 import inspect
+from typing import Any  # pylint: disable=unused-import
 from functools import wraps
 from flask import abort, request
 import sandhill
@@ -9,13 +10,13 @@ import sandhill
 def dp_abort(http_code):
     """
     Data processor abort. Will abort with the given status code if
-    the data processor has an 'on_fail' key set and the value is 0.
-    If the value is non-0, the 'on_fail' code will be override
+    the data processor has an `on_fail` key set and the value is `0`.
+    If the value is non-`0`, the 'on_fail' code will override
     the passed code.
-    args:
-        http_code(int): A valid HTTP code
-    throws:
-        (HTTPException): Throws exception if data['on_fail'] is
+    Args:
+        http_code (int): A valid HTTP status code
+    Raises:
+        (HTTPException): Can raises exception if data processor's `on_fail` is
             defined in parent context
     """
     parent_locals = inspect.currentframe().f_back.f_locals
@@ -25,26 +26,30 @@ def dp_abort(http_code):
 
 def catch(exc_class, exc_msg=None, **kwargs):
     """
-    Catch general exceptions and handle in a standarized manor
-    args:
-        exc_class(Exception): Type of exception to catch
-        exc_msg(String) (optional): Message to log with the
-            parameter {exc} available in the string template.
-            Ex: f"Error: {exc}"
-        kwargs:
-            return_val(any): Value to return after the
-                exception has been handled
-            return_arg(String): Function kwarg to
-                be returned after the exception has been handled
-            abort(int): Status code to abort with
-    returns:
-        (any): If return_val or return_arg is provided in kwargs
-    throws:
-        (HTTPException): If no return_val or return_arg is provided in kwargs
-    examples:
-        @catch(KeyError, "Some error message", return_val=None)
-        # where val is a kwarg to the func
-        @catch((KeyError, IndexError), "Some error message", return_arg=val)
+    Decorator to catch general exceptions and handle in a standarized manor.
+    Args:
+        exc_class (Exception): Type of exception to catch
+        exc_msg (String) (optional): Message to log; the
+            parameter `{exc}` is available in the string template.\n
+            Ex: `f"Error: {exc}"`
+        **kwargs: Optional arguments:\n
+            return_val (Any): Value to return after the exception has been handled\n
+            return_arg (str): Function kwarg to be returned after the exception has been handled\n
+            abort (int): Status code to abort with
+    Returns:
+        (Any): Only if return_val or return_arg is provided in kwargs.
+    Raises:
+        (HTTPException): If no return_val or return_arg is provided in kwargs.
+    Examples:
+    ```python
+    @catch(KeyError, "Some error message", return_val=None)
+    def myfunc():
+        ...
+
+    @catch((KeyError, IndexError), "Some error message", return_arg='myval')
+    def myfunc(myval):
+        ...
+    ```
     """
     def inner(func):
         @wraps(func)

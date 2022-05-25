@@ -1,11 +1,11 @@
 """
-Solr related functionality
+Solr related functionality.
 """
 import re
 
 class Solr:
     """
-    Class for handling Solr related logic, like encoding/decoding
+    Class for handling Solr related logic, such as encoding/decoding.
     """
     def __init__(self):
         self._scanner = None

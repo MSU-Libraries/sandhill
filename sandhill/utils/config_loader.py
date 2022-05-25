@@ -1,5 +1,5 @@
 '''
-Utilities for loading of loading /config files
+Utilities for loading of loading `config/` files.
 '''
 import os
 import re
@@ -7,7 +7,6 @@ import collections
 import operator
 import json
 from json.decoder import JSONDecodeError
-from collections import OrderedDict
 from sandhill import app, catch
 
 @catch(OSError, "Unable to read json file at path: {file_path} Error: {exc}",
@@ -15,11 +14,13 @@ from sandhill import app, catch
 @catch(JSONDecodeError, "Malformed json at path: {file_path} Error: {exc}",
        return_val=collections.OrderedDict())
 def load_json_config(file_path):
-    """Load a json config file
-    args:
-        file_path (str): the full path to the json file to load
-    returns:
-        (dict): the contents of the loaded json file
+    """
+    Load a JSON file.
+    Args:
+        file_path (str): The full path to the JSON file to load
+    Returns:
+        (dict): The contents of the loaded JSON file, or an empty dictionary
+                upon error loading or parsing the file.
     """
     app.logger.info(f"Loading json file at {file_path}")
     with open(file_path, encoding='utf-8') as json_config_file:
@@ -28,11 +29,11 @@ def load_json_config(file_path):
 @catch(FileNotFoundError, "Route dir not found at path {routes_dir} Error: {exc}", return_val=[])
 def load_routes_from_configs(routes_dir="config/routes/"):
     '''
-    Given a path relative to the instance dir, load all JSON files within
+    Given a path relative to the `instance/` dir, load all JSON files within
     and extract the "route" keys.
-    args:
+    Args:
         routes_dir (string): The relative path to the JSON files
-    returns:
+    Returns:
         (list): A list of routes from the configs
     '''
     route_path = os.path.join(app.instance_path, routes_dir)
@@ -54,10 +55,10 @@ def get_all_routes(routes_dir="config/routes/"):
     '''
     Finds all routes in JSON files with within given directory and order them
     according to the desired load order.
-    args:
-        (str): the directory to look for route configs
-    returns:
-        (list of str): all of the route rules found in desired order
+    Args:
+        routes_dir (str): The directory to look for route configs.
+    Returns:
+        (list): All of the route rules found in desired order.
     '''
     routes = load_routes_from_configs(routes_dir)
 
@@ -77,21 +78,21 @@ def get_all_routes(routes_dir="config/routes/"):
 
 @catch(FileNotFoundError, "Route dir not found at path {routes_dir} - " \
        "creating welcome home page route. Error: {exc}",
-       return_val=OrderedDict({
+       return_val=collections.OrderedDict({
            "route": ["/"],
            "template": "home.html.j2"
        }))
 def load_route_config(route_rule, routes_dir="config/routes/"):
     '''
-    Return the json data for the provided directory
-    args:
+    Return the json data for the provided directory.
+    Args:
         route_rule (str): the route rule to match to in the json configs (the `route` key)
         routes_dir (str): the path to look for route configs. Default = config/routes/
-    returns:
+    Returns:
         (OrderedDict): The loaded json of the matched route config, or empty dict if not found
     '''
     route_path = os.path.join(app.instance_path, routes_dir)
-    data = OrderedDict()
+    data = collections.OrderedDict()
     conf_files = [
         os.path.join(route_path, j) for j in os.listdir(route_path) if j.endswith(".json")
     ]
@@ -110,12 +111,12 @@ def load_route_config(route_rule, routes_dir="config/routes/"):
 
 def load_json_configs(path, recurse=False):
     """
-    Loads all the config files in the path
-    args:
-        path (string): path to the dir for the configs
-        recurse (bool): if set does the recursive walk into the dir
-    returns:
-        (dict): dictionary with a key of the file path and a value of the loaded json
+    Loads all the config files in the provided path.
+    Args:
+        path (string): The directory path from which to load the config files.
+        recurse (bool): If set to True, does a recursive walk into the path.
+    Returns:
+        (dict): Dictionary with keys of each file path and values of their loaded JSON.
     """
     config_files = {}
     if not os.path.isdir(path):

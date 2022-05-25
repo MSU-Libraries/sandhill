@@ -1,5 +1,5 @@
 """
-JSONPath wrapper functions
+Wrapper functions for JSONPath queries.
 """
 import copy
 import re
@@ -10,11 +10,11 @@ from sandhill import app
 
 def find(data, path=None, deepcopy=True):
     '''
-    Get the values for a given JSONPath
-    args:
+    Get the values for a given JSONPath.
+    Args:
         data (dict|list): The JSON data
         path (str): The JSONPath to find
-    returns:
+    Returns:
         (list): A list of matches, empty if none found
     '''
     if deepcopy:
@@ -27,14 +27,14 @@ def find(data, path=None, deepcopy=True):
 
 def put(data, path, value, deepcopy=True):
     '''
-    Set a value at the given JSONPath location
-    args:
+    Set a value at the given JSONPath location.
+    Args:
         data (dict|list): The JSON data
         path (str): The JSONPath to find
             Last element in path will be removed, which must be
             a specific Field or Index only
         value (any): The value to set
-    returns:
+    Returns:
         (dict|list): The modified JSON data
     '''
     if deepcopy:
@@ -57,11 +57,11 @@ def put(data, path, value, deepcopy=True):
 def append(data, path, value, deepcopy=True):
     '''
     Append a value to the given JSONPath location. Location must be a list.
-    args:
+    Args:
         data (dict|list): The JSON data
         path (str): The JSONPath to a list(s)
         value (any): The value to append
-    returns:
+    Returns:
         (dict|list): The modified JSON data
     '''
     if deepcopy:
@@ -79,13 +79,13 @@ def append(data, path, value, deepcopy=True):
 
 def delete(data, path, deepcopy=True):
     '''
-    Delete item(s) from JSON data
-    args:
+    Delete item(s) from JSON data.
+    Args:
         data (dict|list): The JSON data
         path (str): The JSONPath to the object(s) to delete
             Last element in path will be removed, which must be
             a specific Field or Index only
-    returns:
+    Returns:
         (dict|list): The modified JSON data
     '''
     if deepcopy:
@@ -106,21 +106,29 @@ def delete(data, path, deepcopy=True):
     return data
 
 def eval_within(string: str, context: dict):
-    """
-    Given a string containing JSONPath queries, replace the queries with
-    the values they found.
-    JSONPath queries will query within the context. Example:
-        No given context: "$.elem1.elem2" would query the first item in the context dictionary
-        Specified conext: "$parent.elem3" would query the the "parent" key in the context dictionary
-    args:
-        string: The string to search within for JSONPath queries
-        context: A dictionary of contexts upon which a JSONPath could query.  Example:
-            {  'item': {
-                    'elem1': { 'elem2': 'value1' } }
-                'parent': {
-                    'elem3': 'value2' }
-            }
-    """
+    '''
+    Given a string containing JSONPath queries, replace the queries with the values they found.\n
+    JSONPath queries will query within the context.\n
+    **Example context**
+    ```json
+    {
+        "item": {
+            "elem1": { "elem2": "value1" } }
+        "parent": {
+            "elem3": "value2" }
+    }
+    ```
+    **Example query strings**
+    ```python
+    # No given context
+    "$.elem1.elem2"     # would query the first item in the context dictionary
+    # Specified conext
+    "$parent.elem3"     # would query the the "parent" key in the context dictionary
+    ```
+    Args:
+        string (str): The string to search within for JSONPath queries
+        context (dict): A dictionary of contexts upon which a JSONPath could query.
+    '''
     if not isinstance(context, dict) or len(context) == 0:
         app.logger.debug("jsonpath.eval_within given invalid/empty context. Skipping.")
         return string
