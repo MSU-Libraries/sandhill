@@ -3,7 +3,7 @@ Generic functions that could be used in most any context.
 """
 import os
 import re
-from typing import Any
+from typing import Any  # pylint: disable=unused-import
 from collections.abc import Mapping
 from sandhill import app, catch
 

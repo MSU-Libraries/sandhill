@@ -2,7 +2,7 @@
 Methods to help handle errors
 '''
 import inspect
-from typing import Any
+from typing import Any  # pylint: disable=unused-import
 from functools import wraps
 from flask import abort, request
 import sandhill

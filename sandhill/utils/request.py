@@ -1,7 +1,7 @@
 """
 Client request related functions
 """
-from typing import Any
+from typing import Any  # pylint: disable=unused-import
 import mimetypes
 from copy import deepcopy
 from flask import request, abort

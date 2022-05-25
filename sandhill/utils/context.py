@@ -1,5 +1,5 @@
 """Context related functionality"""
-from typing import Any
+from typing import Any  # pylint: disable=unused-import
 from datetime import datetime
 from copy import deepcopy
 from deepdiff import DeepDiff
