@@ -1,5 +1,5 @@
 '''
-API utility functions using the requests module
+Functionality to support API calls.
 '''
 import validators
 import requests
@@ -7,14 +7,13 @@ from flask import abort
 from sandhill import app
 
 def api_get(**kwargs):
-    """Perform an API call GET request to return the response object
-
-    kwargs:
-        url (str): required for the function to not raise an error
-        params (dict): parameters to pass with the url
-        (various): any arguments accepted by requests.get
-    raises:
-        RequestException (exception): Raised if the get function cannot return a response.
+    """
+    Perform an API call using `requests.get()` and return the response object. This function adds
+    logging surrounding the call.
+    Args:
+        **kwargs (dict): Arguments to [`requests.get()`](#TODO)
+    Raises:
+        requests.RequestException: If the call cannot return a response.
     """
     app.logger.debug(f"API GET arguments: {kwargs}")
     response = requests.get(**kwargs)
@@ -26,13 +25,13 @@ def api_get(**kwargs):
     return response
 
 def establish_url(url, fallback):
-    """Set url to fallback if url is none; check for valid url.
-
-    args:
-        url(str): valid url
-        fallback(str): valid url to fallback to if url is none
+    """
+    Set URL to fallback if provided URL is none; also checks the URL validity.
+    Args:
+        url (str): A possible URL.
+        fallback (str): A secondary URL to fallback to if `url` is None.
     raises:
-        HTTPException(werkzeurg.exceptions): raised if url is not valid.
+        werkzeurg.exceptions.HTTPException: If URL to be returned is not a valid formatted URL.
     """
     url = url if url else fallback
     if not url or not validators.url(url):

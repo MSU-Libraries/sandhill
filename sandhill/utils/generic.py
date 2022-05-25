@@ -1,8 +1,9 @@
 """
-Generic function that can be used in any context
+Generic functions that could be used in most any context.
 """
 import os
 import re
+from typing import Any
 from collections.abc import Mapping
 from sandhill import app, catch
 
@@ -10,17 +11,19 @@ def ifnone(*args):
     '''
     Returns the default value if the key is not in the dictionary or if
     a non-dictionary is provided it will return the default if it is not set.
-    args:
-        var (dict): The dictionary to check
-        key (str): The key of the dictionary
-        default_value: What to return if key is not in var
-        OR
-        var: The variable to check
-        default_value: What to return if the variable is None
+    Args:
+        *args:
+            With 3 args:\n
+                var (dict): The dictionary to check\n
+                key (str): The key of the dictionary\n
+                default_value: Return val if key is not in var\n
+            With 2 args:\n
+                var: The variable to check\n
+                default_value: Return val if the variable is None\n
     Returns:
-        The default_value if the value is None or the key is not in the dict
-    Trows:
-        TypeError
+        The default_value if the value is None or the key is not in the dict.
+    Raises:
+        (TypeError): If invalid number of arguments passed.
     '''
     var = args[0] if args else None
     if len(args) not in [2, 3]:
@@ -37,7 +40,12 @@ def ifnone(*args):
 
 def tolist(*args):
     """
-    Combine a and b, which may be a scalar variable or list, and returns them as a list
+    Combine arguments, appending them to a list; args may be scalars or lists. If args is
+    a list, then the values of the list are appended (not the list itself).
+    Args:
+        *args: Items to combine.
+    Returns
+        (list): The combined list.
     """
     combined = []
     for i in args:
@@ -48,7 +56,14 @@ def tolist(*args):
     return combined
 
 def touniquelist(*args):
-    """Remove duplicates from combined list."""
+    """
+    Combine arguments while excluding duplicate values. Same functionality as `tolist()`
+    only with duplicate values being removed.
+    Args:
+        *args: Items to combine.
+    Returns
+        (list): The combined list with duplicates removed.
+    """
     unique_list = []
     _ = [unique_list.append(i) for i in tolist(*args) if i not in unique_list]
     return unique_list
@@ -57,17 +72,28 @@ def touniquelist(*args):
 def getdescendant(obj, list_keys, extract=False, put=None):
     '''
     Gets key values from the dictionary/list if they exist;
-    will check recursively through the obj
-    args:
-        obj (dict|list): Hierarchy of dict/lists to check
+    will check recursively through the `obj`.
+    Args:
+        obj (dict|list): A dict/list to check, possibly containing nested dicts/lists.
         list_keys (list|str): List of descendants to follow (or . delimited string)
-        extract (bool): If set to true, will remove the last matching value
-        put (any): Replace the found value with this new value in ther obj,
-                   or append if the found value is a list key is "[]"
-    returns:
-        (any): The last matching value from list_keys, or None if no match
-    raises:
+        extract (bool): If set to true, will remove the last matching value from the `obj`.
+        put (any): Replace the found value with this new value in the `obj`,
+                   or append if the found value at a list key of `"[]"`
+    Returns:
+        (Any): The last matching value from list_keys, or None if no match
+    Raises:
         IndexError: When attempting to put a list index that is invalid.
+    Examples:
+    ```python
+    # Get "key1" of mydict, then index 2 of that result, then "key3" of that result
+    v = getdescendant(mydict, "key1.2.key3")
+    # Same as above, only also remove the found item from mydict
+    v = getdescendant(mydict, "key1.2.key3", extract=True)
+    # Replace value with new value
+    v = getdescendant(mydict, "key1.2.key3", put="Replacement value!")
+    # Append to a list
+    v = getdescendant(mydict, "key1.2.[]", put="Append this value.")
+    ```
     '''
     list_keys = list_keys.split('.') if isinstance(list_keys, str) else list_keys
     for idx, key in enumerate(list_keys):
@@ -100,10 +126,10 @@ def getconfig(name, default=None):
     Get the value of the given config name. It will first
     check in the environment for the variable name, otherwise
     look in the app.config, otherwise use the default param
-    args:
+    Args:
         name (str): Name of the config variable to look for
-        default(str/None): The defaut value if not found elsewhere
-    returns:
+        default (str|None): The defaut value if not found elsewhere
+    Returns:
         (str): Value of the config variable, default value otherwise
     '''
     value = default
@@ -116,7 +142,9 @@ def getconfig(name, default=None):
 def getmodulepath(path):
     """
     Get the Python module path for a directory or file in Sandhill
-    returns:
+    Args:
+        path (str): A file or dir path in Sandhill
+    Returns:
         (str): module (e.g. 'instance' or 'sandhill.filters.filters')
     """
     install_path = os.path.dirname(app.root_path)

@@ -8,11 +8,13 @@ from sandhill.utils import context  # pylint: disable=unused-import
 
 def render_template_string(template_str, ctx):
     """
-    Renders jinja templates
-    args:
+    Renders Jinja templates with added Sandhill filters/context processors.
+    Args:
         template_str (string): jinja template variable
         ctx (dict): Context for the jinja template
-    raises:
+    Returns:
+        (str): The rendered template as a string.
+    Raises:
         jinja2.TemplateError
     """
     with context.app_context():
@@ -22,14 +24,14 @@ def evaluate_conditions(conditions, ctx, match_all=True):
     """
     Render each of the condition['value'] using the given context; the result must
     match a value in condition['allowed']
-    args:
+    Args:
         conditions (list): List of dict containing keys 'value' and 'allowed'
         ctx (dict): Context dictionary for template variables
         match_all (bool): If all conditions need to be matched for it to be considered
             a match. Default = True
-    return:
+    Returns:
         (int): returns the number of matches matched ONLY if all are matched, else returns 0
-    raises
+    Raises:
         KeyError: when "match_when"/"match_when_not" or "evaluate" is not in conditions
     """
     matched = 0
@@ -52,14 +54,13 @@ def evaluate_conditions(conditions, ctx, match_all=True):
 def render_template_json(json_obj, ctx):
     """
     Serialize a JSON, render it as a template, then convert back to JSON
-    args:
-        json_obj(dict|list): JSON represented in Python
+    Args:
+        json_obj (dict|list): JSON represented in Python
         ctx (dict): Context for the jinja template
-    returns:
+    Returns:
         (dict|list): The updated JSON structure
-    throws:
-        json.JSONDecodeError: If the resulting templace is unable to be
-        parsed as JSON
+    Raises:
+        json.JSONDecodeError: If the resulting templace is unable to be parsed as JSON
     """
     rendered = render_template_string(json.dumps(json_obj), ctx)
     return json.loads(rendered)

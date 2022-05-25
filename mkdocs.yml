@@ -40,6 +40,7 @@ nav:
     - Routes: routes.md
     - Data Processors: data-processors.md
     - Template Filters: filters.md
+    - Bootstrap Process: bootstrap.md
     - Restriction Conditions: restrictions.md
     - Development Guide: development-guide.md
     - Code Standards: code-standards.md

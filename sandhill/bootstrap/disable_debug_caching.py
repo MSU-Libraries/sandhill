@@ -1,17 +1,11 @@
 """
-Modify responses to disable caching
+Modify Flask responses to set cache disabling headers.
 """
 from sandhill import app
 
 @app.after_request
 def disable_browser_cache(response):
-    """
-    When app is in debug mode, add headers to disable browser caching
-    Args:
-        response (flask.Response): The completed response before sending to the client
-    Returns:
-        response (flask.Response): The final response, potentially modified
-    """
+    """Adds headers to disable browser caching when app is in debug mode."""
     if app.debug:
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
