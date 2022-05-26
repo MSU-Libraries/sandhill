@@ -8,11 +8,15 @@ from sandhill.utils.error_handling import dp_abort
 
 def response(data):
     '''
-    Stream a Requests library response stored in data with the key of stream_var
-    args:
-        data (dict): The route_config 'data' section
-    returns:
-        streams the response
+    Stream a Requests library response that was previously loaded.
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+            * `response` _str_: The key where the response is located.\n
+            * Key from `data[response]` _requests.Response_: The response to stream.\n
+    Returns:
+        (flask.Response|None): A stream of the response
+    Raises:
+        wergzeug.exceptions.HTTPException: If `on_fail` is set.
     '''
     allowed_headers = [
         'Content-Type', 'Content-Disposition', 'Content-Length',

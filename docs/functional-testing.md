@@ -235,20 +235,20 @@ Could result in a page entry to test for each record in `item`:
 ... (and additional page tests for each record matched by "item" URL and path)
 ```
 
-**data[VAR][url]** (Optional, String, Jinja Processed)  
+**`data[VAR][url]`** (Optional, String, Jinja Processed)  
 The `url` inside a `data[VAR]` dict defines a valid URL to call. The response must be in JSON format.
 The response is then queried by `path` to get a subset of the JSON.  
 
-**data[VAR][path]** (Optional, String, Jinja Processed)  
+**`data[VAR][path]`** (Optional, String, Jinja Processed)  
 A JSONPath query to parse the JSON response from `url` to select a subset of data. The results of this
 JSONPath query will be set into the page test entry under the key `VAR`.  
 
-**data[loop]** (Optional, String)  
+**`data[loop]`** (Optional, String)  
 The `loop` key in `data` must have a value that indicates another `VAR` key in `data` which must also be
 defined. The response from this targeted `VAR` will be looped over, generating a new page test entry
 for each item in the target `VAR`.  
 
-**evaluate** (Optional, List, Jinja Required)  
+**`evaluate`** (Optional, List, Jinja Required)  
 A list of strings that will be rendered by Jinja and then evaluated for truthiness. If the strings in
 the list are not wrapped by Jinja delimiters, the `{{` and `}}` delimiters will automatically be wrapped
 around the value. All entries must evaluate to a truthy value after having be Jinja processed or

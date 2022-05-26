@@ -15,20 +15,20 @@ def render_template_string(template_str, ctx):
     Returns:
         (str): The rendered template as a string.
     Raises:
-        jinja2.TemplateError
+        jinja2.TemplateError: On invalid template.
     """
     with context.app_context():
         return flask.render_template_string(template_str, **ctx)
 
 def evaluate_conditions(conditions, ctx, match_all=True):
     """
-    Render each of the condition['value'] using the given context; the result must
-    match a value in condition['allowed']
+    Render each conditions' `evaluate` using the given context; the result must
+    match a value in the conditions' `match_when` or none of the conditions' `match_when_not`.
     Args:
         conditions (list): List of dict containing keys 'value' and 'allowed'
         ctx (dict): Context dictionary for template variables
         match_all (bool): If all conditions need to be matched for it to be considered
-            a match. Default = True
+            a match. Default: True
     Returns:
         (int): returns the number of matches matched ONLY if all are matched, else returns 0
     Raises:

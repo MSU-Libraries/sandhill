@@ -1,6 +1,6 @@
 # Sandhill API Reference
-This document provides a full API reference for Sandhill code not
-covered by user-facing documentation. If you plan on developing
+This document provides API reference for Sandhill code not covered
+by the user documentation. If you plan on developing
 additional data processors, filters, or the like, this may be
 useful. Otherwise, you can safely ignore these documentation pages.
 

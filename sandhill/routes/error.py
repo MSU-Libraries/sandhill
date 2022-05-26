@@ -13,7 +13,7 @@ def handle_http_abort(exc):
     Args:
         exc (werkzeug.exceptions.HTTPException): A HTTPException from a 4xx or 5xx HTTP code
     Returns:
-        A Flask response
+        (flask.Response): The Flask error response
     """
     # Check if the request accepts json format, if so prefer that for rendering
     request_format = match_request_format(None, ["application/json", "text/html"])

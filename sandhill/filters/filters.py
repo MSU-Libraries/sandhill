@@ -106,7 +106,7 @@ def filtertags(value, *args):
         *args (str): Tag names which are safe and will not be removed.
     Returns:
         (str): A string with tags removed (excluding those passed as *args).
-        This string is marked `safe` and will not be further escaped by Jinja.
+               This string is marked `safe` and will not be further escaped by Jinja.
     """
     htf = HTMLTagFilter(tags=args)
     htf.feed(value)
@@ -119,7 +119,7 @@ def solr_encodequery(query, escape_wildcards=False):
     args:
         query (str): Solr query argument to encode.
         escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
-            should be encoded (Default: False)
+                                 should be encoded (Default: False)
     returns:
         (str): The Solr query with appropriate characters encoded.
     """
@@ -227,7 +227,7 @@ def render(context, value, **kwargs):
         context (Jinja2 context): context information and variables to use when
             evaluating the provided template string. Passed automatically.
         value (str): Jinja2 template string to evaluate given the provided context.
-        **kwargs: Additional key-value pairs to add to the render context.
+        **kwargs (dict): Additional key-value pairs to add to the render context.
     Returns:
         (str): the rendered string
     """
@@ -500,7 +500,7 @@ def filter_getconfig(name: str, default=None):
     look in the app.config, otherwise use the default param
     Args:
         name (str): Name of the config variable to look for
-        default(str/None): The defaut value if not found elsewhere
+        default (str): The defaut value if not found elsewhere
     Returns:
         (str): Value of the config variable, default value otherwise
     """
@@ -526,10 +526,10 @@ def filter_xpath(value, xpath):
     '''
     Perform an XPath query against an XML source
     Args:
-        value(str): XML source
-        xpath(str): An XPath query
+        value (str): XML source
+        xpath (str): An XPath query
     Returns:
-        (lxml Elements): A list of matching elements
+        (list): A list of matching lxml.etree._Elements
     '''
     return xml.xpath(value, xpath)
 
@@ -540,8 +540,8 @@ def filter_xpath_by_id(value, xpath):
     elements as a dict, where the key is the 'id' attribute of the
     element and the value is the XML content inside the element as a string.
     Args:
-        value(str): XML source
-        xpath(str): An XPath query
+        value (str): XML source
+        xpath (str): An XPath query
     Returns:
         (dict): A mapping of element 'id' to a string of XML for its children
     '''

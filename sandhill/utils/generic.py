@@ -77,7 +77,7 @@ def getdescendant(obj, list_keys, extract=False, put=None):
         obj (dict|list): A dict/list to check, possibly containing nested dicts/lists.
         list_keys (list|str): List of descendants to follow (or . delimited string)
         extract (bool): If set to true, will remove the last matching value from the `obj`.
-        put (any): Replace the found value with this new value in the `obj`,
+        put (Any): Replace the found value with this new value in the `obj`,
                    or append if the found value at a list key of `"[]"`
     Returns:
         (Any): The last matching value from list_keys, or None if no match

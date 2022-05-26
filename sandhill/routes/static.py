@@ -16,7 +16,9 @@ def handle_static(static_file):
     Args:
         static_file (str): The requested file path within `/static`
     Returns:
-        File stream of the file object or an HTTPException
+        (file stream): File stream of the file object
+    Raises:
+        HTTPException: On HTTP error
     '''
     # Return from instance/static/ if available
     static_path = os.path.join(app.instance_path, "static")
@@ -33,6 +35,8 @@ def favicon():
     '''
     Wrapper to calling handle_static for the ever popular favicon file.
     Returns:
-        File stream of the favicon.ico file inside `/static` or an HTTPException
+        (file stream): The favicon.ico file stream from inside `/static`
+    Raises:
+        HTTPException: On HTTP error
     '''
     return handle_static('favicon.ico')
