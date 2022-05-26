@@ -34,14 +34,14 @@ nav:
 - Welcome to Sandhill: index.md
 - Getting Started:
     - Instance Setup: instance-setup.md
+    - Developing Your Instance: developing-your-instance.md
     - Service Setup: service-setup.md
     - Functional Testing: functional-testing.md
+    - Development Guidelines: development-guidelines.md
 - User Guide:
     - Routes: routes.md
     - Data Processors: data-processors.md
     - Template Filters: filters.md
     - Bootstrap Process: bootstrap.md
-    - Restriction Conditions: restrictions.md
-    - Development Guide: development-guide.md
-    - Code Standards: code-standards.md
+    - Evaluate Conditions: evaluate-conditions.md
 - API Reference: api-reference.md

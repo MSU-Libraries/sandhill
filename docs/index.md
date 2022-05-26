@@ -8,14 +8,16 @@ data processors.
 
 ## Getting Started
 * [Instance Setup](/instance-setup)
+* [Developing Your Instance](/developing-your-instance)
 * [Service Setup](/service-setup)
 * [Functional Testing](/functional-testing)
+* [Development Guidelines](/development-guidelines)
 
 ## User Guide
 * [Routes in Sandhill](/routes)
 * [Data Processors in Sandhill](/data-processors)
-* [Restriction Conditions](/restrictions)
-* [Development Guide](/development-guide)
+* [Bootstrap Process](/bootstrap)
+* [Evaluate Conditions](/evaluate-conditions)
 * [Code Standards](/code-standards)
 
 ## [API Reference](/api-reference)

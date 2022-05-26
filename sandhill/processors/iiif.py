@@ -13,7 +13,7 @@ def load_image(data, url=None, api_get_function=api_get):
     '''
     Load and return a IIIF image
     Args:
-        data (dict): route data where [view_ags][iiif_path] and [identifier] exist
+        data (dict): route data where `data[view_ags][iiif_path]` and `data[identifier]` exist
         url (str): Override the IIIF server URL from the default IIIF_BASE in the configs
         api_get_function (function): function to use when making the GET request
     Returns:

@@ -10,7 +10,7 @@ Creating your first page
 ------------------------
 
 To get started building your own site using Sandhill, you will need to first
-[create you instance](/instance-setup). That `instance` directory will
+[create your instance](/instance-setup). That `instance` directory will
 be where you start your development.
 
 Once you have your base instance directory structure setup you are ready to start

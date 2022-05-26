@@ -1,3 +1,5 @@
+import pytest
+from werkzeug.exceptions import HTTPException
 from sandhill import app
 from sandhill.processors import evaluate
 
@@ -62,8 +64,17 @@ def test_conditions():
 
         # Test for abort on match
         data_dict['abort_on_match'] = True
-        evaluation = evaluate.conditions(data_dict)
-        assert evaluation is None
+        with pytest.raises(HTTPException) as http_error:
+            evaluate.conditions(data_dict)
+        assert http_error.type.code == 401
+
+        data_dict['on_fail'] = 0
+        with pytest.raises(HTTPException) as http_error:
+            evaluate.conditions(data_dict)
+        assert http_error.type.code == 503
+
+        del data_dict['on_fail']
+        assert evaluate.conditions(data_dict) is None
 
         # Test for missing definition of 'match_all'
         del data_dict['match_all']
