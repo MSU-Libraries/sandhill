@@ -25,7 +25,7 @@ def conditions(data):
     Raises:
         HTTPException: If `abort_on_match` is true and the evaluation is truthy.
     """
-    # TODO refactor suggestion: 
+    # TODO refactor suggestion:
     #   replace `match_all` with `match` key; new possible values:
     #       "all"  : similar to match_all: True
     #       "any"  : similar to match_all: False
