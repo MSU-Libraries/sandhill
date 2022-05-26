@@ -12,13 +12,15 @@ from werkzeug.wrappers.response import Response as WerkzeugReponse
 from sandhill import app, catch
 from sandhill.utils.template import render_template_json, render_template_string
 
+
 def load_route_data(route_data):
-    """Loop through route data, applying Jinja replacements
+    """
+    Loop through route data, applying Jinja replacements
     and calling route data processors specified
-    args:
-        route_data (list of OrderedDict): data loaded from the route config file
-    return:
-        dict containing loaded data
+    Args:
+        route_data (list): Data loaded from the route config file
+    Returns:
+        (dict): The loaded data
     """
     loaded_data = {}
     # add view_args into loaded_data
@@ -64,14 +66,13 @@ def load_route_data(route_data):
 
     return loaded_data
 
-
 def identify_processor_components(route_data):
     '''
-    Will get the processor name, function name, and variable name components
-    args:
-        route_data(dict): has the keys of 'name' and 'processor'
-    returns:
-        tuple<str, str, str>: variable name, processor name, function name
+    Get the processor name, function name, and variable name components
+    Args:
+        route_data (dict): has the keys of 'name' and 'processor'
+    Returns:
+        (tuple[str, str, str]): variable name, processor name, function name
     '''
     name = route_data['name']
     try:
@@ -82,15 +83,14 @@ def identify_processor_components(route_data):
         action = "no action defined"
     return name, processor, action
 
-
 def identify_processor_function(name, processor, action):
     '''
     Verify we can load the function specified in the configs
-    args:
+    Args:
         name: variable name for the data process in the route_config
         processor: name of the processor module
         action: function within the processor to call
-    returns:
+    Returns:
         function: loaded processor function
     '''
     action_function, load_exc = processor_load_action(
@@ -109,12 +109,12 @@ def identify_processor_function(name, processor, action):
 def processor_load_action(absolute_module, action):
     '''
     Attempt to get the action function from the provided module
-    args:
+    Args:
         absolute_module (str): Name of the module to load
         action (str): Function name within the module to load
-    returns:
-        (func, Exception): The loaded callable function; any exception
-            that occured while loading the function
+    Returns:
+        (tuple[func, Exception]): The loaded callable function; any exception
+                                  that occured while loading the function
     '''
     action_function = None
     load_exc = None
@@ -132,10 +132,10 @@ def eval_when(route_data, loaded_data):
     '''
     Evaluate the 'when' key of a data processor to determine if that data processor
     should be processed.
-    args:
+    Args:
         route_data (dict): a data processor entry
-    returns:
-        (any): The evaluation of the 'when' key
+    Returns:
+        (Any): The evaluation of the 'when' key
     '''
     # Default to processing if no 'when' provided
     when = True

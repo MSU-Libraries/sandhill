@@ -26,14 +26,14 @@ def select(data, url=None, api_get_function=api_get):
     ```
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
-          * `params` _dict_: Query arguments to pass to Solr.\n
-          * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
-            the response JSON.\n
+            * `params` _dict_: Query arguments to pass to Solr.\n
+            * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
+              the response JSON.\n
         url (str): Overrides the default SOLR_URL normally retrieved from \
-          the [Sandhill config](#TODO) file.\n
+                   the [Sandhill config](#TODO) file.\n
         api_get_function (function): Function used to call Solr with. Used in unit tests.\n
     Returns:
-        The loaded JSON data or None if nothing matched.
+        (dict|None): The loaded JSON data or None if nothing matched.
     Raises:
         wergzeug.exceptions.HTTPException: If `on_fail` is set.
     """
@@ -69,14 +69,14 @@ def select_record(data, url=None, api_get_function=api_get):
     Perform a Solr select call and return the first result from the response.
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
-          * `params` _dict_: Query arguments to pass to Solr.\n
-          * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
-            the response JSON. Default: `response.docs`\n
+            * `params` _dict_: Query arguments to pass to Solr.\n
+            * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
+              the response JSON. Default: `response.docs`\n
         url (str): Overrides the default SOLR_URL normally retrieved from the \
-          [Sandhill config](#TODO) file.\n
+                   [Sandhill config](#TODO) file.\n
         api_get_function (function): Function used to call Solr with. Used in unit tests.\n
     Returns:
-        The first item matched by `record_keys` in the JSON response, otherwise None.
+        (Any): The first item matched by `record_keys` in the JSON response, otherwise None.
     Raises:
         wergzeug.exceptions.HTTPException: If `on_fail` is set.
     """
@@ -93,17 +93,17 @@ def search(data, url=None, api_get_function=api_get):
     Perform a [configured Solr search](#TODO) and return the result.
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
-          * `path` _string_, `paths` _list_: The path to a search config file. Loaded \
-            per [file.load_json](#TODO).\n
-          * `params` _dict_: Query arguments to pass to Solr.\n
-          * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
-            the response JSON. Default: `response.docs`\n
+            * `path` _string_, `paths` _list_: The path to a search config file. Loaded \
+              per [file.load_json](#TODO).\n
+            * `params` _dict_: Query arguments to pass to Solr.\n
+            * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
+              the response JSON. Default: `response.docs`\n
         url (str): Overrides the default SOLR_URL normally retrieved from \
-          the [Sandhill config](#TODO) file.\n
+                   the [Sandhill config](#TODO) file.\n
         api_get_function (function): Function used to call Solr with. Used in unit tests.\n
     Returns:
-        A dict of the loaded JSON response, or a `flask.Response` instance \
-        if `view_args.format` is `text/json`.
+        (dict|flask.Response): A dict of the loaded JSON response, or a `flask.Response` instance \
+                               if `view_args.format` is `text/json`.
     """
     # TODO module should return None and call dp_abort instead of abort
     # TODO allow "path"

@@ -11,14 +11,17 @@ from sandhill.utils.template import render_template_string
        "Could not find template to render: {exc}", abort=501)
 def render(data):
     '''
-    Render the response as a template or directly as a Flask Response
-    args:
-        data (dict): The route_config 'data' section
-    returns:
-        Renders the response via a template or provided Flask Response
+    Render the response as a template or directly as a Flask Response.
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+            * `file` _str_: Path to the template file.\n
+    Returns:
+        (flask.Response): The rendered template in a Flask response.
+    Raises:
+        wergzeug.exceptions.HTTPException: If `file` is not set in data.
     '''
     if 'file' not in data:
-        app.logger.error("template var: 'file' not set in config. Unable to render response.")
+        app.logger.error("template.render: 'file' not set in data; unable to render response.")
         abort(500)
     template = data["file"]
 
@@ -30,10 +33,11 @@ def render_string(data):
     """
     Given a Jinja2 template string, it will render that template to a string and set it in
     the `name` variable.
-    args:
-        data (dict): Dictinoary with the configs
-    return:
-        (string|None): rendered template to a string value
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+            * `value` _str_: The template string to render.\n
+    Returns:
+        (str|None): The rendered template string, or None if no `value` key was in data.
     """
     evaluation = None
     if 'value' in data:

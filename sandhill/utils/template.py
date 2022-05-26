@@ -15,7 +15,7 @@ def render_template_string(template_str, ctx):
     Returns:
         (str): The rendered template as a string.
     Raises:
-        jinja2.TemplateError
+        jinja2.TemplateError: On invalid template.
     """
     with context.app_context():
         return flask.render_template_string(template_str, **ctx)

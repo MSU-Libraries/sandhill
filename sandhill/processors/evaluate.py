@@ -7,13 +7,13 @@ from sandhill.utils.generic import ifnone, getdescendant
 
 def conditions(data):
     """
-    Evaluates the condtions speicified in the processor section of the configs
-    args:
-        data (dict): Dictinoary with the configs
-
-    return:
+    Evaluates the condtions specified in the processor section of the configs.
+    TODO expand here or link to external documentation
+    Args:
+        data (dict): Dict with the configs
+    Returns:
         (bool|None): Returns True if given conditions match appropriate to the
-            parameters, False if they do not, or None on failure
+                     parameters, False if they do not, or None on failure
     """
     evaluation = None
     condition_keys = ifnone(data, 'conditions', '')

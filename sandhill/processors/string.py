@@ -6,11 +6,16 @@ from requests import Response as RequestsResponse
 
 def replace(data):
     '''
-    For the given 'name' in data, replace all occurances of an old string with new string
-    args:
-        data(dict): Dict with 'old' and 'new' keys
-    returns:
-        dict: The updated data for the 'name' variable
+    For the given `name` in data, replace all occurances of an old string with new string and \
+    return the result.
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+            * `name` _str|requests.Response_: The context in which to find and replace.\n
+            * `old` _str_: The string to find.\n
+            * `new` _str_: The string to replace it with.\n
+    Returns:
+        (str|requests.Response): The same type as `data[name]` was, only now with string \
+            replacements done.
     '''
     data_copy = data[data['name']]
     # TODO able to handle regular string data (non-JSON)
