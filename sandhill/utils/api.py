@@ -15,6 +15,8 @@ def api_get(**kwargs):
     Raises:
         requests.RequestException: If the call cannot return a response.
     """
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 4
     app.logger.debug(f"API GET arguments: {kwargs}")
     response = requests.get(**kwargs)
     app.logger.debug(f"API GET called: {response.url}")

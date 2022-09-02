@@ -131,11 +131,38 @@ def test_load_route_data():
             "value": "{{ view_args.namespace }}",
         })
     ]
-    with app.test_request_context('/dummy'):
+    with app.test_request_context('/dummy1'):
         request.view_args = { 'namespace': "a\\.aspx" }
         with raises(HTTPException) as http_error:
             loaded = base.load_route_data(route_data)
         assert 400 == http_error.type.code
+
+    # Called processor triggers an HTTPException
+    route_data = [
+         OrderedDict({
+            "name": "counts",
+            "processor": "solr.search",
+            "paths": ["config/search/main.json"],
+            "on_fail": 404,
+            "params": {
+                "q": "*",
+                "sort": "INVALID INVALID",
+                "rows":"0",
+                "wt": "json"
+            }
+        })
+    ]
+    with app.test_request_context('/etd/1000'):
+        with raises(HTTPException) as http_error:
+            loaded = base.load_route_data(route_data)
+        assert 404 == http_error.type.code
+
+    route_data[0]['on_fail'] = 0
+    with app.test_request_context('/etd/1000'):
+        with raises(HTTPException) as http_error:
+            loaded = base.load_route_data(route_data)
+        assert 400 == http_error.type.code
+
 
 def test_eval_when():
     route_data = OrderedDict({

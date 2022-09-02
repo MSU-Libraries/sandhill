@@ -9,6 +9,7 @@ from ast import literal_eval
 from flask import request, abort, Response as FlaskResponse
 from jinja2 import TemplateError
 from werkzeug.wrappers.response import Response as WerkzeugReponse
+from werkzeug.exceptions import HTTPException
 from sandhill import app, catch
 from sandhill.utils.template import render_template_json, render_template_string
 
@@ -48,7 +49,15 @@ def load_route_data(route_data):
 
         # Call action from processor
         if action_function:
-            loaded_data[name] = action_function(route_data[i])
+            try:
+                loaded_data[name] = action_function(route_data[i])
+            except HTTPException as exc:
+                # Make abort calls abide by on_fail route setting
+                if 'on_fail' in route_data[i]:
+                    on_fail = int(route_data[i]['on_fail'])
+                    exc_fail = exc.code if hasattr(exc, "code") else 503
+                    on_fail = on_fail if on_fail != 0 else exc_fail
+                    abort(on_fail)
         # Trigger abort with 'on_fail', if set; otherwise allow failure and continue
         if (name not in loaded_data or loaded_data[name] is None) and 'on_fail' in route_data[i]:
             app.logger.warning(
