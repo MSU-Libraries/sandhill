@@ -161,7 +161,7 @@ def test_load_route_data():
     with app.test_request_context('/etd/1000'):
         with raises(HTTPException) as http_error:
             loaded = base.load_route_data(route_data)
-        assert 503 == http_error.type.code
+        assert 400 == http_error.type.code
 
 
 def test_eval_when():
