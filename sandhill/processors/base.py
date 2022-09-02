@@ -55,7 +55,8 @@ def load_route_data(route_data):
                 # Make abort calls abide by on_fail route setting
                 if 'on_fail' in route_data[i]:
                     on_fail = int(route_data[i]['on_fail'])
-                    on_fail = on_fail if on_fail != 0 else exc.type.code
+                    exc_fail = exc.type.code if hasattr(exc, "type") else 503
+                    on_fail = on_fail if on_fail != 0 else exc_fail
                     abort(on_fail)
         # Trigger abort with 'on_fail', if set; otherwise allow failure and continue
         if (name not in loaded_data or loaded_data[name] is None) and 'on_fail' in route_data[i]:
