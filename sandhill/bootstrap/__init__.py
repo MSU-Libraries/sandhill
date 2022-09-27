@@ -37,7 +37,6 @@ def configure_logging():
 
     # Email logger
     if getconfig('EMAIL'):
-        email_log_level = logging.ERROR
         email_log_level = getconfig('EMAIL_LOG_LEVEL', logging.ERROR)
         mail_handler = SMTPHandler(
             mailhost=getconfig('EMAIL_HOST', '127.0.0.1'),
@@ -116,7 +115,7 @@ def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
               or module.name in exclude:
                 continue
             absolute_module = getmodulepath(os.path.join(base_path, sub_path, module.name))
-            # Do not load modules if that are already loaded/loading
+            # Do not load modules if they are already loaded/loading
             if absolute_module not in sys.modules:
                 try:
                     import_module(absolute_module)

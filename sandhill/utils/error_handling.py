@@ -76,7 +76,7 @@ def catch(exc_class, exc_msg=None, **kwargs):
 
                 # Handling of the exception
                 if exc_msg:
-                    sandhill.app.logger.error(f"{request.url if request else ''} raised: " + \
+                    sandhill.app.logger.warning(f"{request.url if request else ''} raised: " + \
                         exc_msg.format(**args_dict))
 
                 # Get the return_arg value if required and present in the function's arguments
