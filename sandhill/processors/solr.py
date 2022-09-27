@@ -3,6 +3,7 @@ Wrappers for making API calls to a Solr node.
 """
 from collections.abc import Sequence
 from urllib.parse import urlencode
+from urllib3.exceptions import HTTPError
 from json.decoder import JSONDecodeError
 from requests.exceptions import RequestException
 from flask import jsonify, abort
@@ -13,7 +14,7 @@ from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 from sandhill.utils.error_handling import dp_abort
 
-@catch(RequestException, "Call to Solr failed: {exc}", abort=503)
+@catch((RequestException, HTTPError), "Call to Solr failed: {exc}", abort=503)
 @catch(JSONDecodeError, "Call returned from Solr that was not JSON.", abort=503)
 @catch(KeyError, "Missing url component: {exc}", abort=400) # Missing 'params' key
 def select(data, url=None, api_get_function=api_get):
