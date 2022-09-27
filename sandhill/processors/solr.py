@@ -3,8 +3,8 @@ Wrappers for making API calls to a Solr node.
 """
 from collections.abc import Sequence
 from urllib.parse import urlencode
-from urllib3.exceptions import HTTPError
 from json.decoder import JSONDecodeError
+from urllib3.exceptions import HTTPError
 from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
