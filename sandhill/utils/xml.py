@@ -4,11 +4,15 @@ XML loading and handling functionality.
 import io
 from lxml import etree
 import requests
-from requests.exceptions import ConnectionError as RequestsConnectionError
+from requests.exceptions import (
+    RequestException,
+    ConnectionError as RequestsConnectionError
+)
 from validator_collection import checkers
 from sandhill import app, catch
 
 @catch(etree.XMLSyntaxError, "Invalid XML source: {source} Exc: {exc}", return_val=None)
+@catch(RequestException, "XML API call failed: {source} Exc: {exc}", return_val=None)
 @catch(RequestsConnectionError, "Invalid host in XML call: {source} Exc: {exc}", return_val=None)
 def load(source) -> etree._Element: # pylint: disable=protected-access
     '''
