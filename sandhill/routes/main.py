@@ -67,7 +67,7 @@ def main(*args, **kwargs): # pylint: disable=unused-argument
         data = load_route_data(route_data)
     # check if none of the route processors returned a FlaskResponse
     if not isinstance(data, (FlaskResponse, WerkzeugReponse)):
-        app.logger.error(
+        app.logger.warning(
             f"None of the 'data' processors in {route_config['route']}"
             f" returned a Response object"
         )
