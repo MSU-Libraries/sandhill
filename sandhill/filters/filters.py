@@ -335,6 +335,9 @@ def solr_getfq(query: dict):
     """
     def parse_fq_into_dict(fq_dict, fq_str):
         fq_pair = fq_str.split(":", 1)
+        if len(fq_pair) != 2:
+            app.logger.debug(f"Could not split invalid Solr fq: {fq_str}")
+            return
         if not fq_pair[0] in fq_dict:
             fq_dict[fq_pair[0]] = []
         fq_dict[fq_pair[0]].append(solr_decode(fq_pair[1]))
