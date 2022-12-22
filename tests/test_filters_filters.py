@@ -278,6 +278,14 @@ def test_filter_solr_getfq():
     res = filters.solr_getfq(query)
     assert res == {'dessert': ['custard']}
 
+    # attempt to get an invalid fq
+    query = {
+        'q': "frogs",
+        'fq': "nocolonhere"
+    }
+    res = filters.solr_getfq(query)
+    assert res == {}
+
 def test_filter_solr_addfq():
     query = {
         'q': "frogs"
