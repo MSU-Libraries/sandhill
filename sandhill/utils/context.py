@@ -4,6 +4,7 @@ from datetime import datetime
 from copy import deepcopy
 from deepdiff import DeepDiff
 from flask import request, has_app_context
+from jinja2 import pass_context
 from sandhill import app
 import json
 
@@ -99,11 +100,24 @@ def context_processors():
         """
         return dict(DeepDiff(dict1, dict2, ignore_order=True))
 
+    @pass_context
+    def get_var(context, var: str):
+        """
+        Returns the given variable in the current application context
+        Args:
+            var (str): The name of the variable to get from the context
+        Returns:
+            (any): The value of the provided variable in the current context
+        """
+        ctx = dict(context)
+        return ctx[var] if var in ctx else None
+
     # Mapping of context function names to actual functions
     return {
         'debug': app.debug,
         'strftime': strftime,
         'sandbug': context_sandbug,
         'urlcomponents': urlcomponents,
-        'find_mismatches': find_mismatches
+        'find_mismatches': find_mismatches,
+        'get_var': get_var
     }
