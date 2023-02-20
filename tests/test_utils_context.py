@@ -9,7 +9,8 @@ def test_list_custom_context_processors():
         'strftime',
         'sandbug',
         'urlcomponents',
-        'find_mismatches'
+        'find_mismatches',
+        'get_var'
     ]
 
 def test_context_processors():
@@ -18,6 +19,13 @@ def test_context_processors():
     assert isinstance(ctx['debug'], bool)
     assert ctx['strftime']('%Y-%m', '2021-08-31') == '2021-08'
     assert ctx['sandbug']('Test for sandbug context processor.') == None
+
+def test_get_var():
+    ctx = context.context_processors()
+    assert ctx['get_var']({},'a') == None
+    assert ctx['get_var']({'a':1},'a') == 1
+    assert ctx['get_var']({'a':1, 'false':True},'false') == True
+    assert ctx['get_var']({'a':1},'q') == None
 
 def test_find_mismatches_context_processor():
     ctx = context.context_processors()
