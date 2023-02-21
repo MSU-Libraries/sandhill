@@ -457,3 +457,7 @@ def test_filter_xpath_by_id():
     xmlstr = "<root><elem id='one'>Pre <mid>Mid</mid> Tail</elem><elem>Second</elem></root>"
     idmap = filters.filter_xpath_by_id(xmlstr, "/root/elem")
     assert idmap == { 'one': "Pre <mid>Mid</mid> Tail" }
+
+def test_json_embedstring():
+    assert filters.json_embedstring(r'\"vegetable\ soups\"') == r'\"\\\"vegetable\\ soups\\\"\"'
+    assert filters.json_embedstring({'not-a': "string val"}) == {'not-a': "string val"}

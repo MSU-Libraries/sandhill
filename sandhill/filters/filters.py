@@ -2,6 +2,7 @@
 import urllib
 import re
 import html
+import json
 from typing import Any  # pylint: disable=unused-import
 from collections.abc import Hashable
 from datetime import datetime
@@ -549,3 +550,20 @@ def filter_xpath_by_id(value, xpath):
         (dict): A mapping of element 'id' to a string of XML for its children
     '''
     return xml.xpath_by_id(value, xpath)
+
+@app.template_filter('json_embedstring')
+def json_embedstring(value):
+    '''
+    Escape a string for embedding inside a JSON string. Does nothing
+    for non-string values.
+    Args:
+        value (string): The string
+    Returns:
+        (string): The input escaped for embedding inside a JSON string
+    '''
+    if not isinstance(value, str):
+        return value
+    encoded = json.JSONEncoder().encode(value)
+    # Replace outer quotes with escaped quotes
+    encoded = r'\"' + encoded[1:-1] + r'\"'
+    return encoded
