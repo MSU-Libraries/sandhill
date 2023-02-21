@@ -62,5 +62,11 @@ def render_template_json(json_obj, ctx):
     Raises:
         json.JSONDecodeError: If the resulting templace is unable to be parsed as JSON
     """
-    rendered = render_template_string(json.dumps(json_obj), ctx)
+    # Disable autoescape for JSON output to avoid HTML entities being injected
+    rendered = render_template_string(
+        "{% autoescape false -%}" +
+        json.dumps(json_obj) +
+        "{%- endautoescape %}",
+        ctx
+    )
     return json.loads(rendered)

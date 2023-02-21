@@ -20,6 +20,8 @@ runhelp() {
     echo "      Run accessibility tests"
     echo "  -m|--metadata"
     echo "      Run metadata tests"
+    echo "  -x|--exitfirst"
+    echo "      Exit on first test failure"
     echo "  -v|--verbose"
     echo "      Show verbose output"
     echo ""
@@ -30,7 +32,8 @@ if [[ -z "$1" || $1 == "-h" || $1 == "--help" || $1 == "help" ]]; then
     exit 0
 fi
 
-VERBOSE_FLAG=
+PYTEST_FLAGS=
+
 
 # Parse flag arguments
 while [[ $# -gt 0 ]]; do
@@ -47,8 +50,11 @@ while [[ $# -gt 0 ]]; do
     -m|--metadata)
         TEST_TYPE=metadata
         shift ;;
+    -x|--exitfirst)
+        PYTEST_FLAGS+=' -x'
+        shift ;;
     -v|--verbose)
-        VERBOSE_FLAG='-vvv --assert=plain'
+        PYTEST_FLAGS+=' -vvv --assert=plain'
         shift ;;
     *)
         echo "ERROR: Unknown flag: $1"
@@ -74,12 +80,12 @@ export PATH=/usr/local/bin:/usr/bin:$PATH
 if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
-    pytest -m functional --no-cov -n 4 $VERBOSE_FLAG
+    pytest -m functional --no-cov -n 4 $PYTEST_FLAGS
     PYTEST_EXIT_CODE=$?
 elif [[ $TEST_TYPE == "metadata" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
-    pytest -m metadata --no-cov -n 4 $VERBOSE_FLAG
+    pytest -m metadata --no-cov -n 4 $PYTEST_FLAGS
     PYTEST_EXIT_CODE=$?
 elif [[ $TEST_TYPE == "a11y" ]]; then
     # Starting x virtual frame buffer, needed for headless browser
@@ -90,14 +96,14 @@ elif [[ $TEST_TYPE == "a11y" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
     echo "Running Accessibility tests against $SERVER_NAME"
-    pytest -m a11y --no-cov -n 4 $VERBOSE_FLAG
+    pytest -m a11y --no-cov -n 4 $PYTEST_FLAGS
     PYTEST_EXIT_CODE=$?
 
     # Stop headless server
     kill $PID
 elif [[ $TEST_TYPE == "unit" ]]; then
     export INSTANCE_DIR=$CUR_DIR/tests/instance
-    pytest $VERBOSE_FLAG
+    pytest $PYTEST_FLAGS
     PYTEST_EXIT_CODE=$?
 else
     echo "ERROR: Unknown test type of '$TEST_TYPE'"
