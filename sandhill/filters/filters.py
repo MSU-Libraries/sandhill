@@ -127,21 +127,29 @@ def solr_encodequery(query, escape_wildcards=False):
     return Solr().encode_query(query, escape_wildcards=escape_wildcards)
 
 @app.template_filter('solr_encode')
-def solr_encode(value, escape_wildcards=False, double_slash=False):
+def solr_encode(value, escape_wildcards=False, preserve_quotes=False):
     """Filter to encode a value being passed to Solr
     Args:
         value (str): string to escape Solr characters
         escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
             should be encoded (Default: False)
-        double_slash (bool): If set to True, will replace single slashes with
-            double slashes
+        preserve_quotes (bool): If set to True, will prevent quotes on outside
+            of the string from being encoded
     Returns:
         (str): same string but with Solr characters encoded
     """
+    quotes_exist = False
+
+    if preserve_quotes and re.match('".*"', value):
+        value = value.strip('"')
+        quotes_exist = True
+
     if isinstance(value, str):
         value = Solr().encode_value(value, escape_wildcards)
-    if double_slash:
-        value = value.replace('\\','\\\\')
+
+    if quotes_exist:
+        value = f"\"{value}\""
+
     return value
 
 @app.template_filter('solr_decode')
@@ -565,5 +573,6 @@ def json_embedstring(value):
         return value
     encoded = json.JSONEncoder().encode(value)
     # Replace outer quotes with escaped quotes
-    encoded = r'\"' + encoded[1:-1] + r'\"'
+    #encoded = r'\"' + encoded[1:-1] + r'\"'
+    encoded = encoded[1:-1]
     return encoded

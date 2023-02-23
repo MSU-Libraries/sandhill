@@ -87,7 +87,8 @@ def test_filter_solr_encode():
     assert filters.solr_encode("hello") == "hello"
     assert filters.solr_encode("hello*?") == "hello*?"
     assert filters.solr_encode("hello* world?", escape_wildcards=True) == r'hello\*\ world\?'
-    assert filters.solr_encode("hello\\world", double_slash=True) == r'hello\\\\world'
+    assert filters.solr_encode("\"hello\\world\"", preserve_quotes=True) == r'"hello\\world"'
+    assert filters.solr_encode("\"hello\\world\"") == r'\"hello\\world\"'
 
     # test non-string
     assert filters.solr_encode(['test']) == ['test']
@@ -459,5 +460,7 @@ def test_filter_xpath_by_id():
     assert idmap == { 'one': "Pre <mid>Mid</mid> Tail" }
 
 def test_json_embedstring():
-    assert filters.json_embedstring(r'\"vegetable\ soups\"') == r'\"\\\"vegetable\\ soups\\\"\"'
+    #assert filters.json_embedstring(r'\"vegetable\ soups\"') == r'\"\\\"vegetable\\ soups\\\"\"'
+    assert filters.json_embedstring(r'\"vegetable\ soups\"') == r'\\\"vegetable\\ soups\\\"'
+    assert filters.json_embedstring(r'vegetable\ soups') == r'vegetable\\ soups'
     assert filters.json_embedstring({'not-a': "string val"}) == {'not-a': "string val"}
