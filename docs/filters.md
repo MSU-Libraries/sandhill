@@ -48,6 +48,11 @@ Take a peek at the code for other Sandhill filters if you'd like to see more exa
 ::: sandhill.filters.filters.deepcopy
     rendering:
       show_root_full_path: false
+### `getdescendant()`
+::: sandhill.filters.filters.filter_getdescendant
+    rendering:
+      show_root_heading: false
+      show_root_toc_entry: false
 ::: sandhill.filters.filters.getextension
     rendering:
       show_root_full_path: false
