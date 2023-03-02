@@ -460,7 +460,22 @@ def test_filter_xpath_by_id():
     assert idmap == { 'one': "Pre <mid>Mid</mid> Tail" }
 
 def test_json_embedstring():
-    #assert filters.json_embedstring(r'\"vegetable\ soups\"') == r'\"\\\"vegetable\\ soups\\\"\"'
     assert filters.json_embedstring(r'\"vegetable\ soups\"') == r'\\\"vegetable\\ soups\\\"'
     assert filters.json_embedstring(r'vegetable\ soups') == r'vegetable\\ soups'
     assert filters.json_embedstring({'not-a': "string val"}) == {'not-a': "string val"}
+
+def test_get_descendant():
+    data = [
+        {
+            "key1": ["val-a", "val-b"],
+            "key2": ["val-c", "val-d"],
+        },
+        {
+            "key1": ["val-x", "val-y"],
+            "key2": "val-z",
+        }
+    ]
+
+    assert filters.filter_getdescendant(data, "0.key2.1") == "val-d"
+    assert filters.filter_getdescendant(data, "0.key2.3") == None
+    assert filters.filter_getdescendant(data, "0.key2.3", []) == []

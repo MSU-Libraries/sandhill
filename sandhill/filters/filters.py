@@ -12,7 +12,7 @@ import copy
 from jinja2 import pass_context, TemplateError
 from markupsafe import Markup
 from sandhill import app, catch
-from sandhill.utils.generic import getconfig
+from sandhill.utils.generic import getconfig, getdescendant
 from sandhill.utils.solr import Solr
 from sandhill.utils.html import HTMLTagFilter
 from sandhill.utils import xml
@@ -576,3 +576,18 @@ def json_embedstring(value):
     #encoded = r'\"' + encoded[1:-1] + r'\"'
     encoded = encoded[1:-1]
     return encoded
+
+@app.template_filter('getdescendant')
+def filter_getdescendant(obj, list_keys, default=None):
+    '''
+    Gets key values from the dictionary/list if they exist;
+    will check recursively through the `obj`.
+    Args:
+        obj (dict|list): A dict/list to check, possibly containing nested dicts/lists.
+        list_keys (list|str): List of descendants to follow (or . delimited string)
+        default (Any): Default value to return if no match found. Default of None.
+    Returns:
+        (Any): The last matching value from list_keys, or default value if not match found.
+    '''
+    found = getdescendant(obj, list_keys)
+    return default if found is None else found
