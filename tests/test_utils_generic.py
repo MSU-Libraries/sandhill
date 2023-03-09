@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 from pytest import raises
 from sandhill.utils import generic
 from sandhill import app
@@ -118,3 +119,46 @@ def test_getmodulepath():
     assert generic.getmodulepath(install_path + '/sandhill/utils/filters.py') == 'sandhill.utils.filters'
     assert generic.getmodulepath(install_path + '/invalid/subpath') == 'invalid.subpath'
     assert generic.getmodulepath('/completely/invalid/path') == 'completely.invalid.path'
+
+def test_pop_dict_matching_key():
+    haystack = [
+        {'key1': 10, 'hay1': 'a'},
+        {'key2': 20, 'hay2': 'b'},
+    ]
+    match_none = {'key0': 0, 'match0': '.'}
+    match_no = {'key1': 99, 'match1': 'y'}
+    match_one = {'key1': 10, 'match1': 'x'}
+    match_two = {'key2': 20, 'match1': 'z'}
+
+    assert generic.pop_dict_matching_key(haystack, match_none, 'key0') == []
+    assert generic.pop_dict_matching_key(haystack, match_no, 'key1') == []
+    assert generic.pop_dict_matching_key(haystack.copy(), match_one, 'key1') == [haystack[0]]
+    assert generic.pop_dict_matching_key(haystack.copy(), match_two, 'key2') == [haystack[1]]
+
+def test_overlay_dicts_matching_key():
+    target = [
+        {'key1': 10, 'tgt1': 'a'},
+        {'key1': 20, 'tgt2': 'b'},
+        {'key2': 30, 'tgt3': 'c'},
+    ]
+    match_none = {'key0': 0, 'match0': '.'}
+    match_no = {'key1': 99, 'match1': 'y'}
+    match_one = {'key1': 10, 'match1': 'x'}
+    match_again = {'key1': 10, 'match1': 'xx'}
+    match_two = {'key1': 20, 'match1': 'z'}
+
+    tcopy = deepcopy(target)
+    generic.overlay_dicts_matching_key(tcopy, [match_none], 'key0')
+    assert tcopy == target + [match_none]
+
+    tcopy = deepcopy(target)
+    generic.overlay_dicts_matching_key(tcopy, [match_no], 'key1')
+    assert tcopy == target + [match_no]
+
+    tcopy = deepcopy(target)
+    generic.overlay_dicts_matching_key(tcopy, [match_one], 'key1')
+    assert tcopy == [target[1], target[2], {**target[0], **match_one}]
+
+    tcopy = deepcopy(target)
+    generic.overlay_dicts_matching_key(tcopy, [match_one, match_again, match_two], 'key1')
+    assert tcopy == [target[2], {**target[0], **match_one}, {**target[0], **match_again}, {**target[1], **match_two}]

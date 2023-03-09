@@ -4,7 +4,7 @@ Generic functions that could be used in most any context.
 import os
 import re
 from typing import Any  # pylint: disable=unused-import
-from collections.abc import Mapping
+from collections.abc import Mapping, Hashable
 from sandhill import app, catch
 
 def ifnone(*args):
@@ -150,3 +150,55 @@ def getmodulepath(path):
     install_path = os.path.dirname(app.root_path)
     subpath = re.sub('^' + re.escape(install_path), '', path)
     return re.sub('\\.py$', '', subpath).strip('/').replace('/', '.')
+
+def pop_dict_matching_key(haystack: list[dict], match: dict, key: Hashable) -> list[dict]:
+    """
+    Search the haystack for all dicts that have the same
+    value as the passed match dict for the given key.
+    Matched dicts are removed from the haystack and
+    returned as a list.
+    Args:
+        haystack (list): A list of dicts to search through.
+        match (dict): The dict to match against.
+        key (Hashable): The key (both dicts) for the comparison value.
+    Returns:
+        (list): A list of matching dicts removed from the haystack.
+    """
+    matched = []
+    if (needle_val := match.get(key)):
+        for hay in list(haystack):
+            if hay.get(key) == needle_val:
+                matched.append(hay)
+                haystack.remove(hay)
+    return matched
+
+def overlay_dicts_matching_key(target: list[dict], overlays: list[dict], key: Hashable):
+    """
+    Given the target, find and replace matching dicts, for all matching dicts
+    in the list of overlays, using the value for the provided key to compare them.
+    For each overlay dict, overlay the values on top of any matching original
+    dict from the target.
+    If multiple overlays match an original target dict, both overlays will use
+    the original dict as a base for the overlay.
+    If no matching dict was found in the original target list, the overlay will be
+    appended to the target as is.
+    Args:
+        haystack (list): The list of dicts to search and update.
+        match (list): The list of dict match and overlay.
+        key (Hashable): The key (both dicts) for the comparison value.
+    Returns:
+        (None)
+    """
+    base_ref = {}
+    # Extract all base/default dictionaries from target
+    for overlay in overlays:
+        if (oval := overlay.get(key)):
+            if [base_dict := tdict for tdict in target if tdict.get(key) == oval]:
+                target.remove(base_dict)
+                base_ref[oval] = base_dict
+
+    # For each overlay, copy matching base and update with overlay before appending
+    for overlay in overlays:
+        if (base_dict := base_ref.get(overlay.get(key))):
+            overlay = {**base_dict, **overlay}
+        target.append(overlay)
