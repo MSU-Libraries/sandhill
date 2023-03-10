@@ -113,6 +113,7 @@ GitHub Release:
     - rm -rf sandhill.git
     - git clone --mirror git@gitlab.msu.edu:msu-libraries/repo-team/sandhill.git
     - cd sandhill.git
+    # This will trigger the GitHub CI which builds the MkDocs into the gh-pages branch
     - git push --force --mirror git@github.com:MSU-Libraries/sandhill.git
     - echo "{\"tag_name\":\"${TAG}\", \"target_commitish\":\"${CI_COMMIT_SHA}\"}" > data.json
     - "curl -X POST -H 'Accept: application/vnd.github.v3+json' -u $GITHUB_USER_TOKEN https://api.github.com/repos/MSU-Libraries/sandhill/releases -d '@data.json'"
