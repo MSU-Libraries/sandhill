@@ -12,5 +12,5 @@ RUN pip install -r requirements.txt
 # Expose the port
 EXPOSE 8080
 
-# run the command to start uWSGI
+# Run the command to start uWSGI
 CMD ["uwsgi", "uwsgi.ini"] 
