@@ -6,8 +6,9 @@ stages:
 
 Unit Testing and Linting:
   stage: Testing and Linting
+  retry: 2
   tags:
-    - msul-docker
+    - msul-shared
   image: python:3.10
   except:
     - tags
@@ -22,8 +23,9 @@ Unit Testing and Linting:
 
 Build Image:
   stage: Build
+  retry: 2
   tags:
-    - msul
+    - msul-shared
   only:
     - master
   except:
