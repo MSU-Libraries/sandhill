@@ -39,8 +39,8 @@ def establish_url(url, fallback):
     try:
         parsed = urlparse(url)
         if not url or not all([parsed.scheme, parsed.netloc]):
-            raise Exception
-    except:
+            raise ValueError
+    except ValueError:
         app.logger.debug(f"URL provided is not valid: {url}")
         abort(400)
     return url
