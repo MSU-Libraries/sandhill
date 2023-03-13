@@ -1,7 +1,7 @@
 '''
 Functionality to support API calls.
 '''
-import validators
+from urllib.parse import urlparse
 import requests
 from flask import abort
 from sandhill import app
@@ -36,7 +36,11 @@ def establish_url(url, fallback):
         werkzeurg.exceptions.HTTPException: If URL to be returned is not a valid formatted URL.
     """
     url = url if url else fallback
-    if not url or not validators.url(url):
-        app.logger.debug(f"Api url provided is not valid. Url: {url}")
+    try:
+        parsed = urlparse(url)
+        if not url or not all([parsed.scheme, parsed.netloc]):
+            raise Exception
+    except:
+        app.logger.debug(f"URL provided is not valid: {url}")
         abort(400)
     return url

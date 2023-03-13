@@ -40,6 +40,10 @@ def test_establish_url():
     url = api.establish_url("", "https://www.google.com")
     assert url == "https://www.google.com"
 
+    # Test non Internet URL
+    url = api.establish_url("http://fedora:8080/fedora", "fallback")
+    assert url == "http://fedora:8080/fedora"
+
     # Test invalid url
     with raises(HTTPException) as http_error:
         url = api.establish_url(None, "not_a_url")
