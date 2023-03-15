@@ -7,17 +7,17 @@ the tools to quickly combine multiple data sources into web content using custom
 data processors.
 
 ## Getting Started
-* [Instance Setup](/instance-setup)
-* [Developing Your Instance](/developing-your-instance)
-* [Service Setup](/service-setup)
-* [Functional Testing](/functional-testing)
-* [Development Guidelines](/development-guidelines)
+* [Instance Setup](/sandhill/instance-setup)
+* [Developing Your Instance](/sandhill/developing-your-instance)
+* [Service Setup](/sandhill/service-setup)
+* [Functional Testing](/sandhill/functional-testing)
+* [Development Guidelines](/sandhill/development-guidelines)
 
 ## User Guide
-* [Routes in Sandhill](/routes)
-* [Data Processors in Sandhill](/data-processors)
-* [Bootstrap Process](/bootstrap)
-* [Evaluate Conditions](/evaluate-conditions)
-* [Code Standards](/code-standards)
+* [Routes in Sandhill](/sandhill/routes)
+* [Data Processors in Sandhill](/sandhill/data-processors)
+* [Bootstrap Process](/sandhill/bootstrap)
+* [Evaluate Conditions](/sandhill/evaluate-conditions)
+* [Code Standards](/sandhill/code-standards)
 
-## [API Reference](/api-reference)
+## [API Reference](/sandhill/api-reference)
