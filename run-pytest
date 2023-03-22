@@ -80,12 +80,12 @@ export PATH=/usr/local/bin:/usr/bin:$PATH
 if [[ $TEST_TYPE == "functional" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
-    pytest -m functional --no-cov -n 4 $PYTEST_FLAGS
+    pytest -m functional --no-cov -n 4 --showlocals $PYTEST_FLAGS
     PYTEST_EXIT_CODE=$?
 elif [[ $TEST_TYPE == "metadata" ]]; then
     # Set instance dir
     export INSTANCE_DIR=$CUR_DIR/instance
-    pytest -m metadata --no-cov -n 4 $PYTEST_FLAGS
+    pytest -m metadata --no-cov -n 4 --showlocals $PYTEST_FLAGS
     PYTEST_EXIT_CODE=$?
 elif [[ $TEST_TYPE == "a11y" ]]; then
     # Starting x virtual frame buffer, needed for headless browser
