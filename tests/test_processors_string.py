@@ -58,3 +58,18 @@ def test_replace():
     new_resp = string.replace(data_dict)
     assert isinstance(new_resp, RequestsResponse)
     assert new_resp.content == b'404 Not Found'
+
+    # Testing with missing or None 'name' key
+    data_dict = {
+        "name": "json",
+        # missing "json" key
+        "old": 'find',
+        "new": 'replace'
+    }
+
+    retval = string.replace(data_dict)
+    assert retval is None
+
+    data_dict['json'] = None
+    retval = string.replace(data_dict)
+    assert retval is None
