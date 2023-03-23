@@ -62,10 +62,11 @@ loader = ChoiceLoader([
 ])
 app.jinja_loader = loader
 
-# So we can load 'static' files from the instance/static/ directory
-for rule in app.url_map.iter_rules('static'):
-    # Remove the default rule as our static files are handled in routes/static.py
-    app.url_map._rules.remove(rule) # pylint: disable=protected-access
+# So we can load 'static' files from the instance/static/ directory, we
+# wemove the default rule; our static files are handled in routes/static.py
+app.url_map._rules_by_endpoint.pop('static', None) # pylint: disable=protected-access
+app.url_map._matcher._root.static = {} # pylint: disable=protected-access
+app.view_functions.pop('static', None)
 
 # Set default config file
 app.config.from_pyfile(os.path.join(app.root_path, 'sandhill.default_settings.cfg'))
