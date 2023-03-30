@@ -64,6 +64,7 @@ Tag Release:
   except:
     - tags
   script:
+    - apk add git || apt install git
     - rm -rf clone/ || true
     - git clone https://gitlab-ci-token:$RW_CICD_TOKEN@gitlab.msu.edu/msu-libraries/repo-team/sandhill.git clone/
     - cd clone/ # doing this to avoid runner cache
@@ -112,7 +113,7 @@ GitHub Release:
     - job: Tag Release
       artifacts: true
   script:
-    - apk add curl || apt install curl
+    - apk add curl git || apt install curl git
     - rm -rf sandhill.git
     - git clone --mirror git@gitlab.msu.edu:msu-libraries/repo-team/sandhill.git
     - cd sandhill.git
