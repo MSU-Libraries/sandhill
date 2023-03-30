@@ -39,7 +39,7 @@ Build Image:
 Publish Docs to GitLab:
   stage: Build
   tags:
-    - msul-docker
+    - msul-shared
   image: python:latest
   only:
     - master
@@ -57,7 +57,7 @@ Publish Docs to GitLab:
 Tag Release:
   stage: Tag
   tags:
-    - msul
+    - msul-shared
   when: manual
   only: 
     - master
@@ -84,7 +84,7 @@ GitLab Release:
   stage: Release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   tags:
-    - msul-docker
+    - msul-shared
   when: manual
   only: 
     - master
@@ -102,7 +102,7 @@ GitLab Release:
 GitHub Release:
   stage: Release
   tags:
-    - msul
+    - msul-shared
   when: manual
   only:
     - master
@@ -112,6 +112,7 @@ GitHub Release:
     - job: Tag Release
       artifacts: true
   script:
+    - apk add curl || apt install curl
     - rm -rf sandhill.git
     - git clone --mirror git@gitlab.msu.edu:msu-libraries/repo-team/sandhill.git
     - cd sandhill.git
@@ -127,7 +128,8 @@ GitHub Release:
 DockerHub Release:
   stage: Release
   tags:
-    - msul
+    - msul-shared
+  image: docker:latest
   when: manual
   only:
     - master
