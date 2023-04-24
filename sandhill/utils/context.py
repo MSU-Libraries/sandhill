@@ -80,11 +80,11 @@ def context_processors():
             (dict): The copied data.
         """
         return {
-            "path": str(request.path),
-            "full_path": str(request.full_path),
-            "base_url": str(request.base_url),
-            "url": str(request.url),
-            "url_root": str(request.url_root),
+            "path": str(request.path, 'utf-8', errors='ignore'),
+            "full_path": str(request.full_path, 'utf-8', errors='ignore'),
+            "base_url": str(request.base_url, 'utf-8', errors='ignore'),
+            "url": str(request.url, 'utf-8', errors='ignore'),
+            "url_root": str(request.url_root, 'utf-8', errors='ignore'),
             "query_args": deepcopy(request.query_args),
             "host": str(request.host)
         }
