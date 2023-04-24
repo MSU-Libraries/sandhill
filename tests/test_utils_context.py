@@ -1,5 +1,6 @@
 from pytest import raises
 import flask
+from werkzeug.exceptions import HTTPException
 from sandhill import app
 from sandhill.utils import context
 
@@ -75,6 +76,13 @@ def test_urlcomponents_context_processor():
 
         assert 'fq' in result['query_args']
         assert result['query_args']['fq'] == ['absek','chocolate']
+
+    # testing bad unicode
+    with raises(HTTPException) as http_error:
+        with app.test_request_context('/etd/1000'):
+            app.preprocess_request()
+            flask.request.path = '/etd/1000'.encode('utf-16')
+            result = ctx['urlcomponents']()
 
     # testing that a missing request fails correctly
     with raises(RuntimeError) as run_error:
