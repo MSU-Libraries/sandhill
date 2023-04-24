@@ -80,9 +80,9 @@ def context_processors():
             (dict): The copied data.
         """
         def safe_str(val):
-            if isinstance(val, str):
-                return str(val)
-            return str(val, 'utf-8', errors='ignore')
+            return str(val) \
+                if isinstance(val, str) else \
+                str(val, 'utf-8', errors='ignore')
         return {
             "path": safe_str(request.path),
             "full_path": safe_str(request.full_path),
