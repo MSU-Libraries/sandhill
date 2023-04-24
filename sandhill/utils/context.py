@@ -79,14 +79,18 @@ def context_processors():
         Returns:
             (dict): The copied data.
         """
+        def safe_str(val):
+            if isinstance(val, str):
+                return str(val)
+            return str(val, 'utf-8', errors='ignore')
         return {
-            "path": str(request.path, 'utf-8', errors='ignore'),
-            "full_path": str(request.full_path, 'utf-8', errors='ignore'),
-            "base_url": str(request.base_url, 'utf-8', errors='ignore'),
-            "url": str(request.url, 'utf-8', errors='ignore'),
-            "url_root": str(request.url_root, 'utf-8', errors='ignore'),
+            "path": safe_str(request.path),
+            "full_path": safe_str(request.full_path),
+            "base_url": safe_str(request.base_url),
+            "url": safe_str(request.url),
+            "url_root": safe_str(request.url_root),
             "query_args": deepcopy(request.query_args),
-            "host": str(request.host)
+            "host": safe_str(request.host)
         }
 
     def find_mismatches(dict1: dict, dict2: dict) -> dict:
