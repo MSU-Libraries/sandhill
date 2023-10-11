@@ -289,6 +289,7 @@ def axe_driver():
         yield None
 
 @pytest.mark.a11y
+@pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 @pytest.mark.parametrize("entry", test_entries)
 def test_entry_a11y(entry, axe_driver):
     """
