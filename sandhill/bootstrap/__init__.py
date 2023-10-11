@@ -80,6 +80,9 @@ SECRET_KEY = "".join(secrets.SystemRandom().choice(
     string.ascii_letters + string.digits) for _ in range(64))
 app.config["SECRET_KEY"] = getconfig("SECRET_KEY", SECRET_KEY)
 
+# Nicer JSON output
+app.json.compact = False
+
 # Set debug mode
 app.debug = bool(int(getconfig("DEBUG", "0")))
 
