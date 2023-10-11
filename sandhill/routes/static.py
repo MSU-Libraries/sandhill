@@ -28,7 +28,7 @@ def handle_static(filename):
         static_path = os.path.join(app.root_path, "static")
 
     cache_timeout = app.get_send_file_max_age(filename)
-    return send_from_directory(static_path, filename, cache_timeout=cache_timeout)
+    return send_from_directory(static_path, filename, max_age=cache_timeout)
 
 @app.route('/favicon.ico')
 def favicon():
