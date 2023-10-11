@@ -281,7 +281,9 @@ def test_entry_metadata(entry):
 @pytest.fixture(scope="session", autouse=True)
 def axe_driver():
     try:
-        with webdriver.Firefox() as driver:
+        opts = webdriver.FirefoxOptions()
+        opts.add_argument('--headless')
+        with webdriver.Firefox(options=opts) as driver:
             yield driver
     except:
         yield None
