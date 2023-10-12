@@ -31,6 +31,26 @@ def test_api_get():
     with raises(TypeError):
         response = api.api_get(set_not_list={1, 2, 3})
 
+def test_api_get_multi():
+    # test some valid urls
+    responses = api.api_get_multi([
+        {"url": "https://www.microsoft.com"},
+        {"url": "https://duckduckgo.com"},
+        {"url": "https://www.google.com/search", "params": {"q": "michigan state"}},
+    ])
+    for resp in responses:
+        assert resp.status_code == 200
+
+    # test more urls but with bad requests
+    responses = api.api_get_multi([
+        {"url": "https://google.com"},
+        {"url": "https://notavalidhostnamehere.msu.edu"},
+        {"url": "invalidurl.edu"},
+    ])
+
+    with raises(RequestException):
+        unwraped = list(responses)
+
 def test_establish_url():
     # Test valid url
     url = api.establish_url("https://www.google.com", "fallback")
