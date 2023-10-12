@@ -27,26 +27,26 @@ def api_get(**kwargs):
         )
     return response
 
-def api_get_multi(requests):
+def api_get_multi(requests_kwargs):
     """
     Perform multiple API calls in parellel using futures, returning a list
     of responses.
     Args:
-        requests (list of dict): Each arguments to [`requests.get()`]
+        requests_kwargs (list of dict): Each arguments to [`requests.get()`]
     Returns:
         A generator yielding response objects
     """
-    def request_futures(requests):
+    def request_futures(requests_kwargs):
         futures = []
         with FuturesSession() as session:
-            for kwargs in requests:
+            for kwargs in requests_kwargs:
                 if "timeout" not in kwargs:
                     kwargs["timeout"] = 10
                 futures.append(session.get(**kwargs))
             for future in futures:
                 yield future.result()
 
-    return request_futures(requests)
+    return request_futures(requests_kwargs)
 
 def establish_url(url, fallback):
     """
