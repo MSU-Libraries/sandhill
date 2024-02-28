@@ -3,6 +3,7 @@
 # Find directory where this script resides
 CUR_DIR=$( dirname "$0" )
 CUR_DIR=$( readlink -f "$CUR_DIR" )
+SCRIPT_NAME=$( basename "$0" )
 
 # Script help text
 runhelp() {
@@ -32,86 +33,122 @@ if [[ -z "$1" || $1 == "-h" || $1 == "--help" || $1 == "help" ]]; then
     exit 0
 fi
 
-PYTEST_FLAGS=
+###############################
+## Parse a value for a given config line
+##  $1 -> File to search
+##  $2 -> Name of parameter to get value for
+## Prints the string value, or empty string if not found
+config_param_get() {
+    grep -E "^ *$2 *=" "$1" 2> /dev/null | tail -n 1 | cut -d= -f2- | sed -e 's/ *$//' -e 's/^ *//'
+}
 
+in_docker() {
+    [[ -f /.dockerenv ]]
+}
 
-# Parse flag arguments
-while [[ $# -gt 0 ]]; do
-    case $1 in
-    -f|--functional)
-        TEST_TYPE=functional
-        shift ;;
-    -u|--unit)
-        TEST_TYPE=unit
-        shift ;;
-    -a|--a11y)
-        TEST_TYPE=a11y
-        shift ;;
-    -m|--metadata)
-        TEST_TYPE=metadata
-        shift ;;
-    -x|--exitfirst)
-        PYTEST_FLAGS+=' -x'
-        shift ;;
-    -v|--verbose)
-        PYTEST_FLAGS+=' -vvv --assert=plain'
-        shift ;;
-    *)
-        echo "ERROR: Unknown flag: $1"
+docker_cmd_exists() {
+    which docker >/dev/null
+}
+
+in_virtualenv() {
+    python3 -c "import sys; sys.exit(sys.prefix == sys.base_prefix);"
+}
+
+main() {
+    PYTEST_FLAGS=
+
+    # Parse flag arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+        -f|--functional)
+            TEST_TYPE=functional
+            shift ;;
+        -u|--unit)
+            TEST_TYPE=unit
+            shift ;;
+        -a|--a11y)
+            TEST_TYPE=a11y
+            shift ;;
+        -m|--metadata)
+            TEST_TYPE=metadata
+            shift ;;
+        -x|--exitfirst)
+            PYTEST_FLAGS+=' -x'
+            shift ;;
+        -v|--verbose)
+            PYTEST_FLAGS+=' -vvv --assert=plain'
+            shift ;;
+        *)
+            echo "ERROR: Unknown flag: $1"
+            exit 1
+        esac
+    done
+
+    # Go to the script directory
+    echo "Testing from: $CUR_DIR"
+    pushd $CUR_DIR > /dev/null
+
+    # Activate the virtualenv
+    [[ -r env/bin/activate ]] && source env/bin/activate
+
+    # Read in local env vars
+    [[ -r .env ]] && source .env
+
+    # Set env vars
+    export DISPLAY=:4
+    export PATH=/usr/local/bin:/usr/bin:$PATH
+
+    # Run the tests
+    if [[ $TEST_TYPE == "functional" ]]; then
+        # Set instance dir
+        export INSTANCE_DIR=$CUR_DIR/instance
+        pytest -m functional --no-cov -n 4 --showlocals $PYTEST_FLAGS
+        PYTEST_EXIT_CODE=$?
+    elif [[ $TEST_TYPE == "metadata" ]]; then
+        # Set instance dir
+        export INSTANCE_DIR=$CUR_DIR/instance
+        pytest -m metadata --no-cov -n 4 --showlocals $PYTEST_FLAGS
+        PYTEST_EXIT_CODE=$?
+    elif [[ $TEST_TYPE == "a11y" ]]; then
+        # Starting x virtual frame buffer, needed for headless browser
+        Xvfb :4 -ac &
+        PID=$!
+        echo "Running Xvfb with PID: $PID"
+
+        # Set instance dir
+        export INSTANCE_DIR=$CUR_DIR/instance
+        echo "Running Accessibility tests against $SERVER_NAME"
+        pytest -m a11y --no-cov -n 4 $PYTEST_FLAGS
+        PYTEST_EXIT_CODE=$?
+
+        # Stop headless server
+        kill $PID
+    elif [[ $TEST_TYPE == "unit" ]]; then
+        export INSTANCE_DIR=$CUR_DIR/tests/instance
+        pytest $PYTEST_FLAGS
+        PYTEST_EXIT_CODE=$?
+    else
+        echo "ERROR: Unknown test type of '$TEST_TYPE'"
         exit 1
-    esac
-done
+    fi
 
-# Go to the script directory
-echo "Testing from: $CUR_DIR"
-pushd $CUR_DIR > /dev/null
 
-# Activate the virtualenv
-[[ -r env/bin/activate ]] && source env/bin/activate
+    # Return
+    popd > /dev/null
 
-# Read in local env vars
-[[ -r .env ]] && source .env
+    exit $PYTEST_EXIT_CODE
+}
 
-# Set env vars
-export DISPLAY=:4
-export PATH=/usr/local/bin:/usr/bin:$PATH
+find_container_by_prefix() {
+    declare CONTAINER_PREFIX=$(config_param_get instance/sandhill.cfg SANDHILL_CONTAINER)
+    docker_cmd_exists && docker ps --filter "name=${CONTAINER_PREFIX}" --format '{{.Names}}'
+}
 
-# Run the tests
-if [[ $TEST_TYPE == "functional" ]]; then
-    # Set instance dir
-    export INSTANCE_DIR=$CUR_DIR/instance
-    pytest -m functional --no-cov -n 4 --showlocals $PYTEST_FLAGS
-    PYTEST_EXIT_CODE=$?
-elif [[ $TEST_TYPE == "metadata" ]]; then
-    # Set instance dir
-    export INSTANCE_DIR=$CUR_DIR/instance
-    pytest -m metadata --no-cov -n 4 --showlocals $PYTEST_FLAGS
-    PYTEST_EXIT_CODE=$?
-elif [[ $TEST_TYPE == "a11y" ]]; then
-    # Starting x virtual frame buffer, needed for headless browser
-    Xvfb :4 -ac &
-    PID=$!
-    echo "Running Xvfb with PID: $PID"
+CONTAINER_NAME=$(find_container_by_prefix)
 
-    # Set instance dir
-    export INSTANCE_DIR=$CUR_DIR/instance
-    echo "Running Accessibility tests against $SERVER_NAME"
-    pytest -m a11y --no-cov -n 4 $PYTEST_FLAGS
-    PYTEST_EXIT_CODE=$?
-
-    # Stop headless server
-    kill $PID
-elif [[ $TEST_TYPE == "unit" ]]; then
-    export INSTANCE_DIR=$CUR_DIR/tests/instance
-    pytest $PYTEST_FLAGS
-    PYTEST_EXIT_CODE=$?
+if ! in_virtualenv && ! in_docker && [[ -n $CONTAINER_NAME ]]; then
+    echo "Running command from within Docker: $CONTAINER_NAME"
+    docker exec -t "$CONTAINER_NAME" ./"$SCRIPT_NAME" "$@"
 else
-    echo "ERROR: Unknown test type of '$TEST_TYPE'"
-    exit 1
+    main "$@"
 fi
-
-
-# Return
-popd > /dev/null
-
-exit $PYTEST_EXIT_CODE
