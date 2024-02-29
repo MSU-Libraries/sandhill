@@ -1,7 +1,7 @@
 '''
 Processor for streaming data
 '''
-from flask import abort, Response as FlaskResponse
+from flask import abort, make_response, Response as FlaskResponse
 from requests.models import Response as RequestsResponse
 from sandhill import app
 from sandhill.utils.error_handling import dp_abort
@@ -45,3 +45,22 @@ def response(data):
         if header.lower() in [allowed_key.lower() for allowed_key in allowed_headers]:
             stream_response.headers.set(header, resp.headers.get(header))
     return stream_response
+
+def string(data):
+    '''
+    Stream a data variable as string data to the output
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+            * `var` _str_: The name of the variable whose content should be sent.\n
+            * `mimetype` _str_: The mimetype to send for the data (default: text/plain).\n
+    Returns:
+        (flask.Response|None): A stream of the response
+    '''
+    if 'var' not in data or not data.get(data['var']):
+        app.logger.error("requires that 'var' is set to name of non-empty data variable")
+        abort(500)
+    mimetype = data.get('mimetype', 'text/plain')
+
+    string_response = make_response(data.get(data['var']))
+    string_response.mimetype = mimetype
+    return string_response

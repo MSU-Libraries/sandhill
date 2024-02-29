@@ -72,3 +72,28 @@ def test_stream():
             resp = stream.response(data)
         assert http_exc.type.code == 500
 
+def test_string():
+    '''
+    Testing the string function
+    '''
+    data = {
+        "response": 'test',
+    }
+    with app.test_request_context('/etd/1000'):
+        app.preprocess_request()
+
+        # Test without a var element in data
+        with raises(HTTPException) as http_error:
+            result = stream.string(data)
+        assert http_error.type.code == 500
+
+        # Test with var element in data which does not reference another element
+        data["var"] = "non-existing key"
+        with raises(HTTPException) as http_error:
+            result = stream.string(data)
+            assert http_error.type.code == 500
+
+        # Test with valid data
+        data["var"] = "response"
+        result = stream.string(data)
+        assert result.status_code == 200 and result.get_data(True) == data.get(data.get('var'))

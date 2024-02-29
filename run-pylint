@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# shellcheck disable=SC1091
+
 # Find directory where this script resides
 CUR_DIR=$( dirname "$0" )
 CUR_DIR=$( readlink -f "$CUR_DIR" )
+SCRIPT_NAME=$( basename "$0" )
 
 # Script help text
 runhelp() {
@@ -18,21 +21,65 @@ if [[ $1 == "-h" || $1 == "--help" || $1 == "help" ]]; then
     exit 0
 fi
 
-# Go to the script directory
-echo "Linting from: $CUR_DIR"
-pushd $CUR_DIR > /dev/null
+###############################
+## Parse a value for a given config line
+##  $1 -> File to search
+##  $2 -> Name of parameter to get value for
+## Prints the string value, or empty string if not found
+config_param_get() {
+    grep -E "^ *$2 *=" "$1" 2> /dev/null | tail -n 1 | cut -d= -f2- | sed -e 's/ *$//' -e 's/^ *//'
+}
 
-# Activate the virtualenv
-[[ -r env/bin/activate ]] && source env/bin/activate
+in_docker() {
+    [[ -f /.dockerenv ]]
+}
 
-# Read in local env vars
-[[ -r .env ]] && source .env
+docker_cmd_exists() {
+    which docker >/dev/null
+}
 
-# Run the linting
-pylint --fail-under=10.00 sandhill/ instance/
-PYLINT_EXIT_CODE=$?
+in_virtualenv() {
+    python3 -c "import sys; sys.exit(sys.prefix == sys.base_prefix);"
+}
 
-# Return
-popd > /dev/null
+main() {
+    # Go to the script directory
+    echo "Linting from: $CUR_DIR"
+    if OUTPUT=$(pushd "$CUR_DIR" > /dev/null); then
+        echo "Failed to pushd to $CUR_DIR. Error: $OUTPUT"
+        exit 1
+    fi
 
-exit $PYLINT_EXIT_CODE
+    # Activate the virtualenv
+    [[ -r env/bin/activate ]] && source env/bin/activate
+
+    # Read in local env vars
+    [[ -r .env ]] && source .env
+
+    # Run the linting
+    pylint --fail-under=10.00 sandhill/ instance/
+    PYLINT_EXIT_CODE=$?
+
+    # Return
+    if OUTPUT=$(popd > /dev/null); then
+        echo "Failed to popd. Error: $OUTPUT"
+        exit 1
+    fi
+
+    exit $PYLINT_EXIT_CODE
+}
+
+find_container_by_prefix() {
+    declare CONTAINER_PREFIX
+    CONTAINER_PREFIX=$(config_param_get instance/sandhill.cfg SANDHILL_CONTAINER)
+    docker_cmd_exists && docker ps --filter "name=${CONTAINER_PREFIX}" --format '{{.Names}}'
+}
+
+CONTAINER_NAME=$(find_container_by_prefix)
+
+if ! in_virtualenv && ! in_docker && [[ -n $CONTAINER_NAME ]]; then
+    echo "Running command from within Docker: $CONTAINER_NAME"
+    docker exec -t "$CONTAINER_NAME" ./"$SCRIPT_NAME"
+else
+    main
+fi
