@@ -48,8 +48,8 @@ in_docker() {
     [[ -f /.dockerenv ]]
 }
 
-docker_cmd_exists() {
-    which docker >/dev/null
+cmd_exists() {
+    which "$1" >/dev/null
 }
 
 in_virtualenv() {
@@ -93,6 +93,11 @@ main() {
     # Activate the virtualenv
     [[ -r env/bin/activate ]] && source env/bin/activate
 
+    if ! cmd_exists "pytest"; then
+        echo "ERROR: Could not find pytest. Need either virtualenv, to be inside container, or set SANDHILL_CONTAINER within instance/sandhill.cfg file."
+        exit 1
+    fi
+
     # Read in local env vars
     [[ -r .env ]] && source .env
 
@@ -134,7 +139,6 @@ main() {
         exit 1
     fi
 
-
     # Return
     popd > /dev/null || true
 
@@ -142,9 +146,13 @@ main() {
 }
 
 find_container_by_prefix() {
-    declare CONTAINER_PREFIX
-    CONTAINER_PREFIX=$(config_param_get instance/sandhill.cfg SANDHILL_CONTAINER)
-    docker_cmd_exists && docker ps --filter "name=${CONTAINER_PREFIX}" --format '{{.Names}}'
+    if [[ -f instance/sandhill.cfg ]]; then
+        declare CONTAINER_PREFIX
+        CONTAINER_PREFIX=$(config_param_get instance/sandhill.cfg SANDHILL_CONTAINER)
+        cmd_exists "docker" && \
+            [[ -n $CONTAINER_PREFIX ]] && \
+            docker ps --filter "name=${CONTAINER_PREFIX}" --format '{{.Names}}'
+    fi
 }
 
 CONTAINER_NAME=$(find_container_by_prefix)
