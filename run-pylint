@@ -45,10 +45,7 @@ in_virtualenv() {
 main() {
     # Go to the script directory
     echo "Linting from: $CUR_DIR"
-    if OUTPUT=$(pushd "$CUR_DIR" > /dev/null); then
-        echo "Failed to pushd to $CUR_DIR. Error: $OUTPUT"
-        exit 1
-    fi
+    pushd "$CUR_DIR" > /dev/null || true
 
     # Activate the virtualenv
     [[ -r env/bin/activate ]] && source env/bin/activate
@@ -61,10 +58,7 @@ main() {
     PYLINT_EXIT_CODE=$?
 
     # Return
-    if OUTPUT=$(popd > /dev/null); then
-        echo "Failed to popd. Error: $OUTPUT"
-        exit 1
-    fi
+    popd > /dev/null || true
 
     exit $PYLINT_EXIT_CODE
 }
