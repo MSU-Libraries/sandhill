@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# shellcheck disable=SC1091
+
 # Find directory where this script resides
 CUR_DIR=$( dirname "$0" )
 CUR_DIR=$( readlink -f "$CUR_DIR" )
@@ -86,7 +88,10 @@ main() {
 
     # Go to the script directory
     echo "Testing from: $CUR_DIR"
-    pushd $CUR_DIR > /dev/null
+    if OUTPUT=$(pushd "$CUR_DIR" > /dev/null); then
+        echo "Failed to pushd to $CUR_DIR. Error: $OUTPUT"
+        exit 1
+    fi
 
     # Activate the virtualenv
     [[ -r env/bin/activate ]] && source env/bin/activate
@@ -102,12 +107,12 @@ main() {
     if [[ $TEST_TYPE == "functional" ]]; then
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
-        pytest -m functional --no-cov -n 4 --showlocals $PYTEST_FLAGS
+        pytest -m functional --no-cov -n 4 --showlocals "$PYTEST_FLAGS"
         PYTEST_EXIT_CODE=$?
     elif [[ $TEST_TYPE == "metadata" ]]; then
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
-        pytest -m metadata --no-cov -n 4 --showlocals $PYTEST_FLAGS
+        pytest -m metadata --no-cov -n 4 --showlocals "$PYTEST_FLAGS"
         PYTEST_EXIT_CODE=$?
     elif [[ $TEST_TYPE == "a11y" ]]; then
         # Starting x virtual frame buffer, needed for headless browser
@@ -118,14 +123,14 @@ main() {
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
         echo "Running Accessibility tests against $SERVER_NAME"
-        pytest -m a11y --no-cov -n 4 $PYTEST_FLAGS
+        pytest -m a11y --no-cov -n 4 "$PYTEST_FLAGS"
         PYTEST_EXIT_CODE=$?
 
         # Stop headless server
         kill $PID
     elif [[ $TEST_TYPE == "unit" ]]; then
         export INSTANCE_DIR=$CUR_DIR/tests/instance
-        pytest $PYTEST_FLAGS
+        pytest "$PYTEST_FLAGS"
         PYTEST_EXIT_CODE=$?
     else
         echo "ERROR: Unknown test type of '$TEST_TYPE'"
@@ -134,13 +139,17 @@ main() {
 
 
     # Return
-    popd > /dev/null
+    if OUTPUT=$(popd > /dev/null); then
+        echo "Failed to popd. Error: $OUTPUT"
+        exit 1
+    fi
 
     exit $PYTEST_EXIT_CODE
 }
 
 find_container_by_prefix() {
-    declare CONTAINER_PREFIX=$(config_param_get instance/sandhill.cfg SANDHILL_CONTAINER)
+    declare CONTAINER_PREFIX
+    CONTAINER_PREFIX=$(config_param_get instance/sandhill.cfg SANDHILL_CONTAINER)
     docker_cmd_exists && docker ps --filter "name=${CONTAINER_PREFIX}" --format '{{.Names}}'
 }
 
