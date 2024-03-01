@@ -41,7 +41,8 @@ fi
 ##  $2 -> Name of parameter to get value for
 ## Prints the string value, or empty string if not found
 config_param_get() {
-    grep -E "^ *$2 *=" "$1" 2> /dev/null | tail -n 1 | cut -d= -f2- | sed -e 's/ *$//' -e 's/^ *//'
+    # Use of xargs is to remove wrapped quotes from value
+    grep -E "^ *$2 *=" "$1" 2> /dev/null | tail -n 1 | cut -d= -f2- | sed -e 's/ *$//' -e 's/^ *//' | xargs
 }
 
 in_docker() {
@@ -146,9 +147,9 @@ main() {
 }
 
 find_container_by_prefix() {
-    if [[ -f instance/sandhill.cfg ]]; then
+    if [[ -f $CUR_DIR/instance/sandhill.cfg ]]; then
         declare CONTAINER_PREFIX
-        CONTAINER_PREFIX=$(config_param_get instance/sandhill.cfg SANDHILL_CONTAINER)
+        CONTAINER_PREFIX=$(config_param_get "$CUR_DIR/instance/sandhill.cfg" SANDHILL_CONTAINER)
         cmd_exists "docker" && \
             [[ -n $CONTAINER_PREFIX ]] && \
             docker ps --filter "name=${CONTAINER_PREFIX}" --format '{{.Names}}'
