@@ -68,10 +68,10 @@ def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=
     # grab the query string params and convert to a flat dict if request args not passed in
     # i.e. duplicative keys will be converted to a list of strings
     if request_args is None:
-        request_args = request.args.to_dict(flat=False)
-    else:
-        # avoid modifying incoming args dict
-        request_args = deepcopy(request_args)
+        request_args = {}
+
+    # avoid modifying incoming args dict and always allow url override (config to be enforced next)
+    request_args = deepcopy(request_args) | request.args.to_dict(flat=False)
 
     query_params = {}
     for field_name, field_conf in query_config.items():
@@ -89,7 +89,7 @@ def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=
                 )
             # Remove field from request_args having already processed it
             del request_args[field_name]
-        # Load default from config if solr_param field not defined
+        # Load default from config if solr_param field not defined in request_args
         elif 'default' in field_conf:
             query_params[field_name] = touniquelist(
                 query_params[field_name],
