@@ -64,15 +64,17 @@ def test_overlay_with_query_args():
             "field": "subject"
         }
     }
-    query_params = request.overlay_with_query_args(query_config, request_args=params)
-    assert ["title:Hello"] == query_params["fq"]
-    assert len(query_params["fq"]) == 1
-    assert query_params["q"] == ["elephant"]
-    assert "json.facet" not in query_params
+    with app.test_request_context('/search?start=10'):
+        query_params = request.overlay_with_query_args(query_config, request_args=params)
+        assert ["title:Hello"] == query_params["fq"]
+        assert len(query_params["fq"]) == 1
+        assert query_params["q"] == ["elephant"]
+        assert query_params["start"] == ["10"]
+        assert "json.facet" not in query_params
 
-    # Allowing unknown fields
-    query_params = request.overlay_with_query_args(query_config, request_args=params, allow_undefined=True)
-    assert "json.facet" in query_params
+        # Allowing unknown fields
+        query_params = request.overlay_with_query_args(query_config, request_args=params, allow_undefined=True)
+        assert "json.facet" in query_params
 
     # Base values will override user-input params; max is implemented; default is overwritten; lists are combined as expected
     with app.test_request_context('/search?q=antelope&rows=120&rows_min=abc&start=5&fl=author&fl=date'):
