@@ -37,7 +37,7 @@ class HTMLTagFilter(HTMLParser):
 
     def handle_entityref(self, name):
         """Handle escape entities"""
-        self.output += f"&{name};"
+        self.output += html.escape(f"&{name}")
 
     def handle_charref(self, name):
         """Handle escape chars"""
