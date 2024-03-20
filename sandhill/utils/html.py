@@ -37,7 +37,8 @@ class HTMLTagFilter(HTMLParser):
 
     def handle_entityref(self, name):
         """Handle escape entities"""
-        self.output += html.escape(f"&{name}")
+        # Handling case where no semicolon exists after &name, but HTMLParser still treats it like so
+        self.output += f"&{name};" if self.rawdata.startswith(f"&{name};", self.offset) else f"&amp;{name}"
 
     def handle_charref(self, name):
         """Handle escape chars"""
