@@ -23,6 +23,8 @@ runhelp() {
     echo "      Run accessibility tests"
     echo "  -m|--metadata"
     echo "      Run metadata tests"
+    echo "  -k EXPRESSION"
+    echo "      Only run tests matching the given EXPRESSION"
     echo "  -x|--exitfirst"
     echo "      Exit on first test failure"
     echo "  -v|--verbose"
@@ -75,6 +77,9 @@ main() {
         -m|--metadata)
             TEST_TYPE=metadata
             shift ;;
+        -k)
+            PYTEST_FLAGS+=" -k $2"
+            shift 2 ;;
         -x|--exitfirst)
             PYTEST_FLAGS+=' -x'
             shift ;;

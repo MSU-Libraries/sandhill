@@ -52,6 +52,8 @@ def test_filter_filtertags():
     assert filters.filtertags(tag_str, "i") == "a tag <i class=\"attr\">filled</i> string"
     assert filters.filtertags("a <b>tag</b> &amp; &quot;quote&#34;") == "a tag &amp; &quot;quote&#34;"
     assert filters.filtertags("non escaped refs \" & > <") == "non escaped refs \" & > "
+    # Handle use of & without a trailing ; (we escape the amp and leave the name as is
+    assert filters.filtertags("unintended ref: AT&T does phones") == "unintended ref: AT&amp;T does phones"
     # Test some bad imputs
     assert filters.filtertags("<a><b></a>c<d></e>") == "c"
     assert filters.filtertags("<a <b <c d> e>", "c") == " e>"  # What did you expect?
