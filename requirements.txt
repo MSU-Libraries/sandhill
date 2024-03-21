@@ -1,19 +1,15 @@
 axe-selenium-python~=2.1.6
 click~=8.1.3
-contextlib2~=21.6.0
 coverage~=6.3.1
 deepdiff~=5.8.0
 Flask~=2.2.5
-Flask-DebugToolbar @ git+https://github.com/MSU-Libraries/flask-debugtoolbar.git@msul_master
+Flask-DebugToolbar~=0.14.1
 Jinja2~=3.1.2
 jsonpath-ng~=1.6.0
 lxml~=4.9.2
-Markdown~=3.3.6
-MarkupSafe~=2.1.2
 mkdocs~=1.3.0
 mkdocs-autorefs~=0.4.1
 mkdocs-material~=8.2.8
-mkdocs-material-extensions~=1.0.3
 mkdocstrings~=0.18.1
 mkdocstrings-python~=0.6.6
 mkdocstrings-python-legacy~=0.2.2
@@ -21,14 +17,13 @@ pylint~=2.12.2
 pytest~=6.2.5
 pytest-cov~=3.0.0
 pytest-xdist~=2.3.0
-pytest-mock~=3.7.0
 python-dotenv~=0.19.2
-PyYAML~=6.0
 requests~=2.31.0
 requests-futures~=1.0.1
 selenium~=4.14.0
 urllib3~=1.26.8
 uWSGI~=2.0.20
 validator-collection~=1.5.0
-virtualenv~=20.13.0
+# Werkzeug should be removed, as it's a flask dependency
+# We are using a downgraded version to prevent deprecation warnings
 Werkzeug~=2.3.3
