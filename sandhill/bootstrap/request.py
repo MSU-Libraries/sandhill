@@ -12,4 +12,6 @@ def update_request_object():
     Specifically, it:\n
       - Adds `query_args`, a normal Python dictionary with args as keys.
     """
-    request.__dict__['query_args'] = request.args.to_dict(flat=False)
+    def flatten_args(_):
+        return request.args.to_dict(flat=False)
+    request.__class__.query_args = property(flatten_args)
