@@ -160,6 +160,17 @@ def test_filter_assembleurl():
     # test non-dict urlcomponents
     assert filters.assembleurl("hello") == ""
 
+    # Removal of 'hidden' arguments
+    urlcomponents = {
+        "path": "https://mytest.com",
+        "query_args": {
+            'target': 'rama',
+            '_min_year': 2001,
+            '_max_year': 2010
+        }
+    }
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com?target=rama"
+
 def test_filter_urlquote():
     assert filters.urlquote("hello world") == 'hello%20world'
     assert filters.urlquote("a/path/to/pid:num") == 'a%2Fpath%2Fto%2Fpid%3Anum'
@@ -248,6 +259,14 @@ def test_filter_formatedate():
     # Test overriding the default value
     res = filters.formatedate("9999-12-31", "different")
     assert res == "different"
+
+def test_filter_formatiso8601():
+    assert filters.formatiso8601("2001-02-28T16:54:29Z") == "2001-02-28"
+    assert filters.formatiso8601("2001-02-28T16:54:29-04:00") == "2001-02-28"
+    assert filters.formatiso8601("2001-12-31", "%Y") == "2001"
+    assert filters.formatiso8601("*") == "Any"
+    assert filters.formatiso8601({}) == "Any"
+    assert filters.formatiso8601("!!", "%Y", "Unknown") == "Unknown"
 
 def test_filter_sandbug():
     # calling the debug logger

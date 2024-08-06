@@ -9,6 +9,7 @@ from datetime import datetime
 import mimetypes
 from ast import literal_eval
 import copy
+from dateutil import parser
 from jinja2 import pass_context, TemplateError
 from markupsafe import Markup
 from sandhill import app, catch
@@ -92,9 +93,9 @@ def unescape(value):
     Args:
         value (str): The string to unescape.
     Returns:
-        (str): The unescaped string.
+        (str): The unescaped string, or empty string if passed a non-string value.
     """
-    return html.unescape(value)
+    return html.unescape(value) if isinstance(value, str) else ""
 
 @app.template_filter('filtertags')
 def filtertags(value, *args):
@@ -200,6 +201,10 @@ def assembleurl(urlcomponents):
         if "query_args" in urlcomponents \
           and isinstance(urlcomponents['query_args'], dict) \
           and urlcomponents['query_args']:
+            # Remove 'hidden' params
+            for key in list(urlcomponents['query_args'].keys()):
+                if key.startswith('_'):
+                    del urlcomponents['query_args'][key]
             url = url + "?" + urllib.parse.urlencode(urlcomponents["query_args"], doseq=True)
     return url
 
@@ -230,6 +235,7 @@ def datepassed(value):
 @app.template_filter('render')
 @pass_context
 @catch(TemplateError, "Invalid template provided: {value}. Error: {exc}", return_val=None)
+@catch(TypeError, "Cannot render a non-string value: {value}. Error: {exc}", return_val=None)
 def render(context, value, **kwargs):
     """Renders a given string using Jinja.
     Args:
@@ -297,6 +303,21 @@ def formatedate(value, default="Indefinite"):
         # Add in the suffix (st, th, rd, nd)
         result = result.replace("DAY", f"{value_date.day}{suf(value_date.day)},")
     return result
+
+@app.template_filter('formatiso8601')
+@catch((ValueError, TypeError), return_arg="default")
+def formatiso8601(value, dtfmt="%Y-%m-%d", default="Any"):  # pylint: disable=unused-argument
+    '''
+    Format the provided ISO 8601 date string.
+    Args:
+        value (str): A date string in the ISO 8601 format
+        dtfmt (str): The format string to output (see `datetime.strftime`)
+        default (str): The default string (Default: "Any")
+    Returns:
+        (str): Formatted date string
+    '''
+    value_date = parser.isoparse(value)
+    return value_date.strftime(dtfmt)
 
 @app.template_filter('sandbug')
 def filter_sandbug(value: str, comment: str = None):
