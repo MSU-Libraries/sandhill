@@ -8,7 +8,7 @@ This might be helpful if your site needs to:
  - Select a different set of templates to display depending on context variables.
 
 Accessing the evaluate ability in Sandhill can be done via the
-[`evaluate.conditions`](/sandhill/data-processors/#sandhill.processors.evaluate.conditions)
+[`evaluate.conditions`](./data-processors.md#sandhill.processors.evaluate.conditions)
 data processor.
 
 ## Example

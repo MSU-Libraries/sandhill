@@ -14,7 +14,7 @@ to render the appropriate page based on the defined route.
 
 ## Defining a Route
 Routes are defined as JSON files inside your instance directory (see the [guide on
-setting up your Sandhill instance](/sandhill/instance-setup)). Specifically, route files should
+setting up your Sandhill instance](./instance-setup.md)). Specifically, route files should
 be placed in `instance/config/routes/`. Sandhill will automatically load all `.json`
 files placed here when it starts.
 
@@ -67,9 +67,9 @@ and call upon Sandhill **data processors** to perform specific actions.
 A data processor can load dynamic data from a datastore or manipulate
 already loaded data to prepare it for output to the user.
 
-Sandhill comes with a number of [builtin data processors](data-processors.md)
+Sandhill comes with a number of [builtin data processors](./data-processors.md)
 that can be used immediately, though with some knowledge of Python programming
-[you can also define your own data processors](/sandhill/data-processors/#developing-a-data-processor).
+[you can also define your own data processors](./data-processors.md#developing-a-data-processor).
 
 
 ### Example with a Data Processor
@@ -117,9 +117,9 @@ In this case, the `solr.select_record` data processor automatically pulls the
 appropriate Solr API base URL from either the `instance/sandhill.cfg` file or
 from an environment variable, both named `SOLR_URL`. More details on the
 `solr` data processor is available in the
-[data processor documentation](/sandhill/data-processors/#sandhill.processors.solr)
+[data processor documentation](./data-processors.md#sandhill.processors.solr)
 and details on how to configure Sandhill is available in the
-[instance setup documentation](/sandhill/instance-setup).
+[instance setup documentation](./instance-setup.md).
 
 ## Jinja Templating
 Regarding the HTML template, Sandhill makes full use of the [Jinja2 templating

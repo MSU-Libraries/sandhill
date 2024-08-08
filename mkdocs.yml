@@ -24,24 +24,24 @@ plugins:
       python:
         selection:
           docstring_style: google
-        rendering:
+        options:
           show_root_heading: true
-          heading_level: 3
+          heading_level: 2
           line_length: 100
           show_signature_annotations: true
 
 nav:
 - Welcome to Sandhill: index.md
 - Getting Started:
-    - Instance Setup: instance-setup.md
-    - Developing Your Instance: developing-your-instance.md
-    - Service Setup: service-setup.md
-    - Functional Testing: functional-testing.md
-    - Development Guidelines: development-guidelines.md
+  - Instance Setup: instance-setup.md
+  - Developing Your Instance: developing-your-instance.md
+  - Service Setup: service-setup.md
+  - Functional Testing: functional-testing.md
+  - Development Guidelines: development-guidelines.md
 - User Guide:
-    - Routes: routes.md
-    - Data Processors: data-processors.md
-    - Template Filters: filters.md
-    - Bootstrap Process: bootstrap.md
-    - Evaluate Conditions: evaluate-conditions.md
+  - Routes: routes.md
+  - Data Processors: data-processors.md
+  - Template Filters: filters.md
+  - Bootstrap Process: bootstrap.md
+  - Evaluate Conditions: evaluate-conditions.md
 - API Reference: api-reference.md

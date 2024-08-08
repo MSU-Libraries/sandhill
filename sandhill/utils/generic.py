@@ -9,21 +9,21 @@ from sandhill import app, catch
 
 def ifnone(*args):
     '''
-    Returns the default value if the key is not in the dictionary or if
-    a non-dictionary is provided it will return the default if it is not set.
+    Returns the default value if the key is not in the dictionary or if \
+    a non-dictionary is provided it will return the default if it is not set. \n
     Args:
-        *args:
+        *args (Any):
             With 3 args:\n
                 var (dict): The dictionary to check\n
                 key (str): The key of the dictionary\n
-                default_value: Return val if key is not in var\n
+                default_value (Any): Return val if key is not in var\n
             With 2 args:\n
-                var: The variable to check\n
-                default_value: Return val if the variable is None\n
+                var (Any): The variable to check\n
+                default_value (Any): Return val if the variable is None\n
     Returns:
-        The default_value if the value is None or the key is not in the dict.
+        (Any) The default_value if the value is None or the key is not in the dict. \n
     Raises:
-        (TypeError): If invalid number of arguments passed.
+        (TypeError): If invalid number of arguments passed. \n
     '''
     var = args[0] if args else None
     if len(args) not in [2, 3]:
@@ -40,12 +40,12 @@ def ifnone(*args):
 
 def tolist(*args):
     """
-    Combine arguments, appending them to a list; args may be scalars or lists. If args is
-    a list, then the values of the list are appended (not the list itself).
+    Combine arguments, appending them to a list; args may be scalars or lists. If args is \
+    a list, then the values of the list are appended (not the list itself). \n
     Args:
-        *args: Items to combine.
-    Returns
-        (list): The combined list.
+        *args (Any): Items to combine. \n
+    Returns:
+        (list): The combined list. \n
     """
     combined = []
     for i in args:
@@ -57,12 +57,12 @@ def tolist(*args):
 
 def touniquelist(*args):
     """
-    Combine arguments while excluding duplicate values. Same functionality as `tolist()`
-    only with duplicate values being removed.
+    Combine arguments while excluding duplicate values. Same functionality as `tolist()` \
+    only with duplicate values being removed. \n
     Args:
-        *args: Items to combine.
-    Returns
-        (list): The combined list with duplicates removed.
+        *args (Any): Items to combine. \n
+    Returns:
+        (list): The combined list with duplicates removed. \n
     """
     unique_list = []
     _ = [unique_list.append(i) for i in tolist(*args) if i not in unique_list]
@@ -71,18 +71,18 @@ def touniquelist(*args):
 @catch(ValueError, "Could not find {list_keys} in: {obj}", return_val=None)
 def getdescendant(obj, list_keys, extract=False, put=None):
     '''
-    Gets key values from the dictionary/list if they exist;
-    will check recursively through the `obj`.
+    Gets key values from the dictionary/list if they exist; \n
+    will check recursively through the `obj`. \n
     Args:
-        obj (dict|list): A dict/list to check, possibly containing nested dicts/lists.
-        list_keys (list|str): List of descendants to follow (or . delimited string)
-        extract (bool): If set to true, will remove the last matching value from the `obj`.
-        put (Any): Replace the found value with this new value in the `obj`,
-                   or append if the found value at a list key of `"[]"`
+        obj (dict|list): A dict/list to check, possibly containing nested dicts/lists. \n
+        list_keys (list|str): List of descendants to follow (or . delimited string) \n
+        extract (bool): If set to true, will remove the last matching value from the `obj`. \n
+        put (Any): Replace the found value with this new value in the `obj`, \
+                   or append if the found value at a list key of `"[]"` \n
     Returns:
-        (Any): The last matching value from list_keys, or None if no match
+        (Any): The last matching value from list_keys, or None if no match \n
     Raises:
-        IndexError: When attempting to put a list index that is invalid.
+        IndexError: When attempting to put a list index that is invalid. \n
     Examples:
     ```python
     # Get "key1" of mydict, then index 2 of that result, then "key3" of that result
@@ -93,7 +93,7 @@ def getdescendant(obj, list_keys, extract=False, put=None):
     v = getdescendant(mydict, "key1.2.key3", put="Replacement value!")
     # Append to a list
     v = getdescendant(mydict, "key1.2.[]", put="Append this value.")
-    ```
+    ``` \n
     '''
     list_keys = list_keys.split('.') if isinstance(list_keys, str) else list_keys
     for idx, key in enumerate(list_keys):
@@ -123,14 +123,14 @@ def getdescendant(obj, list_keys, extract=False, put=None):
 
 def getconfig(name, default=None):
     '''
-    Get the value of the given config name. It will first
-    check in the environment for the variable name, otherwise
-    look in the app.config, otherwise use the default param
+    Get the value of the given config name. It will first \
+    check in the environment for the variable name, otherwise \
+    look in the app.config, otherwise use the default param \n
     Args:
-        name (str): Name of the config variable to look for
-        default (str|None): The defaut value if not found elsewhere
+        name (str): Name of the config variable to look for \n
+        default (str|None): The defaut value if not found elsewhere \n
     Returns:
-        (str): Value of the config variable, default value otherwise
+        (str): Value of the config variable, default value otherwise \n
     '''
     value = default
     if name in os.environ and os.environ[name]:
@@ -141,11 +141,11 @@ def getconfig(name, default=None):
 
 def getmodulepath(path):
     """
-    Get the Python module path for a directory or file in Sandhill
+    Get the Python module path for a directory or file in Sandhill \n
     Args:
-        path (str): A file or dir path in Sandhill
+        path (str): A file or dir path in Sandhill \n
     Returns:
-        (str): module (e.g. 'instance' or 'sandhill.filters.filters')
+        (str): module (e.g. 'instance' or 'sandhill.filters.filters') \n
     """
     install_path = os.path.dirname(app.root_path)
     subpath = re.sub('^' + re.escape(install_path), '', path)
@@ -153,16 +153,16 @@ def getmodulepath(path):
 
 def pop_dict_matching_key(haystack: list[dict], match: dict, key: Hashable) -> list[dict]:
     """
-    Search the haystack for all dicts that have the same
-    value as the passed match dict for the given key.
-    Matched dicts are removed from the haystack and
-    returned as a list.
+    Search the haystack for all dicts that have the same \
+    value as the passed match dict for the given key. \n
+    Matched dicts are removed from the haystack and \
+    returned as a list. \n
     Args:
-        haystack (list): A list of dicts to search through.
-        match (dict): The dict to match against.
-        key (Hashable): The key (both dicts) for the comparison value.
+        haystack (list): A list of dicts to search through. \n
+        match (dict): The dict to match against. \n
+        key (Hashable): The key (both dicts) for the comparison value. \n
     Returns:
-        (list): A list of matching dicts removed from the haystack.
+        (list): A list of matching dicts removed from the haystack. \n
     """
     matched = []
     if (needle_val := match.get(key)):
@@ -174,20 +174,18 @@ def pop_dict_matching_key(haystack: list[dict], match: dict, key: Hashable) -> l
 
 def overlay_dicts_matching_key(target: list[dict], overlays: list[dict], key: Hashable):
     """
-    Given the target, find and replace matching dicts, for all matching dicts
-    in the list of overlays, using the value for the provided key to compare them.
-    For each overlay dict, overlay the values on top of any matching original
-    dict from the target.
-    If multiple overlays match an original target dict, both overlays will use
-    the original dict as a base for the overlay.
-    If no matching dict was found in the original target list, the overlay will be
-    appended to the target as is.
+    Given the target, find and replace matching dicts, for all matching dicts \
+    in the list of overlays, using the value for the provided key to compare them. \n
+    For each overlay dict, overlay the values on top of any matching original \
+    dict from the target. \n
+    If multiple overlays match an original target dict, both overlays will use \
+    the original dict as a base for the overlay. \n
+    If no matching dict was found in the original target list, the overlay will be \
+    appended to the target as is. \n
     Args:
-        haystack (list): The list of dicts to search and update.
-        match (list): The list of dict match and overlay.
-        key (Hashable): The key (both dicts) for the comparison value.
-    Returns:
-        (None)
+        target (list): The list of dicts to search and update. \n
+        overlays (list): The list of dict match and overlay. \n
+        key (Hashable): The key (both dicts) for the comparison value. \n
     """
     base_ref = {}
     # Extract all base/default dictionaries from target

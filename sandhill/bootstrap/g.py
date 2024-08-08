@@ -8,7 +8,7 @@ def g_set(_):
     """
     Standard changes Sandhill makes to the default Flask `g` object.\n
     Specifically, it:\n
-      - Adds `instance_path` available in `g` object.
+      - Adds `instance_path` available in `g` object. \n
     """
     g.instance_path = app.instance_path # pylint: disable=assigning-non-slot
 

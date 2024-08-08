@@ -73,7 +73,7 @@ not match a route will return a 404 page. Most routes are configured to render a
 Jinja2 _template_ (typically resulting in an HTML page), but can
 also return a _stream_ of data (such as an image or downloadable file), or even use a _processor_
 built to return a response that doesn't conform to either of the above. See the 
-[routes](/sandhill/routes) documentation for more details and examples.
+[routes](./routes.md) documentation for more details and examples.
 
 ### `filters/`
 Files within this directory are loaded to add  to the [default set of filters](#TODO)
@@ -103,7 +103,7 @@ Would provide the ability to do this in your template:
 ### `processors/`
 Processors are what are called in the route configs to provide data or data processing before rendering a
 template or streaming output. For example if your home page requires you make a database call to get information for
-the page then you might have a `database` processor. See the [data processors](/sandhill/data-processors)
+the page then you might have a `database` processor. See the [data processors](./data-processors.md)
 documentation for further details and examples.
 
 ### `static/`
@@ -113,7 +113,7 @@ This directory contains any static content used by your application, such as CSS
 The `templates` directory contains Jinja2 template files that can be referenced by your route
 configs. They have the ability to access the built-in or custom filters and all of the variables
 made available by your route configs (referenced by the `name` of the data item).
-Refer to the examples within the [routes](/sandhill/routes) documentation to see the available variables.
+Refer to the examples within the [routes](./routes.md) documentation to see the available variables.
 
 You can see the
 [default included template](https://github.com/MSU-Libraries/sandhill/blob/master/sandhill/templates/home.html.j2)

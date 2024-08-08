@@ -9,8 +9,8 @@ from sandhill import app
 
 def add_routes():
     """
-    Decorator function that adds all routes to the Flask app based
-    on JSON route configs loaded from `instance/configs/routes/`.
+    Decorator function that adds all routes to the Flask app based \
+    on JSON route configs loaded from `instance/configs/routes/`. \n
     """
     app.logger.info("Running add_routes")
     def decorator(func, **options):
@@ -28,16 +28,16 @@ def add_routes():
 @add_routes()
 def main(*args, **kwargs): # pylint: disable=unused-argument
     """
-    Entry point for the whole Sandhill application, handling all routes and
-    determining if a route has output to respond with after all processing
-    is completed.
-    Based on the route_config that the path matches to, it will load all the
-    required data processors before rendering the result.
+    Entry point for the whole Sandhill application, handling all routes and \
+    determining if a route has output to respond with after all processing \
+    is completed. \n
+    Based on the route_config that the path matches to, it will load all the \
+    required data processors before rendering the result. \n
     Args:
-        *args: Unused
-        **kwargs: Unused
+        *args: Unused \n
+        **kwargs: Unused \n
     Returns:
-        A valid response for Flask to render out, or raises HTTP 500
+        A valid response for Flask to render out, or raises HTTP 500 \n
     """
     route_used = request.url_rule.rule
     ## loop over all the configs in the instance dir looking at the "route"

@@ -9,11 +9,11 @@ from sandhill.utils.request import match_request_format
 @app.errorhandler(HTTPException)
 def handle_http_abort(exc):
     """
-    Overrides the default Flask template for abort codes.
+    Overrides the default Flask template for abort codes. \n
     Args:
-        exc (werkzeug.exceptions.HTTPException): A HTTPException from a 4xx or 5xx HTTP code
+        exc (werkzeug.exceptions.HTTPException): A HTTPException from a 4xx or 5xx HTTP code \n
     Returns:
-        (flask.Response): The Flask error response
+        (flask.Response): The Flask error response \n
     """
     # Check if the request accepts json format, if so prefer that for rendering
     request_format = match_request_format(None, ["application/json", "text/html"])

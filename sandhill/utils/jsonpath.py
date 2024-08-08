@@ -10,12 +10,12 @@ from sandhill import app
 
 def find(data, path=None, deepcopy=True):
     '''
-    Get the values for a given JSONPath.
+    Get the values for a given JSONPath. \n
     Args:
-        data (dict|list): The JSON data
-        path (str): The JSONPath to find
+        data (dict|list): The JSON data \n
+        path (str): The JSONPath to find \n
     Returns:
-        (list): A list of matches, empty if none found
+        (list): A list of matches, empty if none found \n
     '''
     if deepcopy:
         data = copy.deepcopy(data)
@@ -27,15 +27,15 @@ def find(data, path=None, deepcopy=True):
 
 def put(data, path, value, deepcopy=True):
     '''
-    Set a value at the given JSONPath location.
+    Set a value at the given JSONPath location. \n
     Args:
-        data (dict|list): The JSON data
-        path (str): The JSONPath to find
-            Last element in path will be removed, which must be
-            a specific Field or Index only
-        value (any): The value to set
+        data (dict|list): The JSON data \n
+        path (str): The JSONPath to find \n
+            Last element in path will be removed, which must be \
+            a specific Field or Index only \n
+        value (any): The value to set\n
     Returns:
-        (dict|list): The modified JSON data
+        (dict|list): The modified JSON data \n
     '''
     if deepcopy:
         data = copy.deepcopy(data)
@@ -56,13 +56,13 @@ def put(data, path, value, deepcopy=True):
 
 def append(data, path, value, deepcopy=True):
     '''
-    Append a value to the given JSONPath location. Location must be a list.
+    Append a value to the given JSONPath location. Location must be a list. \n
     Args:
-        data (dict|list): The JSON data
-        path (str): The JSONPath to a list(s)
-        value (any): The value to append
+        data (dict|list): The JSON data \n
+        path (str): The JSONPath to a list(s) \n
+        value (any): The value to append \n
     Returns:
-        (dict|list): The modified JSON data
+        (dict|list): The modified JSON data \n
     '''
     if deepcopy:
         data = copy.deepcopy(data)
@@ -79,14 +79,14 @@ def append(data, path, value, deepcopy=True):
 
 def delete(data, path, deepcopy=True):
     '''
-    Delete item(s) from JSON data.
+    Delete item(s) from JSON data. \n
     Args:
-        data (dict|list): The JSON data
-        path (str): The JSONPath to the object(s) to delete
-            Last element in path will be removed, which must be
-            a specific Field or Index only
+        data (dict|list): The JSON data \n
+        path (str): The JSONPath to the object(s) to delete \n
+            Last element in path will be removed, which must be \
+            a specific Field or Index only \n
     Returns:
-        (dict|list): The modified JSON data
+        (dict|list): The modified JSON data \n
     '''
     if deepcopy:
         data = copy.deepcopy(data)
@@ -109,7 +109,7 @@ def eval_within(string: str, context: dict):
     '''
     Given a string containing JSONPath queries, replace the queries with the values they found.\n
     JSONPath queries will query within the context.\n
-    **Example context**
+    **Example context** \n
     ```json
     {
         "item": {
@@ -117,17 +117,17 @@ def eval_within(string: str, context: dict):
         "parent": {
             "elem3": "value2" }
     }
-    ```
-    **Example query strings**
+    ``` \n
+    **Example query strings** \n
     ```python
     # No given context
     "$.elem1.elem2"     # would query the first item in the context dictionary
     # Specified conext
     "$parent.elem3"     # would query the the "parent" key in the context dictionary
-    ```
+    ``` \n
     Args:
-        string (str): The string to search within for JSONPath queries
-        context (dict): A dictionary of contexts upon which a JSONPath could query.
+        string (str): The string to search within for JSONPath queries \n
+        context (dict): A dictionary of contexts upon which a JSONPath could query. \n
     '''
     if not isinstance(context, dict) or len(context) == 0:
         app.logger.debug("jsonpath.eval_within given invalid/empty context. Skipping.")

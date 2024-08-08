@@ -38,4 +38,4 @@ _not_ be loaded until Sandhill is restarted.
 
 ## Core Sandhill Bootstrap Files
 If you're curious, have a look at the bootstrap source code of Sandhill over at
-the [API reference](/sandhill/api-reference/#bootstrap) page.
+the [API reference](./api-reference.md#bootstrap) page.

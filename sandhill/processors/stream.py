@@ -8,15 +8,15 @@ from sandhill.utils.error_handling import dp_abort
 
 def response(data):
     '''
-    Stream a Requests library response that was previously loaded.
+    Stream a Requests library response that was previously loaded. \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `response` _str_: The key where the response is located.\n
             * Key from `data[response]` _requests.Response_: The response to stream.\n
     Returns:
-        (flask.Response|None): A stream of the response
+        (flask.Response|None): A stream of the response \n
     Raises:
-        wergzeug.exceptions.HTTPException: If `on_fail` is set.
+        wergzeug.exceptions.HTTPException: If `on_fail` is set. \n
     '''
     allowed_headers = [
         'Content-Type', 'Content-Disposition', 'Content-Length',
@@ -48,13 +48,13 @@ def response(data):
 
 def string(data):
     '''
-    Stream a data variable as string data to the output
+    Stream a data variable as string data to the output \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `var` _str_: The name of the variable whose content should be sent.\n
             * `mimetype` _str_: The mimetype to send for the data (default: text/plain).\n
     Returns:
-        (flask.Response|None): A stream of the response
+        (flask.Response|None): A stream of the response \n
     '''
     if 'var' not in data or not data.get(data['var']):
         app.logger.error("requires that 'var' is set to name of non-empty data variable")

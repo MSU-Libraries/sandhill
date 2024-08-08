@@ -18,7 +18,7 @@ the curious.
 ## Data Processors
 Sandhill routes are composed of a list of **data processors**. These are single
 actions that Sandhill may take while processing a request. See the
-[data processor](/sandhill/data-processors) documentation for full details.
+[data processor](./data-processors.md) documentation for full details.
 
 ## Utils
 Utilities are bits of helper code used elsewhere in Sandhill. Functions or
@@ -40,7 +40,7 @@ Class used to filter through HTML and remove all tags except for those set as al
 Used by the `filtertags()` template filter.
 
 ::: sandhill.utils.jsonpath
-    rendering:
+    options:
       members_order: "source"
 
 ::: sandhill.utils.request
@@ -57,14 +57,14 @@ Class for handling Solr related logic, such as encoding/decoding.
 
 ## Bootstrap
 This is the code that starts up Sandhill, initializing the application.
-Have a look at the [bootstrap](/sandhill/bootstrap) documentation for more details.
+Have a look at the [bootstrap](./bootstrap.md) documentation for more details.
 
 ### `bootstrap`
 The core of the bootstrap module handles, among other things, loading other Python code.
 
 ### `bootstrap.request`
 ::: sandhill.bootstrap.request.update_request_object
-    rendering:
+    options:
       show_root_heading: false
       show_root_toc_entry: false
       show_root_full_path: false
@@ -72,7 +72,7 @@ The core of the bootstrap module handles, among other things, loading other Pyth
 
 ### `bootstrap.g`
 ::: sandhill.bootstrap.g.g_set
-    rendering:
+    options:
       show_root_heading: false
       show_root_toc_entry: false
       show_root_full_path: false
@@ -80,7 +80,7 @@ The core of the bootstrap module handles, among other things, loading other Pyth
 
 ### `bootstrap.debugtoolbar`
 ::: sandhill.bootstrap.debugtoolbar
-    rendering:
+    options:
       show_root_heading: false
       show_root_toc_entry: false
       show_root_full_path: false

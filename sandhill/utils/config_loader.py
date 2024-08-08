@@ -15,12 +15,12 @@ from sandhill import app, catch
        return_val=collections.OrderedDict())
 def load_json_config(file_path):
     """
-    Load a JSON file.
+    Load a JSON file. \n
     Args:
-        file_path (str): The full path to the JSON file to load
+        file_path (str): The full path to the JSON file to load \n
     Returns:
-        (dict): The contents of the loaded JSON file, or an empty dictionary
-                upon error loading or parsing the file.
+        (dict): The contents of the loaded JSON file, or an empty dictionary \
+                upon error loading or parsing the file. \n
     """
     app.logger.info(f"Loading json file at {file_path}")
     with open(file_path, encoding='utf-8') as json_config_file:
@@ -29,12 +29,12 @@ def load_json_config(file_path):
 @catch(FileNotFoundError, "Route dir not found at path {routes_dir} Error: {exc}", return_val=[])
 def load_routes_from_configs(routes_dir="config/routes/"):
     '''
-    Given a path relative to the `instance/` dir, load all JSON files within
-    and extract the "route" keys.
+    Given a path relative to the `instance/` dir, load all JSON files within \
+    and extract the "route" keys. \n
     Args:
-        routes_dir (string): The relative path to the JSON files
+        routes_dir (string): The relative path to the JSON files \n
     Returns:
-        (list): A list of routes from the configs
+        (list): A list of routes from the configs \n
     '''
     route_path = os.path.join(app.instance_path, routes_dir)
     routes = []
@@ -53,12 +53,12 @@ def load_routes_from_configs(routes_dir="config/routes/"):
 
 def get_all_routes(routes_dir="config/routes/"):
     '''
-    Finds all routes in JSON files with within given directory and order them
-    according to the desired load order.
+    Finds all routes in JSON files with within given directory and order them \
+    according to the desired load order. \n
     Args:
-        routes_dir (str): The directory to look for route configs.
+        routes_dir (str): The directory to look for route configs. \n
     Returns:
-        (list): All of the route rules found in desired order.
+        (list): All of the route rules found in desired order. \n
     '''
     routes = load_routes_from_configs(routes_dir)
 
@@ -84,12 +84,12 @@ def get_all_routes(routes_dir="config/routes/"):
        }))
 def load_route_config(route_rule, routes_dir="config/routes/"):
     '''
-    Return the json data for the provided directory.
+    Return the json data for the provided directory. \n
     Args:
-        route_rule (str): the route rule to match to in the json configs (the `route` key)
-        routes_dir (str): the path to look for route configs. Default = config/routes/
+        route_rule (str): the route rule to match to in the json configs (the `route` key) \n
+        routes_dir (str): the path to look for route configs. Default = config/routes/ \n
     Returns:
-        (OrderedDict): The loaded json of the matched route config, or empty dict if not found
+        (OrderedDict): The loaded json of the matched route config, or empty dict if not found \n
     '''
     route_path = os.path.join(app.instance_path, routes_dir)
     data = collections.OrderedDict()
@@ -111,12 +111,12 @@ def load_route_config(route_rule, routes_dir="config/routes/"):
 
 def load_json_configs(path, recurse=False):
     """
-    Loads all the config files in the provided path.
+    Loads all the config files in the provided path. \n
     Args:
-        path (string): The directory path from which to load the config files.
-        recurse (bool): If set to True, does a recursive walk into the path.
+        path (string): The directory path from which to load the config files. \n
+        recurse (bool): If set to True, does a recursive walk into the path. \n
     Returns:
-        (dict): Dictionary with keys of each file path and values of their loaded JSON.
+        (dict): Dictionary with keys of each file path and values of their loaded JSON. \n
     """
     config_files = {}
     if not os.path.isdir(path):
