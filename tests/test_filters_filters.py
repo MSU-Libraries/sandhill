@@ -500,3 +500,34 @@ def test_get_descendant():
     assert filters.filter_getdescendant(data, "0.key2.1") == "val-d"
     assert filters.filter_getdescendant(data, "0.key2.3") == None
     assert filters.filter_getdescendant(data, "0.key2.3", []) == []
+
+def test_findstartswith():
+    data = ["val-a", "val-b", "myteststring"]
+    assert filters.findstartswith(data, "val") == "val-a"
+    assert filters.findstartswith(data, "mytest") == "myteststring"
+    assert filters.findstartswith(data, "doesn't exist") == None
+    assert filters.findstartswith("wrong data type", "item") == None
+
+def test_solr_extractrange():
+    assert filters.solr_extractrange("no range") == None
+    assert filters.solr_extractrange("Only one date [2000-00-00T00:00:00]") == None
+    assert filters.solr_extractrange("dates [2000-00-00T00:00:00 TO 2001-00-00T00:00:00]") == ('2000-00-00T00:00:00', '2001-00-00T00:00:00')
+    assert filters.solr_extractrange("Another range [9 TO 5]") == ('9', '5')
+    assert filters.solr_extractrange("Another range with letters [going TO town]") == ('going', 'town')
+
+def test_solr_facetdates():
+    data = [
+        "param1=123",
+        "param_search=piano",
+        "param_date=[2000-01-01T00:00:00Z TO 2001-01-01T00:00:00Z]",
+    ]
+    results_none = {
+        "min": None,
+        "max": None,
+    }
+    results_date = {
+        "min": "2000",
+        "max": "2001",
+    }
+    assert filters.solr_facetdates(data, "param1") == results_none
+    assert filters.solr_facetdates(data, "param_date") == results_date

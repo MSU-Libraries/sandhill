@@ -421,6 +421,59 @@ def solr_addfq(query: dict, field: str, value: str):
 
     return query
 
+@app.template_filter('solr_facetdates')
+def solr_facetdates(filters: list, parameter: str):
+    """
+    In the provided list, look for the parameter starting by the parameter value,
+     and extract the year range
+    Args:
+        filters (list): A list to loop through
+        parameter (str): The start of the parameter we want (ie: "parameter" => "parameter=123")
+    Returns:
+        (dict): A dictionary containing the index "min" and "max", with the year of the range in it
+    """
+    facet_min_year = None
+    facet_max_year = None
+    value = findstartswith(filters, parameter)
+    if value:
+        solr_range = solr_extractrange(value)
+        if solr_range:
+            facet_min_year = formatiso8601(solr_range[0], '%Y')
+            facet_max_year = formatiso8601(solr_range[1], '%Y')
+
+    return {
+        "min": facet_min_year,
+        "max": facet_max_year,
+    }
+
+@app.template_filter('solr_extractrange')
+def solr_extractrange(value: str):
+    """
+    Given a string, if a range in the format [START TO END] is present,
+     it will extract and return both in a tuple
+    Args:
+        value (str): The string to look into
+    Returns:
+        (Tuple|None): A Tuple containing the 2 end of the range, if matching
+    """
+    result = re.search(r'\[(\S+) TO (\S+)\]', value)
+    return result.groups() if result else None
+
+@app.template_filter('findstartswith')
+def findstartswith(filters: list, item: str):
+    """
+    Given a list, return the first element starting with the string item
+    Args:
+        filters (list): A list to loop through
+        item (str): The start of the string we want (ie: "parameter" => "parameter=123")
+    Returns:
+        (str|None): The value in the list, if matching
+    """
+    for value in filters:
+        if value.startswith(item) :
+            return value
+    return None
+
 @app.template_filter('solr_hasfq')
 def solr_hasfq(query: dict, field: str, value: str):
     """
