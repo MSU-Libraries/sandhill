@@ -9,15 +9,15 @@ import sandhill
 
 def dp_abort(http_code):
     """
-    Data processor abort. Will abort with the given status code if
-    the data processor has an `on_fail` key set and the value is `0`.
-    If the value is non-`0`, the 'on_fail' code will override
-    the passed code.
+    Data processor abort. Will abort with the given status code if \
+    the data processor has an `on_fail` key set and the value is `0`. \n
+    If the value is non-`0`, the 'on_fail' code will override \
+    the passed code. \n
     Args:
-        http_code (int): A valid HTTP status code
+        http_code (int): A valid HTTP status code \n
     Raises:
-        (HTTPException): Can raises exception if data processor's `on_fail` is
-            defined in parent context
+        (HTTPException): Can raises exception if data processor's `on_fail` is \
+            defined in parent context \n
     """
     parent_locals = inspect.currentframe().f_back.f_locals
     data = parent_locals['data'] if 'data' in parent_locals else {}
@@ -26,20 +26,20 @@ def dp_abort(http_code):
 
 def catch(exc_class, exc_msg=None, **kwargs):
     """
-    Decorator to catch general exceptions and handle in a standarized manor.
+    Decorator to catch general exceptions and handle in a standarized manor. \n
     Args:
-        exc_class (Exception): Type of exception to catch
-        exc_msg (String) (optional): Message to log; the
+        exc_class (Exception): Type of exception to catch \n
+        exc_msg (String) (optional): Message to log; the \
             parameter `{exc}` is available in the string template.\n
-            Ex: `f"Error: {exc}"`
+            Ex: `f"Error: {exc}"` \n
         **kwargs: Optional arguments:\n
             return_val (Any): Value to return after the exception has been handled\n
             return_arg (str): Function kwarg to be returned after the exception has been handled\n
-            abort (int): Status code to abort with
+            abort (int): Status code to abort with \n
     Returns:
-        (Any): Only if return_val or return_arg is provided in kwargs.
+        (Any): Only if return_val or return_arg is provided in kwargs. \n
     Raises:
-        (HTTPException): If no return_val or return_arg is provided in kwargs.
+        (HTTPException): If no return_val or return_arg is provided in kwargs. \n
     Examples:
     ```python
     @catch(KeyError, "Some error message", return_val=None)
@@ -49,7 +49,7 @@ def catch(exc_class, exc_msg=None, **kwargs):
     @catch((KeyError, IndexError), "Some error message", return_arg='myval')
     def myfunc(myval):
         ...
-    ```
+    ``` \n
     """
     def inner(func):
         @wraps(func)

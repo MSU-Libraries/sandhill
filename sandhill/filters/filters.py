@@ -22,11 +22,11 @@ from sandhill.utils import xml
 def formatbinary(value):
     """
     Format bytes size to JEDEC standard binary file size.\n
-    Use: `4096 | formatbinary` = `"4 KB"`
+    Use: `4096 | formatbinary` = `"4 KB"` \n
     Args:
-        value (str|int): Number of bytes.
+        value (str|int): Number of bytes. \n
     Returns:
-        (str): The formatted bytesize or `0 B` on invalid input value.
+        (str): The formatted bytesize or `0 B` on invalid input value. \n
     """
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     i = 0
@@ -40,22 +40,23 @@ def formatbinary(value):
 @app.template_filter('islist')
 def islist(value):
     """
-    Check if given value is a list.
+    Check if given value is a list. \n
     Args:
-        value (Any): The value to type check against.
+        value (Any): The value to type check against. \n
     Returns:
-        (bool): True if value is a list."""
+        (bool): True if value is a list. \n
+    """
     return isinstance(value, list)
 
 @app.template_filter('getextension')
 def getextension(value):
     """
     For a given mimetype, return the appropriate file extension.\n
-    Use: `"image/jpeg" | getextension` = `"jpg"`
+    Use: `"image/jpeg" | getextension` = `"jpg"` \n
     Args:
-        value (str): A mimetype string
+        value (str): A mimetype string \n
     Returns:
-        (str): The matching filetype extension (without leading `.`) or `???` not found.
+        (str): The matching filetype extension (without leading `.`) or `???` not found. \n
     """
     mimetypes.add_type("audio/wav", '.wav')
     extension = None
@@ -75,11 +76,11 @@ def getextension(value):
 @app.template_filter('head')
 def head(value):
     """
-    Returns the head of the list if value is a non-empty list, otherwise returns the orig value.
+    Returns the head of the list if value is a non-empty list, otherwise returns the orig value. \n
     Args:
-        value (Any): Possible list from which to remove the first item from.
+        value (Any): Possible list from which to remove the first item from. \n
     Returns:
-        (Any): The first item from the list, or the original value if it was not a list.
+        (Any): The first item from the list, or the original value if it was not a list. \n
     """
     if isinstance(value, list) and value:
         value = value[0]
@@ -89,26 +90,26 @@ def head(value):
 def unescape(value):
     """
     Unescape special characters in a string of HTML.\n
-    Use: `"Moon &amp; &#42;&#42;&#42;" | unescape` = `"Moon & ***"`
+    Use: `"Moon &amp; &#42;&#42;&#42;" | unescape` = `"Moon & ***"` \n
     Args:
-        value (str): The string to unescape.
+        value (str): The string to unescape. \n
     Returns:
-        (str): The unescaped string, or empty string if passed a non-string value.
+        (str): The unescaped string, or empty string if passed a non-string value. \n
     """
     return html.unescape(value) if isinstance(value, str) else ""
 
 @app.template_filter('filtertags')
 def filtertags(value, *args):
     """
-    Filter out all HTML tags except for the ones specified
+    Filter out all HTML tags except for the ones specified \
     and marks the output as safe to render.\n
-    Use: `<i><b>Hello</b></i> | filtertags('b')` = `<b>Hello</b>`
+    Use: `<i><b>Hello</b></i> | filtertags('b')` = `<b>Hello</b>` \n
     Args:
-        value (str): A string potentially containing HTML tags.
-        *args (str): Tag names which are safe and will not be removed.
+        value (str): A string potentially containing HTML tags. \n
+        *args (str): Tag names which are safe and will not be removed. \n
     Returns:
-        (str): A string with tags removed (excluding those passed as *args).
-               This string is marked `safe` and will not be further escaped by Jinja.
+        (str): A string with tags removed (excluding those passed as *args). \n
+               This string is marked `safe` and will not be further escaped by Jinja. \n
     """
     htf = HTMLTagFilter(tags=args)
     htf.feed(value)
@@ -117,27 +118,28 @@ def filtertags(value, *args):
 @app.template_filter('solr_encodequery')
 def solr_encodequery(query, escape_wildcards=False):
     """
-    Parses and encode a Solr query arguments (the part after the colon).
+    Parses and encode a Solr query arguments (the part after the colon). \n
     args:
-        query (str): Solr query argument to encode.
-        escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
-                                 should be encoded (Default: False)
+        query (str): Solr query argument to encode. \n
+        escape_wildcards (bool): If Solr's wildcard indicators (* and ?) \
+                                 should be encoded (Default: False) \n
     returns:
-        (str): The Solr query with appropriate characters encoded.
+        (str): The Solr query with appropriate characters encoded. \n
     """
     return Solr().encode_query(query, escape_wildcards=escape_wildcards)
 
 @app.template_filter('solr_encode')
 def solr_encode(value, escape_wildcards=False, preserve_quotes=False):
-    """Filter to encode a value being passed to Solr
+    """Filter to encode a value being passed to Solr \n
     Args:
-        value (str): string to escape Solr characters
-        escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
-            should be encoded (Default: False)
-        preserve_quotes (bool): If set to True, will prevent quotes on outside
-            of the string from being encoded
+        value (str): string to escape Solr characters \n
+        escape_wildcards (bool): If Solr's wildcard indicators (* and ?) \
+            should be encoded \n
+            Default: `False` \n
+        preserve_quotes (bool): If set to True, will prevent quotes on outside \
+            of the string from being encoded \n
     Returns:
-        (str): same string but with Solr characters encoded
+        (str): same string but with Solr characters encoded \n
     """
     quotes_exist = False
 
@@ -155,13 +157,14 @@ def solr_encode(value, escape_wildcards=False, preserve_quotes=False):
 
 @app.template_filter('solr_decode')
 def solr_decode(value, escape_wildcards=False):
-    """Filter to decode a value previously encoded for Solr.
+    """Filter to decode a value previously encoded for Solr. \n
     Args:
-        value (str): string with Solr escapes to be decoded
-        escape_wildcards (bool): If Solr's wildcard indicators (* and ?)
-            should be encoded (Default: False)
+        value (str): string with Solr escapes to be decoded \n
+        escape_wildcards (bool): If Solr's wildcard indicators (* and ?) \
+            should be encoded \n
+            Default: `False` \n
     Returns:
-        (str): same string after being decoded
+        (str): same string after being decoded \n
     """
     if isinstance(value, str):
         value = Solr().decode_value(value, escape_wildcards)
@@ -169,15 +172,16 @@ def solr_decode(value, escape_wildcards=False):
 
 @app.template_filter('setchildkey')
 def setchildkey(parent_dict, parent_key, key, value):
-    """Take dictionary of url components, and update 'key' with 'value'.\n
-    Use: `{'a': {'x': '1'}} | setchildkey('a', 'y', '2')` = `{'a': {'x': '1', 'y': '2'}}`
+    """
+    Take dictionary of url components, and update 'key' with 'value'.\n
+    Use: `{'a': {'x': '1'}} | setchildkey('a', 'y', '2')` = `{'a': {'x': '1', 'y': '2'}}` \n
     Args:
-        parent_dict (dict): dictionary to add parent_key to
-        parent_key (str|int|other hashable type): parent key to add to the parent_dict
-        key (str|int|other hashable type): key to put under parent_key
-        value (any): value to give that key
+        parent_dict (dict): dictionary to add parent_key to \n
+        parent_key (str|int|other hashable type): parent key to add to the parent_dict \n
+        key (str|int|other hashable type): key to put under parent_key \n
+        value (any): value to give that key \n
     Returns:
-        parent_dict (dict): The updated parent dictionary
+        parent_dict (dict): The updated parent dictionary \n
     """
     if isinstance(parent_dict, dict) \
       and isinstance(parent_key, Hashable) \
@@ -189,11 +193,12 @@ def setchildkey(parent_dict, parent_key, key, value):
 
 @app.template_filter('assembleurl')
 def assembleurl(urlcomponents):
-    """Take urlcomponents (derived from Flask Request object) and returns a url.
+    """
+    Take urlcomponents (derived from Flask Request object) and returns a url. \n
     Args:
-        urlcomponents (dict): components of the URL to build
+        urlcomponents (dict): components of the URL to build \n
     Returns:
-        (str): fully combined URL with query arguments
+        (str): fully combined URL with query arguments \n
     """
     url = ""
     if isinstance(urlcomponents, dict) and "path" in urlcomponents:
@@ -210,11 +215,12 @@ def assembleurl(urlcomponents):
 
 @app.template_filter('urlquote')
 def urlquote(url_str):
-    """Fully escapes all characters (including slash) in the given string with URL percent escapes
+    """
+    Fully escapes all characters (including slash) in the given string with URL percent escapes \n
     Args:
-        url_str (str): The string to escape
+        url_str (str): The string to escape \n
     Returns:
-        (str): The fully escaped string
+        (str): The fully escaped string \n
     """
     return urllib.parse.quote(url_str).replace('/', '%2F')
 
@@ -222,11 +228,12 @@ def urlquote(url_str):
 @catch((ValueError, TypeError),
        'Unable to get a valid date in "{value}". Error {exc}', return_val=False)
 def datepassed(value):
-    """ Checks if the embargoed date is greater than the current date
+    """
+    Checks if the embargoed date is greater than the current date \n
     Args:
-        value (str): Date in the format yyy-mm-dd that needs to be checked
+        value (str): Date in the format yyy-mm-dd that needs to be checked \n
     Returns:
-        (bool): If the given date is less than the current date or not
+        (bool): If the given date is less than the current date or not \n
     """
     value_date = datetime.strptime(value, "%Y-%m-%d")
     current_date = datetime.now()
@@ -237,14 +244,14 @@ def datepassed(value):
 @catch(TemplateError, "Invalid template provided: {value}. Error: {exc}", return_val=None)
 @catch(TypeError, "Cannot render a non-string value: {value}. Error: {exc}", return_val=None)
 def render(context, value, **kwargs):
-    """Renders a given string using Jinja.
+    """Renders a given string using Jinja. \n
     Args:
-        context (Jinja2 context): context information and variables to use when
-            evaluating the provided template string. Passed automatically.
-        value (str): Jinja2 template string to evaluate given the provided context.
-        **kwargs (dict): Additional key-value pairs to add to the render context.
+        context (Jinja2 context): context information and variables to use when \
+            evaluating the provided template string. Passed automatically. \n
+        value (str): Jinja2 template string to evaluate given the provided context. \n
+        **kwargs (dict): Additional key-value pairs to add to the render context. \n
     Returns:
-        (str): the rendered string
+        (str): the rendered string \n
     """
     if kwargs:
         kwargs.update(context)
@@ -258,18 +265,19 @@ def render(context, value, **kwargs):
 @app.template_filter('renderliteral')
 @pass_context
 def renderliteral(context, value, fallback_to_str=True):
-    """Renders string via Jinja and attempts to perform a literal_eval on the result.
+    """
+    Renders string via Jinja and attempts to perform a literal_eval on the result. \n
     Args:
-        context (Jinja2 context): context information and variables to use when
-            evaluating the provided template string.
-        value (str): Jinja2 template string to evaluate given the provided context
-        fallback_to_str (bool): If function should return string value on a failed
-            attempt to literal_eval
+        context (Jinja2 context): context information and variables to use when \
+            evaluating the provided template string. \n
+        value (str): Jinja2 template string to evaluate given the provided context \n
+        fallback_to_str (bool): If function should return string value on a failed \
+            attempt to literal_eval \n
     Returns:
-        (Any|None): The literal_eval result, or string if fallback_to_str, or None on render failure
+        (Any|None): The literal_eval result, or string if fallback_to_str, or None on render failure \n
     Raises:
-        ValueError: If content is valid Python, but not a valid datatype
-        SyntaxError: If content is not valid Python
+        ValueError: If content is valid Python, but not a valid datatype \n
+        SyntaxError: If content is not valid Python \n
     """
     context.environment.autoescape = False
     data_val = render(context, value)
@@ -287,13 +295,13 @@ def renderliteral(context, value, fallback_to_str=True):
 @catch((ValueError, TypeError), return_arg="default")
 def formatedate(value, default="Indefinite"):
     '''
-    Format the provided embargo end date as a human readable string.
-    If the date year is 9999, it will show the default value.
+    Format the provided embargo end date as a human readable string. \n
+    If the date year is 9999, it will show the default value. \n
     Args:
-        value (str): A date string in the format YYYY-MM-DD
-        default (str): The default string (Default: "Indefinite")
+        value (str): A date string in the format YYYY-MM-DD \n
+        default (str): The default string (Default: "Indefinite") \n
     Returns:
-        (str): Formatted end date
+        (str): Formatted end date \n
     '''
     result = default
     value_date = datetime.strptime(value, "%Y-%m-%d")
@@ -308,13 +316,13 @@ def formatedate(value, default="Indefinite"):
 @catch((ValueError, TypeError), return_arg="default")
 def formatiso8601(value, dtfmt="%Y-%m-%d", default="Any"):  # pylint: disable=unused-argument
     '''
-    Format the provided ISO 8601 date string.
+    Format the provided ISO 8601 date string. \n
     Args:
-        value (str): A date string in the ISO 8601 format
-        dtfmt (str): The format string to output (see `datetime.strftime`)
-        default (str): The default string (Default: "Any")
+        value (str): A date string in the ISO 8601 format \n
+        dtfmt (str): The format string to output (see `datetime.strftime`) \n
+        default (str): The default string (Default: "Any") \n
     Returns:
-        (str): Formatted date string
+        (str): Formatted date string \n
     '''
     value_date = parser.isoparse(value)
     return value_date.strftime(dtfmt)
@@ -322,12 +330,12 @@ def formatiso8601(value, dtfmt="%Y-%m-%d", default="Any"):  # pylint: disable=un
 @app.template_filter('sandbug')
 def filter_sandbug(value: str, comment: str = None):
     '''
-    Writes a variable to the Sandhill debug logs.
+    Writes a variable to the Sandhill debug logs. \n
     Args:
-        value (str): Variable to write to the log.
-        comment (str|None): Optional comment to add to the log.
+        value (str): Variable to write to the log. \n
+        comment (str|None): Optional comment to add to the log. \n
     Returns:
-        (str): Always returns an empty string.
+        (str): Always returns an empty string. \n
     '''
     sandbug(value, comment) # pylint: disable=undefined-variable
     return ""
@@ -336,11 +344,11 @@ def filter_sandbug(value: str, comment: str = None):
 @app.template_filter('deepcopy')
 def deepcopy(obj):
     """
-    Returns the deepcopy of the input object.
+    Returns the deepcopy of the input object. \n
     Args:
-        obj (dict|list|tuple): The value to deepcopy.
+        obj (dict|list|tuple): The value to deepcopy. \n
     Returns:
-        (dict|list|tuple): The new copy of the variable.
+        (dict|list|tuple): The new copy of the variable. \n
     """
     return copy.deepcopy(obj)
 
@@ -348,20 +356,20 @@ def deepcopy(obj):
 def solr_getfq(query: dict):
     """
     Extract and returns the filter queries from a Solr query.\n
-    Example input:
+    Example input: \n
     ```
     {"q":"frogs", "fq":["dc.title:example_title1", "dc.title:example_title2",
     "dc.creator:example_creator1", "dc.creator:example_creator2"]}
-    ```
-    Example output:
+    ``` \n
+    Example output: \n
     ```
     {"dc.title": ["example_title1", "example_title2"], "dc.creator":
     ["example_creator1", "example_creator2"]}
-    ```
+    ``` \n
     Args:
-        query (dict): A Solr query.
+        query (dict): A Solr query. \n
     Returns:
-        (dict): The extracted filter queries.
+        (dict): The extracted filter queries. \n
     """
     def parse_fq_into_dict(fq_dict, fq_str):
         fq_pair = fq_str.split(":", 1)

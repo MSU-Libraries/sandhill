@@ -19,12 +19,12 @@ from sandhill.utils.error_handling import dp_abort
 @catch(KeyError, "Missing url component: {exc}", abort=400) # Missing 'params' key
 def select(data, url=None, api_get_function=api_get):
     """
-    Perform a Solr select call and return the loaded JSON response.
+    Perform a Solr select call and return the loaded JSON response. \n
     ```json
     "name": "mysearch",
     "processor": "solr.search",
     "params": { "q": "*", "rows":"20" }
-    ```
+    ``` \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `params` _dict_: Query arguments to pass to Solr.\n
@@ -34,9 +34,9 @@ def select(data, url=None, api_get_function=api_get):
                    the [Sandhill config](#TODO) file.\n
         api_get_function (function): Function used to call Solr with. Used in unit tests.\n
     Returns:
-        (dict|None): The loaded JSON data or None if nothing matched.
+        (dict|None): The loaded JSON data or None if nothing matched. \n
     Raises:
-        wergzeug.exceptions.HTTPException: If `on_fail` is set.
+        wergzeug.exceptions.HTTPException: If `on_fail` is set. \n
     """
 
     response = None
@@ -67,7 +67,7 @@ def select(data, url=None, api_get_function=api_get):
 
 def select_record(data, url=None, api_get_function=api_get):
     """
-    Perform a Solr select call and return the first result from the response.
+    Perform a Solr select call and return the first result from the response. \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `params` _dict_: Query arguments to pass to Solr.\n
@@ -77,9 +77,9 @@ def select_record(data, url=None, api_get_function=api_get):
                    [Sandhill config](#TODO) file.\n
         api_get_function (function): Function used to call Solr with. Used in unit tests.\n
     Returns:
-        (Any): The first item matched by `record_keys` in the JSON response, otherwise None.
+        (Any): The first item matched by `record_keys` in the JSON response, otherwise None. \n
     Raises:
-        wergzeug.exceptions.HTTPException: If `on_fail` is set.
+        wergzeug.exceptions.HTTPException: If `on_fail` is set. \n
     """
     data['record_keys'] = ifnone(data, 'record_keys', 'response.docs')
     records = select(data, url, api_get_function)
@@ -91,7 +91,7 @@ def select_record(data, url=None, api_get_function=api_get):
 
 def search(data, url=None, api_get_function=api_get):
     """
-    Perform a [configured Solr search](#TODO) and return the result.
+    Perform a [configured Solr search](#TODO) and return the result. \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `path` _string_, `paths` _list_: The path to a search config file. Loaded \
@@ -104,7 +104,7 @@ def search(data, url=None, api_get_function=api_get):
         api_get_function (function): Function used to call Solr with. Used in unit tests.\n
     Returns:
         (dict|flask.Response): A dict of the loaded JSON response, or a `flask.Response` instance \
-                               if `view_args.format` is `text/json`.
+                               if `view_args.format` is `text/json`. \n
     """
     # TODO module should return None and call dp_abort instead of abort
     # TODO allow "path"

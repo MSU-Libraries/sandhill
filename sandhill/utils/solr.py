@@ -20,7 +20,7 @@ class Solr:
 
     def _init_scanner(self):
         """
-        Initialize the token scanner for parsing a query
+        Initialize the token scanner for parsing a query \n
         """
         # TODO filter()
         self._scanner = re.Scanner([
@@ -44,7 +44,7 @@ class Solr:
 
     def _tokenize_query(self, query):
         """
-        Tokenize a query, resetting stack and stack position
+        Tokenize a query, resetting stack and stack position \n
         """
         self._init_scanner()
         self._tokens, _ = self._scanner.scan(query)
@@ -76,32 +76,32 @@ class Solr:
 
     def _in_stack(self, *args):
         """
-        Check if ANY of the given arguments are in the _stack
-        args:
-            *args (string): token_id's to check the stack for
-        returns:
-            (bool) Returns True if ANY of the provided args are found in the _stack
+        Check if ANY of the given arguments are in the _stack \n
+        Args:
+            *args (string): token_id's to check the stack for \n
+        Returns:
+            (bool) Returns True if ANY of the provided args are found in the _stack \n
         """
         return any(arg in self._stack for arg in args)
 
     def _stack_top_is(self, token_id):
         """
-        Checks that the top of the stack is the given token. An empty stack never matches.
-        args:
-            token_id (str): the token to match
-        returns:
-            (bool) True if matched
+        Checks that the top of the stack is the given token. An empty stack never matches. \n
+        Args:
+            token_id (str): the token to match \n
+        Returns:
+            (bool) True if matched \n
         """
         return self._stack and self._stack[-1] == token_id
 
     def _stack_entry(self, token_id, token):
         """
-        Process the given stackable token_id
-        args:
-            token_id (str): the token_id to process
-            token (str): the token string
-        raises:
-            ValueError when attempting to close a token pair that hasn't been opened
+        Process the given stackable token_id \n
+        Args:
+            token_id (str): the token_id to process \n
+            token (str): the token string \n
+        Raises:
+            ValueError when attempting to close a token pair that hasn't been opened \n
         """
         if token in tuple("[("):
             self._stack.append(token_id)
@@ -112,12 +112,12 @@ class Solr:
 
     def encode_query(self, query, escape_wildcards=False):
         """
-        Given a solr query, parse and encode characters as appropriate
-        args:
-            query (str): the solr query
-            escape_wildcards (bool): Whether to escape * and ?
-        returns:
-            (str) the encoded solr query
+        Given a solr query, parse and encode characters as appropriate \n
+        Args:
+            query (str): the solr query \n
+            escape_wildcards (bool): Whether to escape * and ? \n
+        Returns:
+            (str) the encoded solr query \n
         """
         self._tokenize_query(query)
         encoded = ""
@@ -147,12 +147,12 @@ class Solr:
 
     def encode_value(self, value, escape_wildcards=False):
         """
-        Given a value, encode characters as appropriate for use in a Solr query
-        args:
-            query (str): the value to encode
-            escape_wildcards (bool): Whether to encode * and ?
-        returns:
-            (str) the encoded value
+        Given a value, encode characters as appropriate for use in a Solr query \n
+        Args:
+            query (str): the value to encode \n
+            escape_wildcards (bool): Whether to encode * and ? \n
+        Returns:
+            (str) the encoded value \n
         """
         escapes = self._escape_chars.copy()
         if not escape_wildcards:
@@ -165,13 +165,13 @@ class Solr:
 
     def decode_value(self, value, escape_wildcards=False):
         """
-        Given a value already encoded for use in a Solr query, decode the
-        characters back to a normal string
-        args:
-            query (str): the value to decode
-            escape_wildcards (bool): Whether to decode * and ?
-        returns:
-            (str) the decoded value
+        Given a value already encoded for use in a Solr query, decode the \
+        characters back to a normal string \n
+        Args:
+            query (str): the value to decode \n
+            escape_wildcards (bool): Whether to decode * and ? \n
+        Returns:
+            (str) the decoded value \n
         """
         escapes = self._escape_chars.copy()
         if not escape_wildcards:

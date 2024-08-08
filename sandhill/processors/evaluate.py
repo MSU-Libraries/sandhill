@@ -9,7 +9,7 @@ from sandhill.utils.error_handling import dp_abort
 def conditions(data):
     """
     Evaluates the condtions specified in the processor section of the configs.\n
-    [Detailed documentation](https://msu-libraries.github.io/sandhill/evaluate-conditions/)
+    [Detailed documentation](https://msu-libraries.github.io/sandhill/evaluate-conditions/) \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `conditions` _string_: Indicates the location in `data` where conditions to be \

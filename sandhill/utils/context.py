@@ -15,9 +15,9 @@ def app_context():
     # Example use
     with context.app_context():
         ...
-    ```
+    ``` \n
     Returns:
-        A context manager class instance.
+        A context manager class instance. \n
     """
     class NullContext: # pylint: disable=all
         def __enter__(self): return None
@@ -27,9 +27,9 @@ def app_context():
 
 def list_custom_context_processors():
     """
-    Get the full list of the available custom context processors.
+    Get the full list of the available custom context processors. \n
     Returns:
-        (list): A list of strings of the context processor names.
+        (list): A list of strings of the context processor names. \n
     """
     custom = []
     for entries in app.template_context_processors[None]:
@@ -42,20 +42,20 @@ def list_custom_context_processors():
 @app.context_processor
 def context_processors():
     """
-    The list of  Sandhill context processor functions.
+    The list of  Sandhill context processor functions. \n
     Returns:
-        (dict): Context processors mapped as: name => function
+        (dict): Context processors mapped as: name => function \n
     """
     # TODO move function definitions to sandhill/context/ and import them for use below
 
     def strftime(fmt: str = None, day: str = None) -> str:
         """
-        Wrapper around datetime.strftime with default yyyy-mm-dd format
+        Wrapper around datetime.strftime with default yyyy-mm-dd format \n
         args:
-            fmt (str): The format for the date to return
-            day (str): A date in yyyy-mm-dd format to format, or today if not passed
+            fmt (str): The format for the date to return \n
+            day (str): A date in yyyy-mm-dd format to format, or today if not passed \n
         returns:
-            (str): The formatted date
+            (str): The formatted date \n
         """
         fmt = "%Y-%m-%d" if not fmt else fmt
         day = datetime.now() if not day else datetime.strptime(day, "%Y-%m-%d")
@@ -63,21 +63,21 @@ def context_processors():
 
     def context_sandbug(value: Any, comment: str = None):
         """
-        Sandbug as a context processor, because we can. Will output the given
-        value into the logs. For debugging.
+        Sandbug as a context processor, because we can. Will output the given \
+        value into the logs. For debugging. \n
         Args:
-            value (Any): The value to debug.
-            comment (str): Additional comment to add to log output.
+            value (Any): The value to debug. \n
+            comment (str): Additional comment to add to log output. \n
         Returns:
-            (None): Sandbug does not return a value.
+            (None): Sandbug does not return a value. \n
         """
         sandbug(value, comment) # pylint: disable=undefined-variable
 
     def urlcomponents():
         """
-        Creates a deepcopy of the url components part of the request object.
+        Creates a deepcopy of the url components part of the request object. \n
         Returns:
-            (dict): The copied data.
+            (dict): The copied data. \n
         """
         try:
             return {
@@ -94,23 +94,23 @@ def context_processors():
 
     def find_mismatches(dict1: dict, dict2: dict) -> dict:
         """
-        Return detailed info about how and where the two supplied dicts don't match.
+        Return detailed info about how and where the two supplied dicts don't match. \n
         Args:
-            dict1 (dict): A dictionary to compare.
-            dict2 (dict): A dictionary to compare.
+            dict1 (dict): A dictionary to compare. \n
+            dict2 (dict): A dictionary to compare. \n
         Returns:
-            (dict) A dictionary highlighting what is different between the two inputs.
+            (dict) A dictionary highlighting what is different between the two inputs. \n
         """
         return dict(DeepDiff(dict1, dict2, ignore_order=True))
 
     @pass_context
     def get_var(context, var: str):
         """
-        Returns the given variable in the current application context
+        Returns the given variable in the current application context \n
         Args:
-            var (str): The name of the variable to get from the context
+            var (str): The name of the variable to get from the context \n
         Returns:
-            (any): The value of the provided variable in the current context
+            (any): The value of the provided variable in the current context \n
         """
         ctx = dict(context)
         return ctx[var] if var in ctx else None

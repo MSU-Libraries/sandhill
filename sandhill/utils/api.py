@@ -9,12 +9,12 @@ from sandhill import app
 
 def api_get(**kwargs):
     """
-    Perform an API call using `requests.get()` and return the response object. This function adds
-    logging surrounding the call.
+    Perform an API call using `requests.get()` and return the response object. This function adds \
+    logging surrounding the call. \n
     Args:
-        **kwargs (dict): Arguments to [`requests.get()`](#TODO)
+        **kwargs (dict): Arguments to [`requests.get()`](#TODO) \n
     Raises:
-        requests.RequestException: If the call cannot return a response.
+        requests.RequestException: If the call cannot return a response. \n
     """
     if "timeout" not in kwargs:
         kwargs["timeout"] = 10
@@ -29,12 +29,12 @@ def api_get(**kwargs):
 
 def api_get_multi(requests_kwargs):
     """
-    Perform multiple API calls in parellel using futures, returning a list
-    of responses.
+    Perform multiple API calls in parellel using futures, returning a list \
+    of responses. \n
     Args:
-        requests_kwargs (list of dict): Each arguments to [`requests.get()`]
+        requests_kwargs (list of dict): Each arguments to [`requests.get()`] \n
     Returns:
-        A generator yielding response objects
+        A generator yielding response objects \n
     """
     def request_futures(requests_kwargs):
         futures = []
@@ -50,12 +50,12 @@ def api_get_multi(requests_kwargs):
 
 def establish_url(url, fallback):
     """
-    Set URL to fallback if provided URL is none; also checks the URL validity.
+    Set URL to fallback if provided URL is none; also checks the URL validity. \n
     Args:
-        url (str): A possible URL.
-        fallback (str): A secondary URL to fallback to if `url` is None.
+        url (str): A possible URL. \n
+        fallback (str): A secondary URL to fallback to if `url` is None. \n
     raises:
-        werkzeurg.exceptions.HTTPException: If URL to be returned is not a valid formatted URL.
+        werkzeurg.exceptions.HTTPException: If URL to be returned is not a valid formatted URL. \n
     """
     url = url if url else fallback
     try:

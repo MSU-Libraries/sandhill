@@ -11,15 +11,15 @@ from sandhill.utils.error_handling import dp_abort
 @catch(RequestException, "Call to IIIF Server failed: {exc}", abort=503)
 def load_image(data, url=None, api_get_function=api_get):
     '''
-    Load and return a IIIF image
+    Load and return a IIIF image. \n
     Args:
-        data (dict): route data where `data[view_ags][iiif_path]` and `data[identifier]` exist
-        url (str): Override the IIIF server URL from the default IIIF_BASE in the configs
-        api_get_function (function): function to use when making the GET request
+        data (dict): route data where `data[view_ags][iiif_path]` and `data[identifier]` exist \n
+        url (str): Override the IIIF server URL from the default IIIF_BASE in the configs \n
+        api_get_function (function): function to use when making the GET request \n
     Returns:
-        (requests.Response|None): Requested image from IIIF, or None on failure.
+        (requests.Response|None): Requested image from IIIF, or None on failure. \n
     Raises:
-        (HTTPException): On failure if `on_fail` is set.
+        (HTTPException): On failure if `on_fail` is set. \n
     '''
     image = None
     url = establish_url(url, getconfig('IIIF_BASE', None))

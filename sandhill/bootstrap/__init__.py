@@ -16,8 +16,8 @@ from sandhill.utils.generic import getconfig, getmodulepath
 
 def configure_logging():
     '''
-    Configure application logging. Includes: default logger, file logger,
-    and email based on the application configuration file.
+    Configure application logging. Includes: default logger, file logger, \
+    and email based on the application configuration file. \n
     '''
 
     # Default logger
@@ -100,13 +100,13 @@ builtins.sandbug = sandbug
 
 def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
     '''
-    Detect and load all of the modules within a given path
+    Detect and load all of the modules within a given path \n
     args:
-        base_path(str): Base directory path to search
-        sub_path(str): Directory within the base path to search
-        files (bool): Include loading files. Default is True
-        dirs (bool): Include loading directories. Default is True
-        exclude (list of  str): Files and directories to exclude
+        base_path(str): Base directory path to search \n
+        sub_path(str): Directory within the base path to search \n
+        files (bool): Include loading files. Default is True \n
+        dirs (bool): Include loading directories. Default is True \n
+        exclude (list of  str): Files and directories to exclude \n
     '''
     sub_path = sub_path.strip('/')
     mod_path = os.path.join(base_path, sub_path)

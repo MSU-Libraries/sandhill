@@ -13,18 +13,18 @@ from sandhill.utils.template import evaluate_conditions
 
 def load_json(data):
     '''
-    Search for files at the paths within 'path' and 'paths' keys of `data`.
-    Will load JSON from the first file it finds and then return the result.
-    If both 'path' and 'paths' are set, paths from both will be searched
+    Search for files at the paths within 'path' and 'paths' keys of `data`. \
+    Will load JSON from the first file it finds and then return the result. \n
+    If both 'path' and 'paths' are set, paths from both will be searched \
     starting with 'path' first.\n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `path` _string_: A single file path to search for.\n
             * `paths` _list_: A list of file paths to search for.\n
-    Note:
-        Paths must be relative to the `instance/` directory.
     Returns:
         (dict|None): The loaded JSON data or None if no file was found.
+    Note:
+        Paths must be relative to the `instance/` directory.
     '''
     file_data = None
     # loop over each provided path and stop when one is found
@@ -40,8 +40,8 @@ def load_json(data):
 
 def create_json_response(data):
     '''
-    Wrapper for `load_json` that will return a JSON response object.
-    This can be used to stream JSON instead of loading it to use it as data.
+    Wrapper for `load_json` that will return a JSON response object. \n
+    This can be used to stream JSON instead of loading it to use it as data. \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `path` _string_: A single file path to search for.\n
@@ -59,7 +59,7 @@ def create_json_response(data):
 
 def load_matched_json(data):
     """
-    Loads all the config files and returns the file that has the most [matched conditions](#TODO).
+    Loads all the config files and returns the file that has the most [matched conditions](#TODO). \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `location` _string_: A directory path within the instance \
