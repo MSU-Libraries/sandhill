@@ -59,7 +59,8 @@ def create_json_response(data):
 
 def load_matched_json(data):
     """
-    Loads all the config files and returns the file that has the most [matched conditions](#TODO). \n
+    Loads all the config files and returns the file that has the most \
+    [matched conditions](#TODO). \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `location` _string_: A directory path within the instance \

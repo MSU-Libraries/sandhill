@@ -9,11 +9,14 @@ from sandhill.utils.generic import touniquelist
 
 def match_request_format(view_args_key, allowed_formats, default_format='text/html'):
     """
-    Match a request mimetype to the given view_args_key or the allowed mimetypes provided by client. \n
+    Match a request mimetype to the given view_args_key or the allowed mimetypes \
+    provided by client. \n
     Args:
-        view_args_key (str|None): the key in the url request to check within for matching format. \n
+        view_args_key (str|None): the key in the url request to check within for \
+            matching format. \n
         allowed_formats (list): list of acceptable mimetypes. \n
-        default_format (str): the mimetype to use by default if view_args_key value is not allowed. \n
+        default_format (str): the mimetype to use by default if view_args_key value is \
+            not allowed. \n
     Returns:
         result_format (str): the mimetype for the format to return. \n
     """

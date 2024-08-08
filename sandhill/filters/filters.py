@@ -274,7 +274,8 @@ def renderliteral(context, value, fallback_to_str=True):
         fallback_to_str (bool): If function should return string value on a failed \
             attempt to literal_eval \n
     Returns:
-        (Any|None): The literal_eval result, or string if fallback_to_str, or None on render failure \n
+        (Any|None): The literal_eval result, or string if fallback_to_str, \
+        or None on render failure \n
     Raises:
         ValueError: If content is valid Python, but not a valid datatype \n
         SyntaxError: If content is not valid Python \n
