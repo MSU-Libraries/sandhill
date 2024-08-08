@@ -10,7 +10,7 @@ def update_request_object():
     """
     Standard changes Sandhill makes to the default Flask `request` object.\n
     Specifically, it:\n
-      - Adds `query_args`, a normal Python dictionary with args as keys.
+      - Adds `query_args`, a normal Python dictionary with args as keys. \n
     """
     def flatten_args(_):
         return request.args.to_dict(flat=False)

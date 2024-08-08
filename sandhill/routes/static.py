@@ -8,17 +8,17 @@ from sandhill import app
 @app.route('/static/<path:filename>', endpoint='static')
 def handle_static(filename):
     '''
-    Replacement for the default Flask `/static` path handler.
-    Retrieves the requested static file by first looking for it inside
-    the `instance/static/` directory. If the file is not found, this
-    method will then look for the file in the core `sandhill/templates/`
-    directory.
+    Replacement for the default Flask `/static` path handler. \
+    Retrieves the requested static file by first looking for it inside \
+    the `instance/static/` directory. If the file is not found, this \
+    method will then look for the file in the core `sandhill/templates/` \
+    directory. \n
     Args:
-        filename (str): The requested file path within `/static`
+        filename (str): The requested file path within `/static` \n
     Returns:
-        (file stream): File stream of the file object
+        (file stream): File stream of the file object \n
     Raises:
-        HTTPException: On HTTP error
+        HTTPException: On HTTP error \n
     '''
     # Return from instance/static/ if available
     static_path = os.path.join(app.instance_path, "static")
@@ -33,10 +33,10 @@ def handle_static(filename):
 @app.route('/favicon.ico')
 def favicon():
     '''
-    Wrapper to calling handle_static for the ever popular favicon file.
+    Wrapper to calling handle_static for the ever popular favicon file. \n
     Returns:
-        (file stream): The favicon.ico file stream from inside `/static`
+        (file stream): The favicon.ico file stream from inside `/static` \n
     Raises:
-        HTTPException: On HTTP error
+        HTTPException: On HTTP error \n
     '''
     return handle_static('favicon.ico')

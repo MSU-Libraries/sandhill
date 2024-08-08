@@ -8,7 +8,7 @@ from requests import Response as RequestsResponse
 def replace(data):
     '''
     For the given `name` in data, replace all occurances of an old string with new string and \
-    return the result.
+    return the result. \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n
             * `name` _str|requests.Response_: The context in which to find and replace.\n
@@ -16,7 +16,7 @@ def replace(data):
             * `new` _str_: The string to replace it with.\n
     Returns:
         (str|requests.Response|None): The same type as `data[name]` was, only now with string \
-            replacements done. Or None if the 'name' value is None or missing.
+            replacements done. Or None if the 'name' value is None or missing. \n
     '''
     data_copy = deepcopy(data.get(data.get('name')))
     cont_copy = data_copy if data_copy is not None else ''

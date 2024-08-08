@@ -16,11 +16,11 @@ from sandhill import app, catch
 @catch(RequestsConnectionError, "Invalid host in XML call: {source} Exc: {exc}", return_val=None)
 def load(source) -> etree._Element: # pylint: disable=protected-access
     '''
-    Load an XML document.
+    Load an XML document. \n
     Args:
-        source: XML source. Either path, url, string, or loaded LXML Element
+        source: XML source. Either path, url, string, or loaded LXML Element \n
     Returns:
-        Loaded XML object tree, or None on invalid source
+        Loaded XML object tree, or None on invalid source \n
     '''
     if not isinstance(source, (str, bytes)) or len(source) < 1:
         # pylint: disable=protected-access
@@ -49,27 +49,27 @@ def load(source) -> etree._Element: # pylint: disable=protected-access
 @catch(etree.XPathEvalError, "Invalid XPath query {query} Exc {exc}", return_val=None)
 def xpath(source, query) -> list:
     '''
-    Retrieve the matching xpath content from an XML source
+    Retrieve the matching xpath content from an XML source \n
     Args:
-        query (str): XPath query to match against
-        source: XML source. Either path, url, or string
+        query (str): XPath query to match against \n
+        source: XML source. Either path, url, or string \n
     Returns:
-        Matching results from XPath query, or None on failure
+        Matching results from XPath query, or None on failure \n
     '''
     doc = load(source)
     return doc.xpath(query, namespaces=doc.getroot().nsmap) if doc else None
 
 def xpath_by_id(source, query) -> dict:
     '''
-    For the matching xpath content, organize into dict with key
-    being the id param of the matched tags. Elements without an id attribute
-    will not be returned.
+    For the matching xpath content, organize into dict with key \
+    being the id param of the matched tags. Elements without an id attribute \
+    will not be returned. \n
     Args:
-        query (str): XPath query to match against
-        source: XML source. Either path, url, or string
+        query (str): XPath query to match against \n
+        source: XML source. Either path, url, or string \n
     Returns:
-        (dict|None): Dict mapping with keys of id, and values of content within
-                     matching elements, or None on failure
+        (dict|None): Dict mapping with keys of id, and values of content within \
+                     matching elements, or None on failure \n
     '''
     matched = xpath(source, query)
     if matched is None: # Explicit check to avoid empty results being matched
