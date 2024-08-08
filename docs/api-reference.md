@@ -18,7 +18,7 @@ the curious.
 ## Data Processors
 Sandhill routes are composed of a list of **data processors**. These are single
 actions that Sandhill may take while processing a request. See the
-[data processor](/data-processors) documentation for full details.
+[data processor](/sandhill/data-processors) documentation for full details.
 
 ## Utils
 Utilities are bits of helper code used elsewhere in Sandhill. Functions or
@@ -57,7 +57,7 @@ Class for handling Solr related logic, such as encoding/decoding.
 
 ## Bootstrap
 This is the code that starts up Sandhill, initializing the application.
-Have a look at the [bootstrap](/bootstrap) documentation for more details.
+Have a look at the [bootstrap](/sandhill/bootstrap) documentation for more details.
 
 ### `bootstrap`
 The core of the bootstrap module handles, among other things, loading other Python code.

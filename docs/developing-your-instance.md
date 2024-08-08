@@ -3,14 +3,14 @@ Development Guide
 
 See the following important documents to get started:
 
-* [Code Standards](/code-standards)
-* [Instance Setup](/instance-setup)
+* [Code Standards](/sandhill/code-standards)
+* [Instance Setup](/sandhill/instance-setup)
 
 Creating your first page
 ------------------------
 
 To get started building your own site using Sandhill, you will need to first
-[create your instance](/instance-setup). That `instance` directory will
+[create your instance](/sandhill/instance-setup). That `instance` directory will
 be where you start your development.
 
 Once you have your base instance directory structure setup you are ready to start
