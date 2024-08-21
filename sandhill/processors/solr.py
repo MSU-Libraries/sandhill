@@ -9,7 +9,7 @@ from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
 from sandhill import app, catch
-from sandhill.utils.generic import getdescendant, ifnone, getconfig
+from sandhill.utils.generic import getdescendant, ifnone, getconfig, recursive_merge
 from sandhill.utils.request import match_request_format, overlay_with_query_args
 from sandhill.processors.file import load_json
 from sandhill.utils.error_handling import dp_abort
@@ -120,7 +120,13 @@ def search(data, url=None, api_get_function=api_get):
         app.logger.error(
             f"Missing 'solr_params' inside search config file(s) '{ str(data['paths']) }'")
         abort(500)
-    solr_config = search_config['solr_params']
+    if 'config_ext' in data and 'solr_params' in data['config_ext']:
+        solr_config = recursive_merge(
+            search_config['solr_params'],
+            data['config_ext']['solr_params']
+        )
+    else:
+        solr_config = search_config['solr_params']
 
     # override default parameters with request query parameters
     data['params'] = overlay_with_query_args(solr_config, \

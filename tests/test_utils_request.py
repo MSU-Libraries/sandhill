@@ -44,6 +44,9 @@ def test_overlay_with_query_args():
         "start": {
             "default": 0
         },
+        "end": {
+            "default": None
+        },
         "fl": {
             "default": ["PID", "title"],
             "base": "PID"
@@ -70,6 +73,7 @@ def test_overlay_with_query_args():
         assert len(query_params["fq"]) == 1
         assert query_params["q"] == ["elephant"]
         assert query_params["start"] == ["10"]
+        assert "end" not in query_params
         assert "json.facet" not in query_params
 
         # Allowing unknown fields
