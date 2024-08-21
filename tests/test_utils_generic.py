@@ -162,3 +162,46 @@ def test_overlay_dicts_matching_key():
     tcopy = deepcopy(target)
     generic.overlay_dicts_matching_key(tcopy, [match_one, match_again, match_two], 'key1')
     assert tcopy == [target[2], {**target[0], **match_one}, {**target[0], **match_again}, {**target[1], **match_two}]
+
+def test_recursive_merge():
+    dict1 = {
+        'key1': 10,
+        'key2': 'a',
+        'key3': {
+            'sub_key': 'lalala'
+        },
+        'key4': {
+            'sub_key': 'lololo'
+        },
+        'key5': 'a',
+    }
+    dict2 = {
+        'key2': 20,
+        'key3': 'b',
+        'key4': {
+            'sub_key2': 'lilili'
+        },
+        'key5': None,
+    }
+    dict3 = {
+        'key1': 10,
+        'key2': 20,
+        'key3': 'b',
+        'key4': {
+            'sub_key': 'lololo',
+            'sub_key2': 'lilili',
+        },
+    }
+
+    assert dict3 == generic.recursive_merge(dict1, dict2)
+    assert dict3 == generic.recursive_merge(dict3, {})
+    with raises(RecursionError):
+        generic.recursive_merge(dict1, dict2, 1)
+    with raises(TypeError):
+        generic.recursive_merge(dict3, None)
+    with raises(TypeError):
+        generic.recursive_merge(None, {})
+    with raises(TypeError):
+        generic.recursive_merge(1, {})
+    with raises(TypeError):
+        generic.recursive_merge({}, {}, 'aa')

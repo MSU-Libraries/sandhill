@@ -85,7 +85,7 @@ def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=
         # Load from request_args
         if field_name in request_args:
             # Allow override if field defined with a default
-            if 'default' in field_conf:
+            if 'default' in field_conf and field_conf['default'] is not None:
                 query_params[field_name] = touniquelist(
                     query_params[field_name],
                     request_args[field_name]
