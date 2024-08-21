@@ -3,6 +3,7 @@ Dummy functions for use in unit tests.
 """
 from requests.models import Response
 from requests.exceptions import RequestException
+import json
 
 def _test_api_get(url=None, params=None, stream=True, headers=None):
     """Test function to simulate successfull API call."""
@@ -33,3 +34,10 @@ def _test_api_get_fail(url=None, params=None, stream=True, headers=None):
 def _test_api_get_unavailable(url=None, params=None, stream=True, headers=None):
     """Test function to raise a requests.RequestException."""
     raise RequestException()
+
+def _test_api_get_json_params(url=None, params=None, stream=True, headers=None):
+    """Test function to simulate successful API call returning JSON overloading params."""
+    response = Response()
+    response._content = json.dumps(params).encode()
+    response.status_code = 200
+    return response

@@ -200,3 +200,36 @@ def overlay_dicts_matching_key(target: list[dict], overlays: list[dict], key: Ha
         if (base_dict := base_ref.get(overlay.get(key))):
             overlay = {**base_dict, **overlay}
         target.append(overlay)
+
+def recursive_merge(dict1: dict, dict2: dict, sanity: int = 100) -> dict:
+    """
+    Given 2 dictionaries, merge them together, overriding dict1 \
+    values by dict2 if existing in both.\n
+
+    Args:
+        dict1 (dict): Base dictionary, keys will be overridden if the keys are in both. \n
+        dict2 (dict): Prioritized dictionary, keys will be kept if the keys are in both. \n
+        sanity (int): The depth to reach before raising an error. \n
+
+    Returns:
+        dict: dict1 and dict2 merged\n
+
+    Raises:
+        RecursionError: if dictionary depth reaches sanity\n
+        TypeError: dict1 and dict2 needs to be dictionaries, sanity needs to be an integer\n
+    """
+    if not (isinstance(dict1, dict) and isinstance(dict2, dict) and isinstance(sanity, int)):
+        raise TypeError(('The function only accepts dictionaries'
+                    ' as dict1 and dict2 and integer as sanity'))
+    merged = dict1.copy()
+    sanity -= 1
+    if sanity < 0:
+        raise RecursionError('Reached depth limit of recursion, aborting')
+    for key, value in dict2.items():
+        if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
+            merged[key] = recursive_merge(merged[key], value, sanity)
+        elif value is None and key in merged:
+            del merged[key]
+        else:
+            merged[key] = value
+    return merged
