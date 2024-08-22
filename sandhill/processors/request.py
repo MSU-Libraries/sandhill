@@ -17,6 +17,8 @@ def api_json(data):
             * `url` _str_: The URL to make the API call to.\n
             * `method` _str, optional_: The HTTP method to use.\n
                 Default: `"GET"` \n
+            * `timeout` _int, optional_: The request timeout in seconds.\n
+                Default: `10` \n
     Returns:
         (dict): The JSON response from the API call. \n
     Raises:
@@ -24,7 +26,11 @@ def api_json(data):
     '''
     method = data['method'] if 'method' in data else 'GET'
     app.logger.debug(f"Connecting to {data['url']}")
-    response = requests.request(method=method, url=data["url"])
+    response = requests.request(
+        method=method,
+        url=data["url"],
+        timeout=data.get('timeout', 10)
+    )
 
     if not response.ok:
         app.logger.warning(f"Call to {data['url']} returned a non-ok status code: " \
