@@ -304,13 +304,15 @@ def formatedate(value, default="Indefinite"):
     Returns:
         (str): Formatted end date \n
     '''
+    def day_suffix(dom):
+        return {1:"st", 2:"nd", 3:"rd"}.get(dom if dom < 20 else dom%10, "th")
+
     result = default
     value_date = datetime.strptime(value, "%Y-%m-%d")
     if value_date.year != 9999:
-        suf = lambda n: {1:"st", 2:"nd", 3:"rd"}.get(n if n < 20 else n%10, "th")
         result = value_date.strftime("%B DAY %Y") # it is a valid date, so set that as the result
         # Add in the suffix (st, th, rd, nd)
-        result = result.replace("DAY", f"{value_date.day}{suf(value_date.day)},")
+        result = result.replace("DAY", f"{value_date.day}{day_suffix(value_date.day)},")
     return result
 
 @app.template_filter('formatiso8601')

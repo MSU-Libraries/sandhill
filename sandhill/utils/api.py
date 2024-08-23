@@ -19,7 +19,7 @@ def api_get(**kwargs):
     if "timeout" not in kwargs:
         kwargs["timeout"] = 10
     app.logger.debug(f"API GET arguments: {kwargs}")
-    response = requests.get(**kwargs)
+    response = requests.get(**kwargs)   # pylint: disable=missing-timeout
     app.logger.debug(f"API GET called: {response.url}")
     if not response.ok:
         app.logger.warning(
