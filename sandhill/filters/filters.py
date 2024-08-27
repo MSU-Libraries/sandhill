@@ -676,3 +676,22 @@ def filter_getdescendant(obj, list_keys, default=None):
     '''
     found = getdescendant(obj, list_keys)
     return default if found is None else found
+
+@app.template_filter('indexvaluegreaterthan')
+def filter_indexvaluegreaterthan(tuples: list, index, value: int = None):
+    '''
+    Loop through a list of tuples,
+    if the value at index is greater than value return the current tuple
+    Args:
+        tuples (list[tuple]): A list of tuples
+        index (int): Index of the tuple to compare the value to
+        value (int): (Default 1) Limit value to be greater than
+    Returns:
+        (tuple): All the tuple with the value at index greater than value.
+    '''
+    if not isinstance(value, (int, str)):
+        value = 1
+    value = int(value)
+    for tup in tuples:
+        if tup[index] > value:
+            yield tup

@@ -531,3 +531,28 @@ def test_solr_facetdates():
     }
     assert filters.solr_facetdates(data, "param1") == results_none
     assert filters.solr_facetdates(data, "param_date") == results_date
+
+def test_indexvaluegreaterthan():
+    data_raw = [
+        ("param1", 123),
+        ("param2", 14, "param3"),
+        ("param3", 10),
+        ("param4", 1, "param2"),
+    ]
+    data_over_1 = [
+        ("param1", 123),
+        ("param2", 14, "param3"),
+        ("param3", 10),
+    ]
+    data_over_10 = [
+        ("param1", 123),
+        ("param2", 14, "param3"),
+    ]
+    data_over_14 = [
+        ("param1", 123),
+    ]
+    assert list(filters.filter_indexvaluegreaterthan(data_raw, 1, 0)) == data_raw
+    assert list(filters.filter_indexvaluegreaterthan(data_raw, 1, 10)) == data_over_10
+    assert list(filters.filter_indexvaluegreaterthan(data_raw, 1, "14")) == data_over_14
+    assert list(filters.filter_indexvaluegreaterthan(data_raw, 1)) == data_over_1
+    assert list(filters.filter_indexvaluegreaterthan(data_raw, 1, {})) == data_over_1
