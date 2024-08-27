@@ -1,5 +1,5 @@
 {
-    "route": [
+    "routes": [
         "/alpha/<string:value>",
         "/beta/<string:value>"
     ],

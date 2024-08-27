@@ -8,6 +8,8 @@ import operator
 import json
 from json.decoder import JSONDecodeError
 from sandhill import app, catch
+from sandhill.utils.generic import tolist, tolistfromkeys
+from sandhill.classes.routing import Route
 
 @catch(OSError, "Unable to read json file at path: {file_path} Error: {exc}",
        return_val=collections.OrderedDict())
@@ -43,12 +45,13 @@ def load_routes_from_configs(routes_dir="config/routes/"):
     ]
     for conf_file in conf_files:
         data = load_json_config(conf_file)
-        if "route" in data:
-            if isinstance(data["route"], list):
-                for route in data["route"]:
-                    routes.append(route)
-            else:
-                routes.append(data["route"])
+        r_rules = tolist(*[data.get(key) for key in ("route", "routes") if key in data])
+        methods = tolist(*[data.get(key) for key in ("method", "methods") if key in data])
+        for rule in r_rules:
+            routes.append(Route(
+                rule=rule,
+                methods=methods,
+            ))
     return routes
 
 def get_all_routes(routes_dir="config/routes/"):
@@ -65,13 +68,13 @@ def get_all_routes(routes_dir="config/routes/"):
     # if no routes are found, add a default one for the home page
     if not routes:
         app.logger.warning("No routes loaded; will use welcome home page route.")
-        routes.append("/")
+        routes.append(Route(rule="/"))
 
     # prefer most specifc path (hardcoded path over variable) in left to right manner
     re_var = re.compile(r'<\w+:\w+>')
     sort_routes = []
-    for rule in routes:
-        sort_routes.append((rule, re_var.sub(' ', rule)))
+    for route in routes:
+        sort_routes.append((route, re_var.sub(' ', route.rule)))
     sort_routes = sorted(sort_routes, key=operator.itemgetter(1), reverse=True)
 
     return [r[0] for r in sort_routes]
@@ -98,15 +101,9 @@ def load_route_config(route_rule, routes_dir="config/routes/"):
     ]
     for conf_file in conf_files:
         check_data = load_json_config(conf_file)
-        if "route" in check_data:
-            if isinstance(check_data["route"], list):
-                if route_rule in check_data["route"]:
-                    data = check_data
-                    break
-            else:
-                if check_data["route"] == route_rule:
-                    data = check_data
-                    break
+        if route_rule in tolistfromkeys(check_data, "route", "routes"):
+            data = check_data
+            break
     return data
 
 def load_json_configs(path, recurse=False):
