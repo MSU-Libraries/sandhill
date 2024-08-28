@@ -68,6 +68,24 @@ def touniquelist(*args):
     _ = [unique_list.append(i) for i in tolist(*args) if i not in unique_list]
     return unique_list
 
+def tolistfromkeys(fromdict, *args):
+    """
+    From a given dict, find all keys and return them within a list. \n
+    If found keys are already a list, then extends the return list with the matched value \
+    instead of appending a list within a list. \n
+    Args:
+        fromdict (dict): Dictionary to search within. \n
+        *args (str|int): Keys to find. \n
+    Returns:
+        (list): The list with found key values. \n
+    """
+    values = []
+    for arg in args:
+        if arg in fromdict:
+            value = fromdict[arg]
+            values.extend(value if isinstance(value, list) else [value])
+    return values
+
 @catch(ValueError, "Could not find {list_keys} in: {obj}", return_val=None)
 def getdescendant(obj, list_keys, extract=False, put=None):
     '''

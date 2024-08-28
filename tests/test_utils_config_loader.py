@@ -1,6 +1,7 @@
 import os
 from sandhill import app
 from sandhill.utils import config_loader
+from sandhill.classes.routing import Route
 from pytest import raises
 from collections import OrderedDict
 
@@ -9,7 +10,7 @@ def test_load_json_config():
     config_path = os.path.join(app.instance_path, "config/routes/home.json")
     data = config_loader.load_json_config(config_path)
     assert isinstance(data, dict)
-    assert "route" in data
+    assert "routes" in data
 
     # test an invalid file path
     data = config_loader.load_json_config("invalid")
@@ -26,36 +27,37 @@ def test_get_all_routes():
     # test valid route config path; the route in the config file is a list
     data = config_loader.get_all_routes()
     assert isinstance(data, list)
-    assert '/home' in data
+    assert any(['/home' in route.rule for route in data])
 
     # test valid route config path; the route in the config file is a string
     data = config_loader.get_all_routes()
     assert isinstance(data, list)
-    assert '/about' in data
+    assert any(['/about' in route.rule for route in data])
 
     # test valid path containing no route configs
     data = config_loader.get_all_routes("config/search/")
     assert isinstance(data, list)
-    assert data == ['/']
+    assert data == [Route('/')]
 
     # test for an invalid route congfig path
     data = config_loader.get_all_routes("invalid_path")
     assert isinstance(data, list)
-    assert data == ['/']
+    assert data == [Route('/')]
 
     # test load sorting for routes
     data = config_loader.get_all_routes()
-    assert data.index('/alpha/<string:value>') < data.index('/<string:value>/alpha')
-    assert data.index('/beta/<string:value>') < data.index('/<string:value>/beta')
-    assert data.index('/beta') < data.index('/<string:value>/beta')
-    assert data.index('/beta') < data.index('/<string:value>')
-    assert data.index('/alpha/<string:value>/beta') < data.index('/alpha/<string:value>')
+    rules = [route.rule for route in data]
+    assert rules.index('/alpha/<string:value>') < rules.index('/<string:value>/alpha')
+    assert rules.index('/beta/<string:value>') < rules.index('/<string:value>/beta')
+    assert rules.index('/beta') < rules.index('/<string:value>/beta')
+    assert rules.index('/beta') < rules.index('/<string:value>')
+    assert rules.index('/alpha/<string:value>/beta') < rules.index('/alpha/<string:value>')
 
 def test_load_route_config():
     # test a simple route config
     data = config_loader.load_route_config("/home")
     assert isinstance(data, dict)
-    assert "route" in data
+    assert "routes" in data
 
     # test route config that has only a string instead of list
     data = config_loader.load_route_config("/about")

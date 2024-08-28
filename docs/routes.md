@@ -22,7 +22,7 @@ files placed here when it starts.
 A simple example route file might look like this:
 ```json title="instance/config/routes/simple.json"
 {
-    "route": [
+    "routes": [
         "/collections/",
         "/browse/"
     ],
@@ -80,6 +80,7 @@ and retrieve a record:
     "route": [
         "/hello/<int:user_id>"
     ],
+    "methods": ["GET", "POST"],
     "template": "hello.html.j2",
     "data": [
         {
@@ -254,6 +255,7 @@ For full details on the `data` section, see the [data processors documentation](
 
 | Name  | Type                       | Description |
 |-------|----------------------------|-------------|
-| `route` | string, or list of strings | The URL pattern to match in order for this route to be selected |
+| `route`/`routes` | string, or list of strings | The URL pattern to match in order for this route to be selected. Both names accept either string or list. |
+| `method`/`methods` | string, or list of strings | The request method to permit (e.g. `GET` or `POST`); default `GET`. Both names accept either string or list. |
 | `template` | string, optional | The name of the Jinja2 template file to attempt to render |
 | `data` | list of JSON entries, optional | An ordered list of data processors, with each one being run in order |

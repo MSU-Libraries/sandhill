@@ -50,9 +50,11 @@ Here would be a fairly simple `pages.json` file with 3 test entries:
 Breaking these tests down:
 * `_comment` Gives you a place to describe the purpose of the test.
 * `page` The relative page on your site to call and test against
+* `method` The method for the call; default `GET`
 * `code` The HTTP code the request to your page should return.
 * `contains` A list of strings that should exist in the source code returned for the page.
 * `excludes` A list of strings that should NOT exist in the source code returned from the page.
+* `control` A way to defining more advanced testing configurations, such as looping.
 
 For each page entry, all specified tests much succeed or the entire entry will fail.  
 
@@ -114,6 +116,14 @@ Examples:
 `"page": "/node/aboutus"`
 `"page": "/asset/{{ item.asset_id }}/view"`
 
+**method** (String)  
+The method to use for the test call, such as `GET`, `POST`, `DELETE`, etc.
+Case insensitive; defaults to `GET`.
+
+Examples:  
+`"method": "POST"`
+`"method": "patch"`
+
 **code** (Optional, Integer)  
 The expected HTTP status code to receive as part of the response for the page call. Ignored
 if no `page` was set.  
@@ -168,13 +178,13 @@ Examples:
 "matches": ["\\d{3}-\\d{4}"]
 ```
 
-**data** (Optional, Dict)  
-The `data` part of a test entry defines supplimental JSON data calls to make which can be used
+**control** (Optional, Dict)  
+The `control` part of a test entry defines supplimental JSON data calls to make which can be used
 in Jinja procesing, including during `evaluate` checks.  
 
-An example `data` section could look like:
+An example `control` section could look like:
 ```
-"data": {
+"control": {
     "loop": "item",
     "item": {
         "url": "{{ 'SOLR_URL' | getconfig }}/select?q=status:active&fl=asset_id,title&rows=999999",
@@ -187,17 +197,17 @@ An example `data` section could look like:
 }
 ```
 
-The only reserved key in a `data` section is `loop`. All other keys (`item`, `child` in the above example)
+The only reserved key in a `control` section is `loop`. All other keys (`item`, `child` in the above example)
 are defined with a `url` and `path` to perform and parse a JSON call. For this documentation, these other
 keys will referred to as the variable `VAR`.  
 
-**data[VAR]** (Optional, Dict, Jinja Processed)  
+**control[VAR]** (Optional, Dict, Jinja Processed)  
 Where `VAR` is any user defined string, the value must be a dict that defines another JSON API call to
 make and parse. Each `VAR` dict must have both `url` and `path` keys defined. There may be any number
-of `VAR` keys, which are processed in the order they are defined (unless a `data[loop]` is defined, in
+of `VAR` keys, which are processed in the order they are defined (unless a `control[loop]` is defined, in
 which the `VAR` indicated by the `loop` is always processed first.  
 
-The results of a `data[VAR]` call will be stored in the page entry using the `VAR` key. The response
+The results of a `control[VAR]` call will be stored in the page entry using the `VAR` key. The response
 will be a list of matches, unless the response is indicated by `loop`, in which the `VAR` will be a
 single entry from the response, but there will be a new page entry for each entry in the response
 as well.  
@@ -207,7 +217,7 @@ For example, this entry:
 {
     "page": /asset/{{ item.asset_id }}",
     "code": 404,
-    "data": {
+    "control": {
         "loop": "item"
         "item": {
             "url": "{{ 'SOLR_URL' | getconfig }}/select?q=status:disabled&fl=asset_id,title&rows=999999",
@@ -235,16 +245,16 @@ Could result in a page entry to test for each record in `item`:
 ... (and additional page tests for each record matched by "item" URL and path)
 ```
 
-**`data[VAR][url]`** (Optional, String, Jinja Processed)  
-The `url` inside a `data[VAR]` dict defines a valid URL to call. The response must be in JSON format.
+**`control[VAR][url]`** (Optional, String, Jinja Processed)  
+The `url` inside a `control[VAR]` dict defines a valid URL to call. The response must be in JSON format.
 The response is then queried by `path` to get a subset of the JSON.  
 
-**`data[VAR][path]`** (Optional, String, Jinja Processed)  
+**`control[VAR][path]`** (Optional, String, Jinja Processed)  
 A JSONPath query to parse the JSON response from `url` to select a subset of data. The results of this
 JSONPath query will be set into the page test entry under the key `VAR`.  
 
-**`data[loop]`** (Optional, String)  
-The `loop` key in `data` must have a value that indicates another `VAR` key in `data` which must also be
+**`control[loop]`** (Optional, String)  
+The `loop` key in `control` must have a value that indicates another `VAR` key in `control` which must also be
 defined. The response from this targeted `VAR` will be looped over, generating a new page test entry
 for each item in the target `VAR`.  
 
@@ -252,7 +262,7 @@ for each item in the target `VAR`.
 A list of strings that will be rendered by Jinja and then evaluated for truthiness. If the strings in
 the list are not wrapped by Jinja delimiters, the `{{` and `}}` delimiters will automatically be wrapped
 around the value. All entries must evaluate to a truthy value after having be Jinja processed or
-the test will fail. You must have set a `data` section in order to have data to evaluate on.  
+the test will fail. You must have set a `control` section in order to have data to evaluate on.  
 
 Values in an evaluate string are first parsed for JSONPath queries. Queries must begin with a
 root indictor `$`. If no context key is provided, it will query against the first data key available.
@@ -277,8 +287,8 @@ The context variables will be the entire page entry processed thus far.
 
 Jinja processing occurs in steps, with each step having access to the data already processed in
 previous steps. Processing order is:
-* The `data[VAR]` indicated by `data[loop]`.
-* Each remaining `data[VAR]` in order of definition.
+* The `control[VAR]` indicated by `control[loop]`.
+* Each remaining `control[VAR]` in order of definition.
 * The entire page entry, minus the `evaluate` key.
 * The `evaluate` key (which occurs only during actual testing).
 

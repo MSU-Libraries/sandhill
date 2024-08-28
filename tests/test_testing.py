@@ -110,7 +110,7 @@ def prepare_test_entry(entry):
     tests generated from the entry.
     """
     tests = []
-    data = entry['data'] if 'data' in entry else {}
+    data = entry['control'] if 'control' in entry else {}
     loop_key, allow_empty = parse_loop_key(data)
     # Temporarily remove 'evaluate' while we prepare entry (to prevent early Jinja evaluation)
     evaluates = None
@@ -131,21 +131,21 @@ def prepare_test_entry(entry):
         if rec:
             loop_entry[loop_key] = rec
 
-        # For any remaining keys in 'data', render Jinja and grab the URL/JSONPath results
-        for key in (loop_entry['data'] if 'data' in loop_entry else {}):
+        # For any remaining keys in 'control', render Jinja and grab the URL/JSONPath results
+        for key in (loop_entry['control'] if 'control' in loop_entry else {}):
             if key in ['loop', loop_key]:
                 continue
-            if 'url' in loop_entry['data'][key] or 'filepath' in loop_entry['data'][key]:
+            if 'url' in loop_entry['control'][key] or 'filepath' in loop_entry['control'][key]:
                 loop_entry[key] = jsonpath_from_rendered_entry(
-                    loop_entry['data'][key],
+                    loop_entry['control'][key],
                     copy.deepcopy(loop_entry)
                 )
         # Perform one last Jinja render on the entire entry_entry before running the test
         with app.app_context():
             loop_entry = render_template_json(loop_entry, copy.deepcopy(loop_entry))
 
-        # Set extra allowed keys generated from 'data'
-        loop_entry['_extra_keys'] = list(data.keys()) + ['data']
+        # Set extra allowed keys generated from 'control'
+        loop_entry['_extra_keys'] = list(data.keys()) + ['control']
         if 'loop' in loop_entry['_extra_keys']:
             loop_entry['_extra_keys'].remove('loop')
 
@@ -205,7 +205,8 @@ def pre_test_check(entry):
     for test in entry.keys():
         assert test in [
             '_comment', '_extra_keys', 'page', 'code', 'contains',
-            'excludes', 'matches', 'evaluate', 'md5', 'data', 'a11y', 'on_fail'
+            'control', 'method', 'excludes', 'matches', 'evaluate',
+            'md5', 'data', 'a11y', 'on_fail'
         ] + (entry['_extra_keys'] if '_extra_keys' in entry else [])
 
 @pytest.mark.functional
@@ -222,7 +223,9 @@ def test_entry_functional(entry):
         if 'page' not in entry:
             pytest.skip("Not a valid functional test (no 'page')")
 
-        resp = client.get(entry['page'])
+        method = entry.get('method', 'GET').upper()
+        data = entry.get('data', None)
+        resp = client.open(entry['page'], method=method, data=data)
         assert resp.status_code == entry['code']
 
         # Validate expected strings appear in response

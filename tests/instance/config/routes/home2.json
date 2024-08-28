@@ -2,6 +2,7 @@
     "route": [
         "/home2"
     ],
+    "method": "GET",
     "data": [
         {
             "processor": "template.render",

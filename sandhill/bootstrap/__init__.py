@@ -132,6 +132,8 @@ def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
 
 load_modules(app.root_path, 'bootstrap', exclude=['__pycache__', '__init__.py'])
 load_modules(app.instance_path, 'bootstrap', exclude=['__pycache__', '__init__.py'])
+load_modules(app.root_path, 'classes', exclude=['__pycache__', '__init__.py'])
+load_modules(app.instance_path, 'classes', exclude=['__pycache__', '__init__.py'])
 load_modules(app.root_path, 'commands', exclude=['__pycache__', '__init__.py'])
 load_modules(app.instance_path, 'commands', exclude=['__pycache__', '__init__.py'])
 load_modules(app.root_path, 'filters', exclude=['__pycache__', '__init__.py'])
