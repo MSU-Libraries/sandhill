@@ -1,8 +1,9 @@
 {
-    "route": [
+    "routes": [
         "/",
         "/home"
     ],
+    "methods": ["GET"],
     "template": "home.html.j2",
     "data": [
     ]
