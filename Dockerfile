@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.12
 
 # Set the working directory
 WORKDIR /sandhill
@@ -10,8 +10,8 @@ COPY . /sandhill
 RUN pip install -r requirements.txt && \
     # Install requirements for A11y testing
     cd /tmp && \
-    wget https://github.com/mozilla/geckodriver/releases/download/v0.32.2/geckodriver-v0.32.2-linux64.tar.gz && \
-    tar -xf geckodriver-v0.32.2-linux64.tar.gz && \
+    wget https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz && \
+    tar -xf geckodriver-v0.35.0-linux64.tar.gz && \
     mv geckodriver /usr/local/bin/ && \
     apt update && \
     apt install firefox-esr xvfb -y
