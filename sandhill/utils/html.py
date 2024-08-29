@@ -4,8 +4,6 @@ HTML utilities and support classes
 import html
 from html.parser import HTMLParser
 
-# Disable abstract-method warning is due to Python bug that is fixed in version 3.10
-# pylint: disable=abstract-method
 class HTMLTagFilter(HTMLParser):
     """
     Class used to filter through HTML and remove all tags except for those set as allowed. \n
@@ -38,6 +36,7 @@ class HTMLTagFilter(HTMLParser):
     def handle_entityref(self, name):
         """Handle escape entities"""
         # Handle case where no semicolon exists after &name (HTMLParser still treats as entref)
+        # pylint: disable=unnecessary-semicolon
         self.output += f"&{name};" \
             if self.rawdata.startswith(f"&{name};", self.offset) \
             else f"&amp;{name}"
