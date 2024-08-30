@@ -704,9 +704,9 @@ def filter_pluralizer(term: str, number: int):
         term (str): A string to switch to plural if needed.
         number (int): Number to compare against to check if plural is needed.
     Returns:
-        (str|Any): The term in plural form or not; if parameters are not properly casted, return the term parameter unchanged
+        (str|Any): The term in plural form or not;
+        if parameters are not properly casted, return the term parameter unchanged
     '''
     if isinstance(term, str) and isinstance(number, int) and number > 1:
         return term + 's'
-    else:
-        return term
+    return term
