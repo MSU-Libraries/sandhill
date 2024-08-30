@@ -695,3 +695,18 @@ def filter_indexvaluegreaterthan(tuples: list, index, value: int = None):
     for tup in tuples:
         if tup[index] > value:
             yield tup
+
+@app.template_filter('pluralizer')
+def filter_pluralizer(term: str, number: int):
+    '''
+    If count is greater than 1, add an s to the string.
+    Args:
+        term (str): A string to switch to plural if needed.
+        number (int): Number to compare against to check if plural is needed.
+    Returns:
+        (str|Any): The term in plural form or not; if parameters are not properly casted, return the term parameter unchanged
+    '''
+    if isinstance(term, str) and isinstance(number, int) and number > 1:
+        return term + 's'
+    else:
+        return term
