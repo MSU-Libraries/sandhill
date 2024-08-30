@@ -14,14 +14,17 @@ from sandhill import app, catch
 @catch(etree.XMLSyntaxError, "Invalid XML source: {source} Exc: {exc}", return_val=None)
 @catch(RequestException, "XML API call failed: {source} Exc: {exc}", return_val=None)
 @catch(RequestsConnectionError, "Invalid host in XML call: {source} Exc: {exc}", return_val=None)
-def load(source) -> etree._Element: # pylint: disable=protected-access
+def load(source, timeout=None) -> etree._Element: # pylint: disable=protected-access
     '''
     Load an XML document. \n
     Args:
         source: XML source. Either path, url, string, or loaded LXML Element \n
+        timeout: An integer timeout in seconds; defaults to 10 if not set
     Returns:
-        Loaded XML object tree, or None on invalid source \n
+        Loaded XML object tree, or None on invalid source or timeout \n
     '''
+    if timeout is None:
+        timeout = 10
     if not isinstance(source, (str, bytes)) or len(source) < 1:
         # pylint: disable=protected-access
         return source if isinstance(source, etree._ElementTree) else None
@@ -34,7 +37,7 @@ def load(source) -> etree._Element: # pylint: disable=protected-access
     elif checkers.is_file(source):      # Handle source as local file
         pass  # etree.parse handles local file paths natively
     elif checkers.is_url(source):       # Handle source as URL
-        response = requests.get(source, timeout=10)
+        response = requests.get(source, timeout=timeout)
         if not response:
             app.logger.warning(f"Failed to retrieve XML URL (or timed out): {source}")
             return None
@@ -47,7 +50,7 @@ def load(source) -> etree._Element: # pylint: disable=protected-access
     return etree.parse(source)
 
 @catch(etree.XPathEvalError, "Invalid XPath query {query} Exc {exc}", return_val=None)
-def xpath(source, query) -> list:
+def xpath(source, query, timeout=None) -> list:
     '''
     Retrieve the matching xpath content from an XML source \n
     Args:
@@ -56,7 +59,7 @@ def xpath(source, query) -> list:
     Returns:
         Matching results from XPath query, or None on failure \n
     '''
-    doc = load(source)
+    doc = load(source, timeout)
     return doc.xpath(query, namespaces=doc.getroot().nsmap) if doc else None
 
 def xpath_by_id(source, query) -> dict:

@@ -86,6 +86,28 @@ def tolistfromkeys(fromdict, *args):
             values.extend(value if isinstance(value, list) else [value])
     return values
 
+def getindex(fromlist: list, idx: str|int, default_idx: int=0, default_val=None):
+    """
+    Get the value from a list for a given index. If the given index \
+    is not valid, a default index is used instead. \n
+    Args:
+        fromlist (list): List in which to find indexes \n
+        idx (str|int): The index to find; str values allowed and cast to int \n
+        default_idx (int): The default index to use if idx is not valid \n
+        default_val (Any): The value to return if the idx and default_idx are \
+            both invalid \n
+    Returns:
+        (Any) A value from the list, or the default_val \n
+    """
+    try:
+        idx = int(idx)
+    except (ValueError, TypeError):
+        idx = default_idx
+    try:
+        return fromlist[idx]
+    except IndexError:
+        return default_val
+
 @catch(ValueError, "Could not find {list_keys} in: {obj}", return_val=None)
 def getdescendant(obj, list_keys, extract=False, put=None):
     '''
