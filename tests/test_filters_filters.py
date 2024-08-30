@@ -556,3 +556,9 @@ def test_indexvaluegreaterthan():
     assert list(filters.filter_indexvaluegreaterthan(data_raw, 1, "14")) == data_over_14
     assert list(filters.filter_indexvaluegreaterthan(data_raw, 1)) == data_over_1
     assert list(filters.filter_indexvaluegreaterthan(data_raw, 1, {})) == data_over_1
+
+def test_pluralizer():
+    assert filters.filter_pluralizer('term', 1) == 'term'
+    assert filters.filter_pluralizer('term', 10) == 'terms'
+    assert filters.filter_pluralizer(['term'], 15) == ['term']
+    assert filters.filter_pluralizer('term', '10') == 'term'
