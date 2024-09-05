@@ -2,6 +2,21 @@ import pytest
 from jsonpath_ng.exceptions import JSONPathError
 from sandhill.utils import jsonpath
 
+def test_json_from_url():
+    test_url_base = "https://jsonplaceholder.typicode.com"
+    data = jsonpath.json_from_url(f"{test_url_base}/users")
+    assert len(data) == 10
+    assert data[0]['name'] == "Leanne Graham"
+
+    data = jsonpath.json_from_url("Not-a-url")
+    assert data is None
+
+    data = jsonpath.json_from_url(f"{test_url_base}/invalid")
+    assert data is None
+
+    data = jsonpath.json_from_url(f"{test_url_base}/users", 0.000001)
+    assert data is None
+
 def test_find():
     data = {
         "key1": ["value1"],

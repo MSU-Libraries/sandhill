@@ -44,6 +44,13 @@ def test_touniquelist():
     assert generic.touniquelist(["test_string"], {"key":"value"}, {"key":"value"}) == ["test_string", {"key":"value"}]
     assert generic.touniquelist() == []
 
+def test_getindex():
+    assert generic.getindex(['a','b'], 1) == 'b'
+    assert generic.getindex(['a','b'], '1') == 'b'
+    assert generic.getindex(['a','b'], 'x', 1) == 'b'
+    assert generic.getindex(['a','b'], 'x', 3) is None
+    assert generic.getindex(['a','b'], 'x', 3, 'y') == 'y'
+
 def test_getdescendant():
     # Test if the correct level in the dict is returned
     test_dict= {

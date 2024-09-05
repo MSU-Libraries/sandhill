@@ -4,9 +4,37 @@ Wrapper functions for JSONPath queries.
 import copy
 import re
 import json
+import requests
+from requests.exceptions import (
+    RequestException,
+    ConnectionError as RequestsConnectionError
+)
+from validator_collection import checkers
 from jsonpath_ng import parse
 from jsonpath_ng.jsonpath import Fields, Index
-from sandhill import app
+from sandhill import app, catch
+
+@catch(RequestException, "JSON API call failed: {url} Exc: {exc}", return_val=None)
+@catch(RequestsConnectionError, "Invalid host for API call: {url} Exc: {exc}", return_val=None)
+def json_from_url(url, timeout=None):
+    '''
+    Try to load URL and retrieve JSON data. \n
+    Args:
+        url (str): The URL to retrieve \n
+        timeout: An integer timeout in seconds; defaults to 10 if not set \n
+    Returns:
+        (dict|list|None): The parsed JSON, or None on failure \n
+    '''
+    if timeout is None:
+        timeout = 10
+    if not checkers.is_url(url):
+        app.logger.warning(f"Cannot load JSON from invalid URL: {url}")
+    else:
+        response = requests.get(url, timeout=timeout)
+        if response:
+            return response.json()
+        app.logger.warning(f"Failed to retrieve valid response (or timed out): {url}")
+    return None
 
 def find(data, path=None, deepcopy=True):
     '''
