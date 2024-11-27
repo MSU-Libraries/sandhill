@@ -1,5 +1,4 @@
 """Filters for jinja templating engine"""
-import urllib
 import re
 import html
 import json
@@ -9,6 +8,7 @@ from datetime import datetime
 import mimetypes
 from ast import literal_eval
 import copy
+from urllib.parse import quote
 from dateutil import parser
 from jinja2 import pass_context, TemplateError
 from markupsafe import Markup
@@ -143,7 +143,7 @@ def solr_encode(value, escape_wildcards=False, preserve_quotes=False):
     """
     quotes_exist = False
 
-    if preserve_quotes and re.match('".*"', value):
+    if preserve_quotes and value.startswith('"') and value.endswith('"'):
         value = value.strip('"')
         quotes_exist = True
 
@@ -200,18 +200,24 @@ def assembleurl(urlcomponents):
     Returns:
         (str): fully combined URL with query arguments \n
     """
-    url = ""
-    if isinstance(urlcomponents, dict) and "path" in urlcomponents:
-        url = urlcomponents["path"]
-        if "query_args" in urlcomponents \
-          and isinstance(urlcomponents['query_args'], dict) \
-          and urlcomponents['query_args']:
-            # Remove 'hidden' params
-            for key in list(urlcomponents['query_args'].keys()):
-                if key.startswith('_'):
-                    del urlcomponents['query_args'][key]
-            url = url + "?" + urllib.parse.urlencode(urlcomponents["query_args"], doseq=True)
-    return url
+    if not isinstance(urlcomponents, dict) or not (path := urlcomponents.get("path")):
+        return ""
+
+    if "query_args" not in urlcomponents or not urlcomponents["query_args"] \
+      or not isinstance(urlcomponents["query_args"], dict):
+        return path
+
+    query_string_parts = []
+    for key in urlcomponents["query_args"]:
+        # Remove 'hidden' params
+        if not key.startswith('_'):
+            vals = urlcomponents['query_args'][key]
+            if not isinstance(vals, list):
+                vals = [vals]
+            for val in vals:
+                query_string_parts.append(f"{quote(key)}={quote(str(val))}")
+
+    return f"{path}?{'&'.join(query_string_parts)}"
 
 @app.template_filter('urlquote')
 def urlquote(url_str):
@@ -222,7 +228,7 @@ def urlquote(url_str):
     Returns:
         (str): The fully escaped string \n
     """
-    return urllib.parse.quote(url_str).replace('/', '%2F')
+    return quote(url_str).replace('/', '%2F')
 
 @app.template_filter('datepassed')
 @catch((ValueError, TypeError),
@@ -413,7 +419,7 @@ def solr_addfq(query: dict, field: str, value: str):
         query['fq'] = [query['fq']]
 
     # TODO this only works when adding a fq value, but fails on an actual solr query
-    fquery = ':'.join([field, solr_encode(value)])
+    fquery = f"{field}:{solr_encode(value)}"
     if fquery not in query['fq']:
         query['fq'].append(fquery)
 

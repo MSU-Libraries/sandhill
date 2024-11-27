@@ -146,7 +146,7 @@ def test_filter_assembleurl():
     assert filters.assembleurl(urlcomponents) == "https://mytest.com?q=%27hi%27"
 
     urlcomponents["query_args"]["another"] = "value with space"
-    assert filters.assembleurl(urlcomponents) == "https://mytest.com?q=%27hi%27&another=value+with+space"
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com?q=%27hi%27&another=value%20with%20space"
 
     # test missing path
     del urlcomponents["path"]
@@ -156,6 +156,16 @@ def test_filter_assembleurl():
     urlcomponents["path"] = "mysite"
     urlcomponents["query_args"] = 1
     assert filters.assembleurl(urlcomponents) == "mysite"
+
+    # test non-string query_args values
+    urlcomponents["path"] = "https://mytest.com"
+    urlcomponents["query_args"] = {"limit": 20}
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com?limit=20"
+
+    # test query_args values being a list
+    urlcomponents["path"] = "https://mytest.com"
+    urlcomponents["query_args"] = {"fq": ["filter1", "filter2"]}
+    assert filters.assembleurl(urlcomponents) == "https://mytest.com?fq=filter1&fq=filter2"
 
     # test non-dict urlcomponents
     assert filters.assembleurl("hello") == ""

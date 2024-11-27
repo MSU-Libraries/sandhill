@@ -2,7 +2,6 @@
 Generic functions that could be used in most any context.
 """
 import os
-import re
 from typing import Any  # pylint: disable=unused-import
 from collections.abc import Mapping, Hashable
 from sandhill import app, catch
@@ -188,8 +187,8 @@ def getmodulepath(path):
         (str): module (e.g. 'instance' or 'sandhill.filters.filters') \n
     """
     install_path = os.path.dirname(app.root_path)
-    subpath = re.sub('^' + re.escape(install_path), '', path)
-    return re.sub('\\.py$', '', subpath).strip('/').replace('/', '.')
+    subpath = os.path.relpath(path, start=install_path)
+    return subpath.removesuffix('.py').replace('/', '.').strip('.')
 
 def pop_dict_matching_key(haystack: list[dict], match: dict, key: Hashable) -> list[dict]:
     """
