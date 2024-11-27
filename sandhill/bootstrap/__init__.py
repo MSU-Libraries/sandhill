@@ -10,7 +10,8 @@ import secrets
 from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
-from jinja2 import ChoiceLoader, FileSystemLoader, select_autoescape
+from jinja2 import ChoiceLoader, FileSystemLoader, \
+    select_autoescape, FileSystemBytecodeCache
 from sandhill import app
 from sandhill.utils.generic import getconfig, getmodulepath
 
@@ -85,6 +86,9 @@ app.json.compact = False
 
 # Set debug mode
 app.debug = bool(int(getconfig("DEBUG", "0")))
+
+# Enable Jinja template disk caching
+app.jinja_env.bytecode_cache = FileSystemBytecodeCache()
 
 # Configure logging
 configure_logging()
