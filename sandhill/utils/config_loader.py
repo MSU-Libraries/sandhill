@@ -9,7 +9,7 @@ import json
 from json.decoder import JSONDecodeError
 from sandhill import app, catch
 from sandhill.utils.generic import tolist, tolistfromkeys
-from sandhill.classes.routing import Route
+from sandhill.modules.routing import Route
 
 @catch(OSError, "Unable to read json file at path: {file_path} Error: {exc}",
        return_val=collections.OrderedDict())
