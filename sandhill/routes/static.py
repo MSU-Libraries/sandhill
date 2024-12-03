@@ -11,7 +11,7 @@ def handle_static(filename):
     Replacement for the default Flask `/static` path handler. \
     Retrieves the requested static file by first looking for it inside \
     the `instance/static/` directory. If the file is not found, this \
-    method will then look for the file in the core `sandhill/templates/` \
+    method will then look for the file in the core `sandhill/static/` \
     directory. \n
     Args:
         filename (str): The requested file path within `/static` \n
