@@ -34,7 +34,7 @@ def api_get_multi(requests_kwargs):
     Args:
         requests_kwargs (list of dict): Each arguments to [`requests.get()`] \n
     Returns:
-        A generator yielding response objects \n
+        A generator yielding response future objects. Call object.result() to unwrap. \n
     """
     def request_futures(requests_kwargs):
         futures = []
@@ -43,8 +43,7 @@ def api_get_multi(requests_kwargs):
                 if "timeout" not in kwargs:
                     kwargs["timeout"] = 10
                 futures.append(session.get(**kwargs))
-            for future in futures:
-                yield future.result()
+            yield from futures
 
     return request_futures(requests_kwargs)
 
