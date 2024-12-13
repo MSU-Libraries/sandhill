@@ -9,6 +9,9 @@ from sandhill import app
 
 @contextmanager
 def sandcache():
+    """
+    Opens the default diskcache cache for Sandhill
+    """
     cachedir = os.path.join(tempfile.gettempdir(), 'crane-cache')
     cache = Cache(cachedir, size_limit=app.config.get('DISKCACHE_SIZE_GB', 1) * 1024**3)
     try:
