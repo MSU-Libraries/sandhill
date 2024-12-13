@@ -24,6 +24,23 @@ def dp_abort(http_code):
     if 'on_fail' in data:
         abort(http_code if data['on_fail'] == 0 else data['on_fail'])
 
+def _get_func_params(func, args):
+    """
+    Get original function parameters and their current values (including
+    defaults, if not passed)
+
+    Note:
+        Used internally. Not intended for use outside `catch()` function.
+    """
+    func_params = {}
+    sig = inspect.signature(func)
+    for idx, (pname, param) in enumerate(sig.parameters.items()):
+        if pname not in func_params:
+            func_params[pname] = param.default
+        if idx < len(args):
+            func_params[pname] = args[idx]
+    return func_params
+
 def catch(exc_class, exc_msg=None, **kwargs):
     """
     Decorator to catch general exceptions and handle in a standarized manor. \n
@@ -57,21 +74,9 @@ def catch(exc_class, exc_msg=None, **kwargs):
             try:
                 rval = func(*args, **func_kwargs)
             except exc_class as exc:
-                def get_func_params():
-                    '''Get original function parameters and their current values (including
-                    defaults, if not passed)'''
-                    func_params = {}
-                    sig = inspect.signature(func)
-                    for idx, (pname, param) in enumerate(sig.parameters.items()):
-                        if pname not in func_params:
-                            func_params[pname] = param.default
-                        if idx < len(args):
-                            func_params[pname] = args[idx]
-                    return func_params
-
                 # Re-map the function arguments to their variable name
                 # for use in formatted error message string
-                args_dict = {**get_func_params(), **func_kwargs}
+                args_dict = {**_get_func_params(func, args), **func_kwargs}
                 args_dict['exc'] = exc
 
                 # Handling of the exception
