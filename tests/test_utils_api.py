@@ -38,7 +38,8 @@ def test_api_get_multi():
         {"url": "https://duckduckgo.com"},
         {"url": "https://www.google.com/search", "params": {"q": "michigan state"}},
     ])
-    for resp in responses:
+    for fut in responses:
+        resp = fut.result()
         assert resp.status_code == 200
 
     # test more urls but with bad requests
@@ -48,8 +49,14 @@ def test_api_get_multi():
         {"url": "invalidurl.edu"},
     ])
 
+    resp1 = next(responses)
+    resp1.result()
     with raises(RequestException):
-        unwraped = list(responses)
+        resp2 = next(responses)
+        resp2.result()
+    with raises(RequestException):
+        resp3 = next(responses)
+        resp3.result()
 
 def test_establish_url():
     # Test valid url
