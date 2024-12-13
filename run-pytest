@@ -60,7 +60,7 @@ in_virtualenv() {
 }
 
 main() {
-    PYTEST_FLAGS=
+    declare -a ADDED_ARGS
 
     # Parse flag arguments
     while [[ $# -gt 0 ]]; do
@@ -78,13 +78,13 @@ main() {
             TEST_TYPE=metadata
             shift ;;
         -k)
-            PYTEST_FLAGS+=" -k $2"
+            ADDED_ARGS+=("-k" "$2")
             shift 2 ;;
         -x|--exitfirst)
-            PYTEST_FLAGS+=' -x'
+            ADDED_ARGS+=("-x")
             shift ;;
         -v|--verbose)
-            PYTEST_FLAGS+=' -vvv --assert=plain'
+            ADDED_ARGS+=("-vvv" "--tb=short")
             shift ;;
         *)
             echo "ERROR: Unknown flag: $1"
@@ -115,12 +115,12 @@ main() {
     if [[ $TEST_TYPE == "functional" ]]; then
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
-        pytest -m functional --no-cov -n 4 --showlocals $PYTEST_FLAGS
+        pytest -m functional --no-cov -n 4 --showlocals "${ADDED_ARGS[@]}"
         PYTEST_EXIT_CODE=$?
     elif [[ $TEST_TYPE == "metadata" ]]; then
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
-        pytest -m metadata --no-cov -n 4 --showlocals $PYTEST_FLAGS
+        pytest -m metadata --no-cov -n 4 --showlocals "${ADDED_ARGS[@]}"
         PYTEST_EXIT_CODE=$?
     elif [[ $TEST_TYPE == "a11y" ]]; then
         # Starting x virtual frame buffer, needed for headless browser
@@ -131,14 +131,14 @@ main() {
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
         echo "Running Accessibility tests against $SERVER_NAME"
-        pytest -m a11y --no-cov -n 4 $PYTEST_FLAGS
+        pytest -m a11y --no-cov -n 4 "${ADDED_ARGS[@]}"
         PYTEST_EXIT_CODE=$?
 
         # Stop headless server
         kill $PID
     elif [[ $TEST_TYPE == "unit" ]]; then
         export INSTANCE_DIR=$CUR_DIR/tests/instance
-        pytest $PYTEST_FLAGS
+        pytest "${ADDED_ARGS[@]}"
         PYTEST_EXIT_CODE=$?
     else
         echo "ERROR: Unknown test type of '$TEST_TYPE'"
