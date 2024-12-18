@@ -53,7 +53,7 @@ def establish_url(url, fallback):
     Args:
         url (str): A possible URL. \n
         fallback (str): A secondary URL to fallback to if `url` is None. \n
-    raises:
+    Raises:
         werkzeurg.exceptions.HTTPException: If URL to be returned is not a valid formatted URL. \n
     """
     url = url if url else fallback

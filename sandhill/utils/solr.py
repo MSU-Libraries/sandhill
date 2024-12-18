@@ -7,11 +7,15 @@ class Solr:
     """
     Class for handling Solr related logic, such as encoding/decoding.
     """
+    _escape_chars_all = {'*': r'\*', '?': r'\?', '-': r'\-', '&': r'\&', '|': r'\|', \
+        '!': r'\!', '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]', \
+        '^': r'\^', '~': r'\~', ' ': r'\ ', '+': r'\+', ':': r'\:', '"': r'\"', ';': r'\;'}
+    _escape_chars_all_re = re.compile('|'.join(re.escape(key) for key in _escape_chars_all))
+    _escape_chars_nowild = dict(list(_escape_chars_all.items())[2:])
+    _escape_chars_nowild_re = re.compile('|'.join(re.escape(key) for key in _escape_chars_nowild))
+
     def __init__(self):
         self._scanner = None
-        self._escape_chars = {' ': r'\ ', '+': r'\+', '-': r'\-', '&': r'\&', '|': r'\|', \
-            '!': r'\!', '(': r'\(', ')': r'\)', '{': r'\{', '}': r'\}', '[': r'\[', ']': r'\]', \
-            '^': r'\^', '~': r'\~', '*': r'\*', '?': r'\?', ':': r'\:', '"': r'\"', ';': r'\;'}
 
         # Variables for query parsing
         self._tokens = None
@@ -154,14 +158,17 @@ class Solr:
         Returns:
             (str) the encoded value \n
         """
-        escapes = self._escape_chars.copy()
+        escapes = Solr._escape_chars_all
+        escape_re = Solr._escape_chars_all_re
         if not escape_wildcards:
-            del escapes['*']
-            del escapes['?']
+            escapes = Solr._escape_chars_nowild
+            escape_re = Solr._escape_chars_nowild_re
+
+        def replace(matches):
+            return escapes[matches.group(0)]
+
         value = value.replace('\\', r'\\')  # must be first replacement
-        for key, val in escapes.items():
-            value = value.replace(key, val)
-        return value
+        return escape_re.sub(replace, value)
 
     def decode_value(self, value, escape_wildcards=False):
         """
@@ -173,11 +180,10 @@ class Solr:
         Returns:
             (str) the decoded value \n
         """
-        escapes = self._escape_chars.copy()
+        escapes = Solr._escape_chars_all
         if not escape_wildcards:
-            del escapes['*']
-            del escapes['?']
+            escapes = Solr._escape_chars_nowild
+
         for key, val in escapes.items():
             value = value.replace(val, key)
-        value = value.replace(r'\\', '\\')  # must be last replacement
-        return value
+        return value.replace(r'\\', '\\')  # must be last replacement

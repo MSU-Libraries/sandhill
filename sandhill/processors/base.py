@@ -4,6 +4,7 @@ so that additional processors can simply be added to this directory without
 requiring code changes to load it.
 '''
 import json
+from functools import cache
 from importlib import import_module
 from ast import literal_eval
 from flask import request, abort, Response as FlaskResponse
@@ -115,6 +116,7 @@ def identify_processor_function(name, processor, action):
                            f"Error: {load_exc}")
     return action_function
 
+@cache
 def processor_load_action(absolute_module, action):
     '''
     Attempt to get the action function from the provided module \n
@@ -125,15 +127,13 @@ def processor_load_action(absolute_module, action):
         (tuple[func, Exception]): The loaded callable function; any exception \
                                   that occured while loading the function \n
     '''
-    action_function = None
-    load_exc = None
     try:
         mod = import_module(absolute_module)
         action_function = getattr(mod, action)
         app.logger.debug(f"Successfully loaded processor action '{absolute_module}'")
+        return action_function, None
     except (ImportError, AttributeError) as exc:
-        load_exc = exc
-    return action_function, load_exc
+        return None, exc
 
 @catch((ValueError, SyntaxError), "Could not literal_eval 'when' condition for " \
        "\"{route_data[name]}\": {route_data[when]}", abort=500)

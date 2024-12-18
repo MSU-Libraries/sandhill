@@ -1,7 +1,7 @@
 import os
 from sandhill import app
 from sandhill.utils import config_loader
-from sandhill.classes.routing import Route
+from sandhill.modules.routing import Route
 from pytest import raises
 from collections import OrderedDict
 
