@@ -119,9 +119,9 @@ After you install the core Sandhill application, you are ready to set up your ow
 application instance. The following documentation provides further instructions for setting up your own instance.  
 
 
-* [Configuring Sandhill](docs/INSTANCE_SETUP.md)
-* [Development within your Sandhill application](docs/DEV_GUIDE.md)
-* [Running Sandhill as a service](docs/SERVICE_SETUP.md)
+* [Configuring Sandhill](docs/instance-setup.md)
+* [Development within your Sandhill application](docs/development-guidelines.md)
+* [Running Sandhill as a service](docs/service-setup.md)
 * [Contributing to Sandhill](CONTRIBUTING.md)
 
 If you have further questions or comment, please reach out to the development
