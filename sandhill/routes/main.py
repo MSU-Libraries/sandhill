@@ -13,14 +13,14 @@ def add_routes():
     Decorator function that adds all routes to the Flask app based \
     on JSON route configs loaded from `instance/configs/routes/`. \n
     """
-    app.logger.info("Running add_routes")
+    app.logger.debug("Processing routes.")
     def decorator(func, **options):
         all_routes = get_all_routes()
-        app.logger.info(f"Loading routes: {', '.join([repr(route) for route in all_routes])}")
+        app.logger.debug(f"Loading routes: {', '.join([repr(route) for route in all_routes])}")
         for route in all_routes:
             endpoint = options.pop('endpoint', None)
             options['methods'] = route.methods
-            app.logger.info(
+            app.logger.debug(
                 f"Adding URL rule: {route.rule}, {endpoint}, {func} {json.dumps(options)}"
             )
             app.add_url_rule(route.rule, endpoint, func, **options)

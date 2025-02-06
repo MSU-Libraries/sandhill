@@ -7,6 +7,7 @@ import logging
 import sys
 import string
 import secrets
+import traceback
 from importlib import import_module
 from logging.handlers import RotatingFileHandler, SMTPHandler
 from flask.logging import create_logger
@@ -14,6 +15,34 @@ from jinja2 import ChoiceLoader, FileSystemLoader, \
     select_autoescape, FileSystemBytecodeCache
 from sandhill import app
 from sandhill.utils.generic import getconfig, getmodulepath
+
+
+class SandhillSMTPHandler(SMTPHandler):
+    """
+    Customized SMTPHandler for Sandhill.
+    """
+    def emit(self, record):
+        """Wrapper emit() to add in request info and backtrace"""
+        environ = {}
+        if hasattr(app, 'environ') and isinstance(app.environ, dict):
+            environ = app.environ
+        req_info = [
+            f"REQUEST_URI:      {environ.get('REQUEST_URI')}",
+            f"REQUEST_METHOD:   {environ.get('REQUEST_METHOD')}",
+            f"REQUEST_ADDR:     {environ.get('REMOTE_ADDR')}",
+            f"HTTP_X_REAL_IP:   {environ.get('HTTP_X_REAL_IP')}",
+            f"HTTP_USER_AGENT:  {environ.get('HTTP_USER_AGENT')}",
+        ]
+        # Add extra newlines for spacing whend displaying request data
+        record.msg = f"{record.msg}\n\n{'\n'.join(req_info)}\n\n"
+
+        # When no exception given, add our own backtrace
+        if not record.exc_info:
+            stack = traceback.extract_stack()
+            # Exclude top of stack to avoid stacktracing the logger itself
+            backtrace = "".join(traceback.format_list(stack[:-6]))
+            record.msg = f"{record.msg}\nTraceback (non-exception):\n{backtrace}"
+        super().emit(record)
 
 def configure_logging():
     '''
@@ -39,15 +68,18 @@ def configure_logging():
     # Email logger
     if getconfig('EMAIL'):
         email_log_level = getconfig('EMAIL_LOG_LEVEL', logging.ERROR)
-        mail_handler = SMTPHandler(
+        mail_handler = SandhillSMTPHandler(
             mailhost=getconfig('EMAIL_HOST', '127.0.0.1'),
             fromaddr=getconfig('EMAIL_FROM'),
             toaddrs=[getconfig('EMAIL')],
-            subject=getconfig('EMAIL_SUBJECT', 'Sandhill Error')
+            subject=(
+                f"{getconfig('EMAIL_SUBJECT', 'Sandhill Error')}"
+                f" ({getconfig('SERVER_NAME', 'localhost')})"
+            )
         )
         mail_handler.setLevel(email_log_level)
         mail_handler.setFormatter(logging.Formatter(
-            '[%(asctime)s] %(levelname)s: %(filename)s %(lineno)d\n%(message)s'
+            '[%(asctime)s] %(levelname)s in %(filename)s line %(lineno)d\n%(message)s'
         ))
         app.logger.addHandler(mail_handler)
 
@@ -92,6 +124,17 @@ app.jinja_env.bytecode_cache = FileSystemBytecodeCache()
 
 # Configure logging
 configure_logging()
+
+# Route uncaught exceptions to the logger
+def uncaught_exception_handler(exc_type, exc_value, exc_traceback):
+    # Prevent SIGINT from sending email alert
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    app.logger.critical("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+sys.excepthook = uncaught_exception_handler
 
 def sandbug(value, comment=None):
     """

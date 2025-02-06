@@ -24,7 +24,7 @@ def load_json_config(file_path):
         (dict): The contents of the loaded JSON file, or an empty dictionary \
                 upon error loading or parsing the file. \n
     """
-    app.logger.info(f"Loading json file at {file_path}")
+    app.logger.debug(f"Loading json file at {file_path}")
     with open(file_path, encoding='utf-8') as json_config_file:
         return json.load(json_config_file, object_pairs_hook=collections.OrderedDict)
 
