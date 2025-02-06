@@ -9,8 +9,8 @@ from requests.exceptions import RequestException
 from flask import jsonify, abort
 from sandhill.utils.api import api_get, establish_url
 from sandhill import app, catch
-from sandhill.utils.generic import getdescendant, ifnone, getconfig, recursive_merge
-from sandhill.utils.request import match_request_format, overlay_with_query_args
+from sandhill.utils.generic import getdescendant, ifnone, getconfig, recursive_merge, str_to_response
+from sandhill.utils.request import match_request_format, overlay_with_query_args, get_view_args_key
 from sandhill.processors.file import load_json
 from sandhill.utils.error_handling import dp_abort
 
@@ -22,7 +22,7 @@ def select(data, url=None, api_get_function=api_get):
     Perform a Solr select call and return the loaded JSON response. \n
     ```json
     "name": "mysearch",
-    "processor": "solr.search",
+    "processor": "solr.select",
     "params": { "q": "*", "rows":"20" }
     ``` \n
     Args:
@@ -39,7 +39,6 @@ def select(data, url=None, api_get_function=api_get):
         wergzeug.exceptions.HTTPException: If `on_fail` is set. \n
     """
 
-    response = None
     url = establish_url(url, getconfig('SOLR_URL', None))
     url = url + "/select"
 
@@ -57,6 +56,8 @@ def select(data, url=None, api_get_function=api_get):
             pass
         dp_abort(response.status_code)
     else:
+        if 'wt' in data['params'] and data['params']['wt'] != 'json':
+            return response.text
         response_json = response.json()
         # Get the records that exist at the provided record_keys
         if 'record_keys' in data and data['record_keys']:
@@ -133,11 +134,17 @@ def search(data, url=None, api_get_function=api_get):
             request_args=data.get('params', None),
             allow_undefined=True)
 
+    format = get_view_args_key('format')
+    if format is not None and format != 'json':
+        data['params']['wt'] = format
+
     solr_results = select(data, url, api_get_function)
 
-    # check if the json results were requested
-    result_format = match_request_format('format', ['text/html', 'application/json'])
+    # check if a special format for results was requested
+    result_format = match_request_format('format', ['text/html', 'application/json', 'text/csv'])
     if result_format == 'application/json':
         solr_results = jsonify(solr_results)
+    elif result_format != 'text/html':
+        solr_results = str_to_response(solr_results)
 
     return solr_results
