@@ -63,8 +63,8 @@ def configure_logging():
         ))
         app.logger.addHandler(file_handler)
 
-    # Email logger
-    if getconfig('EMAIL'):
+    # Email logger (disabled for pytest)
+    if getconfig('EMAIL') and getconfig("PYTESTING", "0") != "1":
         email_log_level = getconfig('EMAIL_LOG_LEVEL', logging.ERROR)
         mail_handler = SandhillSMTPHandler(
             mailhost=getconfig('EMAIL_HOST', '127.0.0.1'),
