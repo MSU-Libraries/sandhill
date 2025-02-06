@@ -23,9 +23,7 @@ class SandhillSMTPHandler(SMTPHandler):
     """
     def emit(self, record):
         """Wrapper emit() to add in request info and backtrace"""
-        environ = {}
-        if hasattr(app, 'environ') and isinstance(app.environ, dict):
-            environ = app.environ
+        environ = app.environ
         req_info = [
             f"REQUEST_URI:      {environ.get('REQUEST_URI')}",
             f"REQUEST_METHOD:   {environ.get('REQUEST_METHOD')}",
@@ -127,6 +125,7 @@ configure_logging()
 
 # Route uncaught exceptions to the logger
 def uncaught_exception_handler(exc_type, exc_value, exc_traceback):
+    """Route unhandled exceptions through the logger."""
     # Prevent SIGINT from sending email alert
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)

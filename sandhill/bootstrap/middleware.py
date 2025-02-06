@@ -1,8 +1,9 @@
 """
 Custom middleaware for Sandhill
 """
-from sandhill import app
+import sandhill
 
+# pylint: disable=too-few-public-methods
 class SandhillMiddleware:
     """
     Middleware to cache WSGI prior to starting Flask.
@@ -13,6 +14,7 @@ class SandhillMiddleware:
         self.app = app
 
     def __call__(self, environ, start_response):
-        app.environ = environ
+        sandhill.app.environ = environ
         return self.app(environ, start_response)
-app.wsgi_app = SandhillMiddleware(app.wsgi_app)
+
+sandhill.app.wsgi_app = SandhillMiddleware(sandhill.app.wsgi_app)

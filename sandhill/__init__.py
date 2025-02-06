@@ -10,6 +10,8 @@ app = Flask(__name__,
             if "INSTANCE_DIR" in os.environ
             else None)
 app.install_dir = install_dir
+# The environ will be populated with environ from WSGI during bootstrap
+app.environ = {}
 # Local imports requiring the Flask app
 from sandhill.utils.error_handling import catch # pylint: disable=wrong-import-position
 import sandhill.bootstrap # pylint: disable=wrong-import-position
