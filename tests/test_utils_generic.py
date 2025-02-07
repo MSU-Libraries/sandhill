@@ -103,10 +103,11 @@ def test_getconfig():
     # Test getting a value from the config when it is not set in the environment
     response = generic.getconfig("SECRET_KEY")
     assert response == app.config["SECRET_KEY"]
+    assert 'SECRET_KEY' not in os.environ
 
-    # Test getting a value from the config when it is set in the environment
-    response = generic.getconfig("DEBUG")
-    assert response == os.environ["DEBUG"] if "DEBUG" in os.environ else "0"
+    # Test getting a value from when it is set in the environment and config
+    response = generic.getconfig("PYTHON_SHA256")
+    assert response == "FAKE_SHA"
 
     # Test getting a value for a config not set in the environment or config
     response = generic.getconfig("NOT_SET")
