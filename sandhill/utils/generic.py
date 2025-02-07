@@ -173,10 +173,10 @@ def getconfig(name, default=None):
         (str): Value of the config variable, default value otherwise \n
     '''
     value = default
+    # XXX os.environ is loaded via bootstrap/__init__.py into app.config
+    #     between loading sandhill.default_settings.cfg and instance/sandhill.cfg
     if app.config.get(name) is not None:
         value = app.config[name]
-    elif os.environ.get(name) is not None:
-        value = os.environ[name]
     return value
 
 def getmodulepath(path):

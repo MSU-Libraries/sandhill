@@ -109,11 +109,6 @@ def test_getconfig():
     response = generic.getconfig("PYTHON_SHA256")
     assert response == "FAKE_SHA"
 
-    # Test getting a value from environment when it is not set in the config
-    response = generic.getconfig("PYTHON_VERSION")
-    assert "PYTHON_VERSION" not in app.config
-    assert response == os.environ["PYTHON_VERSION"]
-
     # Test getting a value for a config not set in the environment or config
     response = generic.getconfig("NOT_SET")
     assert response is None

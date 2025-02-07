@@ -102,6 +102,9 @@ app.view_functions.pop('static', None)
 # Set default config file
 app.config.from_pyfile(os.path.join(app.root_path, 'sandhill.default_settings.cfg'))
 
+# Load ENV into config
+app.config.from_mapping(os.environ)
+
 # If a instance specific config exists, load it
 if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
     app.config.from_pyfile(os.path.join(app.instance_path, "sandhill.cfg"))
