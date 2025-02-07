@@ -126,8 +126,8 @@ configure_logging()
 # Route uncaught exceptions to the logger
 def uncaught_exception_handler(exc_type, exc_value, exc_traceback):
     """Route unhandled exceptions through the logger."""
-    # Prevent SIGINT from sending email alert
-    if issubclass(exc_type, KeyboardInterrupt):
+    # Prevent SIGINT and broken pipes from sending email alert
+    if issubclass(exc_type, (KeyboardInterrupt, OSError)):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
 
