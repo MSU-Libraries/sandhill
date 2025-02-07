@@ -163,9 +163,8 @@ def getdescendant(obj, list_keys, extract=False, put=None):
 def getconfig(name, default=None):
     '''
     Get the value of the given config name. It will first \
-    check in the app.config for the variable name, if not found it \
-    will then look look in the os.environ, if still not found \
-    it will use the default param \n
+    check in the environment for the variable name, otherwise \
+    look in the app.config, otherwise use the default param \n
     Args:
         name (str): Name of the config variable to look for \n
         default (str|None): The defaut value if not found elsewhere \n
@@ -173,10 +172,10 @@ def getconfig(name, default=None):
         (str): Value of the config variable, default value otherwise \n
     '''
     value = default
-    if app.config.get(name) is not None:
-        value = app.config[name]
-    elif os.environ.get(name) is not None:
+    if name in os.environ and os.environ[name]:
         value = os.environ[name]
+    elif name in app.config and app.config[name] is not None:
+        value = app.config[name]
     return value
 
 def getmodulepath(path):

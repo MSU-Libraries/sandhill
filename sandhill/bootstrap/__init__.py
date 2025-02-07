@@ -104,7 +104,7 @@ app.config.from_pyfile(os.path.join(app.root_path, 'sandhill.default_settings.cf
 
 # If a instance specific config exists, load it
 if os.path.exists(os.path.join(app.instance_path, "sandhill.cfg")):
-    app.config.from_pyfile('sandhill.cfg')
+    app.config.from_pyfile(os.path.join(app.instance_path, "sandhill.cfg"))
 
 # Load the secret key
 SECRET_KEY = "".join(secrets.SystemRandom().choice(
