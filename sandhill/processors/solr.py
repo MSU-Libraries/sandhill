@@ -11,6 +11,7 @@ from sandhill.utils.api import api_get, establish_url
 from sandhill import app, catch
 from sandhill.utils.generic import getdescendant, ifnone, getconfig, recursive_merge
 from sandhill.utils.request import match_request_format, overlay_with_query_args
+from sandhill.utils.response import to_response
 from sandhill.processors.file import load_json
 from sandhill.utils.error_handling import dp_abort
 
@@ -22,7 +23,7 @@ def select(data, url=None, api_get_function=api_get):
     Perform a Solr select call and return the loaded JSON response. \n
     ```json
     "name": "mysearch",
-    "processor": "solr.search",
+    "processor": "solr.select",
     "params": { "q": "*", "rows":"20" }
     ``` \n
     Args:
@@ -39,7 +40,6 @@ def select(data, url=None, api_get_function=api_get):
         wergzeug.exceptions.HTTPException: If `on_fail` is set. \n
     """
 
-    response = None
     url = establish_url(url, getconfig('SOLR_URL', None))
     url = url + "/select"
 
@@ -57,6 +57,8 @@ def select(data, url=None, api_get_function=api_get):
             pass
         dp_abort(response.status_code)
     else:
+        if 'wt' in data['params'] and data['params']['wt'] != 'json':
+            return response.text
         response_json = response.json()
         # Get the records that exist at the provided record_keys
         if 'record_keys' in data and data['record_keys']:
@@ -129,15 +131,65 @@ def search(data, url=None, api_get_function=api_get):
         solr_config = search_config['solr_params']
 
     # override default parameters with request query parameters
-    data['params'] = overlay_with_query_args(solr_config, \
+    data['params'] = overlay_with_query_args(solr_config,
             request_args=data.get('params', None),
             allow_undefined=True)
 
+    extension = get_requested_extension(data)
+    writer = get_writer_from_extension(extension)
+    data['params']['wt'] = writer
     solr_results = select(data, url, api_get_function)
 
-    # check if the json results were requested
-    result_format = match_request_format('format', ['text/html', 'application/json'])
-    if result_format == 'application/json':
-        solr_results = jsonify(solr_results)
+    return get_extension_callback(extension)(solr_results)
 
-    return solr_results
+
+def get_requested_extension(data) -> str:
+    return data['view_args'].get('format')
+
+
+def extension_writer_mapping() -> dict:
+    # extension: solr_writer
+    return {
+        None: 'json',
+        'html': 'json',
+        'json': 'json',
+        'csv': 'csv',
+        'py': 'python',
+        'rb': 'ruby',
+        # 'xlsx': 'xlsx', # needs additional solr config
+        'xml': 'xml',
+        # 'xslt': 'xslt', # seems to need additional solr config
+    }
+
+
+def get_writer_from_extension(ext: str|None) -> str:
+    mapping = extension_writer_mapping()
+    if ext not in mapping:
+        abort(501)
+    else:
+        return mapping[ext]
+
+
+def get_extension_callback(ext: str):
+    mapping = extension_callback_mapping()
+    if ext not in mapping:
+        abort(501)
+    else:
+        return mapping[ext]
+
+
+def raw_parameter(param: any) -> any:
+    return param
+
+
+def extension_callback_mapping() -> dict:
+    # extension: callback
+    return {
+        None: raw_parameter, # do nothing
+        'html': raw_parameter, # do nothing
+        'json': jsonify,
+        'csv': to_response,
+        'py': to_response,
+        'rb': to_response,
+        'xml': to_response,
+    }
