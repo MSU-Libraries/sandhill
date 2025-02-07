@@ -5,7 +5,6 @@ import os
 from typing import Any  # pylint: disable=unused-import
 from collections.abc import Mapping, Hashable
 from sandhill import app, catch
-from flask import Response
 
 def ifnone(*args):
     '''
@@ -273,6 +272,3 @@ def recursive_merge(dict1: dict, dict2: dict, sanity: int = 100) -> dict:
         else:
             merged[key] = value
     return merged
-
-def str_to_response(str: str) -> Response:
-    return Response(str, content_type="text/plain")

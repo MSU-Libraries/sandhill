@@ -123,9 +123,3 @@ def overlay_with_query_args(query_config, request_args=None, *, allow_undefined=
         query_params.update(request_args)
 
     return query_params
-
-def get_view_args_key(key: str):
-    if key in request.view_args:
-        return request.view_args[key]
-    else:
-        return None
