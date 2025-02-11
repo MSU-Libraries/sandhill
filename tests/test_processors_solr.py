@@ -93,7 +93,8 @@ def test_search():
     data = {
         "name": "search",
         "processor": "solr.search",
-        "paths": [ 'config/search/main.json' ]
+        "paths": [ 'config/search/main.json' ],
+        "view_args": { 'format': None }
     }
 
     # Test for successful request with a dict response
@@ -104,9 +105,27 @@ def test_search():
 
     # Test for successful request with a jsonify'ed response
     with app.test_request_context('/search.json'):
+        data['view_args']['format'] = 'json'
         response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json)
+        data['view_args']['format'] = None
         assert isinstance(response, FlaskResponse)
         assert response.status_code == 200
+
+    # Test for error with unknown extension
+    with app.test_request_context('/search.wrong_ext'):
+        with raises(HTTPException) as http_error:
+            data['view_args']['format'] = 'wrong_ext'
+            response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json)
+        data['view_args']['format'] = None
+        assert http_error.type.code == 501
+
+    # Test for csv extension
+    with app.test_request_context('/search.csv'):
+        data['view_args']['format'] = 'csv'
+        response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json)
+    data['view_args']['format'] = None
+    assert isinstance(response, FlaskResponse)
+    assert response.status_code == 200
 
     # Test for passing a url parameter to override default
     with app.test_request_context('/search?q=changed&start=20'):
@@ -125,7 +144,9 @@ def test_search():
     del data['paths']
     with app.test_request_context('/search.json'):
         with raises(HTTPException) as http_error:
+            data['view_args']['format'] = 'json'
             response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json)
+            data['view_args']['format'] = None
         assert http_error.type.code == 500
     data["paths"] = [ 'config/search/main.json' ]
 
@@ -139,6 +160,8 @@ def test_search():
     }
     # Test that the config_ext successfully overrides the settings in the search config
     with app.test_request_context('/search.json?q=my_query'):
+        data['view_args']['format'] = 'json'
         response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json_params)
+        data['view_args']['format'] = None
         assert response.json['q'] == "MyTestString"
     del data['config_ext']
