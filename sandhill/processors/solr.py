@@ -208,7 +208,7 @@ def get_extension_callback(ext: str):
     Returns:
         (str): The corresponding callback to execute for this extension.\n
     """
-    # Not checking if it exists as we assume the two mapping dicts are in sync and we already tested one
+    # We already tested if it exists with is_valid_extension
     return extension_callback_mapping()[ext]
 
 
