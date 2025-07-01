@@ -241,12 +241,14 @@ def test_filter_renderliteral():
 
 def test_filter_formatedate():
     # Test with valid end date
-    res = filters.formatedate("2020-12-31")
+    res = filters.formatedate("2020-12-31", add_days=0)
     assert res == "December 31st, 2020"
-    res = filters.formatedate("2022-01-03")
+    res = filters.formatedate("2022-01-03", add_days=0)
     assert res == "January 3rd, 2022"
+    res = filters.formatedate("2022-01-03", add_days=19)
+    assert res == "January 22nd, 2022"
     res = filters.formatedate("8000-01-03")
-    assert res == "January 3rd, 8000"
+    assert res == "January 4th, 8000"
 
     # Test with indenfinite end date
     res = filters.formatedate("9999-12-31")
