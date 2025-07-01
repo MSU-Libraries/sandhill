@@ -4,7 +4,7 @@ import html
 import json
 from typing import Any  # pylint: disable=unused-import
 from collections.abc import Hashable
-from datetime import datetime
+from datetime import datetime, timedelta
 import mimetypes
 from ast import literal_eval
 import copy
@@ -300,13 +300,14 @@ def renderliteral(context, value, fallback_to_str=True):
 
 @app.template_filter('formatedate')
 @catch((ValueError, TypeError), return_arg="default")
-def formatedate(value, default="Indefinite"):
+def formatedate(value, default="Indefinite", add_days=1):
     '''
     Format the provided embargo end date as a human readable string. \n
     If the date year is 9999, it will show the default value. \n
     Args:
         value (str): A date string in the format YYYY-MM-DD \n
         default (str): The default string (Default: "Indefinite") \n
+        add_days (int): Number of days to add to the end date (Default: 1) \n
     Returns:
         (str): Formatted end date \n
     '''
@@ -316,7 +317,10 @@ def formatedate(value, default="Indefinite"):
     result = default
     value_date = datetime.strptime(value, "%Y-%m-%d")
     if value_date.year != 9999:
-        result = value_date.strftime("%B DAY %Y") # it is a valid date, so set that as the result
+        # Add in the additional day(s)
+        value_date += timedelta(days=add_days)
+        # Format the result
+        result = value_date.strftime("%B DAY %Y")
         # Add in the suffix (st, th, rd, nd)
         result = result.replace("DAY", f"{value_date.day}{day_suffix(value_date.day)},")
     return result
