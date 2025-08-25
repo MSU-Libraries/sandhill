@@ -7,7 +7,7 @@ def test_utils_xml_load():
     source_bin = b'<main><el>one</el><el>two</el></main>'
     source_str = '<main><str>one</str><str>two</str></main>'
     source_file = os.path.join(app.instance_path, 'xml_files/example1.xml')
-    source_url = 'https://www.wikidata.org/wiki/Special:EntityData/Q6750239.rdf'
+    source_url = 'https://catalog.lib.msu.edu/Record/folio.in00001735688/Export?style=RDF'
     source_unknown = 'This is not XML, a file, or a URL'
     source_badxml = '<main><str>one</str><str>two</str></badend>'
     source_badhost = 'https://domain.does.not.exist.testing/'
