@@ -38,7 +38,8 @@ def test_find_mismatches_context_processor():
     dict2 = {'a': 2}
     assert ctx['find_mismatches'](dict1, dict2) == {'values_changed': {"root['a']": {'new_value': 2, 'old_value': 1}}}
     # Check that different keys produce expected output.
-    dict3 = {'b': 1}
+    dict1 = {'a': 1, 'b': 2}
+    dict3 = {'a': 1, 'c': 3}
     assert 'dictionary_item_added' in ctx['find_mismatches'](dict1, dict3)
     assert 'dictionary_item_removed' in ctx['find_mismatches'](dict1, dict3)
 
