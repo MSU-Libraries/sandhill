@@ -101,6 +101,8 @@ def search(data, url=None, api_get_function=api_get):
             * `params` _dict_: Query arguments to pass to Solr.\n
             * `record_keys` _string, optional_: Return this [descendant path](#TODO) from \
               the response JSON. Default: `response.docs`\n
+            * `use_query_args` _bool, optional_: Overlay the request query args onto the \
+              `params` dict. Default: `True`\n
         url (str): Overrides the default SOLR_URL normally retrieved from \
                    the [Sandhill config](#TODO) file.\n
         api_get_function (function): Function used to call Solr with. Used in unit tests.\n
