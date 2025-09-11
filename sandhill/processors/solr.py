@@ -130,10 +130,11 @@ def search(data, url=None, api_get_function=api_get):
     else:
         solr_config = search_config['solr_params']
 
-    # override default parameters with request query parameters
-    data['params'] = overlay_with_query_args(solr_config,
-            request_args=data.get('params', None),
-            allow_undefined=True)
+    # override default parameters with request query parameters, unless disallowed
+    if 'use_query_args' not in data or data['use_query_args'] != False:
+        data['params'] = overlay_with_query_args(solr_config,
+                request_args=data.get('params', None),
+                allow_undefined=True)
 
     extension = get_requested_extension(data)
     if not is_valid_extension(extension):

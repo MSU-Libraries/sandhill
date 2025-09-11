@@ -129,9 +129,21 @@ def test_search():
 
     # Test for passing a url parameter to override default
     with app.test_request_context('/search?q=changed&start=20'):
-        response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json)
+        response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json_params)
         assert isinstance(response, dict)
         assert response
+        assert 'q' in response
+        assert 'changed' in response['q']
+
+    # Test for passing a url parameter NOT overriding default if use_query_args is False
+    data['use_query_args'] = False
+    del data['params']['q']
+    with app.test_request_context('/search?q=notchanged&start=20'):
+        response = solr.search(data, url="https://test.example.edu", api_get_function=_test_api_get_json_params)
+        assert isinstance(response, dict)
+        assert response
+        assert 'q' not in response
+    del data['use_query_args']
 
     # Test for missing solr params
     with app.test_request_context('/search'):
