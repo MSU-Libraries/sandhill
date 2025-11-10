@@ -51,10 +51,10 @@ def context_processors():
     def strftime(fmt: str = None, day: str = None) -> str:
         """
         Wrapper around datetime.strftime with default yyyy-mm-dd format \n
-        args:
+        Args:
             fmt (str): The format for the date to return \n
             day (str): A date in yyyy-mm-dd format to format, or today if not passed \n
-        returns:
+        Returns:
             (str): The formatted date \n
         """
         fmt = "%Y-%m-%d" if not fmt else fmt

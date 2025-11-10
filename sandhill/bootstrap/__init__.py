@@ -150,7 +150,7 @@ builtins.sandbug = sandbug
 def load_modules(base_path, sub_path, files=True, dirs=True, exclude=None):
     '''
     Detect and load all of the modules within a given path \n
-    args:
+    Args:
         base_path(str): Base directory path to search \n
         sub_path(str): Directory within the base path to search \n
         files (bool): Include loading files. Default is True \n

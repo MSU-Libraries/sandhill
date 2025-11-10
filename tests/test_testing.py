@@ -29,13 +29,13 @@ def jsonpath_from_rendered_entry(struct, context):
     perform an API call to 'url' key.
     For the resulting JSON, select and return
     the data found at the JSONPath 'path' key
-    args:
+    Args:
         struct(dict): A data structure with keys
                         url => Location to perform API call
                         filepath => Path to a file to open and read
                         path => A JSON path
         context(dict): The context used to render with Jinja
-    returns:
+    Returns:
         (dict|list): The results of the JSONPath
     throws:
         json.JSONDecodeError
@@ -86,12 +86,12 @@ def parse_loop_key(data):
 def render_context(struct, context):
     """
     Render a dict structure using jinja.
-    args:
+    Args:
         struct(dict): A data structure with keys
                         url OR filepath => Location to load file or perform API call
                         path => A JSON path
         context(dict): The context used to render with Jinja
-    returns:
+    Returns:
         (dict): The results of the rendered dict object.
     throws:
         json.JSONDecodeError
@@ -215,7 +215,7 @@ def pre_test_check(entry):
 def test_entry_functional(entry):
     """
     Run a single functional test entry
-    args:
+    Args:
         entry (dict):
     """
     with app.test_client() as client:
@@ -255,7 +255,7 @@ def test_entry_functional(entry):
 def test_entry_metadata(entry):
     """
     Run a single metadata test entry
-    args:
+    Args:
         entry (dict):
     """
     def prepare_render(string, entry):
@@ -297,7 +297,7 @@ def axe_driver():
 def test_entry_a11y(entry, axe_driver):
     """
     Run a single entry test
-    args:
+    Args:
         entry (dict):
     """
     with app.test_client() as client:
