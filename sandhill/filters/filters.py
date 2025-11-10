@@ -119,11 +119,11 @@ def filtertags(value, *args):
 def solr_encodequery(query, escape_wildcards=False):
     """
     Parses and encode a Solr query arguments (the part after the colon). \n
-    args:
+    Args:
         query (str): Solr query argument to encode. \n
         escape_wildcards (bool): If Solr's wildcard indicators (* and ?) \
                                  should be encoded (Default: False) \n
-    returns:
+    Returns:
         (str): The Solr query with appropriate characters encoded. \n
     """
     return Solr().encode_query(query, escape_wildcards=escape_wildcards)
