@@ -7,7 +7,7 @@ from requests import Response as RequestsResponse
 
 def replace(data):
     '''
-    For the given `name` in data, replace all occurances of an old string with new string and \
+    For the given `name` in data, replace all occurrences of an old string with new string and \
     return the result. \n
     Args:
         data (dict): Processor arguments and all other data loaded from previous data processors.\n

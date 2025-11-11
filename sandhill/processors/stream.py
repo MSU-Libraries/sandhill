@@ -2,8 +2,10 @@
 Processor for streaming data
 '''
 from flask import abort, make_response, Response as FlaskResponse
+from pathlib import Path
 from requests.models import Response as RequestsResponse
 from sandhill import app
+from sandhill.utils.response import file_to_response
 from sandhill.utils.error_handling import dp_abort
 
 def response(data):
@@ -45,6 +47,33 @@ def response(data):
         if header.lower() in [allowed_key.lower() for allowed_key in allowed_headers]:
             stream_response.headers.set(header, resp.headers.get(header))
     return stream_response
+
+def serve_file(data):
+    '''
+    Stream a file as a response. \n
+    Args:
+        data (dict): Processor arguments and all other data loaded from previous data processors.\n
+            * `file_to_serve` _str_: Filepath of the file to serve.\n
+    Returns:
+        (flask.Response|None): A stream of the response \n
+    Raises:
+        wergzeug.exceptions.HTTPException: If `on_fail` is set. \n
+    '''
+
+    if 'file_to_serve' not in data:
+        app.logger.error("stream.serve_file requires a 'file_to_serve' variable to be set.")
+        dp_abort(500)
+
+    file = Path(data['file_to_serve'])
+
+    if not file.exists():
+        app.logger.error("stream.serve_file file \"{data['file_to_serve']}\" does not exist.")
+        dp_abort(500)
+
+    stream = open(file, 'rb')
+    mimetype = data['mimetype'] if 'mimetype' in data else 'application/octet-stream'
+
+    return file_to_response(stream, mimetype)
 
 def string(data):
     '''
