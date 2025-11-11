@@ -30,6 +30,7 @@ def download_file(
     Raises:
         (requests.RequestException): if the download request fails
     """
+    return_code = None
     for loop in itertools.islice(itertools.count(), 0, retries + 1): # Number of retries wanted +1
         params = {'download': 'true'}
         app.logger.debug(f"Connecting to {url}?{urlencode(params)}")
@@ -46,8 +47,8 @@ def download_file(
             if loop == retries:
                 # Raises an HTTPError if the request returns a 4xx/5xx for the last attempts
                 r.raise_for_status()
-                return r.status_code
-    return None
+                return_code = r.status_code
+    return return_code
 
 
 def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str = '/'):
