@@ -1,11 +1,14 @@
+'''
+Utility functions for files
+'''
 import itertools
 import os
 import zipfile
 
+from urllib.parse import urlencode
 from flask import request
 from sandhill import app
 from sandhill.utils.api import api_get
-from urllib.parse import urlencode
 
 def download_file(url: str, filepath: str, passthrough_headers: list, retries : int = 0) -> bool:
     """
@@ -37,7 +40,8 @@ def download_file(url: str, filepath: str, passthrough_headers: list, retries : 
         if r.ok:
             return True
 
-    r.raise_for_status() # Raises an HTTPError if the request returns a 4xx/5xx for the last attempts
+    # Raises an HTTPError if the request returns a 4xx/5xx for the last attempts
+    r.raise_for_status()
     return r.status_code
 
 def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str = '/'):
@@ -48,15 +52,18 @@ def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str
         directory_to_zip (str): Filepath of the directory to compress
         zip_inner_path (str): Filepath within the archive where to add files \n
     Raises:
-        (OSError): Generic OS error (e.g. file errors, permissions issues, locked file, invalid path, etc.).
-        (RuntimeError): if compression type is unsupported or misconfigured; or writing after the archive is finalized.
+        (OSError): Generic OS error (e.g. file errors, permissions issues, locked file, invalid
+            path, etc.).
+        (RuntimeError): if compression type is unsupported or misconfigured; or writing after the
+            archive is finalized.
         (ValueError): if invalid arguments (e.g., bad compression mode)
         (zipfile.LargeZipFile): if file size > 2 GiB and ZIP64 is not enabled.
         (zipfile.BadZipFile): if internal corruption occurs during writing (rare).
     """
-    # TODO might be good at some point to have flags not to compress some file types (+ bonus for a config file)
+    # TODO might be good at some point to have flags not to compress some file types
+    #  (+ bonus for a config file)
     with zipfile.ZipFile(zip_filepath, "w", zipfile.ZIP_DEFLATED) as archive:
-        for root, dirs, files in os.walk(directory_to_zip):
+        for root, _, files in os.walk(directory_to_zip):
             for file in files:
                 filepath = os.path.join(root, file)
                 relative_path = os.path.relpath(filepath, start=directory_to_zip)
