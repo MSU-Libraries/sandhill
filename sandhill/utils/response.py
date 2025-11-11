@@ -3,8 +3,8 @@ Functions for handling responses.
 """
 import io
 
-from flask import Response
 from pathlib import Path
+from flask import Response
 
 def to_response(string: str, content_type: str="text/plain") -> Response:
     """
@@ -19,21 +19,23 @@ def to_response(string: str, content_type: str="text/plain") -> Response:
 
 def file_to_response(resource: io.IOBase, mimetype: str= "application/octet-stream") -> Response:
     """
-    Take an opened resource (zip file) and return a Flask Response.
-    Args:
-        resource (io.IOBase): The file being opened to return as a response to be downloaded.\n
-        mimetype (str): Mimetype returned in the response.\n
-    Returns:
-        (Response): The Flask response containing the string. \n
-    """
+        Take an opened resource (zip file) and return a Flask Response.
+        Args:
+            resource (io.IOBase): The file being opened to return as a response to be downloaded.\n
+            mimetype (str): Mimetype returned in the response.\n
+        Returns:
+            (Response): The Flask response containing the string. \n
+        """
     file = Path(resource.name)
+    # 'Content-Encoding': 'Identity' => Allow Content-Length to be kept;
+    # Tell the browser not to do additional compression
     return Response(
         resource,
         mimetype=mimetype,
         headers={
             'Content-Length': str(file.stat().st_size),
             'Content-Disposition': f'attachment; filename="{file.name}"',
-            'Content-Encoding': 'Identity' # Allow Content-Length to be kept; tell the browser not to do add'l compression
+            'Content-Encoding': 'Identity'
         },
         direct_passthrough=True
     )

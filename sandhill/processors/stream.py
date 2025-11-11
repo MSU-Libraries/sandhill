@@ -1,8 +1,8 @@
 '''
 Processor for streaming data
 '''
-from flask import abort, make_response, Response as FlaskResponse
 from pathlib import Path
+from flask import abort, make_response, Response as FlaskResponse
 from requests.models import Response as RequestsResponse
 from sandhill import app
 from sandhill.utils.response import file_to_response
@@ -70,10 +70,9 @@ def serve_file(data):
         app.logger.error("stream.serve_file file \"{data['file_to_serve']}\" does not exist.")
         dp_abort(500)
 
-    stream = open(file, 'rb')
     mimetype = data['mimetype'] if 'mimetype' in data else 'application/octet-stream'
-
-    return file_to_response(stream, mimetype)
+    with open(file, 'rb') as stream:
+        return file_to_response(stream, mimetype)
 
 def string(data):
     '''

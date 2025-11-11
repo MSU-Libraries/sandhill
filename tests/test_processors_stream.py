@@ -2,6 +2,8 @@
 Test the stream processor
 '''
 import io
+import tempfile
+
 from flask import Response as FlaskResponse
 from werkzeug.exceptions import HTTPException
 from requests.models import Response as RequestsResponse
@@ -97,3 +99,38 @@ def test_string():
         data["var"] = "response"
         result = stream.string(data)
         assert result.status_code == 200 and result.get_data(True) == data.get(data.get('var'))
+
+def test_serve_file():
+    '''
+    Tests the serve_file function
+    '''
+    test_resp = RequestsResponse()
+    test_resp.raw = io.StringIO("This is a test")
+    test_resp.status_code = 200
+    test_resp.headers['Content-Type'] = 'application/json'
+    test_resp.headers['Range'] = '0-31'
+    test_resp.headers['Invalid-Header'] = '10.0.0.10'
+    data = {
+        "test": test_resp,
+        "response": 'test',
+        "on_fail": 0
+    }
+
+    with app.test_request_context('/home'):
+        # Missing file_to_serve in data
+        with raises(HTTPException) as http_exc:
+            stream.serve_file(data)
+        assert http_exc.type.code == 500
+
+        # File to serve does not exist
+        data['file_to_serve'] = '/invalid-file'
+        with raises(HTTPException) as http_exc:
+            stream.serve_file(data)
+        assert http_exc.type.code == 500
+
+        # Test with an existing file which we create
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+            # Open the file for writing.
+            f.write(b'text for test file')
+            data['file_to_serve'] = f.name
+        assert isinstance(stream.serve_file(data), FlaskResponse)
