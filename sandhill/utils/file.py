@@ -10,7 +10,7 @@ from flask import request
 from sandhill import app
 from sandhill.utils.api import api_get
 
-def download_file(url: str, filepath: str, passthrough_headers: list, retries : int = 0) -> bool:
+def download_file(url: str, filepath: str, passthrough_headers: list, retries : int = 0, api_get_function=api_get) -> int:
     """
     Download a file at a given URL \n
     Args:
@@ -18,12 +18,13 @@ def download_file(url: str, filepath: str, passthrough_headers: list, retries : 
         filepath (str): Full filepath where to download the file
         passthrough_headers (list): Headers to pass in the request \n
         retries (int): Number of retries to attempt \n
+        api_get_function (function): function to use to make the download
     Returns:
-        (bool|int): True, if the file was downloaded correctly; request code otherwise \n
+        (int): Request code \n
     Raises:
-        (requests.exceptions.HTTPError): if the download request fails
+        (requests.RequestException): if the download request fails
     """
-    for _ in itertools.islice(itertools.count(), 0, retries): # Number of retries wanted +1
+    for loop in itertools.islice(itertools.count(), 0, retries + 1): # Number of retries wanted +1
         params = {'download': 'true'}
         app.logger.debug(f"Connecting to {url}?{urlencode(params)}")
         headers = {}
@@ -31,18 +32,16 @@ def download_file(url: str, filepath: str, passthrough_headers: list, retries : 
             if header in request.headers:
                 headers[header] = request.headers[header]
         # Stream the response to prevent loading the entire file into memory
-        with api_get(url=url, params=params, headers=headers, stream=True) as r:
+        with api_get_function(url=url, params=params, headers=headers, stream=True) as r:
             with open(filepath, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     if chunk: # filter out keep-alive chunks
                         f.write(chunk)
+            if loop == retries:
+                # Raises an HTTPError if the request returns a 4xx/5xx for the last attempts
+                r.raise_for_status()
+                return r.status_code
 
-        if r.ok:
-            return True
-
-    # Raises an HTTPError if the request returns a 4xx/5xx for the last attempts
-    r.raise_for_status()
-    return r.status_code
 
 def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str = '/'):
     """
