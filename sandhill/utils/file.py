@@ -10,7 +10,13 @@ from flask import request
 from sandhill import app
 from sandhill.utils.api import api_get
 
-def download_file(url: str, filepath: str, passthrough_headers: list, retries : int = 0, api_get_function=api_get) -> int:
+def download_file(
+        url: str,
+        filepath: str,
+        passthrough_headers: list,
+        retries : int = 0,
+        api_get_function=api_get
+) -> int|None:
     """
     Download a file at a given URL \n
     Args:
@@ -20,7 +26,7 @@ def download_file(url: str, filepath: str, passthrough_headers: list, retries : 
         retries (int): Number of retries to attempt \n
         api_get_function (function): function to use to make the download
     Returns:
-        (int): Request code \n
+        (int|None): Request code, None should never be returned \n
     Raises:
         (requests.RequestException): if the download request fails
     """
@@ -41,6 +47,7 @@ def download_file(url: str, filepath: str, passthrough_headers: list, retries : 
                 # Raises an HTTPError if the request returns a 4xx/5xx for the last attempts
                 r.raise_for_status()
                 return r.status_code
+    return None
 
 
 def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str = '/'):
