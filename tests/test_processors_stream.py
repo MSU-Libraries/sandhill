@@ -133,4 +133,6 @@ def test_serve_file():
             # Open the file for writing.
             f.write(b'text for test file')
             data['file_to_serve'] = f.name
-        assert isinstance(stream.serve_file(data), FlaskResponse)
+        response = stream.serve_file(data)
+        assert isinstance(response, FlaskResponse)
+        response.close()
