@@ -2,10 +2,9 @@
 Processor for streaming data
 '''
 from pathlib import Path
-from flask import abort, make_response, Response as FlaskResponse
+from flask import abort, make_response, Response as FlaskResponse, send_file
 from requests.models import Response as RequestsResponse
 from sandhill import app
-from sandhill.utils.response import file_to_response
 from sandhill.utils.error_handling import dp_abort
 
 def response(data):
@@ -71,8 +70,15 @@ def serve_file(data):
         dp_abort(500)
 
     mimetype = data['mimetype'] if 'mimetype' in data else 'application/octet-stream'
-    with open(file, 'rb') as stream:
-        return file_to_response(stream, mimetype)
+    r = send_file(
+        file,
+        mimetype=mimetype,
+        as_attachment=True
+    )
+    # 'Content-Encoding': 'Identity' => Allow Content-Length to be kept;
+    # Tell the browser not to do additional compression
+    r.headers['Content-Encoding'] = 'Identity'
+    return r
 
 def string(data):
     '''
