@@ -74,5 +74,8 @@ def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str
             for file in files:
                 filepath = os.path.join(root, file)
                 relative_path = os.path.relpath(filepath, start=directory_to_zip)
-                zip_inner_filepath = os.path.join(zip_inner_path, relative_path).replace("\\", "/")
+                zip_inner_filepath = os.path.join(
+                    zip_inner_path,
+                    relative_path.replace(":", "_")
+                ).replace("\\", "/")
                 archive.write(filepath, zip_inner_filepath)
