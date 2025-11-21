@@ -2,9 +2,11 @@
 Utility functions for files
 '''
 import itertools
+import json
 import os
 import zipfile
 
+from collections.abc import Callable
 from urllib.parse import urlencode
 from flask import request
 from sandhill import app
@@ -51,13 +53,19 @@ def download_file(
     return return_code
 
 
-def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str = '/'):
+def create_archive(
+        zip_filepath: str,
+        directory_to_zip: str,
+        zip_inner_path: str = '/',
+        update_function: Callable[[str, int], None] = None
+):
     """
     Download a file at a given URL \n
     Args:
         zip_filepath (str): Full filepath of the created zip file.\n
         directory_to_zip (str): Filepath of the directory to compress
         zip_inner_path (str): Filepath within the archive where to add files \n
+        update_function (Callable[str, int]): A function to report progress on zipping \n
     Raises:
         (OSError): Generic OS error (e.g. file errors, permissions issues, locked file, invalid
             path, etc.).
@@ -79,3 +87,20 @@ def create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str
                     relative_path.replace(":", "_")
                 ).replace("\\", "/")
                 archive.write(filepath, zip_inner_filepath)
+                if update_function:
+                    update_function(relative_path, os.path.getsize(archive.filename))
+
+def write_json_data(path: str, progress: dict, encoding: str = 'utf-8') -> None:
+    """
+    Write encoded json of progress to path.\n
+    Args:
+        path (str): Path to the file \n
+        progress (dict): Object to encode \n
+        encoding (str): Encoding for the file \n
+    Returns:
+        (None).
+    """
+    with open(path, 'w+', encoding=encoding) as f:
+        f.seek(0)
+        json.dump(progress, f)
+        f.truncate()

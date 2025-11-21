@@ -7,7 +7,7 @@ import shutil
 
 from sandhill import app
 from sandhill.bootstrap import sandbug
-from sandhill.utils.file import download_file, create_archive
+from sandhill.utils.file import download_file, create_archive, write_json_data
 from sandhill.utils.jsonpath import delete
 from sandhill.utils.test import _test_api_get_json, _test_api_get_json_error, _test_api_get_redirect
 from requests.exceptions import HTTPError
@@ -30,12 +30,20 @@ def test_download_file():
 
 def test_create_archive():
     with tempfile.TemporaryDirectory() as d, tempfile.NamedTemporaryFile() as zip, tempfile.NamedTemporaryFile() as file:
-        # create_archive(zip_filepath: str, directory_to_zip: str, zip_inner_path: str = '/'):
         file.write(b'Test text')
         destination_path = os.path.join(d, os.path.basename(file.name))
         shutil.move(file.name, destination_path)
+        callback_called = {'called': False}
+        def callback_function(filename, size):
+            callback_called['called'] = True
 
-        create_archive(zip.name, d)
+        create_archive(zip.name, d, update_function=callback_function)
 
         assert os.path.getsize(zip.name) > 0
+        assert callback_called['called'] == True
         # TODO test if the archive exists and not empty
+
+def test_write_json_data():
+    with tempfile.NamedTemporaryFile() as file:
+        write_json_data(file.name, {'data':123})
+        assert os.path.getsize(file.name) > 0
