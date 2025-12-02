@@ -8,7 +8,7 @@ import zipfile
 
 from collections.abc import Callable
 from urllib.parse import urlencode
-from flask import request
+from flask import request as FlaskRequest
 from sandhill import app
 from sandhill.utils.api import api_get
 
@@ -38,18 +38,18 @@ def download_file(
         app.logger.debug(f"Connecting to {url}?{urlencode(params)}")
         headers = {}
         for header in passthrough_headers:
-            if header in request.headers:
-                headers[header] = request.headers[header]
+            if header in FlaskRequest.headers:
+                headers[header] = FlaskRequest.headers[header]
         # Stream the response to prevent loading the entire file into memory
-        with api_get_function(url=url, params=params, headers=headers, stream=True) as r:
-            with open(filepath, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
+        with api_get_function(url=url, params=params, headers=headers, stream=True) as request:
+            with open(filepath, "wb") as file:
+                for chunk in request.iter_content(chunk_size=8192):
                     if chunk: # filter out keep-alive chunks
-                        f.write(chunk)
+                        file.write(chunk)
             if loop == retries:
                 # Raises an HTTPError if the request returns a 4xx/5xx for the last attempts
-                r.raise_for_status()
-                return_code = r.status_code
+                request.raise_for_status()
+                return_code = request.status_code
     return return_code
 
 
@@ -100,7 +100,7 @@ def write_json_data(path: str, progress: dict, encoding: str = 'utf-8') -> None:
     Returns:
         (None).
     """
-    with open(path, 'w+', encoding=encoding) as f:
-        f.seek(0)
-        json.dump(progress, f)
-        f.truncate()
+    with open(path, 'w+', encoding=encoding) as file:
+        file.seek(0)
+        json.dump(progress, file)
+        file.truncate()
