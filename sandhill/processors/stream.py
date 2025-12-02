@@ -70,15 +70,15 @@ def serve_file(data):
         dp_abort(500)
 
     mimetype = data['mimetype'] if 'mimetype' in data else 'application/octet-stream'
-    r = send_file(
+    stream_response = send_file(
         file,
         mimetype=mimetype,
         as_attachment=True
     )
     # 'Content-Encoding': 'Identity' => Allow Content-Length to be kept;
     # Tell the browser not to do additional compression
-    r.headers['Content-Encoding'] = 'Identity'
-    return r
+    stream_response.headers['Content-Encoding'] = 'Identity'
+    return stream_response
 
 def string(data):
     '''
