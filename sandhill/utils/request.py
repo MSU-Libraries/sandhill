@@ -7,6 +7,23 @@ from copy import deepcopy
 from flask import request, abort
 from sandhill.utils.generic import touniquelist
 
+
+def reload_request_args():
+    """
+    Add/update the `query_args` dictionary to the `request` object, populating
+    it from the `request.args` property.
+    """
+    # force reload of cached_properties
+    try:
+        del request.args
+    except KeyError:
+        pass
+
+    def flatten_args(_):
+        return request.args.to_dict(flat=False)
+    request.__class__.query_args = property(flatten_args)
+
+
 def match_request_format(view_args_key, allowed_formats, default_format='text/html'):
     """
     Match a request mimetype to the given view_args_key or the allowed mimetypes \
