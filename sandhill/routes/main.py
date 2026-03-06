@@ -57,7 +57,8 @@ def main(*args, **kwargs): # pylint: disable=unused-argument
             {
                 'processor': 'template.render',
                 'file': route_config['template'],
-                'name': '_template_render'
+                'name': '_template_render',
+                'status_code': route_config.get('status_code', 200)
             })
     route_rules = tolistfromkeys(route_config, 'route', 'routes')
     if 'data' in route_config:
