@@ -1,7 +1,26 @@
 from sandhill import app
+from flask import request as FlaskRequest
 from pytest import raises
 from sandhill.utils import request
 from werkzeug.exceptions import HTTPException
+
+
+def test_reload_request_args():
+    with app.test_request_context('/search?q=elephant'):
+        app.preprocess_request()
+        assert FlaskRequest.query_args == {'q': ['elephant']}
+
+        llama = "&r=llama"
+        FlaskRequest.query_string += llama.encode()
+        # Pre-reload
+        assert FlaskRequest.query_args == {'q': ['elephant']}
+        request.reload_request_args()
+        # After reload
+        assert FlaskRequest.query_args == {'q': ['elephant'], 'r': ['llama']}
+
+        FlaskRequest.query_string = "".encode()
+        request.reload_request_args()
+        assert FlaskRequest.query_args == {}
 
 
 def test_match_request_format():
