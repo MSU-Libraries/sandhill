@@ -24,7 +24,7 @@ def render(data):
         app.logger.error("template.render: 'file' not set in data; unable to render response.")
         abort(500)
     template = data["file"]
-    
+
     return make_response(render_template(template, **data), data.get("status_code", 200))
 
 @catch(TemplateError, "Invalid template provided for: {data[value]}. Error: {exc}",
