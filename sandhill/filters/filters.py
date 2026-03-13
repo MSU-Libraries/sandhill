@@ -192,11 +192,13 @@ def setchildkey(parent_dict, parent_key, key, value):
     return parent_dict
 
 @app.template_filter('assembleurl')
-def assembleurl(urlcomponents):
+def assembleurl(urlcomponents, no_quote: str = False):
     """
     Take urlcomponents (derived from Flask Request object) and returns a url. \n
     Args:
         urlcomponents (dict): components of the URL to build \n
+        no_quote (str): if the value of the argument should not be quoted \n
+                        Default = False \n
     Returns:
         (str): fully combined URL with query arguments \n
     """
@@ -215,7 +217,9 @@ def assembleurl(urlcomponents):
             if not isinstance(vals, list):
                 vals = [vals]
             for val in vals:
-                query_string_parts.append(f"{quote(key)}={quote(str(val))}")
+                query_string_parts.append(
+                    f"{quote(key)}={str(val) if no_quote else quote(str(val))}"
+                )
 
     return f"{path}?{'&'.join(query_string_parts)}"
 
@@ -403,7 +407,7 @@ def solr_getfq(query: dict):
     return fqueries
 
 @app.template_filter('solr_addfq')
-def solr_addfq(query: dict, field: str, value: str):
+def solr_addfq(query: dict, field: str, value: str, bypass_solr_encode: bool = False):
     """
     Adds the field and value to the filter query.\n
     Also removes the `start` query param if it exists under the
@@ -413,6 +417,7 @@ def solr_addfq(query: dict, field: str, value: str):
         query (dict): Solr query (e.g. `{"q": "frogs", "fq": "dc.title:example_title"}`)
         field (str): field that needs to be checked in the filter query (e.g. `dc.creator`)
         value (str): value that needs to be checked in the filter query (e.g. `example_creator`)
+        bypass_solr_encode (bool): Skip doing the Solr encoding to the value (default = False)
     Returns:
         (dict): The updated query dict
     """
@@ -423,7 +428,7 @@ def solr_addfq(query: dict, field: str, value: str):
         query['fq'] = [query['fq']]
 
     # TODO this only works when adding a fq value, but fails on an actual solr query
-    fquery = f"{field}:{solr_encode(value)}"
+    fquery = f"{field}:{value if bypass_solr_encode else solr_encode(value)}"
     if fquery not in query['fq']:
         query['fq'].append(fquery)
 
