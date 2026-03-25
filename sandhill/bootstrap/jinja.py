@@ -1,6 +1,7 @@
 '''
 Jinja bootstrap
 '''
+import os
 from sandhill import app
 
 # Remove exta whitespace from page templates
@@ -10,3 +11,6 @@ app.jinja_env.lstrip_blocks = True
 
 # Enable zip filter
 app.jinja_env.globals.update(zip=zip)
+
+# Enable environment variables filter
+app.jinja_env.globals.update(getenv=os.getenv)
