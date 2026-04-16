@@ -115,7 +115,6 @@ main() {
     if [[ $TEST_TYPE == "functional" ]]; then
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
-        echo "EXECUTING: pytest -m functional --no-cov -n 4 \"${ADDED_ARGS[@]}\""
         pytest -m functional --no-cov -n 4 "${ADDED_ARGS[@]}"
         PYTEST_EXIT_CODE=$?
     elif [[ $TEST_TYPE == "metadata" ]]; then
