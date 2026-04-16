@@ -84,7 +84,7 @@ main() {
             ADDED_ARGS+=("-x")
             shift ;;
         -v|--verbose)
-            ADDED_ARGS+=("-vvv" "--tb=short")
+            ADDED_ARGS+=("-vvv" "--tb=short" "--showlocals")
             shift ;;
         *)
             echo "ERROR: Unknown flag: $1"
@@ -115,12 +115,12 @@ main() {
     if [[ $TEST_TYPE == "functional" ]]; then
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
-        pytest -m functional --no-cov -n 4 --showlocals "${ADDED_ARGS[@]}"
+        pytest -m functional --no-cov -n 4 "${ADDED_ARGS[@]}"
         PYTEST_EXIT_CODE=$?
     elif [[ $TEST_TYPE == "metadata" ]]; then
         # Set instance dir
         export INSTANCE_DIR=$CUR_DIR/instance
-        pytest -m metadata --no-cov -n 4 --showlocals "${ADDED_ARGS[@]}"
+        pytest -m metadata --no-cov -n 4 "${ADDED_ARGS[@]}"
         PYTEST_EXIT_CODE=$?
     elif [[ $TEST_TYPE == "a11y" ]]; then
         # Starting x virtual frame buffer, needed for headless browser
