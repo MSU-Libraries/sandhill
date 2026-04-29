@@ -1,10 +1,8 @@
-version: "3.8"
-
 services:
   sandhill:
     image: sandhill:latest
     ports:
-       - "8080:8080"
+      - "8080:8080"
     networks:
       nonroutable_net:
     volumes:
@@ -13,13 +11,14 @@ services:
       mode: replicated
       replicas: 1
       restart_policy:
+        condition: on-failure
         max_attempts: 5
         window: 10s
-
 
 networks:
   nonroutable_net:
     driver: overlay
+    attachable: true
     ipam:
       config:
         - subnet: 192.168.0.0/16
